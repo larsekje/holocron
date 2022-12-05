@@ -142,3 +142,6 @@ dmypy.json
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+# Pickle
+pickle/*
