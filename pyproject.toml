@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "holocron"
+version = "0.1.0"
+description = "A collection of tools and resources to aid the GM in a campaign of SWRPG"
+authors = ["Lars Egil Kjenstad"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+fastapi = "^0.88.0"
+dependency-injector = "^4.40.0"
+uvicorn = "^0.20.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+mypy = "^0.991"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
