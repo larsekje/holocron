@@ -26,10 +26,10 @@ def setup(app: FastAPI, container: ApplicationContainer) -> None:
         if app.openapi_schema:
             return app.openapi_schema
         openapi_schema = get_openapi(
-            title="My TODO app",
+            title="Holocron API",
             # version=__version__,
             version="0.0.1",
-            description="My TODO app API'",
+            description="A collection of tools and resources to aid the GM in a campaign of SWRPG",
             routes=app.routes,
         )
         if not container.configuration.api_prefix():
