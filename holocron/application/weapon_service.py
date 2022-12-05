@@ -1,13 +1,11 @@
 from dataclasses import dataclass
 
-from holocron.domain.weapon import Weapon
+from holocron.domain.weapon_repository import IWeaponRepository
 
 
 @dataclass
 class WeaponService:
+    weapon_repository: IWeaponRepository
 
     def get_all(self):
-        a = Weapon("DL-44", 5)
-        b = Weapon("Lightsaber", 9)
-
-        return [a, b]
+        return self.weapon_repository.get_all()

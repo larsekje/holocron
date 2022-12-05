@@ -6,6 +6,7 @@ from holocron.application.weapon_service import WeaponService
 from holocron.infrastructure.database.todo_entry_repository import (
     TodoEntryPickleRepository,
 )
+from holocron.infrastructure.database.weapon_repository import WeaponFileRepository
 
 
 class ApplicationContainer(containers.DeclarativeContainer):
@@ -16,5 +17,9 @@ class ApplicationContainer(containers.DeclarativeContainer):
         TodoEntryPickleRepository, storage_dir=configuration.storage_dir
     )
 
+    weapon_repository = providers.Singleton(
+        WeaponFileRepository, data_dir=configuration.data_dir
+    )
+
     todo_service = providers.Factory(TodoService, todo_entry_repository)
-    weapon_service = providers.Factory(WeaponService)
+    weapon_service = providers.Factory(WeaponService, weapon_repository)

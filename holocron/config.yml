@@ -1,2 +1,3 @@
 storage_dir: "C:/prog/personal/foo/holocron/pickle/"
-log_level: "INFO"
+data_dir: "C:/prog/personal/foo/holocron/data/"
+log_level: "DEBUG"
