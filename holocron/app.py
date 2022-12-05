@@ -40,8 +40,13 @@ def start() -> None:
     logger = logging.getLogger(__name__)
     logger.info(f"My TODO app version: {__version__}")
     app = init()
+
+    log_config = uvicorn.config.LOGGING_CONFIG
+    log_config["formatters"]["access"]["fmt"] = "%(levelname)-7s %(message)s"
+    log_config["formatters"]["default"]["fmt"] = "%(levelname)-7s %(message)s"
     uvicorn.run(
         app,
+        log_config=log_config,
         host="127.0.0.1",
         port=8080,
     )
