@@ -4,18 +4,20 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
 from holocron.container import ApplicationContainer
-from holocron.infrastructure.api import todo_controller
+from holocron.infrastructure.api import todo_controller, weapon_controller
 
 
 def setup(app: FastAPI, container: ApplicationContainer) -> None:
 
     # Add other controllers here
     app.include_router(todo_controller.router)
+    app.include_router(weapon_controller.router)
 
     # Inject dependencies
     container.wire(
         modules=[
             todo_controller,
+            weapon_controller
         ]
     )
 
