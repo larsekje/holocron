@@ -6,9 +6,7 @@ import uvicorn
 
 from holocron.container import ApplicationContainer
 from holocron.infrastructure.api.setup import setup
-# from holocron import __version__
-
-__version__ = 0.1
+from holocron import __version__
 
 
 def init() -> FastAPI:
