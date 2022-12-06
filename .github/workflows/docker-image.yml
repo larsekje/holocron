@@ -18,8 +18,8 @@ jobs:
     needs: build
     steps:
       - name: Stop container
-        run: docker stop holocron
+        run: docker stop holocron || true
       - name: Remove container
-        run: docker rm holocron
+        run: docker rm holocron || true
       - name: Run container
         run: docker run -d --name holocron -p 8080:8080 holocron:latest
