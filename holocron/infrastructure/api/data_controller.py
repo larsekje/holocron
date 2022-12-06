@@ -15,17 +15,17 @@ router = APIRouter(
 )
 
 
-@router.get("/talents")
+@router.get("/talents", deprecated=True)
 async def list_talents():
     return "talents"
 
 
-@router.get("/abilities")
+@router.get("/abilities", deprecated=True)
 async def list_abilities():
     return "abilities"
 
 
-@router.get("/gear")
+@router.get("/gear", deprecated=True)
 async def list_gear():
     return "weapons"
 
@@ -36,41 +36,41 @@ async def list_weapons():
     return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
 
 
-@router.get("/weapon/attachments")
+@router.get("/weapon/attachments", deprecated=True)
 async def list_weapon_attachments():
     return "attachments"
 
 
-@router.get("/adversaries")
+@router.get("/adversaries", deprecated=True)
 async def list_all_adversaries(minionsOnly: bool = False, rivalsOnly: bool = False, nemesisOnly: bool = False):
     return "adversaries"
 
 
-@router.get("/adversary/{id}")
+@router.get("/adversary/{id}", deprecated=True)
 async def get_adversary(id: str):
     return "adversaries"
 
 
-@router.post("/adversary/{id}")
+@router.post("/adversary/{id}", deprecated=True)
 async def add_adversary(id: str):
     return "adversaries"
 
 
-@router.put("/adversary/{id}")
+@router.put("/adversary/{id}", deprecated=True)
 async def replace_adversary(id: str):
     return "adversaries"
 
 
-@router.delete("/adversary/{id}")
+@router.delete("/adversary/{id}", deprecated=True)
 async def delete_adversary(id: str):
     return "adversary {id} deleted"
 
 
-@router.get("/starships/")
+@router.get("/starships/", deprecated=True)
 async def list_starships():
     return "adversaries"
 
 
-@router.get("/starhips/attachments")
+@router.get("/starhips/attachments", deprecated=True)
 async def list_starship_attachments():
     return "adversaries"
