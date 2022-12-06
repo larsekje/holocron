@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
 from holocron.container import ApplicationContainer
-from holocron.infrastructure.api import todo_controller, data_controller, encounter_controller
+from holocron.infrastructure.api import todo_controller, data_controller
 
 
 def setup(app: FastAPI, container: ApplicationContainer) -> None:
@@ -12,7 +12,6 @@ def setup(app: FastAPI, container: ApplicationContainer) -> None:
     # Add other controllers here
     app.include_router(todo_controller.router)
     app.include_router(data_controller.router)
-    app.include_router(encounter_controller.router)
 
     # Inject dependencies
     container.wire(
