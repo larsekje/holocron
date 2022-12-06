@@ -20,4 +20,4 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
       - name: Run container
-        run: docker run --name holocron holocron
+        run: docker run -d --name holocron -p 8080:8080 holocron:latest
