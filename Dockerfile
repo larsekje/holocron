@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM python:3.9
 
 # Virtual environment
 ENV VIRTUAL_ENV=/opt/venv
