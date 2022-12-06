@@ -17,7 +17,9 @@ jobs:
     runs-on: self-hosted
     needs: build
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+      - name: Stop container
+        run: docker stop holocron
+      - name: Remove container
+        run: docker rm holocron
       - name: Run container
         run: docker run -d --name holocron -p 8080:8080 holocron:latest
