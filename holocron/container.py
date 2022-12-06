@@ -1,5 +1,5 @@
 from dependency_injector import providers, containers
-from definitions import CONFIG_PATH
+from holocron.definitions import CONFIG_PATH
 
 from holocron.application.todo_service import TodoService
 from holocron.application.weapon_service import WeaponService
