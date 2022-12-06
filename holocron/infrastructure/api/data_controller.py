@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from holocron.application.weapon_service import WeaponService
 from holocron.container import ApplicationContainer
+from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.weapon_schema import WeaponSchema
 
 weapon_service: WeaponService = Provide[ApplicationContainer.weapon_service]
@@ -36,9 +37,10 @@ async def list_weapons():
     return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
 
 
-@router.get("/weapon/attachments", deprecated=True)
+@router.get("/weapon/attachments", response_model=list[AttachmentSchema])
 async def list_weapon_attachments():
-    return "attachments"
+    attachments = weapon_service.get_all_attachments()
+    return [AttachmentSchema(**asdict(attachment)) for attachment in attachments]
 
 
 @router.get("/adversaries", deprecated=True)

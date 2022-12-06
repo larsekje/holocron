@@ -9,3 +9,6 @@ class WeaponService:
 
     def get_all(self):
         return self.weapon_repository.get_all()
+
+    def get_all_attachments(self):
+        return self.weapon_repository.get_all_attachments()
