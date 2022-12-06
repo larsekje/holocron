@@ -22,4 +22,4 @@ jobs:
       - name: Remove container
         run: docker rm holocron || true
       - name: Run container
-        run: docker run -d --name holocron -p 8080:8080 holocron:latest
+        run: docker run -d --name holocron -p 32781:8080 holocron:latest
