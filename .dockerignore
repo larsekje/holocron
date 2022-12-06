@@ -1,3 +1,6 @@
 .git/
+.github/
 .idea/
 venv/
+pickle/
+config.yml

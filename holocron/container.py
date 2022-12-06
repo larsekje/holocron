@@ -18,7 +18,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
     )
 
     weapon_repository = providers.Singleton(
-        WeaponFileRepository, data_dir=configuration.data_dir
+        WeaponFileRepository
     )
 
     todo_service = providers.Factory(TodoService, todo_entry_repository)

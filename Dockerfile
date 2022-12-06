@@ -1,4 +1,5 @@
 FROM python:3.9
+WORKDIR app
 
 # Virtual environment
 ENV VIRTUAL_ENV=/opt/venv

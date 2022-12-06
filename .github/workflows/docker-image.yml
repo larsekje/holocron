@@ -22,4 +22,10 @@ jobs:
       - name: Remove container
         run: docker rm holocron || true
       - name: Run container
-        run: docker run -d --name holocron -p 32781:8080 holocron:latest
+        run: docker run 
+          -d --name holocron 
+          -p 32781:8080 
+          -v /volume1/docker/holocron/pickle:/app/pickle/ 
+          -v /volume1/docker/holocron/data/:/app/data/ 
+          -v /volume1/docker/holocron/config.yml:/app/config.yml 
+          holocron:latest

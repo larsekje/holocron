@@ -5,11 +5,10 @@ from dataclasses import dataclass
 
 from holocron.domain.weapon import Weapon
 from holocron.domain.weapon_repository import IWeaponRepository
-
+from holocron.definitions import DATA_PATH
 
 @dataclass
 class WeaponFileRepository(IWeaponRepository):
-    data_dir: str
 
     logger = logging.getLogger(__name__)
 
@@ -17,7 +16,7 @@ class WeaponFileRepository(IWeaponRepository):
         self.logger.info("Get all weapons")
         weapons: list[Weapon] = []
 
-        with open(os.path.join(self.data_dir, 'weapons.json'), encoding='utf8') as f:
+        with open(os.path.join(DATA_PATH, 'weapons.json'), encoding='utf8') as f:
             for foo in json.load(f):
                 self.logger.debug("Parsing weapon %s", foo)
                 weapon = Weapon.create_from_json(foo)
@@ -28,7 +27,7 @@ class WeaponFileRepository(IWeaponRepository):
 
 
 if __name__ == '__main__':
-    foo = WeaponFileRepository(r'C:/prog/personal/foo/holocron/data/')
+    foo = WeaponFileRepository(DATA_PATH)
     weapons = foo.get_all()
 
     print(*weapons, sep='\n')
