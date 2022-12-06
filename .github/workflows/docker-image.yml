@@ -29,3 +29,5 @@ jobs:
           -v /volume1/docker/config/holocron/data/:/app/data/ 
           -v /volume1/docker/config/holocron/config.yml:/app/config.yml 
           holocron:latest
+      - name: Send notification via ntfy
+        run: curl -d "Deploy successful" ntfy.sh/myholocrondeploynotification
