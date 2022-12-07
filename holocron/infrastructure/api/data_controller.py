@@ -3,12 +3,15 @@ from dataclasses import asdict
 from dependency_injector.wiring import Provide
 from fastapi import APIRouter
 
+from holocron.application.data_service import DataService
 from holocron.application.weapon_service import WeaponService
 from holocron.container import ApplicationContainer
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
+from holocron.infrastructure.api.skill_schema import SkillSchema
 from holocron.infrastructure.api.weapon_schema import WeaponSchema
 
 weapon_service: WeaponService = Provide[ApplicationContainer.weapon_service]
+data_service: DataService = Provide[ApplicationContainer.data_service]
 
 router = APIRouter(
     prefix="/data",
@@ -24,6 +27,12 @@ async def list_talents():
 @router.get("/abilities", deprecated=True)
 async def list_abilities():
     return "abilities"
+
+
+@router.get("/skills", response_model=list[SkillSchema])
+async def list_skills():
+    foo = data_service.get_skills_web()
+    return foo
 
 
 @router.get("/gear", deprecated=True)
