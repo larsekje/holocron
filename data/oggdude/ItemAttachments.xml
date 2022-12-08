@@ -1420,65 +1420,6 @@ Suppressors are used by assassins and sharpshooters to make their weapons queite
     </BaseMods>
   </ItemAttachment>
   <ItemAttachment>
-    <Key>MODBKACCPOUCH</Key>
-    <Name>Modular Backpack Accessory Pouch</Name>
-    <Description>
-      [H3]Modular Backpack Accessory Pouch[h3]
-
-The Mk. IV Modular Backpack increases the user's encumbrance threshold by 3, plus an additional 1 point of encumbrance threshold for each accessory pouch to a maximum of 3.</Description>
-    <Source Page="51">Enter the Unknown</Source>
-    <Custom>DescOnly</Custom>
-    <Type>Gear</Type>
-    <ItemLimit>
-      <Key>MODPACK</Key>
-    </ItemLimit>
-    <Price>15</Price>
-    <Rarity>1</Rarity>
-    <ModPrice>15</ModPrice>
-    <UseModPrice>true</UseModPrice>
-    <BaseMods>
-      <Mod>
-        <Key>ENCTADD</Key>
-        <Count>1</Count>
-      </Mod>
-    </BaseMods>
-    <AddedMods>
-      <Mod>
-        <Key>ENCTADD</Key>
-        <Count>2</Count>
-      </Mod>
-    </AddedMods>
-  </ItemAttachment>
-  <ItemAttachment>
-    <Key>MODBKACCPOUCH3</Key>
-    <Name>Mk. III Modular Backpack Accessory Pouch</Name>
-    <Description>
-      [H3]Mk. III Modular Backpack Accessory Pouch[h3]
-Creshaldyne Industries' Mk. III Modular Backpack is a civilian version of its popular Mk. IV military reconnaissance pack. Like the Mk. IV, the Mk. III MB is a large, sturdy, internally supported backpack constructed of hard-wearing, weatherproof textiles. It has a single large interior space and two smaller external pockets that are sealed against the environment with a silent, tear away textile sealing system.. The Mk. III is also equipped with a system of hooks and fasteners that allows up to six smaller pouches to be attached to better tailor the backpack to the wearer's needs.</Description>
-    <Source Page="46">Savage Spirits</Source>
-    <Custom>DescOnly</Custom>
-    <Type>Gear</Type>
-    <ItemLimit>
-      <Key>MODPACK3</Key>
-    </ItemLimit>
-    <Price>15</Price>
-    <Rarity>1</Rarity>
-    <ModPrice>15</ModPrice>
-    <UseModPrice>true</UseModPrice>
-    <BaseMods>
-      <Mod>
-        <Key>ENCTADD</Key>
-        <Count>1</Count>
-      </Mod>
-    </BaseMods>
-    <AddedMods>
-      <Mod>
-        <Key>ENCTADD</Key>
-        <Count>5</Count>
-      </Mod>
-    </AddedMods>
-  </ItemAttachment>
-  <ItemAttachment>
     <Key>CW</Key>
     <Name>Cortosis Weave</Name>
     <Description>
