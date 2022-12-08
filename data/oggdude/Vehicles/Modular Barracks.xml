@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>F221MOD</Key>
+  <Name>Modular Barracks</Name>
+  <Description>[H3]MilBar F-221 Modular Barracks[h3]
+
+The F-221
+modular barracks construct provides enough
+room and support facilities to house an entire platoon
+of troopers and all of their attendant gear. It
+features a large common area, smaller rooms that
+can be made into heads, lounges, or offices, and
+a climate control system that keeps the internal
+temperature steady and comfortable. It is proof
+against chemical and biological attacks.
+[P][I]Disclaimer: This is a piece of field equipment found in the Lead by Example Sourcebook.  It is created as a stationary "vehicle" because it is the most appropriate format.  While any mods or benefits are per the official source, the actual vehicle stats are an interpretation only and are not official.  Feel free to modify them if you think any changes are required.[i]</Description>
+  <Source Page="48">Lead by Example</Source>
+  <Custom>DescOnly</Custom>
+  <Type>Field Equipment</Type>
+  <Categories />
+  <Encumbrance>0</Encumbrance>
+  <HP>0</HP>
+  <Price>2000</Price>
+  <Rarity>3</Rarity>
+  <Restricted>false</Restricted>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>Sealed against chemical and biological attacks.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <WeaponModifiers />
+  <MaxAltitude />
+  <HyperdrivePrimary>0</HyperdrivePrimary>
+  <HyperdriveBackup>0</HyperdriveBackup>
+  <StarFighters />
+  <NaviComputer>false</NaviComputer>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew />
+  <EncumbranceCapacity>100</EncumbranceCapacity>
+  <Passengers>25</Passengers>
+  <Consumables>One month</Consumables>
+  <Silhouette>5</Silhouette>
+  <Speed>0</Speed>
+  <Handling>0</Handling>
+  <DefFore>0</DefFore>
+  <DefAft>0</DefAft>
+  <DefPort>0</DefPort>
+  <DefStarboard>0</DefStarboard>
+  <Armor>1</Armor>
+  <HullTrauma>20</HullTrauma>
+  <SystemStrain>15</SystemStrain>
+  <Starship>false</Starship>
+  <Massive>0</Massive>
+  <SinglePilot>false</SinglePilot>
+  <VehicleWeapons />
+  <BuiltInAttachments />
+</Vehicle>

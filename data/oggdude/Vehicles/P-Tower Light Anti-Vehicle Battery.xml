@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>PTOWER</Key>
+  <Name>P-Tower Light Anti-Vehicle Battery</Name>
+  <Description>[H3]1.4 FD P-Tower Light Anti-Vehicle Battery[h3]
+
+The 1.4 FD is a light anti-vehicle and anti-armor laser
+cannon battery first introduced during the opening
+years of the Clone Wars. Initially designed to counter
+medium and heavy armored repulsortanks, the 1.4 FD
+is turret-mounted, single barrel, and roughly twice as
+tall as an average human. Operated by a single gunner
+and maintained by three engineers or technicians,
+this weapon features a seriously outdated and notoriously
+inaccurate targeting computer and fire control
+system linked to a boxy, handheld remote firing unit.
+It has its own integral power generator and low-yield
+ray shield system, and it features a unique series of
+micropower capacitor-routers that store energy in a
+broad dish at the back of the weapon. It is typically
+operated remotely by the gunner while the gunner and
+the weapon’s technicians take cover behind a nearby
+fortification, as the weapon has a tendency to overload
+and burn or electrocute its users.
+[P]Due to its advanced age and a number of design
+peculiarities, the 1.4 FD suffers from a number of
+drawbacks that make it difficult to use effectively. It is
+relatively fragile and inaccurate, has a slow rate of fire,
+requires more than it’s fair share of maintenance and
+repair, and is generally unpleasant and often dangerous
+to operate. In addition, the weapon’s broad dish
+and tendency to glow brightly when fired make it an
+excellent target for enemy anti-battery fire. Despite
+these drawbacks, the 1.4 FD continues to be popular
+among Alliance leadership and quartermasters due
+to its low purchase price and ubiquity, and the fact
+that purchasing these obsolete weapons, even in bulk,
+draws very little attention from the Empire.</Description>
+  <Source Page="46">Lead by Example</Source>
+  <Custom>DescOnly</Custom>
+  <Type>Field Equipment</Type>
+  <Categories />
+  <Encumbrance>0</Encumbrance>
+  <HP>0</HP>
+  <Price>4000</Price>
+  <Rarity>2</Rarity>
+  <Restricted>false</Restricted>
+  <BaseMods />
+  <WeaponModifiers>
+    <WeaponModifier>
+      <Unarmed>false</Unarmed>
+      <UnarmedName>1.4 FD Anti-Vehicle Battery</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <AllSkillKey />
+      <Damage>4</Damage>
+      <DamageAdd>0</DamageAdd>
+      <Crit>4</Crit>
+      <CritSub>0</CritSub>
+      <Qualities>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>INACCURATE</Key>
+          <Count>2</Count>
+        </Quality>
+        <Quality>
+          <Key>SLOWFIRING</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <BaseMods />
+      <VehicleWeaponProperties>
+        <Location>Unspecified</Location>
+        <Turret>false</Turret>
+        <Retractable>false</Retractable>
+        <FiringArcs>
+          <Fore>true</Fore>
+          <Aft>true</Aft>
+          <Port>true</Port>
+          <Starboard>true</Starboard>
+          <Dorsal>false</Dorsal>
+          <Ventral>false</Ventral>
+        </FiringArcs>
+        <Qualities />
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrClose</RangeValue>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <MaxAltitude />
+  <HyperdrivePrimary>0</HyperdrivePrimary>
+  <HyperdriveBackup>0</HyperdriveBackup>
+  <StarFighters />
+  <NaviComputer>false</NaviComputer>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One remote gunner</Crew>
+  <EncumbranceCapacity>0</EncumbranceCapacity>
+  <Passengers>0</Passengers>
+  <Consumables />
+  <Silhouette>1</Silhouette>
+  <Speed>0</Speed>
+  <Handling>0</Handling>
+  <DefFore>1</DefFore>
+  <DefAft>0</DefAft>
+  <DefPort>0</DefPort>
+  <DefStarboard>0</DefStarboard>
+  <Armor>0</Armor>
+  <HullTrauma>3</HullTrauma>
+  <SystemStrain>5</SystemStrain>
+  <Starship>false</Starship>
+  <Massive>0</Massive>
+  <SinglePilot>false</SinglePilot>
+  <VehicleWeapons />
+  <BuiltInAttachments />
+</Vehicle>

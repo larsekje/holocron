@@ -1,0 +1,34 @@
+<Vehicle>
+  <Key>FLAREVSWOOP</Key>
+  <Name>Mobquet Flare-V Swoop</Name>
+  <Description>
+      [H3]Mobquet Flare-V Swoop[h3]
+The Mobquet Flare-V is among the fastest swoops on the market, and it is notoriously difficult to pilot. As this combination makes for a highly dangerous vehicle, the Flare-V is generally used only by gangs and truly reckless thrill-seekers. </Description>
+  <Source Page="58">Chronicles of the Gatekeeper</Source>
+  <Custom>DescOnly</Custom>
+  <MaxAltitude>400 meters</MaxAltitude>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One Pilot</Crew>
+  <EncumbranceCapacity>3</EncumbranceCapacity>
+  <Passengers>1</Passengers>
+  <Silhouette>2</Silhouette>
+  <Speed>4</Speed>
+  <Handling>-2</Handling>
+  <DefFore>0</DefFore>
+  <DefAft>0</DefAft>
+  <DefPort>0</DefPort>
+  <DefStarboard>0</DefStarboard>
+  <Armor>0</Armor>
+  <HullTrauma>2</HullTrauma>
+  <SystemStrain>3</SystemStrain>
+  <HP>1</HP>
+  <Price>5000</Price>
+  <Rarity>4</Rarity>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <Type>Swoop</Type>
+  <SinglePilot>true</SinglePilot>
+  <VehicleWeapons>
+  </VehicleWeapons>
+</Vehicle>

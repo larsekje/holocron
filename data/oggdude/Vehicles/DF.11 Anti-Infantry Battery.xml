@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>DF11</Key>
+  <Name>DF.11 Anti-Infantry Battery</Name>
+  <Description>[H3]DF.11 Anti-Infantry Battery[h3]
+
+Golan Arms’ DF.11 is one of the more popular antiinfantry
+artillery weapons on the galactic market
+today. Used by both the Imperial Army and Rebel
+Alliance ground forces, the DF.11 is a powerful, reliable
+weapon typically found guarding the approaches
+to permanent and semipermanent military garrisons.
+The weapon itself is a short range, turret-mounted,
+double-barrel, light laser cannon mounted atop a
+short, armored, and lightly shielded tower. It fires a
+powerful and accurate laser beam over long distances
+that creates a wide area effect burst of energy upon
+impact. This blast can destroy whole squads of unarmored
+or lightly armored infantry, and even lightly
+armored vehicles, with a single, well placed shot. The
+DF.11 comes equipped with its own power generators
+and requires a crew of three—a gunner, a technician,
+and a fire control operator—to operate at top
+efficiency.
+[P]While DF.11 s are popular and effective weapon
+emplacements, they do suffer from a handful of shortcomings.
+They are, by nature, static emplacements.
+Breaking down a DF.11 for transit is a long and arduous
+task that requires a team of at least six technicians; it
+is not something that can be undertaken in the heat of
+battle. In addition, while the DF.11 is a potent weapon, it’s also a slow-firing energy hog that requires constant
+technical attention to keep functioning properly It is best
+used in conjunction with lighter, more flexible weapons
+like E-Webs and other light and heavy repeating blasters.
+[P]The DF.11 emplacement is a small, immobile vehicle
+for game purposes.</Description>
+  <Source Page="48">Lead by Example</Source>
+  <Custom>DescOnly</Custom>
+  <Type>Field Equipment</Type>
+  <Categories />
+  <Encumbrance>0</Encumbrance>
+  <HP>0</HP>
+  <Price>7500</Price>
+  <Rarity>5</Rarity>
+  <Restricted>true</Restricted>
+  <BaseMods />
+  <WeaponModifiers>
+    <WeaponModifier>
+      <Unarmed>false</Unarmed>
+      <UnarmedName>DF.11 Anti-Infantry Battery</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <AllSkillKey />
+      <Damage>15</Damage>
+      <DamageAdd>0</DamageAdd>
+      <Crit>2</Crit>
+      <CritSub>0</CritSub>
+      <Scale>wsPersonal</Scale>
+      <Qualities>
+        <Quality>
+          <Key>BLAST</Key>
+          <Count>10</Count>
+        </Quality>
+        <Quality>
+          <Key>INACCURATE</Key>
+          <Count>2</Count>
+        </Quality>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>PIERCE</Key>
+          <Count>4</Count>
+        </Quality>
+        <Quality>
+          <Key>SLOWFIRING</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <BaseMods />
+      <VehicleWeaponProperties>
+        <Location>Unspecified</Location>
+        <Turret>false</Turret>
+        <Retractable>false</Retractable>
+        <FiringArcs>
+          <Fore>true</Fore>
+          <Aft>true</Aft>
+          <Port>true</Port>
+          <Starboard>true</Starboard>
+          <Dorsal>false</Dorsal>
+          <Ventral>false</Ventral>
+        </FiringArcs>
+        <Qualities />
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrLong</RangeValue>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <MaxAltitude />
+  <HyperdrivePrimary>0</HyperdrivePrimary>
+  <HyperdriveBackup>0</HyperdriveBackup>
+  <StarFighters />
+  <NaviComputer>false</NaviComputer>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One gunner, one technician, one fire control operator</Crew>
+  <EncumbranceCapacity>0</EncumbranceCapacity>
+  <Passengers>0</Passengers>
+  <Consumables />
+  <Silhouette>1</Silhouette>
+  <Speed>0</Speed>
+  <Handling>0</Handling>
+  <DefFore>1</DefFore>
+  <DefAft>0</DefAft>
+  <DefPort>0</DefPort>
+  <DefStarboard>0</DefStarboard>
+  <Armor>2</Armor>
+  <HullTrauma>5</HullTrauma>
+  <SystemStrain>7</SystemStrain>
+  <Starship>false</Starship>
+  <Massive>0</Massive>
+  <SinglePilot>false</SinglePilot>
+  <VehicleWeapons />
+  <BuiltInAttachments />
+</Vehicle>
