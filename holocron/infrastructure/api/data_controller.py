@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from holocron.application.data_service import DataService
 from holocron.application.weapon_service import WeaponService
 from holocron.container import ApplicationContainer
+from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
 from holocron.infrastructure.api.weapon_schema import WeaponSchema
@@ -19,9 +20,9 @@ router = APIRouter(
 )
 
 
-@router.get("/talents", deprecated=True)
+@router.get("/talents", response_model=list[TalentSchema])
 async def list_talents():
-    return "talents"
+    return data_service.get_talents_web()
 
 
 @router.get("/abilities", deprecated=True)
