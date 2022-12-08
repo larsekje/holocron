@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Any
 
-from holocron.domain.item_attachment import Mod
 from holocron.domain.item_descriptor import ItemDescriptor
 from holocron.domain.oggdude.oggdude_attachment import OggdudeAttachment
+from holocron.domain.oggdude.oggdude_mod import OggdudeMod
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
 
@@ -17,12 +17,12 @@ class ModBuilder:
     def parse(self, mod: Any, attachment: OggdudeAttachment):
         if isinstance(mod, list):
             return self.parse_list(mod, attachment)
-        elif isinstance(mod, Mod):
+        elif isinstance(mod, OggdudeMod):
             return [self.parse_single(mod, attachment)]
         else:
             raise TypeError(f"Mod with type '{type(mod)} is not supported'")
 
-    def parse_list(self, mods: list[Mod], attachment: OggdudeAttachment):
+    def parse_list(self, mods: list[OggdudeMod], attachment: OggdudeAttachment):
         parsed_mods = []
         for mod in mods:
             parsed_mod = self.parse_single(mod, attachment)
@@ -30,7 +30,7 @@ class ModBuilder:
 
         return parsed_mods
 
-    def parse_single(self, mod: Mod, attachment: OggdudeAttachment) -> str:
+    def parse_single(self, mod: OggdudeMod, attachment: OggdudeAttachment) -> str:
         count = mod.count
 
         description = ''
