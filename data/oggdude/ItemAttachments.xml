@@ -4780,59 +4780,6 @@ The Anq 3.6 is a computer/fire control system that allows the Pathfinder's senso
     <PriceSizeMult>true</PriceSizeMult>
   </ItemAttachment>
   <ItemAttachment>
-    <Key>SPACESLUGRULES</Key>
-    <Name>Space Slug Abilities</Name>
-    <Description>
-      [H3]Space Slug Abilities[h3]
-Additional Rules for Enormous Space Slug.</Description>
-    <Source>Strongholds of Resistance</Source>
-    <Custom>DescOnly</Custom>
-    <Type>Vehicle</Type>
-    <ItemLimit>
-      <Key>SPACESLUG</Key>
-    </ItemLimit>
-    <BaseMods>
-      <Mod>
-        <Count>1</Count>
-        <MiscDesc>When rolling for initiative, or attacking with its Insatiable Maw, a space slug rolls a [B]Coordination skill check[b], counting as having Coordination 3 and Agility 1 ([PR][AB][AB]).</MiscDesc>
-      </Mod>
-      <Mod>
-        <Count>1</Count>
-        <MiscDesc>A starship of silhouette 5 or lower attacked by a space slug, regardless of whether or not the attack hit, must make a [B]Hard ([DI][DI][DI]) Piloting (Space) check[b] to avoid  being swallowed.  If swallowed, ship suffers 10 hull trauma daily from being digested.</MiscDesc>
-      </Mod>
-      <Mod>
-        <Count>1</Count>
-        <MiscDesc>The stomach of an space slug is also generally home to mynocks, which will waste no time attacking a swallowed starship.</MiscDesc>
-      </Mod>
-    </BaseMods>
-    <WeaponModifiers>
-      <WeaponModifier>
-        <UnarmedName>Insatiable Maw</UnarmedName>
-        <SkillKey>COORD</SkillKey>
-        <Damage>12</Damage>
-        <Crit>3</Crit>
-        <Qualities>
-          <Quality>
-            <Key>BREACH</Key>
-            <Count>3</Count>
-          </Quality>
-          <Quality>
-            <Key>SLOWFIRING</Key>
-            <Count>2</Count>
-          </Quality>
-        </Qualities>
-        <VehicleWeaponProperties>
-          <FiringArcs>
-            <Fore>true</Fore>
-          </FiringArcs>
-        </VehicleWeaponProperties>
-        <VehicleWeaponCount>1</VehicleWeaponCount>
-        <RangeValue>wrClose</RangeValue>
-        <Range>Close</Range>
-      </WeaponModifier>
-    </WeaponModifiers>
-  </ItemAttachment>
-  <ItemAttachment>
     <Key>BRAUD</Key>
     <Name>Briefing Auditorium</Name>
     <Description>
