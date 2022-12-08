@@ -5,7 +5,7 @@ from holocron.definitions import CONFIG_PATH
 
 from holocron.application.todo_service import TodoService
 from holocron.application.weapon_service import WeaponService
-from holocron.infrastructure.database.data_repository import DataFileRepository
+from holocron.infrastructure.database.file.file_repository import DataFileRepository
 from holocron.infrastructure.database.todo_entry_repository import (
     TodoEntryPickleRepository,
 )

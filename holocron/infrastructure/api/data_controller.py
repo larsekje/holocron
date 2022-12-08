@@ -47,10 +47,10 @@ async def list_weapons():
     return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
 
 
-@router.get("/weapon/attachments", response_model=list[AttachmentSchema])
-async def list_weapon_attachments():
-    attachments = weapon_service.get_all_attachments()
-    return [AttachmentSchema(**asdict(attachment)) for attachment in attachments]
+@router.get("/gear/attachments", response_model=list[AttachmentSchema])
+async def list_attachments():
+    attachments = data_service.get_attachments()
+    return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
 
 
 @router.get("/adversaries", deprecated=True)

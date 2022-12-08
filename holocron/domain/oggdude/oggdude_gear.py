@@ -1,0 +1,27 @@
+from dataclasses import dataclass
+
+from holocron.domain.oggdude.oggdude_equipment import OggdudeEquipmentItem
+
+
+@dataclass(init=False)
+class OggdudeGear(OggdudeEquipmentItem):
+
+    def __init__(self, content):
+        super().__init__(content)
+        self.type = self.get_type(content)
+        self.price = self.get_price(content)
+        self.encumbrance = self.get_encumbrance(content)
+        self.rarity = self.get_rarity(content)
+        self.restricted = self.get_restricted(content)
+
+    def get_encumbrance(self, content) -> int:
+        if self.type in ('droids', 'riding beasts', 'trainable beasts', 'alchemical potion', 'alchemical talisman'):
+            return -1
+
+        return super().get_encumbrance(content)
+
+    def get_price(self, content) -> int:
+        if self.type in ('trophies'):
+            return -1
+
+        return super().get_price(content)
