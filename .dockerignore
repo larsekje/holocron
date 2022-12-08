@@ -3,5 +3,4 @@
 .idea/
 venv/
 pickle/
-raw_data/
 config.yml
