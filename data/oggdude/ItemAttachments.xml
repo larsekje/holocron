@@ -3172,37 +3172,6 @@ In the days of the Republic, the Jedi allowed their younglings to train with "tr
     </BaseMods>
   </ItemAttachment>
   <ItemAttachment>
-    <Key>LTSABERCONST</Key>
-    <Name>Lightsaber Hilt Construction Modifications</Name>
-    <Description>
-      [H3]Lightsaber Hilt Construction Modifications[h3]
-      Use this attachment to reflect the results of a lightsaber hilt construction check, as required.</Description>
-    <Source Page="23">Force and Destiny Game Master's Kit</Source>
-    <Custom>DescOnly</Custom>
-    <Type>Weapon</Type>
-    <CategoryLimit>
-      <Category>Lightsaber Hilt</Category>
-    </CategoryLimit>
-    <AddedMods>
-      <Mod>
-        <Key>HPADD</Key>
-        <Count>4</Count>
-      </Mod>
-      <Mod>
-        <Key>HPSUB</Key>
-        <Count>4</Count>
-      </Mod>
-      <Mod>
-        <Key>ENCSUB</Key>
-        <Count>4</Count>
-      </Mod>
-      <Mod>
-        <Key>ENCADD</Key>
-        <Count>4</Count>
-      </Mod>
-    </AddedMods>
-  </ItemAttachment>
-  <ItemAttachment>
     <Key>BIOFEED</Key>
     <Name>Biofeedback System</Name>
     <Description>
