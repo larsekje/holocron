@@ -10,7 +10,6 @@ from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
 
-weapon_service: WeaponService = Provide[ApplicationContainer.weapon_service]
 data_service: DataService = Provide[ApplicationContainer.data_service]
 
 router = APIRouter(
