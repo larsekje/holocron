@@ -30,6 +30,7 @@ class ItemAttachment:
     hp: int
     rarity: int
     price: int
+    base_mods: list[Mod]
     added_mods: list[Mod]
     encumbrance: int
     restricted: bool

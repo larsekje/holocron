@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from holocron.domain.item_attachment import ItemAttachment
+from holocron.domain.source import Source
 
 
 class OurBaseModel(BaseModel):
@@ -9,15 +10,17 @@ class OurBaseModel(BaseModel):
 
 
 class AttachmentSchema(OurBaseModel):
+    type: str
     name: str
+    description: str
     price: int
     hp: int
     restricted: bool
     rarity: int
-    type: str
-    description: str
     models: list[str]
+    base_mods: list[str]
     additional_mods: list[str]
+    source: list[Source]
 
     @classmethod
     def from_attachment(cls, attachment: ItemAttachment):
@@ -29,5 +32,7 @@ class AttachmentSchema(OurBaseModel):
                    type=attachment.type,
                    description=attachment.description,
                    models=attachment.models,
-                   additional_mods=attachment.added_mods
+                   base_mods=attachment.base_mods,
+                   additional_mods=attachment.added_mods,
+                   source=attachment.source
                    )

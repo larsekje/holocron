@@ -1,3 +1,4 @@
+import logging
 from functools import cache
 
 from holocron.domain.characteristic import Characteristic
@@ -11,6 +12,9 @@ from holocron.utils import dictify
 
 
 class OggdudeRepository:
+
+    logger = logging.getLogger(__name__)
+
     def get_characteristics(self) -> list[Characteristic]:
         ...
 
@@ -55,12 +59,14 @@ class OggdudeRepository:
         # get oggdude representation
         oggdude_attachments = []
         for item in oggdude2000('ItemAttachments.xml'):
+            key = item['Key']
 
-            if item['Key'] in ('JURYRIGGEDW', 'JURYRIGGEDA'):
-                continue
-
-            foo = OggdudeAttachment(item)
-            oggdude_attachments.append(foo)
+            try:
+                foo = OggdudeAttachment(item)
+                oggdude_attachments.append(foo)
+            except Exception as e:
+                reason = f'{type(e).__name__}: {str(e)}'
+                self.logger.warning(f"Parsing of OggdudeAttachment with key '{key}' failed: '{reason}'")
 
         # convert to application specific representation
         descriptors = self.get_descriptors_dict()
@@ -72,10 +78,11 @@ class OggdudeRepository:
 
         attachments = []
         for oggdude_attachment in oggdude_attachments:
-            parsed_mods = mod_builder.parse(
-                oggdude_attachment.additional_mods,
-                oggdude_attachment
-            )
+
+            if oggdude_attachment.built_in:
+                continue  # built in attachments are of no interest here
+
+            base_mods, adds_mods = mod_builder.parse_attachment(oggdude_attachment)
 
             attachment = ItemAttachment(
                 oggdude_attachment.name,
@@ -83,10 +90,11 @@ class OggdudeRepository:
                 oggdude_attachment.models,
                 oggdude_attachment.type,
                 oggdude_attachment.key,
-                -1,
+                oggdude_attachment.hp,
                 oggdude_attachment.rarity,
                 oggdude_attachment.price,
-                parsed_mods,
+                base_mods,
+                adds_mods,
                 oggdude_attachment.encumbrance,
                 oggdude_attachment.restricted,
                 oggdude_attachment.source_model
@@ -95,3 +103,13 @@ class OggdudeRepository:
             attachments.append(attachment)
 
         return attachments
+
+
+if __name__ == '__main__':
+    foo = OggdudeRepository()
+
+    types = []
+    for item in foo.get_attachments():
+        types.append(item.type)
+
+    print(set(types))

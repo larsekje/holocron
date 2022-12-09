@@ -824,6 +824,7 @@ Slings are lengths of hide or synthetic fabric designed to allow easy handling o
       <Key>RANGHVY</Key>
     </SkillLimit>
     <Price>100</Price>
+    <Rarity>0</Rarity>
     <HP>1</HP>
     <BaseMods>
       <Mod>
@@ -930,6 +931,8 @@ Developed in cooperation with CorChemCo, SmartTranq is an adaptable synthetic tr
       <Key>MODEL77</Key>
     </ItemLimit>
     <Price>500</Price>
+    <Rarity>5</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -1380,6 +1383,7 @@ Suppressors are used by assassins and sharpshooters to make their weapons queite
       <Key>DARVROLTFR</Key>
     </ItemLimit>
     <Rarity>9</Rarity>
+    <BuiltIn>true</BuiltIn>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -1408,6 +1412,7 @@ Suppressors are used by assassins and sharpshooters to make their weapons queite
       <Key>DARVROLTFR</Key>
     </ItemLimit>
     <Rarity>6</Rarity>
+    <BuiltIn>true</BuiltIn>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -1758,7 +1763,7 @@ By modifying his armor to mount one or more weapons, a spacer can keep his hands
   </ItemAttachment>
   <ItemAttachment>
     <Key>MULTICOMLINK</Key>
-    <Name>Multi-Band Comlink</Name>
+    <Name>Chedak Communications Multi-Band Comlink</Name>
     <Description>
       [H3]Multi-Band Comlink[h3]
 
@@ -1768,6 +1773,7 @@ It is common practice to incorporate a long-range comlink into a helmet. Many mi
     <Type>Armor</Type>
     <Price>200</Price>
     <Rarity>1</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -3095,20 +3101,7 @@ In the days of the Republic, the Jedi allowed their younglings to train with "tr
     <HP>2</HP>
     <BaseMods>
       <Mod>
-        <Key>DAMSET</Key>
-        <Count>6</Count>
-      </Mod>
-      <Mod>
-        <Key>CRITSET</Key>
-      </Mod>
-      <Mod>
-        <Key>STUNDAMAGE</Key>
-      </Mod>
-      <Mod>
-        <Key>REMQUALSUNDER</Key>
-      </Mod>
-      <Mod>
-        <Key>REMQUALBREACH</Key>
+        <MiscDesc>Installing this crystal changes a lightsaber's damage to 6 and its critical rating to -, and the lightsaber gains the Stun Damage quality. If the crystal is ever removed, the lightsaber loses this quality and reverts to its previous base damage and critical rating</MiscDesc>
       </Mod>
     </BaseMods>
   </ItemAttachment>
@@ -3161,25 +3154,6 @@ This minute metallic wiring is designed to distribute electrical shocks across t
       <Mod>
         <Count>1</Count>
         <MiscDesc>When reducing strain damage by soak, count soak as two higher</MiscDesc>
-      </Mod>
-    </BaseMods>
-  </ItemAttachment>
-  <ItemAttachment>
-    <Key>HELMETCOM</Key>
-    <Name>Helmet Comlink</Name>
-    <Description>
-      [H3]Helmet Comlink[h3]
-
-Rather than rely on a separate piece of equipment that can be broken, lost, or stolen, some mercenaries and bounty hunters prefer to install a micro comlink directly into their armor. A micro-comlink can comprise anything from a complete in-helmet system to a simple small microphone and speaker attached to a wristplate or near the shoulder. A micro-comlink can be installed in any armor.</Description>
-    <Source Page="140">Force and Destiny Beta Rulebook</Source>
-    <Custom>DescOnly</Custom>
-    <Type>Armor</Type>
-    <Price>200</Price>
-    <Rarity>1</Rarity>
-    <BaseMods>
-      <Mod>
-        <Count>1</Count>
-        <MiscDesc>A long-range comlink is integrated into the helmet</MiscDesc>
       </Mod>
     </BaseMods>
   </ItemAttachment>
@@ -3709,6 +3683,7 @@ This uncommon upgrade installs redundant systems within the electronics of an ai
     <Type>Vehicle</Type>
     <Price>750</Price>
     <Rarity>6</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Key>SSTRAINADD</Key>
@@ -3759,6 +3734,7 @@ A very common practice on starships and in more violent, less reputable races, u
     <Custom>DescOnly</Custom>
     <Type>Vehicle</Type>
     <Price>1000</Price>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Key>DAMWEAPSYSADD</Key>
@@ -4117,6 +4093,7 @@ To accompany its autopilot droid brain, Go-Corp has rolled out the CD-13z, an as
     </CategoryLimit>
     <Price>7500</Price>
     <Rarity>6</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -4157,6 +4134,7 @@ More advanced and sophisticated than standard autopilot systems, a specialized a
     <Type>Vehicle</Type>
     <Price>6000</Price>
     <Rarity>6</Rarity>
+    <HP>6</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -5004,10 +4982,10 @@ By adding a metal cone to an ion thruster, a Technician can dramatically increas
     </ItemLimit>
     <Price>75</Price>
     <Rarity>1</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
-        <Key>REMQUALION</Key>
-        <Count>1</Count>
+        <MiscDesc>Removes the Ion quality</MiscDesc>
       </Mod>
     </BaseMods>
     <AddedMods>
@@ -5064,8 +5042,7 @@ By switching out the standard single-bolt loading system for a cobbled-together 
     <HP>1</HP>
     <BaseMods>
       <Mod>
-        <Key>REMQUALLIMITEDAMMO</Key>
-        <Count>1</Count>
+        <MiscDesc>Removes the Limited Ammo 1 quality</MiscDesc>
       </Mod>
     </BaseMods>
   </ItemAttachment>
@@ -5346,6 +5323,7 @@ By removing or deactivating weapon safeties and other features a gun can more ea
     </SkillLimit>
     <Price>250</Price>
     <Rarity>2</Rarity>
+    <HP>0</HP>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -6069,6 +6047,7 @@ A favourite of scoundrels and pirates, decoy buoys are oftern devices cobbled to
     <Type>Vehicle</Type>
     <Price>5000</Price>
     <Rarity>5</Rarity>
+    <HP>0</HP>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -6110,6 +6089,7 @@ A skilled Slicer knows how to protect a computer system from others skilled in e
     <Type>Vehicle</Type>
     <Price>1000</Price>
     <Rarity>6</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -6194,6 +6174,7 @@ Much more than a simiple targeting computer, a specialized droid brain can be in
     <Type>Vehicle</Type>
     <Price>7000</Price>
     <Rarity>6</Rarity>
+    <HP>6</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -6350,6 +6331,7 @@ There are few things to befall a ship owner more dreaded than to have a craft di
     <Type>Vehicle</Type>
     <Price>500</Price>
     <Rarity>4</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -7244,6 +7226,7 @@ Part of the thrill of Podracing is the near certainty of collisions, for many en
     </TypeLimit>
     <Price>2500</Price>
     <Rarity>3</Rarity>
+    <HP>1</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -7862,6 +7845,7 @@ Often, openly carrying a lightsaber causes undue comment and notice. Owners of s
       <Category>Lightsaber Hilt</Category>
     </CategoryLimit>
     <HP>1</HP>
+    <Price>Varies</Price>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -7975,6 +7959,7 @@ Even the best of the Jedi can fall. The Empire scours the galaxy looking for the
     <Rarity>9</Rarity>
     <Restricted>true</Restricted>
     <HP>2</HP>
+    <Price>Cannot be purchased. Must be found.</Price>
     <BaseMods>
       <Mod>
         <Key>DAMSET</Key>
@@ -8040,6 +8025,7 @@ With the destruction of the Jedi, the Empire has begun to horde kyber crystals f
       <Category>Lightsaber Hilt</Category>
     </CategoryLimit>
     <Rarity>10</Rarity>
+    <Price>Cannot be purchased, must be found.</Price>
     <Restricted>true</Restricted>
     <HP>2</HP>
     <BaseMods>
@@ -8096,6 +8082,7 @@ No one seems to know where these crystals come from or how they make their way i
     </CategoryLimit>
     <Price>16000</Price>
     <Rarity>9</Rarity>
+    <HP>2</HP>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -8212,6 +8199,7 @@ Weapons manufacturers, combat engineers, and sabotage specialists are constantly
     </CategoryLimit>
     <Price>1000</Price>
     <Rarity>4</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -8274,6 +8262,7 @@ While some anti-vehicle explosive devices and some concussion grenades are equip
     </CategoryLimit>
     <Price>70</Price>
     <Rarity>2</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -8306,6 +8295,7 @@ Although certain models of mines include proximity detonators as standard, some 
     </CategoryLimit>
     <Price>120</Price>
     <Rarity>3</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -8328,6 +8318,7 @@ Over the millennia, tinkerers, weapon designers, and desperate fighters have com
     </CategoryLimit>
     <Price>500</Price>
     <Rarity>4</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -8498,6 +8489,7 @@ It's a tragic fact that all too often, the brave members of the Alliance fail to
     <Type>Vehicle</Type>
     <Price>1100</Price>
     <Rarity>4</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -9245,6 +9237,7 @@ Combat plating offers perhaps the best protection a hull can provide, but reduce
       <Key>EODMKII</Key>
     </ItemLimit>
     <Price>700</Price>
+    <HP>0</HP>
     <Rarity>3</Rarity>
     <BaseMods>
       <Mod>
@@ -9269,6 +9262,7 @@ Combat plating offers perhaps the best protection a hull can provide, but reduce
       <Key>EODMKII</Key>
     </ItemLimit>
     <Price>300</Price>
+    <HP>0</HP>
     <Rarity>4</Rarity>
     <BaseMods>
       <Mod>
@@ -9584,18 +9578,7 @@ A delicately tuned magnetic field maintains the coherency of a lightsaber's plas
     <HP>1</HP>
     <BaseMods>
       <Mod>
-        <Key>REMQUALBREACH</Key>
-      </Mod>
-      <Mod>
-        <Key>CONCUSSIVE</Key>
-        <Count>1</Count>
-      </Mod>
-      <Mod>
-        <Key>KNOCKDOWN</Key>
-      </Mod>
-      <Mod>
-        <Key>PIERCE</Key>
-        <Count>1</Count>
+        <MiscDesc>The lightsaber loses the Breach quality and gains the Concussive 1, Knockdown, and Pierce 1 qualities</MiscDesc>
       </Mod>
     </BaseMods>
     <AddedMods>
@@ -9809,6 +9792,7 @@ An excellent way to ensure an agent is always armed no matter the circumstances,
     <Type>Armor</Type>
     <Price>100</Price>
     <Rarity>5</Rarity>
+    <HP>0</HP>
     <AddedMods>
       <Mod>
         <Count>1</Count>
@@ -9844,6 +9828,7 @@ Armor inserts are thin, flexible, plasteel and ballistic gel plates that can be 
     <Type>Armor</Type>
     <Price>450</Price>
     <Rarity>3</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -9996,6 +9981,7 @@ This mod consists of a small retracting spool wrapped with twenty-five meters of
     <Type>Gear</Type>
     <Price>100</Price>
     <Rarity>2</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -10014,6 +10000,7 @@ This is a simple device that uses springs or compressed air to fire a tiny alloy
     <Type>Gear</Type>
     <Price>200</Price>
     <Rarity>4</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -10052,6 +10039,7 @@ These are typically very small, easily concealed compartments hidden in places s
     <Type>Gear</Type>
     <Price>50</Price>
     <Rarity>3</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -10076,6 +10064,7 @@ Holo converters are common holo scrambling devices that allow users to alter a h
     <Type>Gear</Type>
     <Price>600</Price>
     <Rarity>6</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -10100,6 +10089,7 @@ Comlink bugs are tiny listening devices implanted into an otherwise normal comli
     <Type>Gear</Type>
     <Price>150</Price>
     <Rarity>4</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -10118,6 +10108,7 @@ Subminiature holocams are small holorecorders equipped with a medium-sized fixed
     <Type>Gear</Type>
     <Price>300</Price>
     <Rarity>5</Rarity>
+    <HP>0</HP>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -10135,6 +10126,7 @@ This simple mod adds a garrote to any suitable item, typically a briefcase, coml
     <Custom>AddedItem</Custom>
     <Type>Gear</Type>
     <Price>200</Price>
+    <HP>0</HP>
     <Rarity>6</Rarity>
     <BaseMods>
       <Mod>
@@ -10160,6 +10152,7 @@ Self-destruct systems are found on many pieces of espionage gear, especially bag
     <Custom>AddedItem</Custom>
     <Type>Gear</Type>
     <Price>550</Price>
+    <HP>0</HP>
     <Rarity>5</Rarity>
     <BaseMods>
       <Mod>

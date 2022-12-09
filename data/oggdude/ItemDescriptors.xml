@@ -1520,6 +1520,16 @@
     <IsQuality>true</IsQuality>
   </ItemDescriptor>
   <ItemDescriptor>
+    <Key>CUMBERSOMESUB</Key>
+    <Name>Cumbersome Quality</Name>
+    <Description>A Cumbersome weapon is large, unwieldy, awkward, or heavy. To wield a Cumbersome weapon properly, the character needs a Brawn characteristic equal to or greater than the weapon’s Cumbersome rating. For each point of Brawn the character is deficient, he must increase the difficulty of all checks made while using the weapon by one.</Description>
+    <Custom>DescOnly</Custom>
+    <Type>Weapon</Type>
+    <ModDesc>Cumbersome -1</ModDesc>
+    <QualDesc>Cumbersome -1</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
     <Key>DEFENSIVE</Key>
     <Name>Defensive Quality</Name>
     <Description>Defensive weapons are particularly good at fending off incoming melee attacks. A character wielding a weapon with the Defensive quality increases his melee defense by the weapon’s Defensive rating.</Description>
