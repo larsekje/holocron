@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from holocron.application.data_service import DataService
 from holocron.application.weapon_service import WeaponService
 from holocron.container import ApplicationContainer
+from holocron.domain.source import Source
 from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
@@ -36,53 +37,80 @@ async def list_skills():
     return foo
 
 
-@router.get("/gear", deprecated=True)
+@router.get("/force")
+async def list_force_powers():
+    pass
+
+
+@router.get("/player/careers")
+async def list_careers():
+    pass
+
+
+@router.get("/player/careers/specializations")
+async def list_career_specializations():
+    pass
+
+
+@router.get("/player/hooks/")
+async def list_hooks():
+    """
+    Hooks, obligations, duties, moralities and motivations
+    """
+    pass
+
+
+@router.get("/rules/", response_model=dict[str, Source])
+async def list_special_rules():
+    pass
+
+
+@router.get("/equipment/gear", deprecated=True)
 async def list_gear():
     return "weapons"
 
 
-@router.get("/weapons", response_model=list[WeaponSchema])
+@router.get("/equipment/weapons", response_model=list[WeaponSchema])
 async def list_weapons():
     weapons = weapon_service.get_all()
     return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
 
 
-@router.get("/gear/attachments", response_model=list[AttachmentSchema])
+@router.get("/equipment/armor", deprecated=True)
+async def list_armor():
+    weapons = weapon_service.get_all()
+    return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
+
+
+@router.get("/equipment/attachments", response_model=list[AttachmentSchema])
 async def list_attachments():
     attachments = data_service.get_attachments()
     return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
 
 
+@router.get("/crafting/templates")
+async def list_crafting_templates():
+    pass
+
+
+@router.get("/dice/tables/")
+async def list_crafting_templates():
+    """
+    List tables for spending x, y, a, t on [something]
+    """
+    pass
+
+
 @router.get("/adversaries", deprecated=True)
-async def list_all_adversaries(minionsOnly: bool = False, rivalsOnly: bool = False, nemesisOnly: bool = False):
+async def list_adversaries(minionsOnly: bool = False, rivalsOnly: bool = False, nemesisOnly: bool = False):
     return "adversaries"
 
 
-@router.get("/adversary/{id}", deprecated=True)
-async def get_adversary(id: str):
+@router.get("/vehicles/", deprecated=True)
+async def list_vehicles():
     return "adversaries"
 
 
-@router.post("/adversary/{id}", deprecated=True)
-async def add_adversary(id: str):
-    return "adversaries"
-
-
-@router.put("/adversary/{id}", deprecated=True)
-async def replace_adversary(id: str):
-    return "adversaries"
-
-
-@router.delete("/adversary/{id}", deprecated=True)
-async def delete_adversary(id: str):
-    return "adversary {id} deleted"
-
-
-@router.get("/starships/", deprecated=True)
-async def list_starships():
-    return "adversaries"
-
-
-@router.get("/starhips/attachments", deprecated=True)
-async def list_starship_attachments():
+@router.get("/vehicles/modifications", deprecated=True)
+async def list_vehicle_modifications():
     return "adversaries"
