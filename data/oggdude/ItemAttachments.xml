@@ -1,68 +1,6 @@
 <?xml version="1.0"?>
 <ItemAttachments>
   <ItemAttachment>
-    <Key>JURYRIGGEDW</Key>
-    <Name>Jury Rigged (Weapon)</Name>
-    <Description>
-      [H3]Jury Rigged (Weapon)[h3]
-
-The character chooses one personal weapon or piece of armor per rank of Jury Rigged. He may increase the damage of the weapon by one; decrease the Advantage cost on its Critical, or any single other effect by one to a minimum of one; or increase armor's ranged or melee defense by one. Alternatively, he can decrease the encumbrance of the item by two to a minimum of one. The bonus only applies so long as the character is using the item. If the item is ever loss or destroyed, the character may apply Jury Rigged to a new personal weapon or piece or armor.</Description>
-    <Sources>
-      <Source Page="138">Edge of the Empire Core Rulebook</Source>
-      <Source Page="150">Age of Rebellion Core Rulebook</Source>
-    </Sources>
-    <Custom>DescOnly</Custom>
-    <Type>Weapon</Type>
-    <JuryRigged>true</JuryRigged>
-    <AddedMods>
-      <Mod>
-        <Key>DAMADD</Key>
-        <Count>1</Count>
-      </Mod>
-      <Mod>
-        <Key>CRITSUB</Key>
-        <Count>1</Count>
-      </Mod>
-      <Mod>
-        <Key>ENCSUB2</Key>
-        <Count>1</Count>
-      </Mod>
-      <Mod>
-        <Key>QUALADVSUB</Key>
-        <Count>1</Count>
-      </Mod>
-    </AddedMods>
-  </ItemAttachment>
-  <ItemAttachment>
-    <Key>JURYRIGGEDA</Key>
-    <Name>Jury Rigged (Armor)</Name>
-    <Description>
-      [H3]Jury Rigged (Armor)[h3]
-
-The character chooses one personal weapon or piece of armor per rank of Jury Rigged. He may increase the damage of the weapon by one; decrease the Advantage cost on its Critical, or any single other effect by one to a minimum of one; or increase armor's ranged or melee defense by one. Alternatively, he can decrease the encumbrance of the item by two to a minimum of one. The bonus only applies so long as the character is using the item. If the item is ever loss or destroyed, the character may apply Jury Rigged to a new personal weapon or piece or armor.</Description>
-    <Sources>
-      <Source Page="138">Edge of the Empire Core Rulebook</Source>
-      <Source Page="150">Age of Rebellion Core Rulebook</Source>
-    </Sources>
-    <Custom>DescOnly</Custom>
-    <Type>Armor</Type>
-    <JuryRigged>true</JuryRigged>
-    <AddedMods>
-      <Mod>
-        <Key>MELEEDEFADD</Key>
-        <Count>1</Count>
-      </Mod>
-      <Mod>
-        <Key>RANGEDEFADD</Key>
-        <Count>1</Count>
-      </Mod>
-      <Mod>
-        <Key>ENCSUB2</Key>
-        <Count>1</Count>
-      </Mod>
-    </AddedMods>
-  </ItemAttachment>
-  <ItemAttachment>
     <Key>AUGSPIN</Key>
     <Name>Augmented Spin Barrel</Name>
     <Description>

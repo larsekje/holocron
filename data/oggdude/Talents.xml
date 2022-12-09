@@ -1152,7 +1152,7 @@ When the character performs the Brace maneuver, the benefits apply to all allies
   <Talent>
     <Key>JURY</Key>
     <Name>Jury Rigged</Name>
-    <Description>Choose 1 weapon, armor, or other item and give it a permanent improvement while it remains in use.</Description>
+    <Description>The character chooses one personal weapon or piece of armor per rank of Jury Rigged, They may increase the damage of the weapon by one: decrease the Advantage cost on its Critical, or any single other effect by one to a minimum of one; or increase armor's ranged or melee defense by one. Alternatively, they can decrease the encumbrance of the item by two to a minimum of one. The bonus only applies so long as the character is using the item. If the item is ever lost or destroyed, the character may apply Jury Rigged to a new personal weapon or piece or armor.</Description>
     <Sources>
       <Source Page="138">Edge of the Empire Core Rulebook</Source>
       <Source Page="150">Age of Rebellion Core Rulebook</Source>
