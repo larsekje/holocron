@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Optional
 
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.item_attachment import ItemAttachment
@@ -17,5 +18,5 @@ class IDataRepository(ABC):
     def get_talents(self) -> list[Talent]:
         ...
 
-    def get_attachments(self) -> list[ItemAttachment]:
+    def get_attachments(self, types: list[str] = None) -> list[ItemAttachment]:
         ...

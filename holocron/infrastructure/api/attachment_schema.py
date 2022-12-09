@@ -20,7 +20,7 @@ class AttachmentSchema(OurBaseModel):
     models: list[str]
     base_mods: list[str]
     additional_mods: list[str]
-    source: list[Source]
+    source: list[str]
 
     @classmethod
     def from_attachment(cls, attachment: ItemAttachment):
@@ -34,5 +34,5 @@ class AttachmentSchema(OurBaseModel):
                    models=attachment.models,
                    base_mods=attachment.base_mods,
                    additional_mods=attachment.added_mods,
-                   source=attachment.source
+                   source=[str(source) for source in attachment.source]
                    )

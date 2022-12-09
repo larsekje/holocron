@@ -70,7 +70,7 @@ async def list_gear():
 
 @router.get("/equipment/attachments", response_model=list[AttachmentSchema])
 async def list_attachments():
-    attachments = data_service.get_attachments()
+    attachments = data_service.get_attachments(['weapon', 'armor'])
     return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
 
 
@@ -97,6 +97,7 @@ async def list_vehicles():
     return "adversaries"
 
 
-@router.get("/vehicles/modifications", deprecated=True)
+@router.get("/vehicles/modifications", response_model=list[AttachmentSchema])
 async def list_vehicle_modifications():
-    return "adversaries"
+    attachments = data_service.get_attachments(['vehicle'])
+    return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
