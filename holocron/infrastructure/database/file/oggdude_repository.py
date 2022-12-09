@@ -55,10 +55,13 @@ class OggdudeRepository:
         return dictify(descriptors)
 
     def get_attachments(self) -> list[ItemAttachment]:
+        self.logger.info("Obtaining attachments")
 
         # get oggdude representation
         oggdude_attachments = []
-        for item in oggdude2000('ItemAttachments.xml'):
+        data = oggdude2000('ItemAttachments.xml')
+        self.logger.debug(f"Found {len(data)} attachments in dataset")
+        for item in data:
             key = item['Key']
 
             try:
@@ -68,19 +71,26 @@ class OggdudeRepository:
                 reason = f'{type(e).__name__}: {str(e)}'
                 self.logger.warning(f"Parsing of OggdudeAttachment with key '{key}' failed: '{reason}'")
 
+        self.logger.debug(f"{len(oggdude_attachments)} items were successfully parsed to OggdudeAttachment")
+
         # convert to application specific representation
         descriptors = self.get_descriptors_dict()
         skills = self.get_skills_dict()
         talents = self.get_talents_dict()
 
+        self.logger.debug("Creating ModBuilder")
+
         from holocron.domain.oggdude.oggdude_mod_builder import ModBuilder
         mod_builder = ModBuilder(descriptors, skills, talents)
+
+        self.logger.debug("Converting Oggdude representation to application specific representation")
 
         attachments = []
         for oggdude_attachment in oggdude_attachments:
 
             if oggdude_attachment.built_in:
-                continue  # built in attachments are of no interest here
+                logging.debug(f"Skipping built-in attachment {oggdude_attachment.key} ({oggdude_attachment.name})")
+                continue
 
             base_mods, adds_mods = mod_builder.parse_attachment(oggdude_attachment)
 
@@ -101,6 +111,8 @@ class OggdudeRepository:
             )
 
             attachments.append(attachment)
+
+        self.logger.debug(f"{len(attachments)} OggdudeAttachments were successfully converted to ItemAttachment")
 
         return attachments
 
