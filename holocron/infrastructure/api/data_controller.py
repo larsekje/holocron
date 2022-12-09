@@ -4,13 +4,11 @@ from dependency_injector.wiring import Provide
 from fastapi import APIRouter
 
 from holocron.application.data_service import DataService
-from holocron.application.weapon_service import WeaponService
 from holocron.container import ApplicationContainer
 from holocron.domain.source import Source
 from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
-from holocron.infrastructure.api.weapon_schema import WeaponSchema
 
 weapon_service: WeaponService = Provide[ApplicationContainer.weapon_service]
 data_service: DataService = Provide[ApplicationContainer.data_service]
@@ -68,18 +66,6 @@ async def list_special_rules():
 @router.get("/equipment/gear", deprecated=True)
 async def list_gear():
     return "weapons"
-
-
-@router.get("/equipment/weapons", response_model=list[WeaponSchema])
-async def list_weapons():
-    weapons = weapon_service.get_all()
-    return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
-
-
-@router.get("/equipment/armor", deprecated=True)
-async def list_armor():
-    weapons = weapon_service.get_all()
-    return [WeaponSchema(**asdict(weapon)) for weapon in weapons]
 
 
 @router.get("/equipment/attachments", response_model=list[AttachmentSchema])
