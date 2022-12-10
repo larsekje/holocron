@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import cached_property
 
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.data_repository import IDataRepository
@@ -36,8 +37,15 @@ class DataService:
         return self.data_repository.get_attachments(types)
 
     # GEAR
-    def get_gear(self) -> list[Gear]:
-        return self.data_repository.get_gear()
+    def get_gear(self, types: list[str] = None) -> list[Gear]:
+        return self.data_repository.get_gear(types)
+
+    def get_gear_categories(self):
+        types = []
+        for gear in self.get_gear():
+            types.append(gear.type)
+
+        return list(set(types))
 
     # TALENTS
 

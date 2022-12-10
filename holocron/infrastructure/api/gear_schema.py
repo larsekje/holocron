@@ -11,7 +11,7 @@ class OurBaseModel(BaseModel):
 class GearSchema(OurBaseModel):
     name: str
     description: str
-    type: str
+    category: str
     price: int
     restricted: bool
     rarity: int
@@ -22,7 +22,7 @@ class GearSchema(OurBaseModel):
     def from_gear(cls, gear: Gear):
         return cls(name=gear.name,
                    description=gear.description,
-                   type=gear.type,
+                   category=gear.type,
                    price=gear.price,
                    restricted=gear.restricted,
                    rarity=gear.rarity,

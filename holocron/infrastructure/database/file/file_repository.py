@@ -103,7 +103,6 @@ class DataFileRepository:
 
         return attachments
 
-    @cache
     def get_gear(self, types: list[str] = None) -> list[Gear]:
         return self.get_oggdude_item('gear', 'Gears.xml', OggdudeGear, ReturnClass=Gear, types=types)
 

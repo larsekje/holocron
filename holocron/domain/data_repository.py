@@ -22,5 +22,5 @@ class IDataRepository(ABC):
     def get_attachments(self, types: list[str] = None) -> list[ItemAttachment]:
         ...
 
-    def get_gear(self) -> list[Gear]:
+    def get_gear(self, types: list[str] = None) -> list[Gear]:
         ...

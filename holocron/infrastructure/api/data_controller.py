@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from typing import Optional
 
 from dependency_injector.wiring import Provide
 from fastapi import APIRouter
@@ -64,8 +65,14 @@ async def list_special_rules():
 
 
 @router.get("/equipment/gear", response_model=list[GearSchema])
-async def list_gear():
-    return [GearSchema.from_gear(gear) for gear in data_service.get_gear()]
+async def list_gear(categories: Optional[str] = None):
+    categories = categories.split(',') if categories is not None else None
+    return [GearSchema.from_gear(gear) for gear in data_service.get_gear(categories)]
+
+
+@router.get("/equipment/gear/categories", response_model=list[str])
+async def list_gear_categories():
+    return data_service.get_gear_categories()
 
 
 @router.get("/equipment/attachments", response_model=list[AttachmentSchema])
