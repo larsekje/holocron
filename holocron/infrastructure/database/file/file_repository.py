@@ -2,7 +2,7 @@ import logging
 from functools import cache
 from typing import Any
 
-from holocron.application.oggdude_builder import OggdudeBuilder
+from holocron.application.oggdude_builder import OggdudeBuilder, UnsupportedWeaponError
 from holocron.domain.armor import Armor
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.gear import Gear
@@ -11,6 +11,7 @@ from holocron.domain.item_descriptor import ItemDescriptor
 from holocron.domain.oggdude.oggdude_mod_builder import ModBuilder, ModParsingException
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
+from holocron.domain.weapon import Weapon
 from holocron.infrastructure.database.file.oggdude2 import oggdude2000
 from holocron.utils import dictify
 
@@ -75,6 +76,9 @@ class DataFileRepository:
     def get_armor(self) -> list[Armor]:
         return self.get_oggdude_items('Armors.xml', Armor, self.builder.build_armor)
 
+    def get_weapon(self, types: list[str] = None) -> list[Weapon]:
+        return self.get_oggdude_items('Weapons.xml', Weapon, self.builder.build_weapon, types)
+
     def get_oggdude_items(self, file: str, ReturnClass, builder, types: list[str] = None) -> list[Any]:
         class_name = ReturnClass.__name__
 
@@ -96,7 +100,7 @@ class DataFileRepository:
             try:
                 foo = builder(item)
                 oggdude.append(foo)
-            except (ModParsingException, KeyError, ValueError) as e:
+            except (ModParsingException, KeyError, ValueError, AttributeError, UnsupportedWeaponError) as e:
                 fail_count += 1
                 key = item['Key']
                 reason = f'{type(e).__name__}: {str(e)}'
@@ -108,8 +112,3 @@ class DataFileRepository:
         self.logger.debug(f"{len(oggdude)} items were successfully parsed to {class_name}")
         return oggdude
 
-
-if __name__ == '__main__':
-    repo = DataFileRepository()
-    repo.get_gear()
-    # print(repo.get_gear())

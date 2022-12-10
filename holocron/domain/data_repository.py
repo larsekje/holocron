@@ -5,6 +5,7 @@ from holocron.domain.gear import Gear
 from holocron.domain.attachment import Attachment
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
+from holocron.domain.weapon import Weapon
 from holocron.infrastructure.database.file.file_repository import Armor
 
 
@@ -26,4 +27,7 @@ class IDataRepository(ABC):
         ...
 
     def get_armor(self) -> list[Armor]:
+        ...
+
+    def get_weapon(self, types: list[str] = None) -> list[Weapon]:
         ...

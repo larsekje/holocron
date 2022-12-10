@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
+from holocron.domain.weapon import default_weapon_categories
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.gear_schema import GearSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
@@ -96,6 +97,17 @@ class ArmorSchema(OurBaseModel):
                    )
 
 
+@router.get("/equipment/weapon")
+async def list_weapons(categories: Optional[str] = None):
+    categories = categories.split(',') if categories is not None else default_weapon_categories
+    return data_service.get_weapon(categories)
+
+
+@router.get("/equipment/weapon/categories")
+async def list_weapon_categories():
+    return data_service.get_weapon_categories()
+
+
 @router.get("/equipment/armor", response_model=list[ArmorSchema])
 async def list_armor():
     schemas = []
@@ -149,3 +161,8 @@ async def list_vehicles():
 async def list_vehicle_modifications():
     attachments = data_service.get_attachments(['vehicle'])
     return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
+
+
+@router.get("/vehicles/weapons")
+async def list_vehicle_weapons():
+    return data_service.get_weapon(['vehicle'])

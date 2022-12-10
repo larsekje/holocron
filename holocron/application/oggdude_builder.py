@@ -8,6 +8,11 @@ from holocron.domain.oggdude.oggdude_mod import OggdudeMod
 from holocron.domain.oggdude.oggdude_mod_builder import ModBuilder
 from holocron.domain.oggdude.oggdude_source import OggdudeSource
 from holocron.domain.talent import Talent
+from holocron.domain.weapon import Weapon
+
+
+class UnsupportedWeaponError(Exception):
+    pass
 
 
 @dataclass(init=False)
@@ -100,6 +105,33 @@ class OggdudeBuilder:
         self.reset()
         return talent
 
+    def build_weapon(self, content) -> Weapon:
+        self.content = content
+
+        dmg, plus_damage = self.get_damage()
+        weapon = Weapon(
+            self.get_name(),
+            self.get_description(),
+            self.get_models(),
+            self.get_type(),
+            self.key,
+            self.get_hardpoints(),
+            self.get_rarity(),
+            self.get_price(),
+            self.get_base_mods(),
+            self.get_encumbrance(),
+            dmg,
+            plus_damage,
+            self.get_crit(),
+            self.get_range(),
+            self.get_skill(),
+            self.get_restricted(),
+            self.get_source()
+        )
+
+        self.reset()
+        return weapon
+
     @property
     def key(self):
         return self.content['Key']
@@ -190,6 +222,27 @@ class OggdudeBuilder:
         activation = activation.replace("IncidentalOOT", "Out-of-turn Incidental")
         return activation
 
+    # WEAPON
+    def get_damage(self) -> (int, bool):
+        if 'Damage' in self.content:
+            return int(self.content['Damage']), False
+
+        if 'DamageAdd' in self.content:
+            return int(self.content['DamageAdd']), True
+
+        raise UnsupportedWeaponError(f"{self.key} does not have any damage")
+
+    def get_crit(self) -> int:
+        return int(self.content['Crit'])
+
+    def get_range(self) -> str:
+        if 'Range' in self.content:
+            return self.content['Range']
+
+        return self.content['RangeValue'].replace("wr", "")
+
+    def get_skill(self) -> str:
+        return self.content['SkillKey']
 
     @staticmethod
     def weird_xml_getter(content, parent, child, func):

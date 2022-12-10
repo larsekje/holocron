@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 
+from holocron.domain.attachment import Attachment
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.data_repository import IDataRepository
 from holocron.domain.gear import Gear
-from holocron.domain.attachment import Attachment
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
+from holocron.domain.weapon import Weapon
 from holocron.infrastructure.api.skill_schema import SkillSchema
 from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.database.file.file_repository import DataFileRepository, Armor
@@ -58,6 +59,18 @@ class DataService:
 
     def get_armor(self) -> list[Armor]:
         return self.data_repository.get_armor()
+
+    # WEAPON
+
+    def get_weapon(self, types: list[str] = None) -> list[Weapon]:
+        return self.data_repository.get_weapon(types)
+
+    def get_weapon_categories(self) -> list[str]:
+        types = []
+        for gear in self.get_weapon():
+            types.append(gear.type)
+
+        return list(set(types))
 
     @staticmethod
     def webify(arr, func, *args):
