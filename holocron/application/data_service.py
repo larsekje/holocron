@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.data_repository import IDataRepository
+from holocron.domain.gear import Gear
 from holocron.domain.item_attachment import ItemAttachment
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
@@ -33,6 +34,10 @@ class DataService:
 
     def get_attachments(self, types: list[str] = None) -> list[ItemAttachment]:
         return self.data_repository.get_attachments(types)
+
+    # GEAR
+    def get_gear(self) -> list[Gear]:
+        return self.data_repository.get_gear()
 
     # TALENTS
 

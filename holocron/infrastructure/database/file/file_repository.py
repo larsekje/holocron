@@ -1,10 +1,13 @@
 import logging
 from functools import cache
+from typing import Any
 
 from holocron.domain.characteristic import Characteristic
+from holocron.domain.gear import Gear
 from holocron.domain.item_attachment import ItemAttachment
 from holocron.domain.item_descriptor import ItemDescriptor
 from holocron.domain.oggdude.oggdude_attachment import OggdudeAttachment
+from holocron.domain.oggdude.oggdude_gear import OggdudeGear
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
 from holocron.infrastructure.database.file.oggdude2 import oggdude2000
@@ -55,28 +58,7 @@ class DataFileRepository:
         return dictify(descriptors)
 
     def get_attachments(self, types: list[str] = None) -> list[ItemAttachment]:
-        self.logger.info("Obtaining attachments")
-
-        # get oggdude representation
-        oggdude_attachments = []
-        data = oggdude2000('ItemAttachments.xml')
-        self.logger.debug(f"Found {len(data)} attachments in dataset")
-        for item in data:
-            key = item['Key']
-
-            try:
-                foo = OggdudeAttachment(item)
-                oggdude_attachments.append(foo)
-            except Exception as e:
-                reason = f'{type(e).__name__}: {str(e)}'
-                self.logger.warning(f"Parsing of OggdudeAttachment with key '{key}' failed: '{reason}'")
-
-        self.logger.debug(f"{len(oggdude_attachments)} items were successfully parsed to OggdudeAttachment")
-
-        # filter away
-        if types is not None:
-            oggdude_attachments = [attachment for attachment in oggdude_attachments if attachment.type in types]
-            self.logger.debug(f"{len(oggdude_attachments)} attachments remaining after keeping only type==({', '.join(types)})")
+        oggdude_attachments = self.get_oggdude_item('attachments', 'ItemAttachments.xml', OggdudeAttachment, types=types)
 
         # convert to application specific representation
         descriptors = self.get_descriptors_dict()
@@ -121,3 +103,54 @@ class DataFileRepository:
 
         return attachments
 
+    @cache
+    def get_gear(self, types: list[str] = None) -> list[Gear]:
+        return self.get_oggdude_item('gear', 'Gears.xml', OggdudeGear, ReturnClass=Gear, types=types)
+
+    def get_oggdude_item(self, name: str, file: str, OggdudeClass: Any, ReturnClass=None, types: list[str] = None) -> list[Any]:
+        """
+        :param name: Name of the item like 'gear' or 'attachment', used for logging
+        :param file: File name for oggdude2000, example ItemAttachments.xml
+        :param OggdudeClass: Oggdude representation
+        :param ReturnClass: If set, the oggdude_items are converted. Requires a from_oggdude classmethod
+        :param types: If set, keep only oggdude_items matching these types
+        :return: Either list[OggdudeClass] or list[ReturnClass]
+        """
+        self.logger.info(f"Obtaining {name}")
+
+        # get oggdude representation
+        oggdude = []
+        data = oggdude2000(file)
+        self.logger.debug(f"Found {len(data)} {name} items in dataset")
+        for item in data:
+            key = item['Key']
+
+            try:
+                foo = OggdudeClass(item)
+                oggdude.append(foo)
+            except Exception as e:
+                reason = f'{type(e).__name__}: {str(e)}'
+                self.logger.warning(f"Parsing of {OggdudeClass.__name__} with key '{key}' failed: '{reason}'")
+
+        self.logger.debug(f"{len(oggdude)} items were successfully parsed to {OggdudeClass.__name__}")
+
+        # filter away
+        if types is not None:
+            oggdude = [item for item in oggdude if item.type in types]
+            self.logger.debug(f"{len(oggdude)} {name} remaining after keeping only type==({', '.join(types)})")
+
+        if ReturnClass is None:
+            return oggdude
+
+        converted = []
+        for item in oggdude:
+            tmp = ReturnClass.from_oggdude(item)
+            converted.append(tmp)
+        return converted
+
+
+
+if __name__ == '__main__':
+    repo = DataFileRepository()
+    repo.get_gear()
+    # print(repo.get_gear())

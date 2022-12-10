@@ -15,13 +15,7 @@ class OggdudeGear(OggdudeEquipmentItem):
         self.restricted = self.get_restricted(content)
 
     def get_encumbrance(self, content) -> int:
-        if self.type in ('droids', 'riding beasts', 'trainable beasts', 'alchemical potion', 'alchemical talisman'):
-            return -1
-
         return super().get_encumbrance(content)
 
     def get_price(self, content) -> int:
-        if self.type in ('trophies'):
-            return -1
-
         return super().get_price(content)
