@@ -1,16 +1,16 @@
-from dataclasses import asdict
 from typing import Optional
 
 from dependency_injector.wiring import Provide
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
-from holocron.domain.gear import Gear
-from holocron.infrastructure.api.gear_schema import GearSchema
-from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
+from holocron.infrastructure.api.gear_schema import GearSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
+from holocron.infrastructure.api.talent_schema import TalentSchema
+from holocron.infrastructure.database.file.file_repository import Armor
 
 data_service: DataService = Provide[ApplicationContainer.data_service]
 
@@ -62,6 +62,47 @@ async def list_hooks():
 @router.get("/rules/", deprecated=True)
 async def list_special_rules():
     pass
+
+
+class OurBaseModel(BaseModel):
+    class Config:
+        orm_mode = True
+
+
+class ArmorSchema(OurBaseModel):
+    name: str
+    description: str
+    price: int
+    restricted: bool
+    rarity: int
+    defense: int
+    soak: int
+    base_mods: list[str]
+    models: list[str]
+    source: list[str]
+
+    @classmethod
+    def from_armor(cls, armor: Armor):
+        return cls(name=armor.name,
+                   description=armor.description,
+                   price=armor.price,
+                   restricted=armor.restricted,
+                   rarity=armor.rarity,
+                   defense=armor.defense,
+                   soak=armor.soak,
+                   base_mods=armor.base_mods,
+                   models=armor.models,
+                   source=[str(source) for source in armor.source]
+                   )
+
+
+@router.get("/equipment/armor", response_model=list[ArmorSchema])
+async def list_armor():
+    schemas = []
+    for armor in data_service.get_armor():
+        schemas.append(ArmorSchema.from_armor(armor))
+
+    return schemas
 
 
 @router.get("/equipment/gear", response_model=list[GearSchema])

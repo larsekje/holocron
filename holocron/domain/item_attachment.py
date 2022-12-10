@@ -30,11 +30,11 @@ class ItemAttachment:
     hp: int
     rarity: int
     price: int
-    base_mods: list[Mod]
-    added_mods: list[Mod]
+    base_mods: list[str]
+    added_mods: list[str]
     encumbrance: int
     restricted: bool
     source: Optional[list[Source]] = None
 
-    def __repr__(self):
-        return f"{self.key} - '{self.name}' - {self.source}\n\t{', '.join(self.added_mods)}."
+    # def __repr__(self):
+    #     return f"{self.key} - '{self.name}' - {self.source}\n\t{', '.join(self.added_mods)}."

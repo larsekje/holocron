@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from functools import cached_property
 
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.data_repository import IDataRepository
@@ -9,7 +8,7 @@ from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
 from holocron.infrastructure.api.skill_schema import SkillSchema
 from holocron.infrastructure.api.talent_schema import TalentSchema
-from holocron.infrastructure.database.file.file_repository import DataFileRepository
+from holocron.infrastructure.database.file.file_repository import DataFileRepository, Armor
 from holocron.utils import dictify
 
 
@@ -54,6 +53,11 @@ class DataService:
 
     def get_talents_web(self) -> list[TalentSchema]:
         return DataService.webify(self.get_talents(), TalentSchema.from_talent)
+
+    # ARMOR
+
+    def get_armor(self) -> list[Armor]:
+        return self.data_repository.get_armor()
 
     @staticmethod
     def webify(arr, func, *args):

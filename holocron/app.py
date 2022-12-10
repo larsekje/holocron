@@ -1,12 +1,12 @@
 import logging
 from pathlib import Path
 
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
 
+from holocron import __version__
 from holocron.container import ApplicationContainer
 from holocron.infrastructure.api.setup import setup
-from holocron import __version__
 
 
 def init() -> FastAPI:

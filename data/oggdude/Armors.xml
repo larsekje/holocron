@@ -2479,6 +2479,7 @@ about unnoticed by sensors and sentries.
     </Categories>
     <Encumbrance>3</Encumbrance>
     <HP>2</HP>
+    <Defense>0</Defense>
     <Price>2200</Price>
     <Rarity>7</Rarity>
     <Restricted>true</Restricted>
@@ -2542,6 +2543,7 @@ wearer’s Perception, Vigilance, and combat checks.
     </Categories>
     <Encumbrance>4</Encumbrance>
     <HP>3</HP>
+    <Defense>0</Defense>
     <Price>18000</Price>
     <Rarity>8</Rarity>
     <Restricted>true</Restricted>
@@ -2582,6 +2584,7 @@ Perception, Vigilance, and combat checks. Additionally, storm commando armor add
     </Categories>
     <Encumbrance>4</Encumbrance>
     <HP>4</HP>
+    <Defense>0</Defense>
     <Price>5000</Price>
     <Rarity>9</Rarity>
     <Restricted>true</Restricted>
@@ -2668,6 +2671,7 @@ operating from her checks.</Description>
     </Categories>
     <Price>1200</Price>
     <Rarity>6</Rarity>
+    <Encumbrance>0</Encumbrance>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -2822,6 +2826,7 @@ made from the trophies they have collected, gathering the toughened hides of wha
     <HP>1</HP>
     <Price>2000</Price>
     <Rarity>9</Rarity>
+    <Defense>0</Defense>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -2933,6 +2938,7 @@ During martial arts training, both students and teachers put themselves at risk 
     <Encumbrance>6</Encumbrance>
     <Price>350</Price>
     <Rarity>1</Rarity>
+    <Defense>0</Defense>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -2973,6 +2979,7 @@ In rare circumstances, Jedi were called in to treat with societies for which sta
     <HP>2</HP>
     <Price>8000</Price>
     <Rarity>10</Rarity>
+    <Defense>0</Defense>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -2999,6 +3006,8 @@ A field disruptor is normally used to disable the shields and potentially the el
     <Categories />
     <Price>9500</Price>
     <Rarity>7</Rarity>
+    <Encumbrance>0</Encumbrance>
+    <Soak>0</Soak>
     <Restricted>true</Restricted>
     <BaseMods>
       <Mod>
@@ -3045,6 +3054,7 @@ Effective body armor is conspicuous. Good armor certainly provides an intimidati
     <Encumbrance>2</Encumbrance>
     <Price>2500</Price>
     <Rarity>5</Rarity>
+    <Defense>0</Defense>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -3079,6 +3089,7 @@ A surprising number of sentients dwell in aquatic environments, far from an oxyg
     <HP>2</HP>
     <Price>400</Price>
     <Rarity>2</Rarity>
+    <Defense>0</Defense>
     <BaseMods>
       <Mod>
         <Count>1</Count>
@@ -3265,8 +3276,7 @@ weaponsmiths became the sale reliable source of arms and armaments. Before the E
     <Encumbrance>4</Encumbrance>
     <HP>1</HP>
     <Rarity>5</Rarity>
-    <BaseMods>
-    </BaseMods>
+    <BaseMods />
   </Armor>
   <Armor>
     <Key>WATERWEAVE</Key>
@@ -3628,8 +3638,7 @@ Many Jedi wear thick robes, sometimes with ceremonial significance, and sometime
     <Encumbrance>1</Encumbrance>
     <HP>0</HP>
     <Rarity>2</Rarity>
-    <BaseMods>
-    </BaseMods>
+    <BaseMods />
   </Armor>
   <Armor>
     <Key>HT77COLDARM</Key>

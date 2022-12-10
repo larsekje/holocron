@@ -43,6 +43,7 @@ def filter(data: str) -> str:
     data = re.sub(r" {2,}", " ", data)  # Remove weird double spaces
 
     data = data.replace("<Sources />", "")
+    data = data.replace("<BaseMods />", "")
     data = data.replace("[B]", "")
     data = data.replace("[b]", "")
 

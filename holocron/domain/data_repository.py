@@ -1,11 +1,11 @@
 from abc import ABC
-from typing import Optional
 
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.gear import Gear
 from holocron.domain.item_attachment import ItemAttachment
 from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
+from holocron.infrastructure.database.file.file_repository import Armor
 
 
 class IDataRepository(ABC):
@@ -23,4 +23,7 @@ class IDataRepository(ABC):
         ...
 
     def get_gear(self, types: list[str] = None) -> list[Gear]:
+        ...
+
+    def get_armor(self) -> list[Armor]:
         ...
