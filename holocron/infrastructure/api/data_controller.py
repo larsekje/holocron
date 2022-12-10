@@ -6,7 +6,6 @@ from fastapi import APIRouter
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
 from holocron.domain.gear import Gear
-from holocron.domain.source import Source
 from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
@@ -35,22 +34,22 @@ async def list_skills():
     return foo
 
 
-@router.get("/force")
+@router.get("/force", deprecated=True)
 async def list_force_powers():
     pass
 
 
-@router.get("/player/careers")
+@router.get("/player/careers", deprecated=True)
 async def list_careers():
     pass
 
 
-@router.get("/player/careers/specializations")
+@router.get("/player/careers/specializations", deprecated=True)
 async def list_career_specializations():
     pass
 
 
-@router.get("/player/hooks/")
+@router.get("/player/hooks/", deprecated=True)
 async def list_hooks():
     """
     Hooks, obligations, duties, moralities and motivations
@@ -58,7 +57,7 @@ async def list_hooks():
     pass
 
 
-@router.get("/rules/", response_model=dict[str, Source])
+@router.get("/rules/", deprecated=True)
 async def list_special_rules():
     pass
 
@@ -74,12 +73,12 @@ async def list_attachments():
     return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
 
 
-@router.get("/crafting/templates")
+@router.get("/crafting/templates", deprecated=True)
 async def list_crafting_templates():
     pass
 
 
-@router.get("/dice/tables/")
+@router.get("/dice/tables/", deprecated=True)
 async def list_crafting_templates():
     """
     List tables for spending x, y, a, t on [something]
