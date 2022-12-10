@@ -8,6 +8,6 @@ class Source:
     page: Optional[int] = None
 
     def __repr__(self):
-        return f"{self.text} p.{self.page}"
+        return f"{self.text} p.{self.page}" if self.page is not None else f"{self.text}"
 
 

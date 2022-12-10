@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from string import punctuation
 
 from holocron.domain.oggdude.oggdude_equipment import OggdudeEquipmentItem
 from holocron.domain.oggdude.oggdude_mod import OggdudeMod
@@ -78,6 +79,10 @@ class OggdudeAttachment(OggdudeEquipmentItem):
         tmp = description.split('Models Include:')
 
         if len(tmp) <= 1:
-            return ['None']
+            return []
 
-        return tmp[-1].split(', ')
+        models = tmp[-1].split(', ')
+        models = [model.strip() for model in models]
+        models = [model.strip(punctuation) for model in models]
+        return models
+
