@@ -26,7 +26,6 @@ jobs:
           -d --name holocron 
           -p 32781:8080 
           -v /volume1/docker/config/holocron/pickle:/app/pickle/ 
-          -v /volume1/docker/config/holocron/data/:/app/data/ 
           -v /volume1/docker/config/holocron/config.yml:/app/config.yml 
           holocron:latest
       - name: Send notification via ntfy
