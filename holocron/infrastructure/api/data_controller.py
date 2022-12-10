@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
 from holocron.domain.gear import Gear
+from holocron.infrastructure.api.gear_schema import GearSchema
 from holocron.infrastructure.api.talent_schema import TalentSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
@@ -62,9 +63,9 @@ async def list_special_rules():
     pass
 
 
-@router.get("/equipment/gear", response_model=list[Gear])
+@router.get("/equipment/gear", response_model=list[GearSchema])
 async def list_gear():
-    return data_service.get_gear()
+    return [GearSchema.from_gear(gear) for gear in data_service.get_gear()]
 
 
 @router.get("/equipment/attachments", response_model=list[AttachmentSchema])
