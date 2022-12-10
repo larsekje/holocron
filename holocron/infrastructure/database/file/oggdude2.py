@@ -4,7 +4,7 @@ import re
 import xmltodict, json
 
 from holocron.definitions import OGGDUDE_PATH
-from holocron.domain.item_attachment import ItemAttachment
+from holocron.domain.attachment import Attachment
 from holocron.domain.source import Source
 
 

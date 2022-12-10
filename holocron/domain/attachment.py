@@ -21,7 +21,7 @@ class Mod:
 
 
 @dataclass
-class ItemAttachment:
+class Attachment:
     name: str
     description: str
     models: list[str]

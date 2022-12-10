@@ -6,7 +6,7 @@ from holocron.application.oggdude_builder import OggdudeBuilder
 from holocron.domain.armor import Armor
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.gear import Gear
-from holocron.domain.item_attachment import ItemAttachment
+from holocron.domain.attachment import Attachment
 from holocron.domain.item_descriptor import ItemDescriptor
 from holocron.domain.oggdude.oggdude_mod_builder import ModBuilder, ModParsingException
 from holocron.domain.skill import Skill
@@ -66,8 +66,8 @@ class DataFileRepository:
 
         return dictify(descriptors)
 
-    def get_attachments(self, types: list[str] = None) -> list[ItemAttachment]:
-        return self.get_oggdude_items('ItemAttachments.xml', ItemAttachment, self.builder.build_attachment, types)
+    def get_attachments(self, types: list[str] = None) -> list[Attachment]:
+        return self.get_oggdude_items('ItemAttachments.xml', Attachment, self.builder.build_attachment, types)
 
     def get_gear(self, types: list[str] = None) -> list[Gear]:
         return self.get_oggdude_items('Gears.xml', Gear, self.builder.build_gear, types)

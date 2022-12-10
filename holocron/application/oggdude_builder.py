@@ -3,7 +3,7 @@ from string import punctuation
 
 from holocron.domain.armor import Armor
 from holocron.domain.gear import Gear
-from holocron.domain.item_attachment import ItemAttachment
+from holocron.domain.attachment import Attachment
 from holocron.domain.oggdude.oggdude_mod import OggdudeMod
 from holocron.domain.oggdude.oggdude_mod_builder import ModBuilder
 from holocron.domain.oggdude.oggdude_source import OggdudeSource
@@ -63,10 +63,10 @@ class OggdudeBuilder:
         self.reset()
         return gear
 
-    def build_attachment(self, content) -> ItemAttachment:
+    def build_attachment(self, content) -> Attachment:
         self.content = content
 
-        attachment = ItemAttachment(
+        attachment = Attachment(
             self.get_name(),
             self.get_description(),
             self.get_models(),
