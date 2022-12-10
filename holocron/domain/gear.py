@@ -11,6 +11,7 @@ class Gear:
     price: int
     restricted: bool
     rarity: int
+    models: list[str]
     source: list[str]
 
     @classmethod
@@ -22,5 +23,6 @@ class Gear:
             gear.price,
             gear.restricted,
             gear.rarity,
+            gear.models,
             gear.source_model
         )

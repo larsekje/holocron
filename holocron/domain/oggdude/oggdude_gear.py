@@ -13,6 +13,7 @@ class OggdudeGear(OggdudeEquipmentItem):
         self.encumbrance = self.get_encumbrance(content)
         self.rarity = self.get_rarity(content)
         self.restricted = self.get_restricted(content)
+        self.models = self.get_models(content)
 
     def get_encumbrance(self, content) -> int:
         return super().get_encumbrance(content)

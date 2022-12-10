@@ -26,7 +26,8 @@ class OggdudeItem:
 
     @staticmethod
     def get_description(content):
-        return content['Description']
+        description = content['Description']
+        return description.split('Models Include:')[0]
 
     @staticmethod
     def get_source(content):

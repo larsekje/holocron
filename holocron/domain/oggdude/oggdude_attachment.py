@@ -27,11 +27,6 @@ class OggdudeAttachment(OggdudeEquipmentItem):
         self.additional_mods = self.get_additional_mods(content)
         self.models = self.get_models(content)
 
-    @staticmethod
-    def get_description(content):
-        description = content['Description']
-        return description.split('Models Include:')[0]
-
     def get_price(self, content) -> int:
         if self.built_in:
             return 0
@@ -73,16 +68,4 @@ class OggdudeAttachment(OggdudeEquipmentItem):
 
         return []
 
-    @staticmethod
-    def get_models(content) -> list[str]:
-        description = content['Description']
-        tmp = description.split('Models Include:')
-
-        if len(tmp) <= 1:
-            return []
-
-        models = tmp[-1].split(', ')
-        models = [model.strip() for model in models]
-        models = [model.strip(punctuation) for model in models]
-        return models
 

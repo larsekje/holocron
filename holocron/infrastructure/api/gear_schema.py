@@ -15,6 +15,7 @@ class GearSchema(OurBaseModel):
     price: int
     restricted: bool
     rarity: int
+    models: list[str]
     source: list[str]
 
     @classmethod
@@ -25,5 +26,6 @@ class GearSchema(OurBaseModel):
                    price=gear.price,
                    restricted=gear.restricted,
                    rarity=gear.rarity,
+                   models=gear.models,
                    source=[str(source) for source in gear.source]
                    )

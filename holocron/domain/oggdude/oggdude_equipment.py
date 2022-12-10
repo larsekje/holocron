@@ -1,5 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass
+from string import punctuation
 
 from holocron.domain.oggdude.oggdude_item import OggdudeItem
 
@@ -29,3 +30,16 @@ class OggdudeEquipmentItem(ABC, OggdudeItem):
     @staticmethod
     def get_type(content) -> str:
         return str(content['Type']).lower()
+
+    @staticmethod
+    def get_models(content) -> list[str]:
+        description = content['Description']
+        tmp = description.split('Models Include:')
+
+        if len(tmp) <= 1:
+            return []
+
+        models = tmp[-1].split(', ')
+        models = [model.strip() for model in models]
+        models = [model.strip(punctuation) for model in models]
+        return models
