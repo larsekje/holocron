@@ -21,6 +21,7 @@ class Weapon:
     crit: int
     range: str
     skill: str
+    qualities: list[str]
     restricted: bool
     source: Optional[list[Source]] = None
 

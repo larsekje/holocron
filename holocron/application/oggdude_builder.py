@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from string import punctuation
 
 from holocron.domain.armor import Armor
-from holocron.domain.gear import Gear
 from holocron.domain.attachment import Attachment
+from holocron.domain.gear import Gear
+from holocron.domain.item_descriptor import ItemDescriptor
 from holocron.domain.oggdude.oggdude_mod import OggdudeMod
 from holocron.domain.oggdude.oggdude_mod_builder import ModBuilder
 from holocron.domain.oggdude.oggdude_source import OggdudeSource
@@ -15,10 +15,15 @@ class UnsupportedWeaponError(Exception):
     pass
 
 
+class PropertyNotSetError(Exception):
+    pass
+
+
 @dataclass(init=False)
 class OggdudeBuilder:
 
     _mod_builder: ModBuilder = None
+    _descriptors: dict[str, ItemDescriptor] = None
     content = None
 
     def reset(self):
@@ -26,11 +31,23 @@ class OggdudeBuilder:
 
     @property
     def mod_builder(self) -> ModBuilder:
+        if self._mod_builder is None:
+            raise PropertyNotSetError("Property 'mod_builder' not set")
         return self._mod_builder
 
     @mod_builder.setter
     def mod_builder(self, mod_builder: ModBuilder):
         self._mod_builder = mod_builder
+        
+    @property
+    def descriptors(self) -> dict[str, ItemDescriptor]:
+        if self._descriptors is None:
+            raise PropertyNotSetError("Property 'descriptor' not set")
+        return self._descriptors
+
+    @descriptors.setter
+    def descriptors(self, descriptors: dict[str, ItemDescriptor]):
+        self._descriptors = descriptors
 
     def build_armor(self, content) -> Armor:
         self.content = content
@@ -125,6 +142,7 @@ class OggdudeBuilder:
             self.get_crit(),
             self.get_range(),
             self.get_skill(),
+            self.get_qualities(),
             self.get_restricted(),
             self.get_source()
         )
@@ -176,6 +194,7 @@ class OggdudeBuilder:
 
         models = tmp[-1].split(', ')
         models = [model.strip() for model in models]
+        punctuation = r"""!"#$%&'*+,-./:;<=>?@[\]^_`{|}~"""  # adapted from 'from string import punctuation'
         models = [model.strip(punctuation) for model in models]
         return models
 
@@ -242,7 +261,27 @@ class OggdudeBuilder:
         return self.content['RangeValue'].replace("wr", "")
 
     def get_skill(self) -> str:
-        return self.content['SkillKey']
+        skill_key = self.content['SkillKey']
+        skill_key = skill_key.replace('MELEE', 'Melee')
+        skill_key = skill_key.replace('BRAWL', 'Brawl')
+        skill_key = skill_key.replace('GUNN', 'Gunnery')
+        skill_key = skill_key.replace('LTSABER', 'Lightsaber')
+        skill_key = skill_key.replace('RANGLT', 'Ranged [Light]')
+        skill_key = skill_key.replace('RANGHVY', 'Ranged [Heavy]')
+        return skill_key
+
+    def get_qualities(self) -> [str]:
+        return self.weird_xml_getter(self.content, 'Qualities', 'Quality', self.quality_parser)
+
+    def quality_parser(self, content: dict):
+        key = content['Key']
+        quality = self.descriptors[key].qual_desc
+
+        if '{0}' in quality:
+            count = content['Count']
+            quality = quality.replace("{0}", count)
+
+        return quality
 
     @staticmethod
     def weird_xml_getter(content, parent, child, func):

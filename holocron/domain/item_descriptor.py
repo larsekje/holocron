@@ -7,7 +7,7 @@ class ItemDescriptor:
     name: str
     description: str
     mod_desc: str
-    qual_desc: int
+    qual_desc: str
     is_quality: bool
 
     @classmethod

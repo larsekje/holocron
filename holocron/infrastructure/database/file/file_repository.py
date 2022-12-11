@@ -27,6 +27,7 @@ class DataFileRepository:
 
         self.builder = OggdudeBuilder()
         self.builder.mod_builder = ModBuilder(descriptors, skills, talents)
+        self.builder.descriptors = descriptors
 
     def get_characteristics(self) -> list[Characteristic]:
         ...

@@ -42,7 +42,7 @@ The smallest of blasters are easy to conceal but still pack a powerful punch. Wh
     <Name>TT24 Holdout Blaster</Name>
     <Description>
       [H3]TT24 Holdout Blaster[h3]
-      
+
 TT24 holdout blaster is a make of Hold-out blaster available during the Galactic Civil War between the Galactic Empire and the Alliance to Restore the Republic. The blasters can be set to a stun setting if needed.</Description>
     <Source Page="26">Beyond the Rim</Source>
     <Custom>DescOnly</Custom>
@@ -74,9 +74,9 @@ TT24 holdout blaster is a make of Hold-out blaster available during the Galactic
     <Description>
       [H3]Military Holdout Blaster[h3]
 
-Diplomats rarely fare as well as their allies in extended firefights or brawls, but sometimes, a single shot might be sufficient to enable escape from a perilous situation. Many governments, therefore, outfit representatives with more powerful versions of the oft-employed holdout blasters. Like the civilian variants, such weapons can be easily hidden and drawn quickly, allowing the user to get off an unexpected shot at a critical moment. Military models, by contrast, typically fire a more powerful blast, at the cost of limited ammunition capacity. 
+Diplomats rarely fare as well as their allies in extended firefights or brawls, but sometimes, a single shot might be sufficient to enable escape from a perilous situation. Many governments, therefore, outfit representatives with more powerful versions of the oft-employed holdout blasters. Like the civilian variants, such weapons can be easily hidden and drawn quickly, allowing the user to get off an unexpected shot at a critical moment. Military models, by contrast, typically fire a more powerful blast, at the cost of limited ammunition capacity.
 
-[P]Add [SE] to a character's Perception checks to find a military holdout blaster on a person's body. During combat, GMs may make a military holdout blaster run out of ammunition by spending [TH][TH][TH]. This is in addition to the standard spending of [DE], as discussed on page 218 of the [B]Age of Rebellion[b] Core Rulebook. 
+[P]Add [SE] to a character's Perception checks to find a military holdout blaster on a person's body. During combat, GMs may make a military holdout blaster run out of ammunition by spending [TH][TH][TH]. This is in addition to the standard spending of [DE], as discussed on page 218 of the [B]Age of Rebellion[b] Core Rulebook.
 
 [BR][B]Models include:[b] Czerka Arms 411, BlasTech C-91. </Description>
     <Source Page="44">Desperate Allies</Source>
@@ -162,7 +162,7 @@ Diplomats rarely fare as well as their allies in extended firefights or brawls, 
     <Description>
       [H3]Model Q4 Quickfire[h3]
 
-Touted as a revolution in light blaster design, Merr-Sonn's Q4 Quickfire is one of the more unique hold-out blasters on the market today. Instead of the typical gas chamber and energy cell power supply, the Q4 possesses an integral rechargeable power pack that provides more stopping power and a higher cyclic rate of fire than other holdouts. The trade-off for this extra power is the fact that the power pack must be recharged instead of easily replaced (a process that takes ten minutes), as well as the weapon's dismal performance at anything farther than short range. 
+Touted as a revolution in light blaster design, Merr-Sonn's Q4 Quickfire is one of the more unique hold-out blasters on the market today. Instead of the typical gas chamber and energy cell power supply, the Q4 possesses an integral rechargeable power pack that provides more stopping power and a higher cyclic rate of fire than other holdouts. The trade-off for this extra power is the fact that the power pack must be recharged instead of easily replaced (a process that takes ten minutes), as well as the weapon's dismal performance at anything farther than short range.
 
 [P]Add [SE] to a character's Perception checks when attempting to find a 04 Quickfire on a person's body. If this weapon runs out of ammo due to a [DE] result, it may not be reloaded by Extra Reloads, the Spare Clip talent, or other means.</Description>
     <Source Page="40">Far Horizons</Source>
@@ -201,9 +201,9 @@ Touted as a revolution in light blaster design, Merr-Sonn's Q4 Quickfire is one 
     <Description>
       [H3]12 Defender[h3]
 
-Described as a "micro blaster" in advertising literature, the 12 Defender holdout blaster by Gee-Tech is a weapon of dubious quality and legality. Touted as the smallest, most reliable self-defense blaster for sale in the galaxy," this tiny pistol is a light, easily concealable, low-powered holdout blaster marketed to wealthy individuals such as merchants, entertainers, and politicians. In theory, the 12 Defender is perfect for those who need a bit of personal protection but have no need or desire to carry a larger blaster pistol. In practice, however, this tiny pistol is a cheaply made, largely disposable weapon of questionable reliability. Produced in the millions and possessing no distinguishing markings (not even a serial number) these weapons feature a ceraplas frame coated with a non-reactive polymer case, which makes them incredibly light and nearly invisible to weapon detection systems. They carry only two shots in their integral power pack, and, once fired, cannot be recharged and retain only a small amount of scrap value. 
+Described as a "micro blaster" in advertising literature, the 12 Defender holdout blaster by Gee-Tech is a weapon of dubious quality and legality. Touted as the smallest, most reliable self-defense blaster for sale in the galaxy," this tiny pistol is a light, easily concealable, low-powered holdout blaster marketed to wealthy individuals such as merchants, entertainers, and politicians. In theory, the 12 Defender is perfect for those who need a bit of personal protection but have no need or desire to carry a larger blaster pistol. In practice, however, this tiny pistol is a cheaply made, largely disposable weapon of questionable reliability. Produced in the millions and possessing no distinguishing markings (not even a serial number) these weapons feature a ceraplas frame coated with a non-reactive polymer case, which makes them incredibly light and nearly invisible to weapon detection systems. They carry only two shots in their integral power pack, and, once fired, cannot be recharged and retain only a small amount of scrap value.
 
-[P]While the 12 Defender certainly does offer a fair amount of protection for the price, its shoddy construction and lack of versatility limits its usefulness to the average galactic citizen. However, due to its ease of concealment, ability to elude scanners, untraceable components, and disposable nature, this tiny pistol has found an avid following among the criminal classes. 
+[P]While the 12 Defender certainly does offer a fair amount of protection for the price, its shoddy construction and lack of versatility limits its usefulness to the average galactic citizen. However, due to its ease of concealment, ability to elude scanners, untraceable components, and disposable nature, this tiny pistol has found an avid following among the criminal classes.
 
 [P]Add [SE][SE] to a character's Computers and Perception checks when attempting to find a 12 Defender on a person's body. A 12 Defender may not be reloaded.</Description>
     <Source Page="40">Far Horizons</Source>
@@ -321,7 +321,7 @@ The ELG-3A differs slightly from the Merr-Sonn 02 model of blaster pistol, but s
     <Description>
       [H3]Light Blaster Pistol[h3]
 
-A good compromise between concealment and power, light blasters are favored by those who often need a firearm—but just as often need to pretend they don't. Smugglers, spies, and rogues who don't want to advertise their shadier side are all likely to carry light blasters. Smaller-framed species tend to favor light blasters as well, simply for their weight and convenience relative to their own body mass. 
+A good compromise between concealment and power, light blasters are favored by those who often need a firearm—but just as often need to pretend they don't. Smugglers, spies, and rogues who don't want to advertise their shadier side are all likely to carry light blasters. Smaller-framed species tend to favor light blasters as well, simply for their weight and convenience relative to their own body mass.
 
 [BR][B]Models Include[b]: Merr-Sonn Model 44 Blaster Pistol, BlasTech DL-18 Blaster Pistol.</Description>
     <Sources>
@@ -391,7 +391,7 @@ The HL-27 is a sterling example of the superior craftsmanship of weapons produce
     <Description>
       [H3]Spukami Pocket Blaster Pistol[h3]
 
-This unassuming pistol produced by Fed-Dub Protective Services Inc. provides citizens of the double worlds with a last-ditch punch for personal protection. The Spukami is designed for close-quarters combat only, and while it hits hard, it also loses accuracy quickly at any kind of range. 
+This unassuming pistol produced by Fed-Dub Protective Services Inc. provides citizens of the double worlds with a last-ditch punch for personal protection. The Spukami is designed for close-quarters combat only, and while it hits hard, it also loses accuracy quickly at any kind of range.
 
 [P]When firing the Spukami at short range (or longer), the weapon gains the Inaccurate 1 quality (it does not gain this quality when fired at an engaged target). Add [SE] to a character's Perception check when attempting to find a holdout pistol on a person's body. </Description>
     <Source Page="96">Suns of Fortune</Source>
@@ -427,9 +427,9 @@ This unassuming pistol produced by Fed-Dub Protective Services Inc. provides cit
     <Name>Blaster Pistol</Name>
     <Description>
       [H3]Blaster Pistol[h3]
-      
-Most spacers carry standard blaster pistols. They pack enough punch to penetrate plastoid armor, have decent range, and are light enough to carry around at all times. Most scoundrels also appreciate the gunslinger-style look of a well-used blaster on their hip. 
-[P]Spacefarers who often have to fight aboard ship carry these weapons since the blast is effective against many types of armor, but isn't powerful enough to breach the hull of most vessels. 
+
+Most spacers carry standard blaster pistols. They pack enough punch to penetrate plastoid armor, have decent range, and are light enough to carry around at all times. Most scoundrels also appreciate the gunslinger-style look of a well-used blaster on their hip.
+[P]Spacefarers who often have to fight aboard ship carry these weapons since the blast is effective against many types of armor, but isn't powerful enough to breach the hull of most vessels.
 
 [BR][B]Models Include[b]: BlasTech DH-17 Blaster, BlasTech SE-14 and SE-14C Blaster Pistol.</Description>
     <Sources>
@@ -638,7 +638,7 @@ Considered by many to be one of the finest production model blasters in the gala
     <Description>
       [H3]DR-45 "Dragoon" Calvalry Blaster[h3]
 
-The DR-45 cavalry blaster by Merr-Sonn is one of a line of convertible blaster carbines marketed to vehicle crews and beast riders. Based on Merr-Sonris popular DD6 blaster pistol, the DR-45, also called the Dragoon, is marketed as an all-in-one weapon providing the portability of a blaster pistol with the range and stopping power of a blaster carbine. To accomplish this, the base weapon, which is a long-barreled blaster pistol, can be fitted with a detachable polycarbonate shoulder stock and a range-extending augmented spin barrel to turn it into a respectably effective blaster carbine. The stock and barrel are fixed to the base weapon with sturdy quick-release mounts that allow an experienced user to mount or dismount the attachments quickly and easily. While not particularly common, Dragoon cavalry blasters are slowly finding a following among members of the Rebel Alliance who value their versatility, reliability, and stopping power. 
+The DR-45 cavalry blaster by Merr-Sonn is one of a line of convertible blaster carbines marketed to vehicle crews and beast riders. Based on Merr-Sonris popular DD6 blaster pistol, the DR-45, also called the Dragoon, is marketed as an all-in-one weapon providing the portability of a blaster pistol with the range and stopping power of a blaster carbine. To accomplish this, the base weapon, which is a long-barreled blaster pistol, can be fitted with a detachable polycarbonate shoulder stock and a range-extending augmented spin barrel to turn it into a respectably effective blaster carbine. The stock and barrel are fixed to the base weapon with sturdy quick-release mounts that allow an experienced user to mount or dismount the attachments quickly and easily. While not particularly common, Dragoon cavalry blasters are slowly finding a following among members of the Rebel Alliance who value their versatility, reliability, and stopping power.
 
 [P]Converting the DR-45 from a pistol to a carbine takes one maneuver and changes the weapon's combat skill from Ranged (Light) to Ranged (Heavy). Similarly, it takes one maneuver to convert the weapon back, restoring its combat skill to Ranged (Light).</Description>
     <Source Page="40">Stay on Target</Source>
@@ -674,7 +674,7 @@ The DR-45 cavalry blaster by Merr-Sonn is one of a line of convertible blaster c
     <Description>
       [H3]DR-45 "Dragoon" Calvalry Blaster (Carbine Mode)[h3]
 
-The DR-45 cavalry blaster by Merr-Sonn is one of a line of convertible blaster carbines marketed to vehicle crews and beast riders. Based on Merr-Sonris popular DD6 blaster pistol, the DR-45, also called the Dragoon, is marketed as an all-in-one weapon providing the portability of a blaster pistol with the range and stopping power of a blaster carbine. To accomplish this, the base weapon, which is a long-barreled blaster pistol, can be fitted with a detachable polycarbonate shoulder stock and a range-extending augmented spin barrel to turn it into a respectably effective blaster carbine. The stock and barrel are fixed to the base weapon with sturdy quick-release mounts that allow an experienced user to mount or dismount the attachments quickly and easily. While not particularly common, Dragoon cavalry blasters are slowly finding a following among members of the Rebel Alliance who value their versatility, reliability, and stopping power. 
+The DR-45 cavalry blaster by Merr-Sonn is one of a line of convertible blaster carbines marketed to vehicle crews and beast riders. Based on Merr-Sonris popular DD6 blaster pistol, the DR-45, also called the Dragoon, is marketed as an all-in-one weapon providing the portability of a blaster pistol with the range and stopping power of a blaster carbine. To accomplish this, the base weapon, which is a long-barreled blaster pistol, can be fitted with a detachable polycarbonate shoulder stock and a range-extending augmented spin barrel to turn it into a respectably effective blaster carbine. The stock and barrel are fixed to the base weapon with sturdy quick-release mounts that allow an experienced user to mount or dismount the attachments quickly and easily. While not particularly common, Dragoon cavalry blasters are slowly finding a following among members of the Rebel Alliance who value their versatility, reliability, and stopping power.
 
 [P]Converting the DR-45 from a pistol to a carbine takes one maneuver and changes the weapon's combat skill from Ranged (Light) to Ranged (Heavy). Similarly, it takes one maneuver to convert the weapon back, restoring its combat skill to Ranged (Light).</Description>
     <Source Page="40">Stay on Target</Source>
@@ -710,7 +710,7 @@ The DR-45 cavalry blaster by Merr-Sonn is one of a line of convertible blaster c
     <Description>
       [H3]Boonta Blaster[h3]
 
-Named after the legendary hero Boonta the Hutt, who allegedly carried a similar weapon, these specialized holdout blasters typically appear to be nothing more than ornate and ostentatious pieces of jewelry. Custom-made to the taste of individual Hutts, these garish blasters pack enough firepower to ensure that any would-be assassin who gets past the wearer's bodyguards does not live long enough to remain a threat. Some of these weapons are treasured family heirlooms, passed down from one Hutt to another for many generations. 
+Named after the legendary hero Boonta the Hutt, who allegedly carried a similar weapon, these specialized holdout blasters typically appear to be nothing more than ornate and ostentatious pieces of jewelry. Custom-made to the taste of individual Hutts, these garish blasters pack enough firepower to ensure that any would-be assassin who gets past the wearer's bodyguards does not live long enough to remain a threat. Some of these weapons are treasured family heirlooms, passed down from one Hutt to another for many generations.
 
 [P]Add [SE] to Perception checks to find a Boonta Blaster on a wearer's body. Remove [SE] from the wearer's Deception checks to explain away the weapon as purely ornamental or otherwise non-threatening. </Description>
     <Source Page="100">Lords of Nal Hutta</Source>
@@ -8065,8 +8065,6 @@ To all appearances, needle gloves look like typical hand coverings. Indeed, they
     <Source Page="46">Desperate Allies</Source>
     <Custom>DescOnly</Custom>
     <Type>Brawling</Type>
-    <Categories>
-    </Categories>
     <Encumbrance>1</Encumbrance>
     <HP>0</HP>
     <Price>750</Price>
@@ -8084,8 +8082,6 @@ To all appearances, needle gloves look like typical hand coverings. Indeed, they
         <MiscDesc>Add [SETBACK][SETBACK][SETBACK] to determine that needle gloves are lethal.</MiscDesc>
       </Mod>
     </BaseMods>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>SHIELDGAUNT</Key>
@@ -9530,8 +9526,6 @@ Like the Bo-Rifle, Ashla Staffs were one of the many items plundered by the Empi
     <Price>3000</Price>
     <Restricted>false</Restricted>
     <Rarity>7</Rarity>
-    <Qualities>
-    </Qualities>
     <BaseMods>
       <Mod>
         <MiscDesc>When wielder makes a Force power check, may spend 3 strain to add [LI] to result.</MiscDesc>
@@ -9560,8 +9554,6 @@ Even for the eccentric designs of ancient Thisspias, the Ouro Blade is a strange
     <Price>600</Price>
     <Restricted>false</Restricted>
     <Rarity>4</Rarity>
-    <Qualities>
-    </Qualities>
     <BaseMods>
       <Mod>
         <MiscDesc>After successful combat check, may spend [AD] to inflict automatic hit on target, doing base damage.  May do this multiple times.</MiscDesc>
@@ -9591,8 +9583,6 @@ Like many items made by the Vurk, Semblan daggers tend to serve at least two fun
     <Price>350</Price>
     <Restricted>false</Restricted>
     <Rarity>4</Rarity>
-    <Qualities>
-    </Qualities>
     <BaseMods>
       <Mod>
         <MiscDesc>When recovering strain at end of encounter, Vurk may heal one additional strain when holding a Semblan dagger.</MiscDesc>
@@ -10034,8 +10024,6 @@ The soul of each lightsaber is its crystal. The Jedi of old tested their youngli
       <Category>Lightsaber</Category>
       <Category>Lightsaber Hilt</Category>
     </Categories>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>LTSABERDBLHILT</Key>
@@ -11837,8 +11825,6 @@ Known colloquially as "flash cannons," blaster cannons are heavy, crew-served ve
     <Type>Vehicle</Type>
     <SizeLow>2</SizeLow>
     <SizeHigh>10</SizeHigh>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>BLASTCANHVY</Key>
@@ -11867,8 +11853,6 @@ Known colloquially as "flash cannons," blaster cannons are heavy, crew-served ve
     <Type>Vehicle</Type>
     <SizeLow>3</SizeLow>
     <SizeHigh>10</SizeHigh>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>CML</Key>
@@ -12322,8 +12306,6 @@ The standard anti-ship weapon mounted to starships, laser cannons are found on n
     <Type>Vehicle</Type>
     <SizeLow>3</SizeLow>
     <SizeHigh>10</SizeHigh>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>LASERMED</Key>
@@ -12352,8 +12334,6 @@ The standard anti-ship weapon mounted to starships, laser cannons are found on n
     <Type>Vehicle</Type>
     <SizeLow>3</SizeLow>
     <SizeHigh>10</SizeHigh>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>LASERHVY</Key>
@@ -12382,8 +12362,6 @@ The standard anti-ship weapon mounted to starships, laser cannons are found on n
     <Type>Vehicle</Type>
     <SizeLow>4</SizeLow>
     <SizeHigh>10</SizeHigh>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>LASERPTDEF</Key>
@@ -15325,8 +15303,6 @@ and an [B]Easy ([DI]) Mechanics check[b].</Description>
     <Price>10</Price>
     <Rarity>0</Rarity>
     <Restricted>false</Restricted>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>BMWEAPTEMP5</Key>
@@ -15450,8 +15426,6 @@ and an [B]Easy ([DI]) Mechanics check[b].</Description>
     <Price>50</Price>
     <Rarity>2</Rarity>
     <Restricted>false</Restricted>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>RWEAPTEMP3</Key>
@@ -15512,8 +15486,6 @@ and an [B]Easy ([DI]) Mechanics check[b].</Description>
     <Price>200</Price>
     <Rarity>3</Rarity>
     <Restricted>false</Restricted>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>RWEAPTEMP5</Key>
@@ -15542,8 +15514,6 @@ and an [B]Easy ([DI]) Mechanics check[b].</Description>
     <Price>450</Price>
     <Rarity>4</Rarity>
     <Restricted>false</Restricted>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>RWEAPTEMP6</Key>
@@ -15604,8 +15574,6 @@ and an [B]Easy ([DI]) Mechanics check[b].</Description>
     <Price>4000</Price>
     <Rarity>7</Rarity>
     <Restricted>true</Restricted>
-    <Qualities>
-    </Qualities>
   </Weapon>
   <Weapon>
     <Key>RWEAPTEMP8</Key>
@@ -16175,8 +16143,8 @@ Crossguard lightsabers are common among students of Makashi and any other Force 
     </Qualities>
     <Range>Engaged</Range>
   </Weapon>
-  
-  
+
+
   <Weapon>
     <Key>MINECONC</Key>
     <Name>Concussion Mine</Name>
@@ -17246,7 +17214,7 @@ This extendable cudgel integrates a set of conductor contact vanes that can effe
     <Range>Engaged</Range>
   </Weapon>
 
-  
+
   <!-- Fully Operational -->
 
   <Weapon>
@@ -18684,7 +18652,7 @@ The A280-CFE by BlasTech was designed during the Clone Wars for Galactic Republi
     <Key>CS14GHOST</Key>
     <Name>CS14 "Ghost" Light Blaster Pistol</Name>
     <Description>[H3]CS14 "Ghost" Light Blaster Pistol[h3]
-Small, lightweight, and easily concealed, BlasTech's CS14 is one of the galaxy's premier personal defense blasters. One of the smallest blaster pistols on the market, the CS14 is marketed primarily to detectives, investigators, and other individuals who need a powerful yet easy-to-conceal weapon for daily carry. Roughly the size and weight of a standard holdout blaster, the CS14 is built using lightweight polycarbonates and sensor-proof alloys. This makes the weapon nearly invisible to most common weapon scanners. On an individual with the right holster and clothing, it is very difficult to detect without an extremely thorough search. Since its introduction, state intelligence agencies throughout the galaxy have adopted the CS14 as a standard-issue weapon for field agents. 
+Small, lightweight, and easily concealed, BlasTech's CS14 is one of the galaxy's premier personal defense blasters. One of the smallest blaster pistols on the market, the CS14 is marketed primarily to detectives, investigators, and other individuals who need a powerful yet easy-to-conceal weapon for daily carry. Roughly the size and weight of a standard holdout blaster, the CS14 is built using lightweight polycarbonates and sensor-proof alloys. This makes the weapon nearly invisible to most common weapon scanners. On an individual with the right holster and clothing, it is very difficult to detect without an extremely thorough search. Since its introduction, state intelligence agencies throughout the galaxy have adopted the CS14 as a standard-issue weapon for field agents.
 [P]Finding a CS14 on an individual requires a [B]Daunting ([DI][DI][DI][DI]) Perception check[b]. A character must make a [B]Daunting ([DI][DI][DI][DI]) Computers check[b] to find the CS14 with a weapon scanner. The difficulty of the latter check can be reduced by one or two levels at the Game Master's discretion, depending on the type of scanner being used and the attentiveness of the operator.</Description>
     <Sources>
       <Source Page="38">Cyphers and Masks</Source>
@@ -18774,7 +18742,7 @@ Xerrol Corporation's Nightstinger is one of the most unusual blaster rifles in t
     <Key>STM40</Key>
     <Name>ST-M40 Heavy Repeating Blaster Pistol</Name>
     <Description>[H3]ST-M40 Heavy Repeating Blaster Pistol[h3]
-The ST-M40 is a repeating blaster pistol based loosely on Merr-Sonn's best-selling DD6. Somewhere between a heavy blaster pistol and a blaster carbine, the ST-M40 is a medium-sized weapon with a short, heavily shrouded barrel and a folding shoulder stock. In combat, the ST-M40 features a select-fire setting that allows it to be fired as a single-shot, semiautomatic weapon or in full auto. Although its short barrel and auto-fire setting have a deleterious effect on the weapon's accuracy, the ST-M40 is wildly popular among special operations teams and vehicle crews for its size, durability, and ease of use. 
+The ST-M40 is a repeating blaster pistol based loosely on Merr-Sonn's best-selling DD6. Somewhere between a heavy blaster pistol and a blaster carbine, the ST-M40 is a medium-sized weapon with a short, heavily shrouded barrel and a folding shoulder stock. In combat, the ST-M40 features a select-fire setting that allows it to be fired as a single-shot, semiautomatic weapon or in full auto. Although its short barrel and auto-fire setting have a deleterious effect on the weapon's accuracy, the ST-M40 is wildly popular among special operations teams and vehicle crews for its size, durability, and ease of use.
 [P]During combat, GMs may make this weapon run out of ammunition by spending [TH][TH]. This is in addition to the standard spending of [DE].</Description>
     <Sources>
       <Source Page="39">Cyphers and Masks</Source>
@@ -18815,7 +18783,7 @@ The ST-M40 is a repeating blaster pistol based loosely on Merr-Sonn's best-selli
     <Key>VACMK127</Key>
     <Name>Vac Attack Mk-127 Concealable Disc Launcher (Single-Line Mode)</Name>
     <Description>[H3]Vac Attack Mk-127 Concealable Disc Launcher[h3]
-Initially designed by the Vacutech Combine—which ran out of capital and declared bankruptcy during the development of this weapon thanks to Imperial meddling—the Vac Attack is a small projectile launcher worn around the wrist like a chrono. It fires bursts of small, extremely sharp discs that can shred armor and flesh like a flechette. The weapon's spread can be adjusted so that it fires all of its discs in a single line or in a broad arc that can catch multiple targets. Entirely silent and easily concealable, the Mk-127 is often used for jobs in which silence and stealth are paramount. 
+Initially designed by the Vacutech Combine—which ran out of capital and declared bankruptcy during the development of this weapon thanks to Imperial meddling—the Vac Attack is a small projectile launcher worn around the wrist like a chrono. It fires bursts of small, extremely sharp discs that can shred armor and flesh like a flechette. The weapon's spread can be adjusted so that it fires all of its discs in a single line or in a broad arc that can catch multiple targets. Entirely silent and easily concealable, the Mk-127 is often used for jobs in which silence and stealth are paramount.
 [P]Changing the weapon's spread from single to arc requires a maneuver and grants the weapon the Blast 6 item quality. If Blast is activated, the weapon's supply of discs is exhausted in the shot. When worn on both wrists, Mk-127s can be fired as if they were a single weapon with a regular combat check, gaining the Linked 2 quality. Noticing that an individual is wearing one or a pair of these weapons requires a [B]Hard ([DI][DI][DI]) Perception check[b]. At the Game Master's discretion, the discs can be coated with various toxins. Reloads for the Mk-127 contain four discs and cost 100 credits.</Description>
     <Sources>
       <Source Page="39">Cyphers and Masks</Source>
@@ -18865,7 +18833,7 @@ Initially designed by the Vacutech Combine—which ran out of capital and declar
     <Key>VACMK127ARC</Key>
     <Name>Vac Attack Mk-127 Concealable Disc Launcher (Arc Mode)</Name>
     <Description>[H3]Vac Attack Mk-127 Concealable Disc Launcher[h3]
-Initially designed by the Vacutech Combine—which ran out of capital and declared bankruptcy during the development of this weapon thanks to Imperial meddling—the Vac Attack is a small projectile launcher worn around the wrist like a chrono. It fires bursts of small, extremely sharp discs that can shred armor and flesh like a flechette. The weapon's spread can be adjusted so that it fires all of its discs in a single line or in a broad arc that can catch multiple targets. Entirely silent and easily concealable, the Mk-127 is often used for jobs in which silence and stealth are paramount. 
+Initially designed by the Vacutech Combine—which ran out of capital and declared bankruptcy during the development of this weapon thanks to Imperial meddling—the Vac Attack is a small projectile launcher worn around the wrist like a chrono. It fires bursts of small, extremely sharp discs that can shred armor and flesh like a flechette. The weapon's spread can be adjusted so that it fires all of its discs in a single line or in a broad arc that can catch multiple targets. Entirely silent and easily concealable, the Mk-127 is often used for jobs in which silence and stealth are paramount.
 [P]Changing the weapon's spread from single to arc requires a maneuver and grants the weapon the Blast 6 item quality. If Blast is activated, the weapon's supply of discs is exhausted in the shot. When worn on both wrists, Mk-127s can be fired as if they were a single weapon with a regular combat check, gaining the Linked 2 quality. Noticing that an individual is wearing one or a pair of these weapons requires a [B]Hard ([DI][DI][DI]) Perception check[b]. At the Game Master's discretion, the discs can be coated with various toxins. Reloads for the Mk-127 contain four discs and cost 100 credits.</Description>
     <Sources>
       <Source Page="39">Cyphers and Masks</Source>
@@ -18919,7 +18887,7 @@ Initially designed by the Vacutech Combine—which ran out of capital and declar
     <Key>WRISTBLAST</Key>
     <Name>Wrist Blaster</Name>
     <Description>[H3]Wrist Blaster[h3]
-Wrist blasters are custom-made self-defense weapons worn by diplomats, espionage agents, businesspeople, and other individuals who need an inconspicuous personal defense weapon. Typically built into a bracelet or large-framed chrono, these weapons fire an extremely powerful blast at little more than arm's length. Good for only one shot, the blaster mechanism focuses all of its power into a single, high-powered blast that can penetrate most armor and can incapacitate or even kill the toughest opponent in the blink of an eye. Despite their utility, wrist blasters have a number of downsides. They are illegal on most worlds, although that doesn't stop individuals from using them. In addition, their range is pitifully short: users must be almost touching their target for the weapon to have any effect. Finally, since wrist blasters are only good for one shot, a user is put in a precarious situation if the blast fails to incapacitate or kill the intended target. 
+Wrist blasters are custom-made self-defense weapons worn by diplomats, espionage agents, businesspeople, and other individuals who need an inconspicuous personal defense weapon. Typically built into a bracelet or large-framed chrono, these weapons fire an extremely powerful blast at little more than arm's length. Good for only one shot, the blaster mechanism focuses all of its power into a single, high-powered blast that can penetrate most armor and can incapacitate or even kill the toughest opponent in the blink of an eye. Despite their utility, wrist blasters have a number of downsides. They are illegal on most worlds, although that doesn't stop individuals from using them. In addition, their range is pitifully short: users must be almost touching their target for the weapon to have any effect. Finally, since wrist blasters are only good for one shot, a user is put in a precarious situation if the blast fails to incapacitate or kill the intended target.
 [P]Noticing that an individual is wearing a wrist blaster requires a [B]Daunting ([DI][DI][DI]) Perception check[b]. At the Game Master's discretion, [TH][TH][TH] or [DE] can be spent on a user's Ranged (Light) check to have the weapon burn the user and deal 5 wounds.</Description>
     <Sources>
       <Source Page="40">Cyphers and Masks</Source>
@@ -18999,7 +18967,7 @@ The garrote has been the go-to weapon for quiet assassinations for millennia. An
     <Key>MMD18DAG</Key>
     <Name>MMD-18 Molecular Dagger</Name>
     <Description>[H3]MMD-18 Molecular Dagger[h3]
-The MMD-18 is a larger, more durable version of Xana Exotic Arms' MSW-9 molecular stiletto. Roughly the size of a combat knife, the MMD-18 has a long and thin double-edged, crystalline matrix blade set into a simple polycarbonate handle with a short, straight quillon. The edges of the blade are honed to mono-molecular thickness, allowing them to cut through even the thickest armor. While this dagger is sturdier than the MSW-9, a wrong move or an awkward blow can still shatter the blade relatively easily. 
+The MMD-18 is a larger, more durable version of Xana Exotic Arms' MSW-9 molecular stiletto. Roughly the size of a combat knife, the MMD-18 has a long and thin double-edged, crystalline matrix blade set into a simple polycarbonate handle with a short, straight quillon. The edges of the blade are honed to mono-molecular thickness, allowing them to cut through even the thickest armor. While this dagger is sturdier than the MSW-9, a wrong move or an awkward blow can still shatter the blade relatively easily.
 [P]Due to their inherent fragility, any combat check made while wielding one of these blades that generates either [TH][TH][TH] or [DE] shatters the blade.</Description>
     <Sources>
       <Source Page="40">Cyphers and Masks</Source>
@@ -19028,7 +18996,7 @@ The MMD-18 is a larger, more durable version of Xana Exotic Arms' MSW-9 molecula
     <Key>SAPGLOVES</Key>
     <Name>Sap Gloves</Name>
     <Description>[H3]Sap Gloves[h3]
-Sap gloves are produced by a number of companies throughout the galaxy. Made in a variety of styles for nearly every imaginable species, they are simply a pair of gloves with heavy plates, alloy pellets, sand, or some other dense, weighty material sewn into the fingers and back of the hand. Relatively innocuous when worn, sap gloves amplify a wearer's punch and act almost like brass knuckles. Sap gloves are popular among law enforcement and intelligence services throughout the galaxy, and their use is extremely common in the criminal underworld. 
+Sap gloves are produced by a number of companies throughout the galaxy. Made in a variety of styles for nearly every imaginable species, they are simply a pair of gloves with heavy plates, alloy pellets, sand, or some other dense, weighty material sewn into the fingers and back of the hand. Relatively innocuous when worn, sap gloves amplify a wearer's punch and act almost like brass knuckles. Sap gloves are popular among law enforcement and intelligence services throughout the galaxy, and their use is extremely common in the criminal underworld.
 [P]Spotting sap gloves on an individual requires a [B]Daunting ([DI][DI][DI][DI]) Perception check[b].</Description>
     <Sources>
       <Source Page="40">Cyphers and Masks</Source>
@@ -19108,7 +19076,7 @@ Redirection crystals are an invention of the Imperial Security Bureau. Produced 
     <Key>BLASTRIFDC15</Key>
     <Name>DC-15 Blaster Rifle</Name>
     <Description>[H3]DC-15 Blaster Rifle[h3]
-The DC-15 was, before the introduction of the DC-15A carbine, the standard issue longarm of the GAR. Roughly as long as a clone is tall, these weapons are heavy, poorly balanced, and extremely difficult to use anywhere but in a wide open battlefield. They tend to suffer beam cohesion issues after sustained fire, which negatively affects their short- to medium-range accuracy and they are generally unpleasant weapons to deal with on a daily basis. 
+The DC-15 was, before the introduction of the DC-15A carbine, the standard issue longarm of the GAR. Roughly as long as a clone is tall, these weapons are heavy, poorly balanced, and extremely difficult to use anywhere but in a wide open battlefield. They tend to suffer beam cohesion issues after sustained fire, which negatively affects their short- to medium-range accuracy and they are generally unpleasant weapons to deal with on a daily basis.
 
 [P]Despite these glaring flaws, the DC-15 remains surprisingly popular among the clone ranks for one simple reason: raw power. The DC-15 is one of the most powerful heavy blaster rifles in current use. It can punch through laminate armor at 1,000 meters, and at closer ranges it can destroy lightly armored vehicles. It rarely overheats or needs to be reloaded, is extremely reliable, and can be serviced with the bare minimum of tools In the field. Many clone marksmen have adopted it as their primary weapon, fitting it with long-range optical systems and gyrostabilization units to increase combat effectiveness.
 </Description>
@@ -19365,7 +19333,7 @@ Built by SoroSuub specifically for the GAR, the Mk II EMP grenade is the latest 
     <Description>[H3]Model 201 Mortar System[h3]
 The Model 201 mortar is a portable light artillery system used by specialized clone artillery troopers. Built by Merr-Sonn, the Model 201 is a smoothbore weapon that uses an electromagnetic mass-driver system to launch large-caliber shells over long distances. The shells are fired in an arc instead of a direct line, which makes the 201 the weapon of choice for striking enemies behind heavy cover. Primarily a support weapon, the GAR usually deploys the 201 behind the front lines.
 
-[P]The weapon consists of three parts—the launcher, a heavy bipod, and the ammunition magazine—and is operated by a specially trained mortar team. A mortar team consists of three clones: one to carry the weapon, one to carry the bipod, and one to carry the ammo. Working together, a mortar team can keep up an incredible rate of fire, and a good mortar team can be a trooper squad's best friend in the field. 
+[P]The weapon consists of three parts—the launcher, a heavy bipod, and the ammunition magazine—and is operated by a specially trained mortar team. A mortar team consists of three clones: one to carry the weapon, one to carry the bipod, and one to carry the ammo. Working together, a mortar team can keep up an incredible rate of fire, and a good mortar team can be a trooper squad's best friend in the field.
 
 [P]The Model 201 can only be used at medium range or further due to the arc of its shells.
 </Description>
@@ -20347,7 +20315,7 @@ Quarrie has designed a unique fire-linking system that draws power from all weap
     <Description>
       [H3]Light Repeating Blaster[h3]
 
-Light repeaters are support weapons for military and mercenary units. They feature a high rate of fire and are designed to suppress and injure unarmored personnel. The hail of "light" produced by these rapid-firing weapons is often enough to force enemies to ground. 
+Light repeaters are support weapons for military and mercenary units. They feature a high rate of fire and are designed to suppress and injure unarmored personnel. The hail of "light" produced by these rapid-firing weapons is often enough to force enemies to ground.
 
 [BR][B]Models Include[b]: BlasTech T-21 Light Repeating Blaster. </Description>
     <Sources>
@@ -20388,7 +20356,7 @@ Light repeaters are support weapons for military and mercenary units. They featu
     <Description>
       [H3]Light Repeating Blaster[h3]
 
-Light repeaters are support weapons for military and mercenary units. They feature a high rate of fire and are designed to suppress and injure unarmored personnel. The hail of "light" produced by these rapid-firing weapons is often enough to force enemies to ground. 
+Light repeaters are support weapons for military and mercenary units. They feature a high rate of fire and are designed to suppress and injure unarmored personnel. The hail of "light" produced by these rapid-firing weapons is often enough to force enemies to ground.
 
 [BR][B]Models Include[b]: BlasTech T-21 Light Repeating Blaster. </Description>
     <Source Page="127">Dawn of Rebellion</Source>

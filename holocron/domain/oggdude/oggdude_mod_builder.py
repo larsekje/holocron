@@ -81,6 +81,9 @@ class ModBuilder:
             else:
                 raise ModParsingException(f"Unknown modification with key '{mod.key}'")
 
+        elif mod.desc is not None and is_base_mod:
+            return mod.desc
+
         elif mod.desc is not None:
             description = mod.desc
 

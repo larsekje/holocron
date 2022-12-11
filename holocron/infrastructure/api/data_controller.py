@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
-from holocron.domain.weapon import default_weapon_categories
+from holocron.domain.weapon import default_weapon_categories, Weapon
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.gear_schema import GearSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
@@ -97,10 +97,52 @@ class ArmorSchema(OurBaseModel):
                    )
 
 
-@router.get("/equipment/weapon")
+class WeaponSchema(OurBaseModel):
+    name: str
+    description: str
+    models: list[str]
+    type: str
+    skill: str
+    price: int
+    restricted: bool
+    hp: int
+    rarity: int
+    encumbrance: int
+    damage: int
+    plus_damage: bool
+    crit: int
+    range: str
+    qualities: list[str]
+    base_mods: list[str]
+    source: list[str]
+
+    @classmethod
+    def from_weapon(cls, weapon: Weapon):
+        return cls(
+            name=weapon.name,
+            description=weapon.description,
+            models=weapon.models,
+            type=weapon.type,
+            hp=weapon.hp,
+            rarity=weapon.rarity,
+            price=weapon.price,
+            base_mods=weapon.base_mods,
+            encumbrance=weapon.encumbrance,
+            damage=weapon.damage,
+            plus_damage=weapon.plus_damage,
+            crit=weapon.crit,
+            range=weapon.range,
+            skill=weapon.skill,
+            qualities=weapon.qualities,
+            restricted=weapon.restricted,
+            source=[str(source) for source in weapon.source]
+        )
+
+
+@router.get("/equipment/weapon", response_model=list[WeaponSchema])
 async def list_weapons(categories: Optional[str] = None):
     categories = categories.split(',') if categories is not None else default_weapon_categories
-    return data_service.get_weapon(categories)
+    return [WeaponSchema.from_weapon(weapon) for weapon in data_service.get_weapon(categories)]
 
 
 @router.get("/equipment/weapon/categories")
@@ -163,6 +205,7 @@ async def list_vehicle_modifications():
     return [AttachmentSchema.from_attachment(attachment) for attachment in attachments]
 
 
-@router.get("/vehicles/weapons")
+@router.get("/vehicles/weapons", response_model=list[WeaponSchema])
 async def list_vehicle_weapons():
-    return data_service.get_weapon(['vehicle'])
+    weapons = data_service.get_weapon(['vehicle'])
+    return [WeaponSchema.from_weapon(weapon) for weapon in weapons]

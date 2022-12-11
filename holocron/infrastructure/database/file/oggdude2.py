@@ -42,8 +42,7 @@ def filter(data: str) -> str:
     data = re.sub(r"\n", "", data)  # Remove random newlines
     data = re.sub(r" {2,}", " ", data)  # Remove weird double spaces
 
-    data = data.replace("<Sources />", "")
-    data = data.replace("<BaseMods />", "")
+    data = re.sub(r"<([^\s]+) />", "", data)  # Remove <Qualities /> and similar
     data = data.replace("[B]", "")
     data = data.replace("[b]", "")
 
