@@ -6228,7 +6228,7 @@ While true cloaking devices are all but unhead of and limited to capital ships, 
     <Name>Secondary Transponder</Name>
     <Description>[H3]Secondary Transponder[h3]
 Although it is possible to modify a ship's transponder signal, doing so is either easily detected or risks damaging the engines, depending on the method used. Mounting a secondary transponder to the engine is a one-time modification that allows the ship's crew to thereafter switch between two identities. When activated the secondary transponder overrides the data signal from the ship's primary transponder, while also generating an energy signature that disguises the activity of the ship's engine (these are the twp parts of a transponder signal). The cost of this attachment includes a false or stolen identity in Bureau of Ships and Services (BoSS) records. This attachment can be applied to any starship.
-[P][B]Models include:[b] Various Illicit Models</Description>
+[P][B]Models Include:[b] Various Illicit Models</Description>
     <Source Page="67">Special Modifications</Source>
     <Custom>DescOnly</Custom>
     <Type>Vehicle</Type>

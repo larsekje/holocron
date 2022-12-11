@@ -25,7 +25,7 @@ class ModBuilder:
             if len(mod) > 0:
                 return self._parse_list2(mod, is_base_mod)
             else:
-                return ['None']
+                return []
 
         elif isinstance(mod, OggdudeMod):
             return [self._parse2(mod, is_base_mod)]
