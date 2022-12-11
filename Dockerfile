@@ -9,6 +9,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 # Upgrade pip
 RUN python3 -m pip install pip==22.3.1
 
+RUN pip install pipenv
+
 # Install dependencies
 COPY pyproject.toml .
 COPY poetry.lock .
@@ -17,4 +19,5 @@ RUN poetry install
 
 # Copy application
 COPY ./ ./
-CMD ["python", "-m", "holocron.app"]
+CMD ["-m", "holocron.app"]
+ENTRYPOINT ["python"]

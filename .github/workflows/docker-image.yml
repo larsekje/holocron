@@ -13,9 +13,19 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag holocron:latest
-  deploy:
+  test:
     runs-on: self-hosted
     needs: build
+    steps:
+      - name: Stop container
+        run: docker stop holocron-test || true
+      - name: Remove container
+        run: docker rm holocron-test || true
+      - name: Run tests
+        run: docker run --name holocron-test holocron:latest -m pytest
+  deploy:
+    runs-on: self-hosted
+    needs: test
     steps:
       - name: Stop container
         run: docker stop holocron || true
