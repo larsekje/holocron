@@ -23,6 +23,8 @@ jobs:
         run: docker rm holocron-test || true
       - name: Run tests
         run: docker run --name holocron-test holocron:latest -m pytest
+      - name: Stop container
+        run: docker stop holocron-test || true
   deploy:
     runs-on: self-hosted
     needs: test
