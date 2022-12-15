@@ -2,16 +2,16 @@ from typing import Optional
 
 from dependency_injector.wiring import Provide
 from fastapi import APIRouter
-from pydantic import BaseModel
 
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
-from holocron.domain.weapon import default_weapon_categories, Weapon
+from holocron.domain.weapon import default_weapon_categories
+from holocron.infrastructure.api.armor_schema import ArmorSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
 from holocron.infrastructure.api.gear_schema import GearSchema
 from holocron.infrastructure.api.skill_schema import SkillSchema
 from holocron.infrastructure.api.talent_schema import TalentSchema
-from holocron.infrastructure.database.file.file_repository import Armor
+from holocron.infrastructure.api.weapon_schema import WeaponSchema
 
 data_service: DataService = Provide[ApplicationContainer.data_service]
 
@@ -63,80 +63,6 @@ async def list_hooks():
 @router.get("/rules/", deprecated=True)
 async def list_special_rules():
     pass
-
-
-class OurBaseModel(BaseModel):
-    class Config:
-        orm_mode = True
-
-
-class ArmorSchema(OurBaseModel):
-    name: str
-    description: str
-    price: int
-    restricted: bool
-    rarity: int
-    defense: int
-    soak: int
-    base_mods: list[str]
-    models: list[str]
-    source: list[str]
-
-    @classmethod
-    def from_armor(cls, armor: Armor):
-        return cls(name=armor.name,
-                   description=armor.description,
-                   price=armor.price,
-                   restricted=armor.restricted,
-                   rarity=armor.rarity,
-                   defense=armor.defense,
-                   soak=armor.soak,
-                   base_mods=armor.base_mods,
-                   models=armor.models,
-                   source=[str(source) for source in armor.source]
-                   )
-
-
-class WeaponSchema(OurBaseModel):
-    name: str
-    description: str
-    models: list[str]
-    type: str
-    skill: str
-    price: int
-    restricted: bool
-    hp: int
-    rarity: int
-    encumbrance: int
-    damage: int
-    plus_damage: bool
-    crit: int
-    range: str
-    qualities: list[str]
-    base_mods: list[str]
-    source: list[str]
-
-    @classmethod
-    def from_weapon(cls, weapon: Weapon):
-        return cls(
-            name=weapon.name,
-            description=weapon.description,
-            models=weapon.models,
-            type=weapon.type,
-            hp=weapon.hp,
-            rarity=weapon.rarity,
-            price=weapon.price,
-            base_mods=weapon.base_mods,
-            encumbrance=weapon.encumbrance,
-            damage=weapon.damage,
-            plus_damage=weapon.plus_damage,
-            crit=weapon.crit,
-            range=weapon.range,
-            skill=weapon.skill,
-            qualities=weapon.qualities,
-            restricted=weapon.restricted,
-            source=[str(source) for source in weapon.source]
-        )
 
 
 @router.get("/equipment/weapon", response_model=list[WeaponSchema])
