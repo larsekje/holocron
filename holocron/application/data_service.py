@@ -18,6 +18,8 @@ class DataService:
     data_repository: IDataRepository
 
     # SKILLS
+    
+    # trigger workflow
 
     def get_skills(self) -> list[Skill]:
         return self.data_repository.get_skills()
