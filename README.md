@@ -12,3 +12,6 @@ The docker container expects the following files and folders:
 - /pickle/
 - /data/
 - config.yml
+
+## Usage
+See http://192.168.0.249:32781/docs for swagger documentation
