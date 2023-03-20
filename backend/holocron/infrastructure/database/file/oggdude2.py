@@ -1,11 +1,9 @@
 import os
 import re
 
-import xmltodict, json
+import xmltodict
 
 from holocron.definitions import OGGDUDE_PATH
-from holocron.domain.attachment import Attachment
-from holocron.domain.source import Source
 
 
 def xml2dict(xml: str, *args: str) -> dict:

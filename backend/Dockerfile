@@ -12,12 +12,12 @@ RUN python3 -m pip install pip==22.3.1
 RUN pip install pipenv
 
 # Install dependencies
-COPY pyproject.toml .
-COPY poetry.lock .
+COPY backend/pyproject.toml .
+COPY backend/poetry.lock .
 RUN pip install poetry
 RUN poetry install
 
 # Copy application
-COPY ./ ./
+COPY backend/ ./
 CMD ["-m", "holocron.app"]
 ENTRYPOINT ["python"]
