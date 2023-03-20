@@ -3,6 +3,7 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from holocron import __version__
 from holocron.container import ApplicationContainer
@@ -29,6 +30,14 @@ def init() -> FastAPI:
 
     # Do setup and dependencies wiring
     setup(app, container)
+
+    # Allow CORS for all origins and methods
+    logger.warning("CORS is enabled")
+    app.add_middleware(CORSMiddleware,
+                       allow_origins=["*"],
+                       allow_methods=["*"],
+                       allow_headers=["*"],
+                       )
 
     # TODO add other initialization here
 
