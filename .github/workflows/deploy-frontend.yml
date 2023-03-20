@@ -1,0 +1,38 @@
+name: deploy-frontend
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - frontend/**
+      - .github/**
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v3
+    - name: Checkout
+      run: docker build . --file frontend/Dockerfile --tag holoron-web:latest
+  run:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Stop container
+        run: docker stop holocron-web || true
+      - name: Remove container
+        run: docker rm holocron-web || true
+      - name: Run container
+        run: docker run
+          -d --name holocron-web
+          -p 8000:8000
+          holoron-web:latest
+      - name: Send notification via ntfy
+        run: |
+          curl \
+          -H "Title: Scarif" \
+          -H "Tags: desktop_computer" \
+          -d "Frontend deployed successfully" \
+          ntfy.sh/myholocrondeploynotification

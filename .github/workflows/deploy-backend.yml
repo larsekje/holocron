@@ -1,8 +1,11 @@
-name: Docker Image CI
+name: deploy-backend
 
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - backend/**
+      - .github/**
   pull_request:
     branches: [ "master" ]
 
@@ -12,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag holocron:latest
+      run: docker build . --file backend/Dockerfile --tag holocron-rest:latest
   test:
     runs-on: self-hosted
     needs: build
@@ -22,7 +25,7 @@ jobs:
       - name: Remove container
         run: docker rm holocron-test || true
       - name: Run tests
-        run: docker run --name holocron-test holocron:latest -m pytest
+        run: docker run --name holocron-test holocron-rest:latest -m pytest
       - name: Stop container
         run: docker stop holocron-test || true
   deploy:
@@ -30,20 +33,20 @@ jobs:
     needs: test
     steps:
       - name: Stop container
-        run: docker stop holocron || true
+        run: docker stop holocron-rest || true
       - name: Remove container
-        run: docker rm holocron || true
+        run: docker rm holocron-rest || true
       - name: Run container
         run: docker run 
-          -d --name holocron 
+          -d --name holocron-rest 
           -p 32781:8080 
           -v /volume1/docker/config/holocron/pickle:/app/pickle/ 
           -v /volume1/docker/config/holocron/config.yml:/app/config.yml 
-          holocron:latest
+          holocron-rest:latest
       - name: Send notification via ntfy
         run: |
           curl \
           -H "Title: Scarif" \
           -H "Tags: desktop_computer" \
-          -d "Application deployed successfully" \
+          -d "Backend deployed successfully" \
           ntfy.sh/myholocrondeploynotification
