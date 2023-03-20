@@ -2,7 +2,7 @@ version: "3.4"
 services:
   frontend:
     image: node:18.15-alpine
-    container_name: holoron-web
+    container_name: holocron-web
     entrypoint: /bin/sh
     ports:
       - "8000:8000"
@@ -13,7 +13,7 @@ services:
         target: /srv/app
     tty: true
   backend:
-    container_name: holoron-rest
+    container_name: holocron-rest
     build:
       dockerfile: ./backend/Dockerfile
       context: ./
