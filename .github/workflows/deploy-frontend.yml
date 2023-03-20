@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Checkout
-      run: docker build . --file frontend/Dockerfile --tag holoron-web:latest
+      run: docker build . --file frontend/Dockerfile --tag holocron-web:latest
   run:
     runs-on: self-hosted
     needs: build
@@ -28,7 +28,7 @@ jobs:
         run: docker run
           -d --name holocron-web
           -p 8000:8000
-          holoron-web:latest
+          holocron-web:latest
       - name: Send notification via ntfy
         run: |
           curl \
