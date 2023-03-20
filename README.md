@@ -8,6 +8,12 @@ Architecture based on https://ryax.tech/how-to-build-backend-part1/
 - infrastructure: The arms and legs of the application. CRUD for db and REST goes here
 
 ## Setup and installation
+### Local
+Create a virtual environment and install poetry with `pip install poetry`, and then `poetry install` for dependencies. 
+Verify everything is ok by running `app.py` and check `localhost:8080/docs`. 
+
+### Docker
+
 The docker container expects the following files and folders:
 - /pickle/
 - /data/
