@@ -1,12 +1,15 @@
 import logging
 from pathlib import Path
+import json
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from holocron import __version__
 from holocron.container import ApplicationContainer
 from holocron.infrastructure.api.setup import setup
+from holocron.utils import is_running_in_docker
 
 
 def init() -> FastAPI:
@@ -29,6 +32,14 @@ def init() -> FastAPI:
 
     # Do setup and dependencies wiring
     setup(app, container)
+
+    # Generate OpenAPI specification
+    if is_running_in_docker():
+        logger.info("Skipping generation of OpenAPI specification (running in docker)")
+    else:
+        logger.info("Generating OpenAPI specification (swagger)")
+        with open('../../frontend/src/generated/openapi.json', 'w') as f:
+            json.dump(app.openapi(), f)
 
     # TODO add other initialization here
 

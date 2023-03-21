@@ -1,3 +1,4 @@
+import os
 import dataclasses
 import json
 
@@ -14,3 +15,7 @@ def dictify(arr):
     for item in arr:
         foo.update({item.key: item})
     return foo
+
+
+def is_running_in_docker():
+    return os.path.exists('/.dockerenv')
