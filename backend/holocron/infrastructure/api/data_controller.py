@@ -108,7 +108,7 @@ async def list_crafting_templates():
 
 
 @router.get("/dice/tables/", deprecated=True)
-async def list_crafting_templates():
+async def list_dice_tables():
     """
     List tables for spending x, y, a, t on [something]
     """
