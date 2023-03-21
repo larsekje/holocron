@@ -19,3 +19,10 @@ After that the following commands may prove useful:
 * `npm run docker-clear`
 
 For reference, the following guide was used to configure docker: [How to use React or Vue with Vite and Docker ](https://dev.to/ysmnikhil/how-to-build-with-react-or-vue-with-vite-and-docker-1a3l)
+
+## Additional Info
+
+### API Client
+Client is generated using [swagger-typescript-api](https://github.com/acacode/swagger-typescript-api):
+* `npm run gen`
+

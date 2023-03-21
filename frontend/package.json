@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "gen": "swagger-typescript-api -p src/generated/openapi.json -o src/generated --axios --templates src/generated/templates --unwrap-response-data",
     "docker-build": "docker-compose up frontend --build --no-recreate -d",
     "docker-install": "docker exec -it holoron-web sh -c \"npm i\"",
     "docker-dev": "docker exec -it holoron-web sh -c \"npm run dev\"",
@@ -18,6 +19,7 @@
     "docker-clear": "npm run docker-stop && docker-compose down frontend -v --remove-orphans || true"
   },
   "dependencies": {
+    "axios": "^1.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -25,6 +27,7 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
+    "swagger-typescript-api": "^12.0.3",
     "typescript": "^4.9.3",
     "vite": "^4.2.0"
   }
