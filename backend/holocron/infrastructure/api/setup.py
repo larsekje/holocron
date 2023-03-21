@@ -2,13 +2,13 @@ from typing import Any
 
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import RedirectResponse
 
 from holocron.container import ApplicationContainer
 from holocron.infrastructure.api import data_controller
 
 
 def setup(app: FastAPI, container: ApplicationContainer) -> None:
-
     # Add other controllers here
     app.include_router(data_controller.router)
 
@@ -18,6 +18,11 @@ def setup(app: FastAPI, container: ApplicationContainer) -> None:
             data_controller
         ]
     )
+
+    # Redirect to docs
+    @app.get("/", include_in_schema=False)
+    async def root():
+        return RedirectResponse(url="/docs")
 
     # Customize the openAPI documentation
     def custom_openapi() -> Any:
