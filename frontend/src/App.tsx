@@ -1,5 +1,6 @@
 import {Box, Grid, GridItem} from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
+import TargetCard from "./components/TargetCard";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
@@ -12,7 +13,7 @@ function App() {
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
       <GridItem area='turn' bg='green.300'>Turn</GridItem>
       <GridItem area='active' bg='gold'>Active</GridItem>
-      <GridItem area='targets' bg='dodgerblue'>Targets</GridItem>
+      <GridItem area='targets' bg='dodgerblue' padding='5px'><TargetCard currentWounds={10} maxWounds={12}/></GridItem>
       <GridItem area='targeted' bg='tomato'>Targeted</GridItem>
       <GridItem area='sidebar' bg='orchid'>Sidebar</GridItem>
     </Grid></>
