@@ -17,7 +17,7 @@ const ContentCard = ({heading, children, buttons, icon}: Props) => {
 
   return (
     <Box height="100%">
-      <Card bg='#26292d' borderRadius='md' height="100%">
+      <Card bg='#26292d' borderRadius='md' height="100%" overflow="hidden">
         <CardHeader height='50px'  display='flex'>
           <HStack justifyContent='space-between' width="100%">
             <HStack>
