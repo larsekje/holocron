@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from holocron.domain.adversary import Adversary
 from holocron.domain.attachment import Attachment
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.data_repository import IDataRepository
@@ -14,12 +15,10 @@ from holocron.utils import dictify
 
 
 @dataclass
-class DataService:
+class DataService(IDataRepository):
     data_repository: IDataRepository
 
     # SKILLS
-    
-    # trigger workflow
 
     def get_skills(self) -> list[Skill]:
         return self.data_repository.get_skills()
@@ -73,6 +72,11 @@ class DataService:
             types.append(gear.type)
 
         return list(set(types))
+
+    # ADVERSARIES
+
+    def get_adversaries(self) -> list[Adversary]:
+        return self.data_repository.get_adversaries()
 
     @staticmethod
     def webify(arr, func, *args):

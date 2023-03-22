@@ -1,5 +1,6 @@
 from abc import ABC
 
+from holocron.domain.adversary import Adversary
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.gear import Gear
 from holocron.domain.attachment import Attachment
@@ -30,4 +31,7 @@ class IDataRepository(ABC):
         ...
 
     def get_weapon(self, types: list[str] = None) -> list[Weapon]:
+        ...
+
+    def get_adversaries(self) -> list[Adversary]:
         ...

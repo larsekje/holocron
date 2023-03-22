@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from holocron.application.data_service import DataService
 from holocron.container import ApplicationContainer
+from holocron.domain.adversary import AdversarySchema
 from holocron.domain.weapon import default_weapon_categories
 from holocron.infrastructure.api.armor_schema import ArmorSchema
 from holocron.infrastructure.api.attachment_schema import AttachmentSchema
@@ -60,11 +61,6 @@ async def list_hooks():
     pass
 
 
-@router.get("/rules/", deprecated=True)
-async def list_special_rules():
-    pass
-
-
 @router.get("/equipment/weapon", response_model=list[WeaponSchema])
 async def list_weapons(categories: Optional[str] = None):
     categories = categories.split(',') if categories is not None else default_weapon_categories
@@ -115,9 +111,10 @@ async def list_dice_tables():
     pass
 
 
-@router.get("/adversaries", deprecated=True)
-async def list_adversaries(minionsOnly: bool = False, rivalsOnly: bool = False, nemesisOnly: bool = False):
-    return "adversaries"
+@router.get("/adversaries", response_model=list[AdversarySchema])
+async def list_adversaries():
+    adversaries = data_service.get_adversaries()
+    return [AdversarySchema(adversary) for adversary in adversaries]
 
 
 @router.get("/vehicles/", deprecated=True)

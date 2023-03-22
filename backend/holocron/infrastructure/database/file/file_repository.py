@@ -3,6 +3,7 @@ from functools import cache
 from typing import Any
 
 from holocron.application.oggdude_builder import OggdudeBuilder, UnsupportedWeaponError
+from holocron.domain.adversary import Adversary
 from holocron.domain.armor import Armor
 from holocron.domain.characteristic import Characteristic
 from holocron.domain.gear import Gear
@@ -13,7 +14,7 @@ from holocron.domain.skill import Skill
 from holocron.domain.talent import Talent
 from holocron.domain.weapon import Weapon
 from holocron.infrastructure.database.file.oggdude2 import oggdude2000
-from holocron.utils import dictify
+from holocron.utils import dictify, get_adversaries
 
 
 class DataFileRepository:
@@ -79,6 +80,9 @@ class DataFileRepository:
 
     def get_weapon(self, types: list[str] = None) -> list[Weapon]:
         return self.get_oggdude_items('Weapons.xml', Weapon, self.builder.build_weapon, types)
+
+    def get_adversaries(self) -> list[Adversary]:
+        return get_adversaries()
 
     def get_oggdude_items(self, file: str, ReturnClass, builder, types: list[str] = None) -> list[Any]:
         class_name = ReturnClass.__name__
