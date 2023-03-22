@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <Box h='50' bg='coral'><NavBar/></Box>
+      <Box display='flex' alignItems='center' h='50' bg='coral'><NavBar/></Box>
       <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
       <GridItem area='turn' bg='green.300'>Turn</GridItem>
