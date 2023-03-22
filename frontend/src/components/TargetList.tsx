@@ -1,22 +1,17 @@
 import React from 'react';
 import {VStack} from "@chakra-ui/react";
 import TargetCard from "./TargetCard";
+import {Target} from "./ContentCardTargets";
 
 interface Props {
-  count: number;
+  targets: Target[];
 }
 
-const TargetList = ({count}: Props) => {
-
-  const targets = []
-
-  for (let i = 0; i < count; i++) {
-    targets.push(<TargetCard maxWounds={12} currentWounds={10}/>)
-  }
+const TargetList = ({targets}: Props) => {
 
   return (
     <VStack>
-      {targets}
+      {targets.map(target => <TargetCard target={target}/>)}
     </VStack>
   );
 };
