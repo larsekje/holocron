@@ -41,6 +41,14 @@ def init() -> FastAPI:
         with open('../../frontend/src/generated/openapi.json', 'w') as f:
             json.dump(app.openapi(), f)
 
+    # Allow CORS for all origins and methods
+    logger.warning("CORS is enabled")
+    app.add_middleware(CORSMiddleware,
+                       allow_origins=["*"],
+                       allow_methods=["*"],
+                       allow_headers=["*"],
+                       )
+
     # TODO add other initialization here
 
     return app

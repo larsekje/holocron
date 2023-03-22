@@ -1,34 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {Box, Grid, GridItem} from "@chakra-ui/react";
+import NavBar from "./components/NavBar";
+import React from "react";
+import ContentCardActive from "./components/ContentCardActive";
+import ContentCardTargets from "./components/ContentCardTargets";
+import ContentCardTargeted from "./components/ContentCardTargeted";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const templateAreas = `"turn   turn    turn     turn"
+                         "active targets targeted sidebar"`
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <>
+      <Box display='flex' alignItems='center' h='50' bg='coral'><NavBar/></Box>
+      <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
+             gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
+
+      <GridItem area='turn' bg='green.300'>Turn</GridItem>
+      <GridItem area='active'><ContentCardActive/></GridItem>
+      <GridItem area='targets'><ContentCardTargets/></GridItem>
+      <GridItem area='targeted'><ContentCardTargeted/></GridItem>
+      <GridItem area='sidebar' bg='orchid'>Sidebar</GridItem>
+    </Grid></>
+
   )
 }
 
