@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ContentCard from "./ContentCard";
 import TargetList from "./TargetList";
 import {AddIcon} from "@chakra-ui/icons";
@@ -13,41 +13,16 @@ export interface Target {
   isSelected: boolean;
 }
 
-const ContentCardTargets = () => {
+interface Props {
+  targets: Target[];
+}
 
-  const targets: Target[] = [
-    {
-      id: 1,
-      name: "Imperial Stormtrooper",
-      wt: 5,
-      isSelected: false
-    },
-    {
-      id: 2,
-      name: "Thenn Hodar",
-      wt: 11,
-      isSelected: false
-    },
-    {
-      id: 3,
-      name: "Juggernaut",
-      wt: 15,
-      isSelected: false
-    },
-    {
-      id: 4,
-      name: "Stormtrooper Sergeant",
-      wt: 8,
-      isSelected: false
-    }
-  ]
+const ContentCardTargets = ({targets}: Props) => {
 
   const addTargetButton = <HeadingButton text='Add' shortcut={'n'} icon={<AddIcon color='green'/>} onClick={() => console.log("Add Target")}/>
   const buttons = [addTargetButton]
 
   return (
-
-
     <ContentCard heading={'Targets'} buttons={buttons} icon={<FaBug/>}>
       <TargetList targets={targets}/>
     </ContentCard>
