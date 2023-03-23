@@ -12,14 +12,16 @@ import {Target} from "./ContentCardTargets";
 interface Props {
   target: Target;
   currentWounds?: number;
+  onClick: () => void;
+  selected: boolean;
 }
 
-const TargetCard = ({target, currentWounds=target.wt}: Props) => {
+const TargetCard = ({target, currentWounds=target.wt, onClick, selected}: Props) => {
 
   const woundRatio = currentWounds / target.wt * 100;
 
   return (
-    <Card overflow='hidden' height='35px' width='100%' outline='1px' outlineColor='tomato'>
+    <Card overflow='hidden' height='35px' width='100%' outline='1px' variant={selected ? 'outline' : ''} onClick={onClick}>
       <CardBody padding='0'>
         <HStack justifyContent='space-between' spacing='0'>
           <HStack spacing='0px'>
@@ -30,10 +32,10 @@ const TargetCard = ({target, currentWounds=target.wt}: Props) => {
           <Box display='flex' height='35px' bg='green.300' w='100%'>
             <Progress width='100%' height='35px' colorScheme='green' bg='#25272a' value={woundRatio}/>
             <HStack padding='0 5px' spacing='0px' justifyContent='space-between' width='calc(100% - 125px)' position='absolute' color='white'>
-              <Text as='b' lineHeight='35px'>{target.name}</Text>
+              <Text userSelect='none' as='b' lineHeight='35px'>{target.name}</Text>
               <Box>
-                <Text as='b' fontSize='lg' lineHeight='35px'>{currentWounds}</Text>
-                <Text as='b' fontSize='sm' color='white' lineHeight='35px'>/{target.wt}</Text>
+                <Text userSelect='none' as='b' fontSize='lg' lineHeight='35px'>{currentWounds}</Text>
+                <Text userSelect='none' as='b' fontSize='sm' color='white' lineHeight='35px'>/{target.wt}</Text>
               </Box>
             </HStack>
           </Box>
