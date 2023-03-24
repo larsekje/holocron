@@ -27,7 +27,7 @@ jobs:
       - name: Run container
         run: docker run
           -d --name holocron-web
-          -p 8000:8000
+          -p 32782:8000
           holocron-web:latest
       - name: Send notification via ntfy
         run: |
