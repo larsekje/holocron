@@ -2,8 +2,8 @@ import React, {useContext} from 'react';
 import ContentCard from "./ContentCard";
 import HeadingButton from "./HeadingButton";
 import {MdBuild} from "react-icons/md";
-import {Heading} from "@chakra-ui/react";
 import {TargetContext} from "../TargetContext";
+import StatSheet from "./StatSheet";
 
 const ContentCardTargeted = () => {
 
@@ -15,7 +15,7 @@ const ContentCardTargeted = () => {
 
   return (
     <ContentCard heading='Targeted' buttons={buttons}>
-      <Heading color='white'>{selectedTarget ? selectedTarget.name : "No target selected"}</Heading>
+      <StatSheet/>
     </ContentCard>
   );
 };
