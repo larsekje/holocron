@@ -1,50 +1,44 @@
 import React from 'react';
 import SkillItem from "./SkillItem";
-import {Table, Td, Tr, HStack, VStack} from "@chakra-ui/react";
+import {HStack, VStack} from "@chakra-ui/react";
+import skillMap from "../../skillMap";
 
 interface Props {
+  currentCharacteristic: string;
 }
 
-const SkillList = ({}: Props) => {
+function splitArray<T>(arr: T[], n: number): T[][] {
+  const size = Math.ceil(arr.length / n);
+  const result = new Array(n);
+  for(let i= 0; i < n; i++){
+    result[i] = arr.slice(i * size, (i+1) * size);
+  }
+
+  return result;
+}
+
+const SkillList = ({currentCharacteristic}: Props) => {
+
+
+  const skills = Object.keys(skillMap)
+  const splitSkills = splitArray(skills, 3);
+
   return (
-
-    <HStack justifyContent='space-between'>
-      <VStack spacing='0'>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2} group={true}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-      </VStack>
-      <VStack spacing='0'>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2} group={true}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-      </VStack>
-      <VStack spacing='0'>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-        <SkillItem name={'Athletics'} rank={2}/>
-      </VStack>
-
+    <HStack justifyContent='space-between' alignItems='top'>
+      // for each column
+      {splitSkills.map((splitSkill) => (
+        <VStack spacing='0' alignItems='left'>
+          // for each item in column
+          {splitSkill.map((skill) => (
+            <SkillItem
+              name={skill}
+              rank={2}
+              currentCharacteristic={currentCharacteristic}
+            />
+          ))}
+        </VStack>
+      ))}
     </HStack>
-
   );
 };
 

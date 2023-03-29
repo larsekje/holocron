@@ -1,27 +1,30 @@
-import React from 'react';
-import {HStack, VStack} from "@chakra-ui/react";
+import React from "react";
+import { HStack } from "@chakra-ui/react";
 import CharacteristicItem from "./CharacteristicItem";
+import { Adversary } from "../StatSheet";
+import { capitalize } from "../../utils";
 
 interface Props {
-  brawn: number;
-  agility: number;
-  cunning: number;
-  presence: number;
-  intelligence: number;
-  willpower: number;
+  characteristics: Adversary["characteristics"];
+  setCurrentCharacteristic: (characteristic: string) => void;
 }
 
-const Characteristics = ({brawn, agility, cunning, presence, intelligence, willpower}: Props) => {
-  return (
-    <HStack>
-      <CharacteristicItem name={"Brawn"} value={brawn}/>
-      <CharacteristicItem name={"Agility"} value={agility}/>
-      <CharacteristicItem name={"Cunning"} value={cunning}/>
-      <CharacteristicItem name={"Presence"} value={presence}/>
-      <CharacteristicItem name={"Intelligence"} value={intelligence}/>
-      <CharacteristicItem name={"Willpower"} value={willpower}/>
-    </HStack>
-  );
+const Characteristics = ({
+  characteristics,
+  setCurrentCharacteristic,
+}: Props) => {
+  let items = [];
+  for (const [name, value] of Object.entries(characteristics)) {
+    items.push(
+      <CharacteristicItem
+        name={capitalize(name)}
+        value={value}
+        setCurrentCharacteristic={setCurrentCharacteristic}
+      />
+    );
+  }
+
+  return <HStack>{items}</HStack>;
 };
 
 export default Characteristics;
