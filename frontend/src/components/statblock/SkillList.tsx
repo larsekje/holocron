@@ -2,19 +2,10 @@ import React from 'react';
 import SkillItem from "./SkillItem";
 import {HStack, VStack} from "@chakra-ui/react";
 import skillMap from "../../skillMap";
+import {splitArray} from "../../utils";
 
 interface Props {
   currentCharacteristic: string;
-}
-
-function splitArray<T>(arr: T[], n: number): T[][] {
-  const size = Math.ceil(arr.length / n);
-  const result = new Array(n);
-  for(let i= 0; i < n; i++){
-    result[i] = arr.slice(i * size, (i+1) * size);
-  }
-
-  return result;
 }
 
 const SkillList = ({currentCharacteristic}: Props) => {
