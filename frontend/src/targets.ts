@@ -1,30 +1,9 @@
 import {Target} from "./components/ContentCardTargets";
+import adversaries from "./adversaries";
 
 const targets: Target[] = [
-  {
-    id: 1,
-    name: "Imperial Stormtrooper",
-    wt: 5,
-    isSelected: false
-  },
-  {
-    id: 2,
-    name: "Thenn Hodar",
-    wt: 11,
-    isSelected: false
-  },
-  {
-    id: 3,
-    name: "Juggernaut",
-    wt: 15,
-    isSelected: false
-  },
-  {
-    id: 4,
-    name: "Stormtrooper Sergeant",
-    wt: 8,
-    isSelected: false
-  }
+  new Target(1, adversaries[0]),
+  new Target(1, adversaries[1]),
 ];
 
 export default targets;

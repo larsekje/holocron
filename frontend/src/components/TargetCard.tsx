@@ -17,7 +17,6 @@ interface Props {
 }
 
 const TargetCard = ({target, currentWounds=target.wt, onClick, selected}: Props) => {
-
   const woundRatio = currentWounds / target.wt * 100;
 
   return (
@@ -27,7 +26,7 @@ const TargetCard = ({target, currentWounds=target.wt, onClick, selected}: Props)
           <HStack spacing='0px'>
             <Square size='35px' bg='tomato'></Square>
             <Square size='35px' bg='coral'></Square>
-            <Square size='35px' bg='gold'></Square>
+            <Square size='35px' bg='gold'>{target.soak}</Square>
           </HStack>
           <Box display='flex' height='35px' bg='green.300' w='100%'>
             <Progress width='100%' height='35px' colorScheme='green' bg='#25272a' value={woundRatio}/>

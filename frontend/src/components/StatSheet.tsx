@@ -15,6 +15,13 @@ export interface Adversary {
   tags: string[];
   gear: string[];
   description: string;
+  derived: {
+    wt: number;
+    st: number | null;
+    soak: number;
+    meleeDefense: number | null;
+    rangedDefense: number | null;
+  }
   characteristics: {
     brawn: number;
     agility: number;
@@ -28,7 +35,7 @@ export interface Adversary {
 
 export interface Skill {
   name: string;
-  rank: number;
+  rank: number | null;
 }
 
 interface Props {
@@ -38,40 +45,8 @@ interface Props {
 const StatSheet = ({ adversary }: Props) => {
   const [currentCharacteristic, setCurrentCharacteristic] = useState("");
 
-  adversary = {
-    name: "Imperial Stormtrooper",
-    type: "Minion",
-    description:
-      "Stormtroopers who survive engagements with high marks are promoted to the position of sergeant. Typically this involves command of a single squadron, but stormtroopers who excel at leadership are promoted to higher ranks. Such positions can include supervision of entire companies of stormtroopers. Rank within the stormtrooper legions is difficult for outsiders to fully understand, as they refer to virtually any officer from their ranks as commander. The uniformity of their armour and this tendency for vague references helps to enforce the image of stormtroopers as an absolutely faceless, monolithic military entity, which only serves to enhance their fearsome reputation.",
-    gear: ["Stormtrooper amor (+2 soak)", "utility belt", "extra reloads"],
-    tags: ["Imperial", "Stormtrooper"],
-    characteristics: {
-      brawn: 3,
-      agility: 3,
-      cunning: 2,
-      presence: 1,
-      intelligence: 2,
-      willpower: 3,
-    },
-    skills: [
-      {
-        name: "Vigilance",
-        rank: 3
-      },
-      {
-        name: "Discipline",
-        rank: 2
-      },
-      {
-        name: "Melee",
-        rank: 3
-      },
-      {
-        name: "Ranged: Heavy",
-        rank: 3
-      },
-    ]
-  };
+  if (adversary === undefined)
+    return <Text>Nothing selected</Text>
 
   return (
     <div>
