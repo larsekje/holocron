@@ -7,6 +7,7 @@ import {splitArray} from "../../utils";
 
 interface Props {
   skills: Skill[];
+  characteristics;
   currentCharacteristic: string;
 }
 
@@ -18,7 +19,18 @@ function getRank(skill: string, skills: Skill[]): number {
   return 0;
 }
 
-const SkillList = ({skills, currentCharacteristic}: Props) => {
+function getPool(skill: string, skills: Skill[], characteristics): string {
+  const characteristicName = skillMap[skill];
+
+  const skillRank = getRank(skill, skills);
+  const characteristicRank = characteristics[characteristicName];
+
+  const yellowDie = Math.min(skillRank, characteristicRank);
+  const greenDie = Math.max(skillRank, characteristicRank) - yellowDie;
+  return `${greenDie} ${yellowDie}`;
+}
+
+const SkillList = ({skills, characteristics, currentCharacteristic}: Props) => {
 
   const allSkills = Object.keys(skillMap)
   const splitSkills = splitArray(allSkills, 3);
@@ -33,6 +45,7 @@ const SkillList = ({skills, currentCharacteristic}: Props) => {
             <SkillItem
               name={skill}
               rank={getRank(skill, skills)}
+              pool={getPool(skill, skills, characteristics)}
               currentCharacteristic={currentCharacteristic}
             />
           ))}

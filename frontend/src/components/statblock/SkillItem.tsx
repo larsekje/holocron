@@ -11,6 +11,7 @@ import { capitalize } from "../../utils";
 interface Props {
   name: string;
   rank: number;
+  pool: string;
   currentCharacteristic?: string;
   group?: boolean;
 }
@@ -18,6 +19,7 @@ interface Props {
 const SkillItem = ({
   name,
   rank,
+  pool,
   currentCharacteristic = "",
   group = false,
 }: Props) => {
@@ -45,6 +47,7 @@ const SkillItem = ({
         <Text userSelect="none" color={color}>
           {capitalize(name)}
         </Text>
+        <Text userSelect="none" color={color}>{pool}</Text>
       </HStack>
       <Text userSelect="none" color={color}>
         {rank}

@@ -60,7 +60,7 @@ const StatSheet = ({ adversary }: Props) => {
       },
       {
         name: "Discipline",
-        rank: 3
+        rank: 2
       },
       {
         name: "Melee",
@@ -100,7 +100,7 @@ const StatSheet = ({ adversary }: Props) => {
       </Heading>
       <Divider />
 
-      <SkillList skills={adversary.skills} currentCharacteristic={currentCharacteristic} />
+      <SkillList skills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic={currentCharacteristic} />
       <Divider />
       <Text color="white">
         <b>Adversary 2:</b> Upgrade difficulty of all combat checks against this
