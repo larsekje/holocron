@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {VStack} from "@chakra-ui/react";
-import TargetCard from "./TargetCard";
+import TargetCard from "./target/TargetCard";
 import {Target} from "./ContentCardTargets";
 import {TargetContext} from "../TargetContext";
 

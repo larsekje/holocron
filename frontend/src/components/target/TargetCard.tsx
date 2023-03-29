@@ -7,7 +7,8 @@ import {
   Square,
   Progress, Box
 } from "@chakra-ui/react";
-import {Target} from "./ContentCardTargets";
+import {Target} from "../ContentCardTargets";
+import AdversaryTypeBadge from "./AdversaryTypeBadge";
 
 interface Props {
   target: Target;
@@ -25,7 +26,7 @@ const TargetCard = ({target, currentWounds=target.wt, onClick, selected}: Props)
         <HStack justifyContent='space-between' spacing='0'>
           <HStack spacing='0px'>
             <Square size='35px' bg='tomato'></Square>
-            <Square size='35px' bg='coral'></Square>
+            <Square size='35px' bg='coral'><AdversaryTypeBadge type={target.template.type}/></Square>
             <Square size='35px' bg='gold'>{target.soak}</Square>
           </HStack>
           <Box display='flex' height='35px' bg='green.300' w='100%'>
