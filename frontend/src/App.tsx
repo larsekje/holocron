@@ -5,37 +5,11 @@ import ContentCardActive from "./components/ContentCardActive";
 import ContentCardTargets, {Target} from "./components/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
 import {TargetContextProvider} from "./TargetContext";
+import targets from "./targets";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
                          "active targets targeted sidebar"`
-
-  const targets: Target[] = [
-    {
-      id: 1,
-      name: "Imperial Stormtrooper",
-      wt: 5,
-      isSelected: false
-    },
-    {
-      id: 2,
-      name: "Thenn Hodar",
-      wt: 11,
-      isSelected: false
-    },
-    {
-      id: 3,
-      name: "Juggernaut",
-      wt: 15,
-      isSelected: false
-    },
-    {
-      id: 4,
-      name: "Stormtrooper Sergeant",
-      wt: 8,
-      isSelected: false
-    }
-  ];
 
   return (
     <>
