@@ -23,6 +23,12 @@ export interface Adversary {
     intelligence: number;
     willpower: number;
   };
+  skills: Skill[];
+}
+
+export interface Skill {
+  name: string;
+  rank: number;
 }
 
 interface Props {
@@ -47,6 +53,24 @@ const StatSheet = ({ adversary }: Props) => {
       intelligence: 2,
       willpower: 3,
     },
+    skills: [
+      {
+        name: "Vigilance",
+        rank: 3
+      },
+      {
+        name: "Discipline",
+        rank: 3
+      },
+      {
+        name: "Melee",
+        rank: 3
+      },
+      {
+        name: "Ranged: Heavy",
+        rank: 3
+      },
+    ]
   };
 
   return (
@@ -76,7 +100,7 @@ const StatSheet = ({ adversary }: Props) => {
       </Heading>
       <Divider />
 
-      <SkillList currentCharacteristic={currentCharacteristic} />
+      <SkillList skills={adversary.skills} currentCharacteristic={currentCharacteristic} />
       <Divider />
       <Text color="white">
         <b>Adversary 2:</b> Upgrade difficulty of all combat checks against this

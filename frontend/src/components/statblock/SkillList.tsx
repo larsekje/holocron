@@ -2,17 +2,26 @@ import React from 'react';
 import SkillItem from "./SkillItem";
 import {HStack, VStack} from "@chakra-ui/react";
 import skillMap from "../../skillMap";
+import {Skill} from "../StatSheet";
 import {splitArray} from "../../utils";
 
 interface Props {
+  skills: Skill[];
   currentCharacteristic: string;
 }
 
-const SkillList = ({currentCharacteristic}: Props) => {
+function getRank(skill: string, skills: Skill[]): number {
+  const match = skills.filter(foo => skill.toLowerCase() === foo.name.toLowerCase());
 
+  if (match.length > 0)
+    return match[0].rank;
+  return 0;
+}
 
-  const skills = Object.keys(skillMap)
-  const splitSkills = splitArray(skills, 3);
+const SkillList = ({skills, currentCharacteristic}: Props) => {
+
+  const allSkills = Object.keys(skillMap)
+  const splitSkills = splitArray(allSkills, 3);
 
   return (
     <HStack justifyContent='space-between' alignItems='top'>
@@ -23,7 +32,7 @@ const SkillList = ({currentCharacteristic}: Props) => {
           {splitSkill.map((skill) => (
             <SkillItem
               name={skill}
-              rank={2}
+              rank={getRank(skill, skills)}
               currentCharacteristic={currentCharacteristic}
             />
           ))}

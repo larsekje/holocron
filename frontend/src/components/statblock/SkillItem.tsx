@@ -23,7 +23,7 @@ const SkillItem = ({
 }: Props) => {
   const [hover, setHover] = useState(false);
 
-  const icon: IconType = group ? BsCircleFill : BsCircle;
+  const icon: IconType = (group || rank > 0) ? BsCircleFill : BsCircle;
   const iconElement = React.createElement(icon, {
     color: "white",
     fontSize: "10px",
