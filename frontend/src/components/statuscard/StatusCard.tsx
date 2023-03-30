@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, CardBody, Text} from "@chakra-ui/react";
-import {Target} from "../ContentCardTargets";
 import HealthBar from "./HealthBar";
+import {Target} from "../../target";
 
 interface Props {
   target?: Target | null;

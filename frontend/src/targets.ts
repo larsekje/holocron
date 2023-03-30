@@ -1,9 +1,9 @@
-import {Target} from "./components/ContentCardTargets";
 import adversaries from "./adversaries";
+import {Target} from "./target";
 
 const targets: Target[] = [
-  new Target(1, adversaries[0]),
-  new Target(1, adversaries[1]),
+  new Target(adversaries[0]),
+  new Target(adversaries[1]),
 ];
 
 export default targets;

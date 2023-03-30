@@ -1,8 +1,8 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {VStack} from "@chakra-ui/react";
 import TargetCard from "./target/TargetCard";
-import {Target} from "./ContentCardTargets";
-import {TargetContext} from "../TargetContext";
+import {Target} from "../target";
+import {useTargetStore} from "../targetStore";
 
 interface Props {
   targets: Target[];
@@ -10,7 +10,8 @@ interface Props {
 
 const TargetList = ({targets}: Props) => {
 
-  const [selectedTarget, setSelectedTarget] = useContext(TargetContext);
+  const selectedTarget = useTargetStore(state => state.selectedTarget);
+  const setSelectedTarget = useTargetStore(state => state.selectTarget);
 
   const handleTargetClick = (target: Target) => {
     setSelectedTarget(target);

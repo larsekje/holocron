@@ -7,8 +7,8 @@ import {
   Square,
   Progress, Box
 } from "@chakra-ui/react";
-import {Target} from "../ContentCardTargets";
 import AdversaryTypeBadge from "./AdversaryTypeBadge";
+import {Target} from "../../target";
 
 interface Props {
   target: Target;

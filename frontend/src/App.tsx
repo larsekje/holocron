@@ -4,7 +4,6 @@ import React from "react";
 import ContentCardActive from "./components/ContentCardActive";
 import ContentCardTargets from "./components/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
-import {TargetContextProvider} from "./TargetContext";
 import targets from "./targets";
 
 function App() {
@@ -16,15 +15,13 @@ function App() {
       <Box display='flex' alignItems='center' h='50' bg='coral'><NavBar/></Box>
       <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
-        <TargetContextProvider>
-          <GridItem area='turn' bg='green.300'>Turn</GridItem>
-          <GridItem area='active'><ContentCardActive/></GridItem>
-          <GridItem area='targets'><ContentCardTargets targets={targets}/></GridItem>
-          <GridItem area='targeted'><ContentCardTargeted/></GridItem>
-          <GridItem area='sidebar' bg='orchid'>Sidebar</GridItem>
-        </TargetContextProvider>
-      </Grid></>
-
+        <GridItem area='turn' bg='green.300'>Turn</GridItem>
+        <GridItem area='active'><ContentCardActive/></GridItem>
+        <GridItem area='targets'><ContentCardTargets targets={targets}/></GridItem>
+        <GridItem area='targeted'><ContentCardTargeted/></GridItem>
+        <GridItem area='sidebar' bg='orchid'>Sidebar</GridItem>
+      </Grid>
+    </>
   )
 }
 
