@@ -33,6 +33,11 @@ export const useTargetStore = create<TargetStore>((set) => ({
             ? {...t, health: value}
             : t
         ),
-        selectedTarget: {... target, health: value}
+        selectedTarget: state.selectedTarget.id === target.id ?
+          {... target, health: value}
+          : state.selectedTarget,
+        activePlayer: state.activePlayer.id === target.id ?
+          {... target, health: value}
+          : state.activePlayer
     })),
 }));
