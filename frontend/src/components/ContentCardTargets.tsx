@@ -4,14 +4,10 @@ import TargetList from "./TargetList";
 import {AddIcon} from "@chakra-ui/icons";
 import {FaBug} from "react-icons/fa";
 import HeadingButton from "./HeadingButton";
-import {Target} from "../target";
+import {useTargetStore} from "../targetStore";
 
-
-interface Props {
-  targets: Target[];
-}
-
-const ContentCardTargets = ({targets}: Props) => {
+const ContentCardTargets = () => {
+  const targets = useTargetStore(state => state.targets);
 
   const addTargetButton = <HeadingButton text='Add' shortcut={'n'} icon={<AddIcon color='green'/>} onClick={() => console.log("Add Target")}/>
   const buttons = [addTargetButton]

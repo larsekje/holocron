@@ -4,21 +4,11 @@ import {nanoid} from "nanoid";
 export class Target {
   id: string;
   template: Adversary;
+  health: number;
 
   constructor(adversary: Adversary) {
     this.id = nanoid();
     this.template = adversary;
-  }
-
-  get name(): string {
-    return this.template.name;
-  }
-
-  get wt(): number {
-    return this.template.derived.wt;
-  }
-
-  get soak(): number {
-    return this.template.derived.soak;
+    this.health = 0;
   }
 }

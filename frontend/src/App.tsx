@@ -4,7 +4,6 @@ import React from "react";
 import ContentCardActive from "./components/ContentCardActive";
 import ContentCardTargets from "./components/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
-import targets from "./targets";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
@@ -17,7 +16,7 @@ function App() {
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
         <GridItem area='turn' bg='green.300'>Turn</GridItem>
         <GridItem area='active'><ContentCardActive/></GridItem>
-        <GridItem area='targets'><ContentCardTargets targets={targets}/></GridItem>
+        <GridItem area='targets'><ContentCardTargets/></GridItem>
         <GridItem area='targeted'><ContentCardTargeted/></GridItem>
         <GridItem area='sidebar' bg='orchid'>Sidebar</GridItem>
       </Grid>

@@ -14,7 +14,7 @@ const ContentCardTargeted = () => {
 
   return (
     <ContentCard heading='Targeted' buttons={buttons}>
-      <StatSheet adversary={selectedTarget?.template}/>
+      <StatSheet target={selectedTarget}/>
     </ContentCard>
   );
 };

@@ -8,6 +8,7 @@ import {
 import Characteristics from "./statblock/Characteristics";
 import SkillList from "./statblock/SkillList";
 import StatusCard from "./statuscard/StatusCard";
+import {Target} from "../target";
 
 export interface Adversary {
   name: string;
@@ -39,14 +40,16 @@ export interface Skill {
 }
 
 interface Props {
-  adversary?: Adversary;
+  target?: Target;
 }
 
-const StatSheet = ({ adversary }: Props) => {
+const StatSheet = ({ target }: Props) => {
   const [currentCharacteristic, setCurrentCharacteristic] = useState("");
 
-  if (adversary === undefined)
+  if (target === undefined)
     return <Text>Nothing selected</Text>
+
+  const adversary = target.template;
 
   return (
     <div>
@@ -63,7 +66,7 @@ const StatSheet = ({ adversary }: Props) => {
       </Text>
 
       <Divider />
-      <StatusCard />
+      <StatusCard target={target}/>
       <Characteristics
         characteristics={adversary.characteristics}
         setCurrentCharacteristic={setCurrentCharacteristic}
