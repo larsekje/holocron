@@ -9,8 +9,6 @@ interface Props {
 }
 
 const TargetList = ({targets}: Props) => {
-
-  const selectedTarget = useTargetStore(state => state.selectedTarget);
   const setSelectedTarget = useTargetStore(state => state.selectTarget);
 
   const handleTargetClick = (target: Target) => {
@@ -22,7 +20,6 @@ const TargetList = ({targets}: Props) => {
       {targets.map(target =>
         <TargetCard
           target={target}
-          selected={target === selectedTarget}
           onClick={() => handleTargetClick(target)}
         />)}
     </VStack>

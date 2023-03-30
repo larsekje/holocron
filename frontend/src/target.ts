@@ -4,7 +4,6 @@ import {nanoid} from "nanoid";
 export class Target {
   id: string;
   template: Adversary;
-  isSelected: boolean = false;
 
   constructor(adversary: Adversary) {
     this.id = nanoid();

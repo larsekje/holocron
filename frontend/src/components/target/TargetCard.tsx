@@ -9,19 +9,22 @@ import {
 } from "@chakra-ui/react";
 import AdversaryTypeBadge from "./AdversaryTypeBadge";
 import {Target} from "../../target";
+import {useTargetStore} from "../../targetStore";
 
 interface Props {
   target: Target;
   currentWounds?: number;
   onClick: () => void;
-  selected: boolean;
 }
 
-const TargetCard = ({target, currentWounds=target.wt, onClick, selected}: Props) => {
+const TargetCard = ({target, currentWounds=target.wt, onClick}: Props) => {
+  const selectedTarget = useTargetStore(state => state.selectedTarget);
+  const isSelected = selectedTarget.id === target.id;
+
   const woundRatio = currentWounds / target.wt * 100;
 
   return (
-    <Card overflow='hidden' height='35px' width='100%' outline='1px' variant={selected ? 'outline' : ''} onClick={onClick}>
+    <Card overflow='hidden' height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
       <CardBody padding='0'>
         <HStack justifyContent='space-between' spacing='0'>
           <HStack spacing='0px'>
