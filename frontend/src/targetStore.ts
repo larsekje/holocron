@@ -10,6 +10,8 @@ interface TargetStore{
     addTarget: (target: Target) => void;
     removeTarget: (target: Target) => void;
     selectTarget: (target: Target) => void;
+    setActive: (target: Target) => void;
+    activePlayer: Target;
     setHealth: (target: Target, value: number) => void;
 }
 
@@ -23,6 +25,8 @@ export const useTargetStore = create<TargetStore>((set) => ({
     addTarget: (target) => set((state) => ({targets: [...state.targets, target]})),
     removeTarget: (target) => set((state) => ({targets: state.targets.filter((t) => t.id !== target.id)})),
     selectTarget: (target) => set(() => ({selectedTarget: target})),
+    setActive: (target) => set(() => ({activePlayer: target})),
+    activePlayer: listOfInitialTargets[0],
     setHealth: (target, value) => set(state => ({
         targets: state.targets.map((t) =>
           t.id === target.id

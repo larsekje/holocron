@@ -6,11 +6,13 @@ import StatSheet from "./StatSheet";
 import {useTargetStore} from "../targetStore";
 
 const ContentCardTargeted = () => {
-  const setActiveTargetButton = <HeadingButton text='Set Active' shortcut={'n'} onClick={() => console.log("Set Active target")}/>
+  const selectedTarget = useTargetStore(state => state.selectedTarget);
+  const setActive = useTargetStore(state => state.setActive);
+
+  const setActiveTargetButton = <HeadingButton text='Set Active' shortcut={'n'} onClick={() => setActive(selectedTarget)}/>
   const eyeButton = <HeadingButton icon={<MdBuild color='white'/>} onClick={() => console.log("Eye see you")} label='Toggle additional information'/>
   const buttons = [setActiveTargetButton, eyeButton]
 
-  const selectedTarget = useTargetStore(state => state.selectedTarget);
 
   return (
     <ContentCard heading='Targeted' buttons={buttons}>

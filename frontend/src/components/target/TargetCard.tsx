@@ -18,9 +18,10 @@ interface Props {
 
 const TargetCard = ({target, onClick}: Props) => {
   const selectedTarget = useTargetStore(state => state.selectedTarget);
+  const activePlayer = useTargetStore(state => state.activePlayer);
+
   const isSelected = selectedTarget.id === target.id;
-
-
+  const isActive = activePlayer.id === target.id;
 
   const currentWounds = target.health;
   const woundRatio = currentWounds / target.template.derived.wt * 100;
@@ -30,7 +31,7 @@ const TargetCard = ({target, onClick}: Props) => {
       <CardBody padding='0'>
         <HStack justifyContent='space-between' spacing='0'>
           <HStack spacing='0px'>
-            <Square size='35px' bg='tomato'></Square>
+            <Square size='35px' bg='tomato'>{isActive ? "A" : "I"}</Square>
             <Square size='35px' bg='coral'><AdversaryTypeBadge type={target.template.type}/></Square>
             <Square size='35px' bg='gold'>5</Square>
           </HStack>

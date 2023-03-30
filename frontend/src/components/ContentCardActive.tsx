@@ -7,12 +7,12 @@ import ResetHealth from "./ResetHealth";
 import {useTargetStore} from "../targetStore";
 
 const ContentCardActive = () => {
-  const target = useTargetStore(state => state.targets)[0];
+  const active = useTargetStore(state => state.activePlayer);
 
   return (
-    <ContentCard heading={'Active'}>
+    <ContentCard heading={active.template.name}>
       <Text>
-        <StatusCard target={target}/>
+        <StatusCard target={active}/>
         <AdjustHealth/>
         <ResetHealth/>
       </Text>
