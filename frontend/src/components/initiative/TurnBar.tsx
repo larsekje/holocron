@@ -16,14 +16,19 @@ const TurnBar = () => {
   const rollInitiative = useTurnStore(state => state.rollInitiative);
   const reset = useTurnStore(state => state.reset);
   const isActiveSlotNPC = useTurnStore(state => state.isActiveSlotNPC);
+  const setChoosingActivePlayer = useTurnStore(state => state.setChoosingActivePlayer);
+  const isChoosingActivePlayer = useTurnStore(state => state.isChoosingActivePlayer);
 
   // targetStore
   const targets = useTargetStore(state => state.targets);
   const setSomething = useTargetStore(state => state.setCanUseCurrentInitiativeSlot);
 
   const handleNextTurn = () => {
-    incrementTurn();
-    setSomething(isActiveSlotNPC());
+    if (!isChoosingActivePlayer){
+      incrementTurn();
+      setSomething(isActiveSlotNPC());
+      setChoosingActivePlayer(true);
+    }
   }
 
 

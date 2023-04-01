@@ -25,6 +25,8 @@ interface TurnStore{
     turn: number;
     initiativeSlots: InitiativeSlot[];
     activeInitiativeSlotId: string;
+    isChoosingActivePlayer: boolean;
+    setChoosingActivePlayer: (isChoosing: boolean) => void;
     isActiveSlotNPC: () => boolean;
     incrementRound: () => void;
     decrementRound: () => void;
@@ -39,6 +41,8 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
     turn: 1,
     initiativeSlots: [],
     activeInitiativeSlotId: "",
+    isChoosingActivePlayer: true,
+    setChoosingActivePlayer: (isChoosing) => set({isChoosingActivePlayer: isChoosing}),
     incrementRound: () => set((state) => ({round: state.round + 1})),
     decrementRound: () => set((state) => ({round: Math.max(state.round - 1, 1)})),
     incrementTurn: () => {
