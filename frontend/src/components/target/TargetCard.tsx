@@ -27,7 +27,7 @@ const TargetCard = ({target, onClick}: Props) => {
   const woundRatio = currentWounds / target.template.derived.wt * 100;
 
   return (
-    <Card overflow='hidden' height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
+    <Card overflow='hidden' shadow={target.canUseThisSlot ? "outline" : ""} height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
       <CardBody padding='0'>
         <HStack justifyContent='space-between' spacing='0'>
           <HStack spacing='0px'>

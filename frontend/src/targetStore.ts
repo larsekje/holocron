@@ -13,11 +13,12 @@ interface TargetStore{
     setActive: (target: Target) => void;
     activePlayer: Target;
     setHealth: (target: Target, value: number) => void;
+    setCanUseCurrentInitiativeSlot: (isNPC: boolean) => void;
 }
 
 const listOfInitialTargets = initialTargets;
 
-export const useTargetStore = create<TargetStore>((set) => ({
+export const useTargetStore = create<TargetStore>((set, get) => ({
     bears: 12,
     targets: listOfInitialTargets,
     selectedTarget: listOfInitialTargets[1],
@@ -40,4 +41,12 @@ export const useTargetStore = create<TargetStore>((set) => ({
           {... target, health: value}
           : state.activePlayer
     })),
+    setCanUseCurrentInitiativeSlot: (isNPC) => {
+        let newtargets = [];
+        for (let target of get().targets){
+            target.canUseThisSlot = target.isNPC && isNPC || (!target.isNPC && !isNPC);
+            newtargets.push(target);
+        }
+        set({targets: newtargets})
+    }
 }));

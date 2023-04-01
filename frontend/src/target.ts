@@ -6,12 +6,14 @@ export class Target {
   template: Adversary;
   health: number;
   initiative: number;
+  canUseThisSlot: boolean;
 
   constructor(adversary: Adversary) {
     this.id = nanoid();
     this.template = adversary;
     this.health = 0;
     this.initiative = this.rollInitiative();
+    this.canUseThisSlot = false;
   }
 
   get isNPC(): boolean {

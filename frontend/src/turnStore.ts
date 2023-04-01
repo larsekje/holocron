@@ -25,6 +25,7 @@ interface TurnStore{
     turn: number;
     initiativeSlots: InitiativeSlot[];
     activeInitiativeSlotId: string;
+    isActiveSlotNPC: () => boolean;
     incrementRound: () => void;
     decrementRound: () => void;
     incrementTurn: () => void;
@@ -85,6 +86,10 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
             initiativeSlots: initiativeSlots,
             activeInitiativeSlotId: initiativeSlots[0].id
         })
+    },
+    isActiveSlotNPC: () => {
+        const activeSlot = get().initiativeSlots[get().turn-1];
+        return activeSlot.isNPC;
     }
 }));
 
