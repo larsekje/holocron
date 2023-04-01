@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import {nanoid} from "nanoid";
+import {Target} from "./target";
+import {useTargetStore} from "./targetStore";
 
 
 export class InitiativeSlot {
@@ -29,13 +31,13 @@ interface TurnStore{
     incrementTurn: () => void;
     decrementTurn: () => void;
     reset: () => void;
-    rollInitiative: () => void;
+    rollInitiative: (targets: Target[]) => void;
 }
 
 export const useTurnStore = create<TurnStore>((set, get) => ({
     round: 1,
     turn: 1,
-    initiativeSlots: [new InitiativeSlot(false), new InitiativeSlot(false), new InitiativeSlot(true), new InitiativeSlot(false)],
+    initiativeSlots: [],
     activeInitiativeSlotId: "",
     initActive: () => set(state => ({activeInitiativeSlotId: state.initiativeSlots[0].id})),
     incrementRound: () => set((state) => ({round: state.round + 1})),
@@ -69,8 +71,16 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
         round: 1,
         activeInitiativeSlotId: get().initiativeSlots[0].id
     })),
-    rollInitiative: () => {
+    rollInitiative: (targets) => {
+        const initiativeSlots = []
+        for(let target of targets){
+            const slot = new InitiativeSlot(target.isNPC);
+            initiativeSlots.push(slot);
+        }
+        set({initiativeSlots: initiativeSlots})
     }
 }));
 
+const targets = useTargetStore.getState().targets;
+useTurnStore.getState().rollInitiative(targets);
 useTurnStore.getState().initActive();

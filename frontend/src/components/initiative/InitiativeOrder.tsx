@@ -13,7 +13,7 @@ const InitiativeOrder = ({}: Props) => {
 
   return (
     <HStack justifyContent="center" spacing="0px">
-      {initiativeSlots.map(slot => (<InitiativeMarker id={slot.id} activeId={activeInitiativeSlotId} pc={!slot.isNPC}/>))}
+      {initiativeSlots.map(slot => (<InitiativeMarker id={slot.id} activeId={activeInitiativeSlotId} isNPC={slot.isNPC}/>))}
     </HStack>
   );
 };

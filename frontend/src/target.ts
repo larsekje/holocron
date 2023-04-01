@@ -11,4 +11,10 @@ export class Target {
     this.template = adversary;
     this.health = 0;
   }
+
+  get isNPC(): boolean {
+    const adversaryType = this.template.type.toLowerCase();
+    return adversaryType === "minion" || adversaryType === "rival" || adversaryType === "nemesis";
+  }
+
 }

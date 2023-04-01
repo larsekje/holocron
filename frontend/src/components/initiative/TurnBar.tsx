@@ -6,6 +6,7 @@ import {useTurnStore} from "../../turnStore";
 import RoundCounter from "./RoundCounter";
 import TurnCounter from "./TurnCounter";
 import {useHotkeys} from "react-hotkeys-hook";
+import {useTargetStore} from "../../targetStore";
 
 const TurnBar = () => {
 
@@ -15,6 +16,9 @@ const TurnBar = () => {
   const rollInitiative = useTurnStore(state => state.rollInitiative);
   const reset = useTurnStore(state => state.reset);
 
+  // targetStore
+  const targets = useTargetStore(state => state.targets);
+
   // hotkeys
   useHotkeys('left', decrementTurn);
   useHotkeys('right', incrementTurn);
@@ -23,7 +27,7 @@ const TurnBar = () => {
   return (
     <HStack padding="0 10px" justifyContent="space-between" bg="#26292d" borderRadius="md">
       <HStack>
-        <Button colorScheme="blue" onClick={rollInitiative}>Roll initiative</Button>
+        <Button colorScheme="blue" onClick={() => rollInitiative(targets)}>Roll initiative</Button>
         <Button colorScheme="blue" variant="outline" onClick={reset}>Reset</Button>
       </HStack>
       <HStack justifyContent="center" height="100%" margin="0 auto">
