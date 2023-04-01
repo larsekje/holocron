@@ -33,7 +33,7 @@ const TargetCard = ({target, onClick}: Props) => {
           <HStack spacing='0px'>
             <Square size='35px' bg='tomato'>{isActive ? "A" : "I"}</Square>
             <Square size='35px' bg='coral'><AdversaryTypeBadge type={target.template.type}/></Square>
-            <Square size='35px' bg='gold'>5</Square>
+            <Square size='35px' bg='gold'>{target.initiative}</Square>
           </HStack>
           <Box display='flex' height='35px' bg='green.300' w='100%'>
             <Progress width='100%' height='35px' colorScheme='green' bg='#25272a' value={woundRatio}/>

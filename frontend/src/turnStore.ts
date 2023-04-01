@@ -11,12 +11,12 @@ export class InitiativeSlot {
     active: boolean;
     initiative: number;
 
-    constructor(isNPC: boolean) {
+    constructor(isNPC: boolean, initiative: number) {
         this.id = nanoid();
         this.isNPC = isNPC;
         this.current = false;
         this.active = true;
-        this.initiative = 1;
+        this.initiative = initiative;
     }
 }
 
@@ -72,11 +72,17 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
         activeInitiativeSlotId: get().initiativeSlots[0].id
     })),
     rollInitiative: (targets) => {
+
+        // create initiative slots from targets
         const initiativeSlots = []
         for(let target of targets){
-            const slot = new InitiativeSlot(target.isNPC);
+            const slot = new InitiativeSlot(target.isNPC, target.rollInitiative());
             initiativeSlots.push(slot);
         }
+
+        // Sort - prioritize higher numbers
+        initiativeSlots.sort((x, y) => {return x < y ? -1 : x > y ? 1 : 0;})
+
         set({initiativeSlots: initiativeSlots})
     }
 }));
