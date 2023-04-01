@@ -81,7 +81,7 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
         }
 
         // Sort - prioritize higher numbers
-        initiativeSlots.sort((x, y) => {return x < y ? -1 : x > y ? 1 : 0;})
+        initiativeSlots.sort((x, y) => {return x.initiative < y.initiative ? -1 : x.initiative > y.initiative ? 1 : 0;})
 
         set({initiativeSlots: initiativeSlots})
     }
