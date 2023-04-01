@@ -25,7 +25,6 @@ interface TurnStore{
     turn: number;
     initiativeSlots: InitiativeSlot[];
     activeInitiativeSlotId: string;
-    initActive: () => void;
     incrementRound: () => void;
     decrementRound: () => void;
     incrementTurn: () => void;
@@ -39,7 +38,6 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
     turn: 1,
     initiativeSlots: [],
     activeInitiativeSlotId: "",
-    initActive: () => set(state => ({activeInitiativeSlotId: state.initiativeSlots[0].id})),
     incrementRound: () => set((state) => ({round: state.round + 1})),
     decrementRound: () => set((state) => ({round: Math.max(state.round - 1, 1)})),
     incrementTurn: () => {
@@ -83,10 +81,12 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
         // Sort - prioritize higher numbers
         initiativeSlots.sort((x, y) => {return x.initiative < y.initiative ? -1 : x.initiative > y.initiative ? 1 : 0;})
 
-        set({initiativeSlots: initiativeSlots})
+        set({
+            initiativeSlots: initiativeSlots,
+            activeInitiativeSlotId: initiativeSlots[0].id
+        })
     }
 }));
 
 const targets = useTargetStore.getState().targets;
 useTurnStore.getState().rollInitiative(targets);
-useTurnStore.getState().initActive();
