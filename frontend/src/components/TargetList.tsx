@@ -16,6 +16,8 @@ const TargetList = ({usedForChoosingActivePlayer=false}: Props) => {
   let targets = useTargetStore(state => state.targets);
   const setSelectedTarget = useTargetStore(state => state.selectTarget);
   const setActive = useTargetStore(state => state.setActive);
+  const nextTarget = useTargetStore(state => state.nextTarget);
+  const prevTarget = useTargetStore(state => state.prevTarget);
 
   // turnStore
   const setChoosingActivePlayer = useTurnStore(state => state.setChoosingActivePlayer);
@@ -29,6 +31,9 @@ const TargetList = ({usedForChoosingActivePlayer=false}: Props) => {
       let hotkey = (index + 1).toString();
       useHotkeys(hotkey, () => handleTargetClick(target));
     }
+  } else {
+      useHotkeys("down", nextTarget);
+      useHotkeys("up", prevTarget);
   }
 
   const handleTargetClick = (target: Target) => {
