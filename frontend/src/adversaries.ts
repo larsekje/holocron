@@ -99,6 +99,52 @@ const adversaries: Adversary[] = [
       },
     ]
   },
+  {
+    name: "Thenn Hodar",
+    type: "Player",
+    description: "",
+    gear: [""],
+    tags: [""],
+    characteristics: {
+      brawn: 3,
+      agility: 3,
+      cunning: 2,
+      presence: 1,
+      intelligence: 2,
+      willpower: 3,
+    },
+    derived: {
+      wt: 5,
+      st: null,
+      soak: 5,
+      meleeDefense: null,
+      rangedDefense: null
+    },
+    skills: []
+  },
+  {
+    name: "Klaekk Treth",
+    type: "Player",
+    description: "",
+    gear: [""],
+    tags: [""],
+    characteristics: {
+      brawn: 3,
+      agility: 3,
+      cunning: 2,
+      presence: 1,
+      intelligence: 2,
+      willpower: 3,
+    },
+    derived: {
+      wt: 5,
+      st: null,
+      soak: 5,
+      meleeDefense: null,
+      rangedDefense: null
+    },
+    skills: []
+  },
 
 ]
 
