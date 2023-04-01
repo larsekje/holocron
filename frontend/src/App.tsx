@@ -4,7 +4,7 @@ import React from "react";
 import ContentCardActive from "./components/ContentCardActive";
 import ContentCardTargets from "./components/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
-import TurnBar from "./components/turn/TurnBar";
+import TurnBar from "./components/initiative/TurnBar";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
