@@ -66,7 +66,8 @@ export const useTurnStore = create<TurnStore>((set, get) => ({
     },
     reset: () => set(() => ({
         turn: 1,
-        round: 1
+        round: 1,
+        activeInitiativeSlotId: get().initiativeSlots[0].id
     })),
     rollInitiative: () => {
     }
