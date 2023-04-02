@@ -38,7 +38,7 @@ const TurnBar = () => {
   useHotkeys('r', reset);
 
   return (
-    <HStack padding="0 10px" justifyContent="space-between" bg="#26292d" borderRadius="md">
+    <HStack padding="0 10px" justifyContent="space-between" bg="#272A2D" borderRadius="md">
       <HStack>
         <Button colorScheme="blue" onClick={() => rollInitiative(targets)}>Roll initiative</Button>
         <Button colorScheme="blue" variant="outline" onClick={reset}>Reset</Button>
