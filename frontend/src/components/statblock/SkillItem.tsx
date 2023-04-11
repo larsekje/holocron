@@ -45,9 +45,6 @@ const SkillItem = ({
     >
       <HStack>
         {iconElement}
-        <Text userSelect="none" color={rank === 0 ? 'gray': color}>
-          {rank}
-        </Text>
         <Text userSelect="none" color={color}>
           {capitalize(name)}
         </Text>
