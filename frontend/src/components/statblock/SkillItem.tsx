@@ -3,7 +3,7 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react";
-import { BsCircle, BsCircleFill } from "react-icons/all";
+import { BsCircle, BsCircleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
 import skillMap from "../../skillMap";
 import { capitalize } from "../../utils";
