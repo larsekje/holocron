@@ -10,6 +10,7 @@ import SkillList from "./statblock/SkillList";
 import StatusCard from "./statuscard/StatusCard";
 import {Target} from "../target";
 import {symbolise} from "../utils";
+import {Interweave} from "interweave";
 
 export interface Adversary {
   name: string;
@@ -88,9 +89,13 @@ const StatSheet = ({ target }: Props) => {
       <Text color="white">
         <b>Feral Strength 2:</b> +2 damage on all Brawl and Melee attacks
       </Text>
-      <Text color="white" dangerouslySetInnerHTML={symbolise("<b>Knockdown:</b> May spend :triumph: to knock target prone with successful melee attack")}/>
+      <Text color="white">
+        <Interweave content={symbolise("<b>Knockdown:</b> May spend :triumph: to knock target prone with successful melee attack")}/>
+      </Text>
       <Divider />
-      <Text color="white" dangerouslySetInnerHTML={symbolise("<b>Pirate Leader:</b> May spend a maneuver giving orders to other pirate allies in medium range, granting them :boost: on their next check.")}/>
+      <Text color="white">
+        <Interweave content={symbolise("<b>Pirate Leader:</b> May spend a maneuver giving orders to other pirate allies in medium range, granting them :boost: on their next check.")}/>
+      </Text>
       <Divider />
 
       <Heading paddingTop="5" color="white" size="lg">

@@ -19,7 +19,7 @@ export const symbolise = (text: string) => {
     text = text.replace(reg, diceMap[k]);
   });
 
-  return { __html: text };
+  return text;
 }
 
 export const diceMap = {
