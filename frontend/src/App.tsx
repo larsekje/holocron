@@ -6,6 +6,8 @@ import ContentCardTargets from "./components/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
 import TurnBar from "./components/initiative/TurnBar";
 
+import "./assets/sass/dice.sass"
+
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
                          "active targets targeted sidebar"`
