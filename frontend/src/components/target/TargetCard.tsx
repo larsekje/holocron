@@ -10,6 +10,8 @@ import {
 import AdversaryTypeBadge from "./AdversaryTypeBadge";
 import {Target} from "../../target";
 import {useTargetStore} from "../../targetStore";
+import IconWithNumericOverlay from "../../IconWithNumericOverlay";
+import {BsFillShieldFill} from "react-icons/all";
 
 interface Props {
   target: Target;

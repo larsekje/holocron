@@ -1,23 +1,40 @@
 import React from 'react';
-import {Text} from "@chakra-ui/react"
+
+import {ReactComponent as Ability} from "../../assets/dice/ability.svg";
+import {ReactComponent as Proficiency} from "../../assets/dice/proficiency.svg";
+import {ReactComponent as Difficulty} from "../../assets/dice/difficulty.svg";
+import {ReactComponent as Challenge} from "../../assets/dice/challenge.svg";
+import {ReactComponent as Setback} from "../../assets/dice/setback.svg";
+import IconWithNumericOverlay from "../../IconWithNumericOverlay";
 
 interface Props {
   type: string;
+  number?: number;
 }
 
-const AdversaryTypeBadge = ({type}: Props) => {
+const AdversaryTypeBadge = ({type, number}: Props) => {
+  const icons = {
+    minion: Setback,
+    rival: Difficulty,
+    nemesis: Challenge,
+    player: Proficiency,
+    npc: Ability
+  }
 
-  if (type.toLowerCase() === 'minion')
-    return (<Text>M</Text>);
+  const labels = {
+    minion: "Minion",
+    rival: "Rival",
+    nemesis: "Nemesis",
+    player: "Player",
+    npc: "Player-controlled NPC"
+  }
 
-  if (type.toLowerCase() === 'rival')
-    return (<Text>R</Text>);
+  const IconComponent = icons[type.toLowerCase()];
+  const label = labels[type.toLowerCase()]
 
-  if (type.toLowerCase() === 'nemesis')
-    return (<Text>N</Text>);
-
-  return (<Text>U</Text>)
-
+  return (
+    <IconWithNumericOverlay Icond={IconComponent} value={number} label={label}/>
+  )
 };
 
 export default AdversaryTypeBadge;
