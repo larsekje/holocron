@@ -1,9 +1,8 @@
 import React from 'react';
 import SkillItem from "./SkillItem";
-import {HStack, VStack} from "@chakra-ui/react";
+import {SimpleGrid} from "@chakra-ui/react";
 import skillMap from "../../skillMap";
 import {Skill} from "../StatSheet";
-import {splitArray} from "../../utils";
 import {DicePool} from "./DicePool";
 
 interface Props {
@@ -34,25 +33,18 @@ function getPool(skill: string, skills: Skill[], characteristics): DicePool {
 const SkillList = ({skills, characteristics, currentCharacteristic}: Props) => {
 
   const allSkills = Object.keys(skillMap)
-  const splitSkills = splitArray(allSkills, 3);
 
   return (
-    <HStack justifyContent='space-between' alignItems='top'>
-      // for each column
-      {splitSkills.map((splitSkill) => (
-        <VStack spacing='0' alignItems='left'>
-          // for each item in column
-          {splitSkill.map((skill) => (
-            <SkillItem
-              name={skill}
-              rank={getRank(skill, skills)}
-              pool={getPool(skill, skills, characteristics)}
-              currentCharacteristic={currentCharacteristic}
-            />
-          ))}
-        </VStack>
+    <SimpleGrid columns={3} spacingX={2}>
+      {allSkills.map((skill) => (
+        <SkillItem
+          name={skill}
+          rank={getRank(skill, skills)}
+          pool={getPool(skill, skills, characteristics)}
+          currentCharacteristic={currentCharacteristic}
+        />
       ))}
-    </HStack>
+    </SimpleGrid>
   );
 };
 
