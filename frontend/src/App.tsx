@@ -5,6 +5,7 @@ import ContentCardActive from "./components/ContentCardActive";
 import ContentCardTargets from "./components/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
 import TurnBar from "./components/initiative/TurnBar";
+import Sidebar from "./components/Sidebar";
 
 import "./assets/sass/dice.sass"
 
@@ -21,7 +22,7 @@ function App() {
         <GridItem area='active'><ContentCardActive/></GridItem>
         <GridItem area='targets'><ContentCardTargets/></GridItem>
         <GridItem area='targeted'><ContentCardTargeted/></GridItem>
-        <GridItem area='sidebar' bg='orchid'>Sidebar</GridItem>
+        <GridItem area='sidebar' bg='orchid'><Sidebar/></GridItem>
       </Grid>
     </>
   )
