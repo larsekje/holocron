@@ -7,11 +7,12 @@ import { BsCircle, BsCircleFill } from "react-icons/all";
 import { IconType } from "react-icons";
 import skillMap from "../../skillMap";
 import { capitalize } from "../../utils";
+import {DicePool, DicePoolC} from "./DicePool";
 
 interface Props {
   name: string;
   rank: number;
-  pool: string;
+  pool: DicePool;
   currentCharacteristic?: string;
   group?: boolean;
 }
@@ -44,14 +45,14 @@ const SkillItem = ({
     >
       <HStack>
         {iconElement}
+        <Text userSelect="none" color={rank === 0 ? 'gray': color}>
+          {rank}
+        </Text>
         <Text userSelect="none" color={color}>
           {capitalize(name)}
         </Text>
-        <Text userSelect="none" color={color}>{pool}</Text>
       </HStack>
-      <Text userSelect="none" color={color}>
-        {rank}
-      </Text>
+      <DicePoolC pool={pool}/>
     </HStack>
   );
 };

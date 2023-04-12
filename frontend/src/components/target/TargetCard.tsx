@@ -27,13 +27,13 @@ const TargetCard = ({target, onClick}: Props) => {
   const woundRatio = currentWounds / target.template.derived.wt * 100;
 
   return (
-    <Card overflow='hidden' height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
+    <Card overflow='hidden' shadow={isActive ? "outline" : ""} height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
       <CardBody padding='0'>
         <HStack justifyContent='space-between' spacing='0'>
           <HStack spacing='0px'>
             <Square size='35px' bg='tomato'>{isActive ? "A" : "I"}</Square>
             <Square size='35px' bg='coral'><AdversaryTypeBadge type={target.template.type}/></Square>
-            <Square size='35px' bg='gold'>5</Square>
+            <Square size='35px' bg='gold'>{target.initiative}</Square>
           </HStack>
           <Box display='flex' height='35px' bg='green.300' w='100%'>
             <Progress width='100%' height='35px' colorScheme='green' bg='#25272a' value={woundRatio}/>

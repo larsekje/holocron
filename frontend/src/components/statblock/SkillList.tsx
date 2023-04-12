@@ -4,6 +4,7 @@ import {HStack, VStack} from "@chakra-ui/react";
 import skillMap from "../../skillMap";
 import {Skill} from "../StatSheet";
 import {splitArray} from "../../utils";
+import {DicePool} from "./DicePool";
 
 interface Props {
   skills: Skill[];
@@ -19,7 +20,7 @@ function getRank(skill: string, skills: Skill[]): number {
   return 0;
 }
 
-function getPool(skill: string, skills: Skill[], characteristics): string {
+function getPool(skill: string, skills: Skill[], characteristics): DicePool {
   const characteristicName = skillMap[skill];
 
   const skillRank = getRank(skill, skills);
@@ -27,7 +28,7 @@ function getPool(skill: string, skills: Skill[], characteristics): string {
 
   const yellowDie = Math.min(skillRank, characteristicRank);
   const greenDie = Math.max(skillRank, characteristicRank) - yellowDie;
-  return `${greenDie} ${yellowDie}`;
+  return new DicePool(greenDie, yellowDie);
 }
 
 const SkillList = ({skills, characteristics, currentCharacteristic}: Props) => {
