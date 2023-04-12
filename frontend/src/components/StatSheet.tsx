@@ -94,7 +94,9 @@ const StatSheet = ({ target }: Props) => {
         <Interweave content={symbolise("<b>Knockdown:</b> May spend :triumph: to knock target prone with successful melee attack")}/>
       </Text>
       <Divider />
-      <ParsedText text={"<b>Pirate Leader:</b> May make an :average: Leadership check to give orders to other pirate allies in medium range, granting them :boost: on their next check."}/>
+      <ParsedText color="white">
+        <b>Pirate Leader:</b> May make an :average: Leadership check to give orders to other pirate allies in medium range, granting them :boost: on their next check.
+      </ParsedText>
       <Divider />
 
       <Heading paddingTop="5" color="white" size="lg">
