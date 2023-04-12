@@ -11,6 +11,7 @@ import StatusCard from "./statuscard/StatusCard";
 import {Target} from "../target";
 import {symbolise} from "../utils";
 import {Interweave} from "interweave";
+import ParsedText from "../ParsedText";
 
 export interface Adversary {
   name: string;
@@ -93,9 +94,7 @@ const StatSheet = ({ target }: Props) => {
         <Interweave content={symbolise("<b>Knockdown:</b> May spend :triumph: to knock target prone with successful melee attack")}/>
       </Text>
       <Divider />
-      <Text color="white">
-        <Interweave content={symbolise("<b>Pirate Leader:</b> May spend a maneuver giving orders to other pirate allies in medium range, granting them :boost: on their next check.")}/>
-      </Text>
+      <ParsedText text={"<b>Pirate Leader:</b> May make an :average: Leadership check to give orders to other pirate allies in medium range, granting them :boost: on their next check."}/>
       <Divider />
 
       <Heading paddingTop="5" color="white" size="lg">
