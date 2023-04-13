@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  Heading, ListItem, Table, Tbody, Td, Th, Thead, Tr,
+  Heading, List, ListItem, Tbody, Td, Th, Thead, Tr,
 } from "@chakra-ui/react";
 import DiceThreat from "../diceSymbols/DiceThreat";
 import DiceAdvantage from "../diceSymbols/DiceAdvantage";
 import DiceTriumph from "../diceSymbols/DiceTriumph";
 import DiceDespair from "../diceSymbols/DiceDespair";
 import {DiceResult} from "../../spendingDiceResultsInCombat";
-import ParsedList from "../parsedChakra/ParsedList";
+import ParsedTable from "../parsedChakra/ParsedTable";
 
 interface Props {
   tableName: string
@@ -22,9 +22,9 @@ const DiceResultTable = ({tableName, diceTable, positiveResults}: Props) => {
     <Tr key={result.cost}>
       <Td>{result.cost}</Td>
       <Td>
-        <ParsedList>
+        <List>
           {result.result.map(r => <ListItem>{r}</ListItem>)}
-        </ParsedList>
+        </List>
       </Td>
     </Tr>
   ));
@@ -37,7 +37,7 @@ const DiceResultTable = ({tableName, diceTable, positiveResults}: Props) => {
   return (
     <>
       <Heading as="h2" size="lg">{headingText}</Heading>
-      <Table variant="striped">
+      <ParsedTable variant="striped">
         <Thead>
           <Tr>
             <Th>Cost</Th>
@@ -45,7 +45,7 @@ const DiceResultTable = ({tableName, diceTable, positiveResults}: Props) => {
           </Tr>
         </Thead>
         <Tbody>{rows}</Tbody>
-      </Table>
+      </ParsedTable>
     </>
   );
 };
