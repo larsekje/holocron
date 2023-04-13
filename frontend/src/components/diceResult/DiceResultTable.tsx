@@ -7,7 +7,7 @@ import DiceAdvantage from "../diceSymbols/DiceAdvantage";
 import DiceTriumph from "../diceSymbols/DiceTriumph";
 import DiceDespair from "../diceSymbols/DiceDespair";
 import {DiceResult} from "../../spendingDiceResultsInCombat";
-import ParsedTable from "../parsedChakra/ParsedTable";
+import {ParsedTable} from "../ParsedChakra";
 
 interface Props {
   tableName: string

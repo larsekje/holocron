@@ -11,7 +11,7 @@ import StatusCard from "./statuscard/StatusCard";
 import {Target} from "../target";
 import {symbolise} from "../utils";
 import {Interweave} from "interweave";
-import ParsedText from "./parsedChakra/ParsedText";
+import {ParsedText} from "./ParsedChakra";
 
 export interface Adversary {
   name: string;
