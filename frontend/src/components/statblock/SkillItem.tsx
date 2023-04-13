@@ -5,8 +5,8 @@ import {
 } from "@chakra-ui/react";
 import { BsCircle, BsCircleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
-import skillMap from "../../skillMap";
-import { capitalize } from "../../utils";
+import skillMap from "@/skillMap";
+import { capitalize } from "@/utils";
 import {DicePool, DicePoolC} from "./DicePool";
 
 interface Props {

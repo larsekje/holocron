@@ -1,6 +1,6 @@
 import React from 'react';
 import {Center} from "@chakra-ui/react";
-import {diceTableBad, diceTableGood} from "../spendingDiceResultsInCombat";
+import {diceTableBad, diceTableGood} from "@/spendingDiceResultsInCombat";
 import DiceResultSuggestionModal from "./diceResult/DiceResultSuggestionModal";
 
 const Sidebar = () => {

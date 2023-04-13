@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {ReactComponent as Ability} from "../../assets/dice/ability.svg";
-import {ReactComponent as Proficiency} from "../../assets/dice/proficiency.svg";
-import {ReactComponent as Difficulty} from "../../assets/dice/difficulty.svg";
-import {ReactComponent as Challenge} from "../../assets/dice/challenge.svg";
-import {ReactComponent as Setback} from "../../assets/dice/setback.svg";
-import IconWithNumericOverlay from "../../IconWithNumericOverlay";
+import {ReactComponent as Ability} from "@/assets/dice/ability.svg";
+import {ReactComponent as Proficiency} from "@/assets/dice/proficiency.svg";
+import {ReactComponent as Difficulty} from "@/assets/dice/difficulty.svg";
+import {ReactComponent as Challenge} from "@/assets/dice/challenge.svg";
+import {ReactComponent as Setback} from "@/assets/dice/setback.svg";
+import IconWithNumericOverlay from "@components/IconWithNumericOverlay";
 
 interface Props {
   type: string;

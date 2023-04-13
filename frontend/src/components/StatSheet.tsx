@@ -8,8 +8,8 @@ import {
 import Characteristics from "./statblock/Characteristics";
 import SkillList from "./statblock/SkillList";
 import StatusCard from "./statuscard/StatusCard";
-import {Target} from "../target";
-import {symbolise} from "../utils";
+import {Target} from "@/target";
+import {symbolise} from "@/utils";
 import {Interweave} from "interweave";
 import {ParsedText} from "./ParsedChakra";
 

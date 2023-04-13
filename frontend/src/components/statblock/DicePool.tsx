@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {ReactComponent as Ability} from "../../assets/dice/ability.svg";
-import {ReactComponent as Proficiency} from "../../assets/dice/proficiency.svg";
+import {ReactComponent as Ability} from "@/assets/dice/ability.svg";
+import {ReactComponent as Proficiency} from "@/assets/dice/proficiency.svg";
 import {HStack} from "@chakra-ui/react";
 
 export class DicePool {

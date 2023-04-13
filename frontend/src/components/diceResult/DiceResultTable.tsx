@@ -2,12 +2,12 @@ import React from 'react';
 import {
   Heading, List, ListItem, Tbody, Td, Th, Thead, Tr,
 } from "@chakra-ui/react";
-import DiceThreat from "../diceSymbols/DiceThreat";
-import DiceAdvantage from "../diceSymbols/DiceAdvantage";
-import DiceTriumph from "../diceSymbols/DiceTriumph";
-import DiceDespair from "../diceSymbols/DiceDespair";
-import {DiceResult} from "../../spendingDiceResultsInCombat";
-import {ParsedTable} from "../ParsedChakra";
+import DiceThreat from "@components/diceSymbols/DiceThreat";
+import DiceAdvantage from "@components/diceSymbols/DiceAdvantage";
+import DiceTriumph from "@components/diceSymbols/DiceTriumph";
+import DiceDespair from "@components/diceSymbols/DiceDespair";
+import {ParsedTable} from "@components/ParsedChakra";
+import {DiceResult} from "@/spendingDiceResultsInCombat";
 
 interface Props {
   tableName: string

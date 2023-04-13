@@ -1,6 +1,6 @@
 import React from 'react';
 import {VStack, Text, Heading} from "@chakra-ui/react";
-import {useTurnStore} from "../../turnStore";
+import {useTurnStore} from "@/turnStore";
 
 const RoundCounter = () => {
   const turn = useTurnStore(state => state.turn);

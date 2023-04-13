@@ -8,10 +8,10 @@ import {
   DrawerHeader,
   DrawerOverlay, Input, VStack
 } from "@chakra-ui/react";
-import {useTargetStore} from "../../targetStore";
-import targets from "../../targets";
-import {Target} from "../../target";
-import adversaries from "../../adversaries";
+import {useTargetStore} from "@/targetStore";
+import targets from "@/targets";
+import {Target} from "@/target";
+import adversaries from "@/adversaries";
 
 interface Props {
   isOpen: boolean;

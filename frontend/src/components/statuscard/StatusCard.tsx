@@ -1,8 +1,8 @@
 import React from 'react';
 import {Card, CardBody, Text} from "@chakra-ui/react";
 import HealthBar from "./HealthBar";
-import {Target} from "../../target";
-import {useTargetStore} from "../../targetStore";
+import {Target} from "@/target";
+import {useTargetStore} from "@/targetStore";
 
 interface Props {
   target: Target;

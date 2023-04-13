@@ -1,5 +1,5 @@
 import React from 'react';
-import {diceMap} from "../utils";
+import {diceMap} from "@/utils";
 import {Link, useToast} from "@chakra-ui/react"
 
 interface Props {

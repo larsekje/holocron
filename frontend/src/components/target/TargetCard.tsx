@@ -8,10 +8,8 @@ import {
   Progress, Box
 } from "@chakra-ui/react";
 import AdversaryTypeBadge from "./AdversaryTypeBadge";
-import {Target} from "../../target";
-import {useTargetStore} from "../../targetStore";
-import IconWithNumericOverlay from "../../IconWithNumericOverlay";
-import {BsFillShieldFill} from "react-icons/all";
+import {Target} from "@/target";
+import {useTargetStore} from "@/targetStore";
 
 interface Props {
   target: Target;

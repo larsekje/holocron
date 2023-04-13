@@ -1,8 +1,8 @@
 import React from 'react';
 import ContentCard from "./ContentCard";
 import StatusCard from "./statuscard/StatusCard";
-import {useTargetStore} from "../targetStore";
-import {useTurnStore} from "../turnStore";
+import {useTargetStore} from "@/targetStore";
+import {useTurnStore} from "@/turnStore";
 import TargetList from "./TargetList";
 
 const ContentCardActive = () => {

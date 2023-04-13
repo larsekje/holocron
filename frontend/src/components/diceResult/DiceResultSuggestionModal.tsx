@@ -7,10 +7,10 @@ import {
   ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip, useDisclosure,
 } from "@chakra-ui/react";
 import {useHotkeys} from "react-hotkeys-hook";
-import DiceThreat from "../diceSymbols/DiceThreat";
+import DiceThreat from "@components/diceSymbols/DiceThreat";
+import DiceAdvantage from "@components/diceSymbols/DiceAdvantage";
+import {DiceResult} from "@/spendingDiceResultsInCombat";
 import DiceResultTable from "./DiceResultTable";
-import DiceAdvantage from "../diceSymbols/DiceAdvantage";
-import {DiceResult} from "../../spendingDiceResultsInCombat";
 
 interface Props {
   tableName: string

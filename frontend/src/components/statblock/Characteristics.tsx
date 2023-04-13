@@ -1,8 +1,8 @@
 import React from "react";
 import { HStack } from "@chakra-ui/react";
 import CharacteristicItem from "./CharacteristicItem";
-import { Adversary } from "../StatSheet";
-import { capitalize } from "../../utils";
+import { Adversary } from "@/components/StatSheet";
+import { capitalize } from "@/utils";
 
 interface Props {
   characteristics: Adversary["characteristics"];

@@ -1,7 +1,7 @@
 import React from 'react';
 import InitiativeMarker from "./InitiativeMarker";
 import {HStack} from "@chakra-ui/react";
-import {useTurnStore} from "../../turnStore";
+import {useTurnStore} from "@/turnStore";
 
 interface Props {
 

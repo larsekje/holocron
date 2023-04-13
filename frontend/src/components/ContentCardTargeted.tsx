@@ -3,7 +3,7 @@ import ContentCard from "./ContentCard";
 import HeadingButton from "./HeadingButton";
 import {MdBuild} from "react-icons/md";
 import StatSheet from "./StatSheet";
-import {useTargetStore} from "../targetStore";
+import {useTargetStore} from "@/targetStore";
 
 const ContentCardTargeted = () => {
   const selectedTarget = useTargetStore(state => state.selectedTarget);

@@ -1,9 +1,9 @@
 import React from 'react';
 import {VStack} from "@chakra-ui/react";
 import TargetCard from "./target/TargetCard";
-import {Target} from "../target";
-import {useTargetStore} from "../targetStore";
-import {useTurnStore} from "../turnStore";
+import {Target} from "@/target";
+import {useTargetStore} from "@/targetStore";
+import {useTurnStore} from "@/turnStore";
 import {useHotkeys} from "react-hotkeys-hook";
 
 interface Props {

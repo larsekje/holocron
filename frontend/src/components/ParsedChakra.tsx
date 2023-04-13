@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import {List, Table, Text} from "@chakra-ui/react";
 import ClickableText from "./ClickableText";
 import {Interweave} from "interweave";
-import {symbolise} from "../utils";
+import {symbolise} from "@/utils";
 
 export const ParsedList = withParsed(List);
 export const ParsedTable = withParsed(Table);

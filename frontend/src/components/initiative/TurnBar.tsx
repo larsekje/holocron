@@ -2,11 +2,11 @@ import React from 'react';
 import InitiativeOrder from "./InitiativeOrder";
 import {Button, HStack, IconButton} from "@chakra-ui/react";
 import {ArrowBackIcon, ArrowForwardIcon} from "@chakra-ui/icons";
-import {useTurnStore} from "../../turnStore";
+import {useTurnStore} from "@/turnStore";
 import RoundCounter from "./RoundCounter";
 import TurnCounter from "./TurnCounter";
 import {useHotkeys} from "react-hotkeys-hook";
-import {useTargetStore} from "../../targetStore";
+import {useTargetStore} from "@/targetStore";
 
 const TurnBar = () => {
 
