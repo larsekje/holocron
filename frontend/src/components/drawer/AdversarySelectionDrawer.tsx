@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   Drawer,
@@ -12,6 +12,11 @@ import {useTargetStore} from "@/targetStore";
 import targets from "@/targets";
 import {Target} from "@/target";
 import adversaries from "@/adversaries";
+import {Character} from "@/character";
+import DiceRed from "@components/diceSymbols/DiceRed";
+import DiceFailure from "@components/diceSymbols/DiceFailure";
+import DicePurple from "@components/diceSymbols/DicePurple";
+import DiceBlack from "@components/diceSymbols/DiceBlack";
 
 interface Props {
   isOpen: boolean;
@@ -38,6 +43,45 @@ const AdversarySelectionDrawer = ({isOpen, onClose}: Props) => {
     addTarget(target);
   }
 
+  const [characters, setCharacters] = useState<Character[]>([]);
+
+  const unnamedCharacters: string[] = [
+    "Alliance Fleet Trooper",
+    "Specforce Infiltrator",
+    "Alliance Driver",
+    "Lasan Honour Guard",
+    "Politician",
+    "Senator",
+    "Imperial Armour Corps Crew",
+    "Imperial Armour Corps Commander",
+    "Imperial Navy Gunner",
+    "Stormtrooper: Range Trooper",
+    "Gang leader",
+    "Swoop Ace",
+    "Tusken Raider (AaA)",
+    "Weequay Gunsel",
+    "Ewok Hunter",
+    "Ewok Shaman",
+    "Krayt dragon",
+    "Loth-wolf",
+    "Mouse Droid",
+    "Marksman-H Combat Training Remote",
+    "Rancor",
+    "Sarlacc",
+  ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const response = await fetch("/assets/a-and-a.json");
+        const data = await response.json();
+        setCharacters(data);
+    };
+    fetchData();
+  }, []);
+
+  const characterList = characters.filter(c => unnamedCharacters.includes(c.name));
+  console.log(characterList);
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -52,9 +96,12 @@ const AdversarySelectionDrawer = ({isOpen, onClose}: Props) => {
         <DrawerBody>
           <VStack>
             <Input placeholder='Search...' />
-            <Button onClick={handleAddTarget} justifyContent="left" width="100%">Add Stormtrooper</Button>
-            <Button onClick={handleAddTarget} justifyContent="left" width="100%">Add Sergeant</Button>
-            <Button onClick={handleAddTarget} justifyContent="left" width="100%">Add Thug</Button>
+            {characterList.map(adversary => {
+                const Icon = adversary.type === 'Nemesis' ? DiceRed :
+                             adversary.type === 'Rival'   ? DicePurple :
+                             adversary.type === 'Minion'  ? DiceBlack : DiceFailure;
+                return(<Button onClick={handleAddTarget} justifyContent="left" width="100%">{<Icon/>}{adversary.name}</Button>)
+            })}
           </VStack>
         </DrawerBody>
 
