@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  Heading, Table, Tbody, Td, Th, Thead, Tr,
+  Heading, ListItem, Table, Tbody, Td, Th, Thead, Tr,
 } from "@chakra-ui/react";
 import DiceThreat from "../diceSymbols/DiceThreat";
 import DiceAdvantage from "../diceSymbols/DiceAdvantage";
 import DiceTriumph from "../diceSymbols/DiceTriumph";
 import DiceDespair from "../diceSymbols/DiceDespair";
-import {symbolise} from "../../utils";
 import {DiceResult} from "../../spendingDiceResultsInCombat";
+import ParsedList from "../parsedChakra/ParsedList";
 
 interface Props {
   tableName: string
@@ -15,13 +15,17 @@ interface Props {
   positiveResults: boolean;
 }
 
-const DiceResultSuggestionModal = ({tableName, diceTable, positiveResults}: Props) => {
+const DiceResultTable = ({tableName, diceTable, positiveResults}: Props) => {
 
   // create table contents
   const rows = diceTable.map((result) => (
     <Tr key={result.cost}>
-      <Td dangerouslySetInnerHTML={{__html: symbolise(result.cost)}}></Td>
-      <Td dangerouslySetInnerHTML={{__html: symbolise(result.result.join("<br>"))}}></Td>
+      <Td>{result.cost}</Td>
+      <Td>
+        <ParsedList>
+          {result.result.map(r => <ListItem>{r}</ListItem>)}
+        </ParsedList>
+      </Td>
     </Tr>
   ));
 
@@ -46,4 +50,4 @@ const DiceResultSuggestionModal = ({tableName, diceTable, positiveResults}: Prop
   );
 };
 
-export default DiceResultSuggestionModal;
+export default DiceResultTable;

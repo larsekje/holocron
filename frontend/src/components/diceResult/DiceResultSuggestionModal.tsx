@@ -40,7 +40,7 @@ const DiceResultSuggestionModal = ({tableName, diceTableGood, diceTableBad}: Pro
       <Modal isOpen={isOpen} onClose={onClose} size="3xl" >
         <ModalOverlay />
         <ModalContent>
-          <ModalBody pb={6}>
+          <ModalBody>
             <Tabs isFitted defaultIndex={0} variant="enclosed">
               <TabList>
                 <Tab><DiceAdvantage/></Tab>
