@@ -7,8 +7,8 @@ import {
   ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip, useDisclosure,
 } from "@chakra-ui/react";
 import {useHotkeys} from "react-hotkeys-hook";
-import DiceThreat from "@components/diceSymbols/DiceThreat";
-import DiceAdvantage from "@components/diceSymbols/DiceAdvantage";
+import SymbolThreat from "@components/dice/SymbolThreat";
+import SymbolAdvantage from "@components/dice/SymbolAdvantage";
 import {DiceResult} from "@/spendingDiceResultsInCombat";
 import DiceResultTable from "./DiceResultTable";
 
@@ -34,7 +34,7 @@ const DiceResultSuggestionModal = ({tableName, diceTableGood, diceTableBad}: Pro
   return (
     <>
       <Tooltip label={"Spending dice results on combat [t]"}>
-        <Button onClick={onOpen}><DiceThreat/></Button>
+        <Button onClick={onOpen}><SymbolThreat/></Button>
       </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onClose} size="3xl" >
@@ -43,8 +43,8 @@ const DiceResultSuggestionModal = ({tableName, diceTableGood, diceTableBad}: Pro
           <ModalBody>
             <Tabs isFitted defaultIndex={0} variant="enclosed">
               <TabList>
-                <Tab><DiceAdvantage/></Tab>
-                <Tab><DiceThreat/></Tab>
+                <Tab><SymbolAdvantage/></Tab>
+                <Tab><SymbolThreat/></Tab>
               </TabList>
 
               <TabPanels>

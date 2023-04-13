@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DiceAdvantage = () => {
+const SymbolAdvantage = () => {
   return (<span className="icon advantage"></span>);
 };
 
-export default DiceAdvantage;
+export default SymbolAdvantage;

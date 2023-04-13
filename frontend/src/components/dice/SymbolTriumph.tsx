@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DiceTriumph = () => {
+const SymbolTriumph = () => {
   return (<span className="icon triumph"></span>);
 };
 
-export default DiceTriumph;
+export default SymbolTriumph;

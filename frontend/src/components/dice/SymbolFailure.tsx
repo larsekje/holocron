@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DiceFailure = () => {
+const SymbolFailure = () => {
   return (<span className="icon failure"></span>);
 };
 
-export default DiceFailure;
+export default SymbolFailure;

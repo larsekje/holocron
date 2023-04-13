@@ -13,10 +13,10 @@ import targets from "@/targets";
 import {Target} from "@/target";
 import adversaries from "@/adversaries";
 import {Character} from "@/character";
-import DiceRed from "@components/diceSymbols/DiceRed";
-import DiceFailure from "@components/diceSymbols/DiceFailure";
-import DicePurple from "@components/diceSymbols/DicePurple";
-import DiceBlack from "@components/diceSymbols/DiceBlack";
+import DiceRed from "@components/dice/DiceRed";
+import SymbolFailure from "@components/dice/SymbolFailure";
+import DicePurple from "@components/dice/DicePurple";
+import DiceBlack from "@components/dice/DiceBlack";
 
 interface Props {
   isOpen: boolean;
@@ -99,7 +99,7 @@ const AdversarySelectionDrawer = ({isOpen, onClose}: Props) => {
             {characterList.map(adversary => {
                 const Icon = adversary.type === 'Nemesis' ? DiceRed :
                              adversary.type === 'Rival'   ? DicePurple :
-                             adversary.type === 'Minion'  ? DiceBlack : DiceFailure;
+                             adversary.type === 'Minion'  ? DiceBlack : SymbolFailure;
                 return(<Button onClick={handleAddTarget} justifyContent="left" width="100%">{<Icon/>}{adversary.name}</Button>)
             })}
           </VStack>

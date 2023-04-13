@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DiceThreat = () => {
+const SymbolThreat = () => {
   return (<span className="icon threat"></span>);
 };
 
-export default DiceThreat;
+export default SymbolThreat;

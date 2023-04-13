@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DiceSuccess = () => {
+const SymbolSuccess = () => {
   return (<span className="icon success"></span>);
 };
 
-export default DiceSuccess;
+export default SymbolSuccess;

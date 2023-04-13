@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Heading, List, ListItem, Tbody, Td, Th, Thead, Tr,
 } from "@chakra-ui/react";
-import DiceThreat from "@components/diceSymbols/DiceThreat";
-import DiceAdvantage from "@components/diceSymbols/DiceAdvantage";
-import DiceTriumph from "@components/diceSymbols/DiceTriumph";
-import DiceDespair from "@components/diceSymbols/DiceDespair";
+import SymbolThreat from "@components/dice/SymbolThreat";
+import SymbolAdvantage from "@components/dice/SymbolAdvantage";
+import SymbolTriumph from "@components/dice/SymbolTriumph";
+import SymbolDespair from "@components/dice/SymbolDespair";
 import {ParsedTable} from "@components/ParsedChakra";
 import {DiceResult} from "@/spendingDiceResultsInCombat";
 
@@ -31,8 +31,8 @@ const DiceResultTable = ({tableName, diceTable, positiveResults}: Props) => {
 
   // text for header
   const headingText = positiveResults
-    ? (<>Spending <DiceAdvantage/> and <DiceTriumph/> in {tableName}</>)
-    : (<>Spending <DiceThreat/> and <DiceDespair/> in {tableName}</>);
+    ? (<>Spending <SymbolAdvantage/> and <SymbolTriumph/> in {tableName}</>)
+    : (<>Spending <SymbolThreat/> and <SymbolDespair/> in {tableName}</>);
 
   return (
     <>

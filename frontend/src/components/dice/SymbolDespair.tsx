@@ -1,7 +1,7 @@
 import React from 'react';
 
-const DiceDespair = () => {
+const SymbolDespair = () => {
   return (<span className="icon despair"></span>);
 };
 
-export default DiceDespair;
+export default SymbolDespair;
