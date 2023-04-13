@@ -12,7 +12,11 @@ interface Props {
 }
 
 const HeadingButton = ({text, shortcut, icon, onClick, label}: Props) => {
-  shortcut && useHotkeys(shortcut, onClick);
+  shortcut && useHotkeys(shortcut, (event) => {
+      event.preventDefault();
+      onClick()
+    }
+  );
 
   return (
       <Tooltip label={label} openDelay={200} hasArrow placement='top'>
