@@ -9,8 +9,6 @@ import Characteristics from "./statblock/Characteristics";
 import SkillList from "./statblock/SkillList";
 import StatusCard from "./statuscard/StatusCard";
 import {Target} from "@/target";
-import {symbolise} from "@/utils";
-import {Interweave} from "interweave";
 import {ParsedText} from "./ParsedChakra";
 
 export interface Adversary {
@@ -90,9 +88,9 @@ const StatSheet = ({ target }: Props) => {
       <Text color="white">
         <b>Feral Strength 2:</b> +2 damage on all Brawl and Melee attacks
       </Text>
-      <Text color="white">
-        <Interweave content={symbolise("<b>Knockdown:</b> May spend :triumph: to knock target prone with successful melee attack")}/>
-      </Text>
+      <ParsedText color="white">
+        <b>Knockdown:</b> May spend :triumph: to knock target prone with successful melee attack
+      </ParsedText>
       <Divider />
       <ParsedText color="white">
         <b>Pirate Leader:</b> May make an :average: Leadership check to give orders to other pirate allies in medium range, granting them :boost: on their next check.
