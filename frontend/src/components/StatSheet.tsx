@@ -73,7 +73,7 @@ const StatSheet = ({ target }: Props) => {
         setCurrentCharacteristic={setCurrentCharacteristic}
       />
       <Divider />
-
+      {/*
       <Heading color="white" size="lg">
         Skills
       </Heading>
@@ -106,7 +106,7 @@ const StatSheet = ({ target }: Props) => {
       <br />
       <Text color="white">
         <b>Equipment:</b> {adversary.gear.join(", ")}
-      </Text>
+      </Text>*/}
     </div>
   );
 };

@@ -24,7 +24,7 @@ const TargetCard = ({target, onClick}: Props) => {
   const isActive = activePlayer.id === target.id;
 
   const currentWounds = target.health;
-  const woundRatio = currentWounds / target.template.derived.wt * 100;
+  const woundRatio = currentWounds / target.template.derived.wounds * 100;
 
   return (
     <Card overflow='hidden' shadow={isActive ? "outline" : ""} height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
@@ -41,7 +41,7 @@ const TargetCard = ({target, onClick}: Props) => {
               <Text userSelect='none' as='b' lineHeight='35px'>{target.template.name}</Text>
               <Box>
                 <Text userSelect='none' as='b' fontSize='lg' lineHeight='35px'>{currentWounds}</Text>
-                <Text userSelect='none' as='b' fontSize='sm' color='white' lineHeight='35px'>/{target.template.derived.wt}</Text>
+                <Text userSelect='none' as='b' fontSize='sm' color='white' lineHeight='35px'>/{target.template.derived.wounds}</Text>
               </Box>
             </HStack>
           </Box>
