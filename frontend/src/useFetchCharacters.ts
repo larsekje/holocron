@@ -2,27 +2,29 @@ import { useState, useEffect } from "react";
 import {Character} from "@/character";
 
 
-const useFetchCharacters = () => {
+export const useFetchCharacters = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("/assets/a-and-a.json");
-      const data: Character[] = await response.json();
+      const fetchAndSetCharacters = async () => {
+        const fetchedCharacters = await fetchCharacters();
+        setCharacters(fetchedCharacters);
+      };
 
-      const filteredData = data
-        .filter(character => unnamedCharacters.includes(character.name));
-
-
-      setCharacters(filteredData);
-    };
-    fetchData();
-  }, []);
+      fetchAndSetCharacters();
+    });
 
   return characters;
 };
 
-export default useFetchCharacters;
+export const fetchCharacters = async(): Promise<Character[]> => {
+  const response = await fetch("/assets/a-and-a.json");
+  const data: Character[] = await response.json();
+
+  return data
+    .filter(character => unnamedCharacters.includes(character.name));
+};
+
 
 // hack to shorten list of adversaries from a-and-a.json
 const unnamedCharacters: string[] = [

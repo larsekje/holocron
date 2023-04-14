@@ -16,7 +16,7 @@ import DiceRed from "@components/dice/DiceRed";
 import SymbolFailure from "@components/dice/SymbolFailure";
 import DicePurple from "@components/dice/DicePurple";
 import DiceBlack from "@components/dice/DiceBlack";
-import useFetchCharacters from "@/useFetchCharacters";
+import {useFetchCharacters} from "@/useFetchCharacters";
 
 interface Props {
   isOpen: boolean;
