@@ -11,7 +11,6 @@ import {
 import {useTargetStore} from "@/targetStore";
 import targets from "@/targets";
 import {Target} from "@/target";
-import adversaries from "@/adversaries";
 import DiceRed from "@components/dice/DiceRed";
 import SymbolFailure from "@components/dice/SymbolFailure";
 import DicePurple from "@components/dice/DicePurple";
@@ -73,7 +72,7 @@ const AdversarySelectionDrawer = ({isOpen, onClose}: Props) => {
                 const Icon = adversary.type === 'Nemesis' ? DiceRed :
                              adversary.type === 'Rival'   ? DicePurple :
                              adversary.type === 'Minion'  ? DiceBlack : SymbolFailure;
-                return(<Button onClick={() => addTarget(new Target(adversaries[1]))} justifyContent="left" width="100%">{<Icon/>}{adversary.name}</Button>)
+                return(<Button onClick={() => addTarget(new Target(adversary))} justifyContent="left" width="100%">{<Icon/>}{adversary.name}</Button>)
             })}
           </List>
         </DrawerBody>

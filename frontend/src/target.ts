@@ -1,16 +1,16 @@
-import {Adversary} from "./components/StatSheet";
-import {nanoid} from "nanoid";
+ import {nanoid} from "nanoid";
+import {Character} from "@/character";
 
 export class Target {
   id: string;
-  template: Adversary;
+  template: Character;
   health: number;
   initiative: number;
   canUseThisSlot: boolean;
 
-  constructor(adversary: Adversary) {
+  constructor(character: Character) {
     this.id = nanoid();
-    this.template = adversary;
+    this.template = character;
     this.health = 0;
     this.initiative = this.rollInitiative();
     this.canUseThisSlot = false;
