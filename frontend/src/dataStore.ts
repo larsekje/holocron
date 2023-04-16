@@ -1,9 +1,17 @@
-import { create } from 'zustand'
+import {create} from 'zustand'
 
 import talents from './assets/data/talents.json';
-import {nanoid} from "nanoid";
 
-export interface Talent {
+export const id = function id(input: string) {
+  return input.trim().normalize("NFD").replace(/[^a-z0-9\-\s]/gi, '').replace(/\s{1,}/g, "-").toLowerCase();
+}
+
+export interface Data {
+  id: string;
+  name: string;
+}
+
+export interface Talent extends Data {
   name: string;
   description: string;
   ranked?: boolean;
@@ -11,17 +19,22 @@ export interface Talent {
 
 interface DataStore {
   talents: Talent[];
+  getTalent: (name: string) => Talent | undefined;
 }
 
 // enforce id
-const idify = <T>(data: T[]) => {
+const idify = <T extends Data>(data: Omit<T, 'id'>[]) => {
   return data.map(item => ({
-    id: nanoid(),
     ...item,
+    id: id(item.name),
   }))
 }
 
 
-export const useDataStore = create<DataStore>(set => ({
-  talents: idify(talents),
+export const useDataStore = create<DataStore>((set, get) => ({
+  talents: idify(talents) as Talent[],
+  getTalent: (name) => {
+    const lookUpId = id(name.replace(/\s\d+$/, ""));
+    return get().talents.find(i => i.id === lookUpId);
+  }
 }));
