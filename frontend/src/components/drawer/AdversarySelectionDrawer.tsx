@@ -37,7 +37,7 @@ const AdversarySelectionDrawer = ({isOpen, onClose}: Props) => {
   const firstField = React.useRef()
 
   // fetch local data
-  const characters = useFetchCharacters();
+  const characters = []//useFetchCharacters();
 
   // search and filter
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

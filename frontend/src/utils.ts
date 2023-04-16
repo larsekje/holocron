@@ -93,9 +93,19 @@ export const statify = function(text, stats, ranks) {
   text = text.replace(/\{ranks\|plus-2}/g,       () => ranks + 2);
 
   // add game symbols a number of times equal to ranks
-  // ["setback", "boost", "success", "threat", "force"].forEach(symbol => text = text.replace(new RegExp(`\{ranks\\|(${symbol})\}`, "g"), (s, match) => r(match, ranks)));
+  ["setback", "boost", "success", "threat", "force"].forEach(symbol => text = text.replace(new RegExp(`\{ranks\\|(${symbol})\}`, "g"), (s, match) => r(match, ranks)));
 
   return text;
+}
+
+function r(symbol, ranks) {
+  let buffer = [];
+
+  for(let i = 0; i < ranks; ++i) {
+    buffer.push(`:${symbol}:`);
+  }
+
+  return buffer.join("");
 }
 
 let words = ["", "one", "two", "three", "four", "five"];
