@@ -77,3 +77,26 @@ export const diceMap = {
   "formidable-4": "<strong>Formidable</strong> (<span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span><span class='icon difficulty'></span>)",
   "formidable-5": "<strong>Formidable</strong> (<span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span>)"
 };
+
+// add talent ranks, and correct numbers of dice to talent text
+export const statify = function(text, stats, ranks) {
+  // convert characteristics and skills
+  // Object.keys(stats).forEach(k => text = text.replace(new RegExp(`\{${k}\}`, "g"), stats[k]));
+
+  // insert ranks and format
+  text = text.replace(/\{ranks}/g, ranks);
+  text = text.replace(/\{ranks\|words}/g,        () => words[ranks]);
+  text = text.replace(/\{ranks\|times}/g,        () => times[ranks]);
+  text = text.replace(/\{ranks\|multiply-10}/g,  () => ranks * 10);
+  text = text.replace(/\{ranks\|multiply-50}/g,  () => ranks * 50);
+  text = text.replace(/\{ranks\|multiply-100}/g, () => ranks * 100);
+  text = text.replace(/\{ranks\|plus-2}/g,       () => ranks + 2);
+
+  // add game symbols a number of times equal to ranks
+  // ["setback", "boost", "success", "threat", "force"].forEach(symbol => text = text.replace(new RegExp(`\{ranks\\|(${symbol})\}`, "g"), (s, match) => r(match, ranks)));
+
+  return text;
+}
+
+let words = ["", "one", "two", "three", "four", "five"];
+let times = ["", "once", "twice", "three times", "four times", "five times"];
