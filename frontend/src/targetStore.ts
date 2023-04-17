@@ -7,12 +7,15 @@ interface TargetStore {
   targets: Target[]
   setTargets: (targets: Target[]) => void;
   selectedTarget: Target | undefined;
-  setSelectedTarget: (selectedTarget: Target) => void;
+  activeTarget: Target | undefined;
+  setSelectedTarget: (activeTarget: Target) => void;
+  setActiveTarget: (activeTarget: Target | undefined) => void;
 }
 
 export const useTargetStore = create<TargetStore>((set, get) => ({
   targets: [],
   selectedTarget: undefined,
+  activeTarget: undefined,
   setTargets: targets => set({targets}),
   setSelectedTarget: selectedTarget => {
     const currentlySelected = get().selectedTarget;
@@ -22,8 +25,11 @@ export const useTargetStore = create<TargetStore>((set, get) => ({
     } else {
       set({selectedTarget});
     }
+  },
+  setActiveTarget: activeTarget => {
+    if (activeTarget !== undefined)
+      set({activeTarget})
   }
-
 }))
 
 export function useSetInitialTargets() {
