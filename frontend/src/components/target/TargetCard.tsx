@@ -14,12 +14,11 @@ interface Props {
   key: string;
   target: Target;
   onClick: () => void;
+  isSelected: boolean;
+  isActive: boolean;
 }
 
-const TargetCard = ({target, onClick}: Props) => {
-  const isSelected = false;
-  const isActive = false;
-
+const TargetCard = ({target, onClick, isSelected=false, isActive=false}: Props) => {
   const currentWounds = target.health;
   const woundRatio = currentWounds / target.template.derived.wounds * 100;
 

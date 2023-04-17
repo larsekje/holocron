@@ -48,3 +48,29 @@ export function useSetInitialTargets() {
   }, [loading]);
 }
 
+export function selectNextTarget(targets: Target[], selectedTarget: Target | undefined, setSelectedTarget: (target: Target) => void) {
+  if (selectedTarget === undefined)
+    setSelectedTarget(targets[0])
+  else {
+    let index = targets.indexOf(selectedTarget)
+
+    if (index === targets.length-1)
+      index = -1;
+
+    setSelectedTarget(targets[index+1])
+  }
+}
+
+export function selectPreviousTarget (targets: Target[], selectedTarget: Target | undefined, setSelectedTarget: (target: Target) => void) {
+  if (selectedTarget === undefined)
+    setSelectedTarget(targets[targets.length-1])
+  else {
+    let index = targets.indexOf(selectedTarget)
+
+    if (index === 0)
+      index = targets.length;
+
+    setSelectedTarget(targets[index-1])
+  }
+}
+
