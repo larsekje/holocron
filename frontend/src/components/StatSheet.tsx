@@ -1,40 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     Divider,
     Heading,
     HStack, List,
     Text,
 } from "@chakra-ui/react";
-import Characteristics from "./statblock/Characteristics";
 import StatusCard from "./statuscard/StatusCard";
 import {Target} from "@/target";
 import {ParsedText} from "./ParsedChakra";
 import {statify} from "@/utils";
 import {useDataStore} from "@/dataStore";
-
-export interface Adversary {
-  name: string;
-  type: string;
-  tags: string[];
-  gear: string[];
-  description: string;
-  derived: {
-    wt: number;
-    st: number | null;
-    soak: number;
-    meleeDefense: number | null;
-    rangedDefense: number | null;
-  }
-  characteristics: {
-    brawn: number;
-    agility: number;
-    cunning: number;
-    presence: number;
-    intelligence: number;
-    willpower: number;
-  };
-  skills: Skill[];
-}
 
 export interface Skill {
   name: string;
@@ -46,8 +21,6 @@ interface Props {
 }
 
 const StatSheet = ({ target }: Props) => {
-  const [currentCharacteristic, setCurrentCharacteristic] = useState("");
-
     const getTalent = useDataStore((state) => state.getTalent);
 
 
@@ -69,10 +42,6 @@ const StatSheet = ({ target }: Props) => {
 
       <Divider />
       <StatusCard target={target}/>
-      <Characteristics
-        characteristics={adversary.characteristics}
-        setCurrentCharacteristic={setCurrentCharacteristic}
-      />
       <Divider />
 
       <Heading color="white" size="lg">
