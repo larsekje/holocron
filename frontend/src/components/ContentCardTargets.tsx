@@ -8,7 +8,7 @@ import TargetList from "@components/TargetList";
 
 const ContentCardTargets = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
-  const addTargetButton = <HeadingButton text='Add' shortcut={'n'} icon={<AddIcon color='green'/>} onClick={onOpen}/>
+  const addTargetButton = <HeadingButton key="target-add" text='Add' shortcut={'n'} icon={<AddIcon color='green'/>} onClick={onOpen}/>
   const buttons = [addTargetButton]
 
   return (

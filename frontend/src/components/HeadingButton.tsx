@@ -4,6 +4,7 @@ import {IconProps} from "@chakra-ui/icons";
 import {useHotkeys} from "react-hotkeys-hook";
 
 interface Props {
+  key: string;
   text?: string;
   shortcut?: string;
   icon?: ReactElement<IconProps>;

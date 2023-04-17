@@ -8,7 +8,7 @@ import {useTargetStore} from "@/targetStore";
 const ContentCardTargeted = () => {
   const selectedTarget = useTargetStore(state => state.selectedTarget);
 
-  const setActiveTargetButton = <HeadingButton text='Set Active' shortcut={'a'} onClick={() => console.log("Set active")}/>
+  const setActiveTargetButton = <HeadingButton key="target-setActive" text='Set Active' shortcut={'a'} onClick={() => console.log("Set active")}/>
   const buttons = [setActiveTargetButton]
 
   return (
