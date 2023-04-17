@@ -7,8 +7,8 @@ import {
   ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Tooltip, useDisclosure,
 } from "@chakra-ui/react";
 import {useHotkeys} from "react-hotkeys-hook";
-import SymbolThreat from "@components/dice/SymbolThreat";
-import SymbolAdvantage from "@components/dice/SymbolAdvantage";
+import SymbolThreat from "@components/textFormatting/dice/SymbolThreat";
+import SymbolAdvantage from "@components/textFormatting/dice/SymbolAdvantage";
 import {DiceResult} from "@/spendingDiceResultsInCombat";
 import DiceResultTable from "./DiceResultTable";
 

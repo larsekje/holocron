@@ -5,9 +5,9 @@ import {
     HStack, List,
     Text,
 } from "@chakra-ui/react";
-import StatusCard from "./statuscard/StatusCard";
+import StatusCard from "../statuscard/StatusCard";
 import {Target} from "@/target";
-import {ParsedText} from "./ParsedChakra";
+import {ParsedText} from "../textFormatting/ParsedChakra";
 import {statify} from "@/utils";
 import {useDataStore} from "@/dataStore";
 

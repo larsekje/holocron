@@ -2,7 +2,7 @@ import React from 'react';
 import SkillItem from "./SkillItem";
 import {SimpleGrid} from "@chakra-ui/react";
 import skillMap from "@/skillMap";
-import {Skill} from "@components/StatSheet";
+import {Skill} from "@components/statblock/StatSheet";
 import {DicePool} from "./DicePool";
 
 interface Props {

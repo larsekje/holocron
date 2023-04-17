@@ -78,10 +78,10 @@ export const diceMap = {
   "formidable-5": "<strong>Formidable</strong> (<span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span><span class='icon challenge'></span>)"
 };
 
-// add talent ranks, and correct numbers of dice to talent text
+// add talent ranks, and correct numbers of dice to talent textFormatting
 export const statify = function(text, stats, ranks) {
   // convert characteristics and skills
-  // Object.keys(stats).forEach(k => text = text.replace(new RegExp(`\{${k}\}`, "g"), stats[k]));
+  // Object.keys(stats).forEach(k => textFormatting = textFormatting.replace(new RegExp(`\{${k}\}`, "g"), stats[k]));
 
   // insert ranks and format
   text = text.replace(/\{ranks}/g, ranks);

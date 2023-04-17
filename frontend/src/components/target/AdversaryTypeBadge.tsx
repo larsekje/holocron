@@ -5,7 +5,7 @@ import {ReactComponent as Proficiency} from "@/assets/dice/proficiency.svg";
 import {ReactComponent as Difficulty} from "@/assets/dice/difficulty.svg";
 import {ReactComponent as Challenge} from "@/assets/dice/challenge.svg";
 import {ReactComponent as Setback} from "@/assets/dice/setback.svg";
-import IconWithNumericOverlay from "@components/IconWithNumericOverlay";
+import IconWithNumericOverlay from "@components/target/IconWithNumericOverlay";
 
 interface Props {
   type: string;

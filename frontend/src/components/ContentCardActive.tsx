@@ -1,5 +1,5 @@
 import React from 'react';
-import ContentCard from "./ContentCard";
+import ContentCard from "./contentCardMain/ContentCard";
 import {useTargetStore} from "@/targetStore";
 
 const ContentCardActive = () => {

@@ -2,7 +2,7 @@ import {Box, Grid, GridItem} from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import React from "react";
 import ContentCardActive from "./components/ContentCardActive";
-import ContentCardTargets from "./components/ContentCardTargets";
+import ContentCardTargets from "@components/contentCardTargets/ContentCardTargets";
 import ContentCardTargeted from "./components/ContentCardTargeted";
 import Sidebar from "./components/Sidebar";
 

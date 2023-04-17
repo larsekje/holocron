@@ -1,7 +1,7 @@
 import React from 'react';
-import ContentCard from "./ContentCard";
-import HeadingButton from "./HeadingButton";
-import StatSheet from "@components/StatSheet";
+import ContentCard from "./contentCardMain/ContentCard";
+import HeadingButton from "./contentCardMain/HeadingButton";
+import StatSheet from "@components/statblock/StatSheet";
 import {Text} from "@chakra-ui/react";
 import {useTargetStore} from "@/targetStore";
 

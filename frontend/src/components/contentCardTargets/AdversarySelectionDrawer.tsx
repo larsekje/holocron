@@ -13,7 +13,6 @@ import SymbolFailure from "@components/dice/SymbolFailure";
 import DicePurple from "@components/dice/DicePurple";
 import DiceBlack from "@components/dice/DiceBlack";
 import {useDataStore} from "@/dataStore";
-import {useTargetStore} from "@/targetStore";
 
 interface Props {
   isOpen: boolean;

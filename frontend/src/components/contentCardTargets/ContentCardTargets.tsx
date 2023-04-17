@@ -2,9 +2,9 @@ import React from 'react';
 import {FaBug} from "react-icons/fa";
 import {useDisclosure} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
-import ContentCard from "./ContentCard";
-import HeadingButton from "./HeadingButton";
-import TargetList from "@components/TargetList";
+import ContentCard from "../contentCardMain/ContentCard";
+import HeadingButton from "../contentCardMain/HeadingButton";
+import TargetList from "@components/target/TargetList";
 
 const ContentCardTargets = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
