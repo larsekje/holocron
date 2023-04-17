@@ -9,22 +9,19 @@ import {
 } from "@chakra-ui/react";
 import AdversaryTypeBadge from "./AdversaryTypeBadge";
 import {Target} from "@/target";
-import {useTargetStore} from "@/targetStore";
 
 interface Props {
+  key: string;
   target: Target;
   onClick: () => void;
 }
 
 const TargetCard = ({target, onClick}: Props) => {
-  const selectedTarget = useTargetStore(state => state.selectedTarget);
-  const activePlayer = useTargetStore(state => state.activePlayer);
-
-  const isSelected = selectedTarget.id === target.id;
-  const isActive = activePlayer.id === target.id;
+  const isSelected = false;
+  const isActive = false;
 
   const currentWounds = target.health;
-  const woundRatio = currentWounds / target.template.derived.wt * 100;
+  const woundRatio = currentWounds / target.template.derived.wounds * 100;
 
   return (
     <Card overflow='hidden' shadow={isActive ? "outline" : ""} height='35px' width='100%' outline='1px' variant={isSelected ? 'outline' : ''} onClick={onClick}>
@@ -41,7 +38,7 @@ const TargetCard = ({target, onClick}: Props) => {
               <Text userSelect='none' as='b' lineHeight='35px'>{target.template.name}</Text>
               <Box>
                 <Text userSelect='none' as='b' fontSize='lg' lineHeight='35px'>{currentWounds}</Text>
-                <Text userSelect='none' as='b' fontSize='sm' color='white' lineHeight='35px'>/{target.template.derived.wt}</Text>
+                <Text userSelect='none' as='b' fontSize='sm' color='white' lineHeight='35px'>/{target.template.derived.wounds}</Text>
               </Box>
             </HStack>
           </Box>

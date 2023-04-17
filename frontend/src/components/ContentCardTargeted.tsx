@@ -1,22 +1,21 @@
 import React from 'react';
 import ContentCard from "./ContentCard";
 import HeadingButton from "./HeadingButton";
-import {MdBuild} from "react-icons/md";
-import {useTargetStore} from "@/targetStore";
 import StatSheet from "@components/StatSheet";
+import {Text} from "@chakra-ui/react";
+import {useTargetStore} from "@/targetStore";
 
 const ContentCardTargeted = () => {
   const selectedTarget = useTargetStore(state => state.selectedTarget);
-  const setActive = useTargetStore(state => state.setActive);
 
-  const setActiveTargetButton = <HeadingButton text='Set Active' shortcut={'a'} onClick={() => setActive(selectedTarget)}/>
-  const eyeButton = <HeadingButton icon={<MdBuild color='white'/>} onClick={() => console.log("Eye see you")} label='Toggle additional information'/>
-  const buttons = [setActiveTargetButton, eyeButton]
-
+  const setActiveTargetButton = <HeadingButton text='Set Active' shortcut={'a'} onClick={() => console.log("Set active")}/>
+  const buttons = [setActiveTargetButton]
 
   return (
     <ContentCard heading='Targeted' buttons={buttons}>
-      <StatSheet target={selectedTarget}/>
+      {selectedTarget
+        ? <StatSheet target={selectedTarget}/>
+        : <Text>No target selected. Select a target from the Targets list.</Text>}
     </ContentCard>
   );
 };

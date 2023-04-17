@@ -2,6 +2,7 @@ import {create} from 'zustand'
 
 import talents from './assets/data/talents.json';
 import {useEffect} from "react";
+import {Adversary} from "@/adversary";
 
 export const id = function id(input: string) {
   return input.trim().normalize("NFD").replace(/[^a-z0-9\-\s]/gi, '').replace(/\s{1,}/g, "-").toLowerCase();
@@ -16,12 +17,6 @@ export interface Talent extends Data {
   name: string;
   description: string;
   ranked?: boolean;
-}
-
-export interface Adversary extends Data {
-  name: string;
-  description: string;
-  type: string;
 }
 
 // enforce id
@@ -87,6 +82,6 @@ export function useLoadData() {
     )
       .then(() => setLoading(false))
       .catch(error => console.error(error));
-  }, [files, setters, setLoading]);
+  }, []);
 }
 

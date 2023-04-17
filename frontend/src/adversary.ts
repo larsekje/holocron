@@ -1,5 +1,6 @@
+import {Data} from "@/dataStore";
 
-export interface Character {
+export interface Adversary extends Data {
   name: string;
   type: string;
   description: string;

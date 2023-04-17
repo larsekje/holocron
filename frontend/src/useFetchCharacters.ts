@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {Character} from "@/character";
+import {Character} from "@/adversary";
 
 
 export const useFetchCharacters = () => {

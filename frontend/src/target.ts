@@ -1,16 +1,16 @@
  import {nanoid} from "nanoid";
-import {Character} from "@/character";
+ import {Adversary} from "@/adversary";
 
 export class Target {
   id: string;
-  template: Character;
+  template: Adversary;
   health: number;
   initiative: number;
   canUseThisSlot: boolean;
 
-  constructor(character: Character) {
+  constructor(adversary: Adversary) {
     this.id = nanoid();
-    this.template = character;
+    this.template = adversary;
     this.health = 0;
     this.initiative = this.rollInitiative();
     this.canUseThisSlot = false;

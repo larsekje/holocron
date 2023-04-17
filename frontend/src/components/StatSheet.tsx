@@ -6,7 +6,6 @@ import {
     Text,
 } from "@chakra-ui/react";
 import Characteristics from "./statblock/Characteristics";
-import SkillList from "./statblock/SkillList";
 import StatusCard from "./statuscard/StatusCard";
 import {Target} from "@/target";
 import {ParsedText} from "./ParsedChakra";
@@ -43,7 +42,7 @@ export interface Skill {
 }
 
 interface Props {
-  target?: Target;
+  target: Target;
 }
 
 const StatSheet = ({ target }: Props) => {
@@ -51,8 +50,6 @@ const StatSheet = ({ target }: Props) => {
 
     const getTalent = useDataStore((state) => state.getTalent);
 
-  if (target === undefined)
-    return <Text>Nothing selected</Text>
 
   const adversary = target.template;
 
@@ -86,23 +83,19 @@ const StatSheet = ({ target }: Props) => {
       {/*<SkillList skills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic={currentCharacteristic} />*/}
       <Divider />
 
-        <List>
-            {adversary.talents && adversary.talents.map(talentName => {
-                    let ranked = talentName.match(/\s(\d+)$/);
-                    let ranks = ranked ? ranked[1] : 1;
+      <List>
+          {adversary.talents && adversary.talents.map(talentName => {
+                  let ranked = talentName.match(/\s(\d+)$/);
+                  let ranks = ranked ? ranked[1] : 1;
 
-                    let description = getTalent(talentName)?.description;
-                    description = statify(description, "", ranks);
+                  let description = getTalent(talentName)?.description;
+                  description = statify(description, "", ranks);
 
-                    return (<ParsedText color="white"><strong>{talentName}:</strong> {description}</ParsedText>)
-                }
-            )}
-        </List>
+                  return (<ParsedText color="white"><strong>{talentName}:</strong> {description}</ParsedText>)
+              }
+          )}
+      </List>
 
-      <Divider />
-      <ParsedText color="white">
-        <b>Pirate Leader:</b> May make an :average: Leadership check to give orders to other pirate allies in medium range, granting them :boost: on their next check.
-      </ParsedText>
       <Divider />
 
       <Heading paddingTop="5" color="white" size="lg">
@@ -111,10 +104,15 @@ const StatSheet = ({ target }: Props) => {
       <Divider />
 
       <Text color="white">{adversary.description}</Text>
-      <br />
-      <Text color="white">
-        <b>Equipment:</b> {adversary.gear.join(", ")}
-      </Text>
+
+      {adversary.gear && (
+        <>
+          <br />
+          <Text color="white">
+            <b>Equipment:</b> {adversary.gear.join(", ")}
+          </Text>
+        </>
+      )}
     </div>
   );
 };

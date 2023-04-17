@@ -1,9 +1,8 @@
 import React from 'react';
 import {VStack, Text, Heading} from "@chakra-ui/react";
-import {useTurnStore} from "@/turnStore";
 
 const RoundCounter = () => {
-  const round = useTurnStore(state => state.round);
+  const round = 1;
 
   return (
     <VStack spacing="10px" marginLeft="auto">
