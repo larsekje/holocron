@@ -49,24 +49,30 @@ const StatSheet = ({ target }: Props) => {
       <TargetStatus target={target} type={target.template.type} talents={target.template.talents} minions={target.minions}/>
 
       <SkillList profileSkills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic="Intellect" minions={target.minions}/>
-      <Divider />
 
-      <List>
-        {adversary.talents && adversary.talents.map(talentName => {
-            let ranked = talentName.match(/\s(\d+)$/);
-            let ranks = ranked ? ranked[1] : 1;
+      {
+        adversary.talents && (
+          <>
+            <Heading size="md" as="h2" color="white" marginTop="10px">Talents & Abilities</Heading>
+            <Divider/>
+            <List>
+              {adversary.talents && adversary.talents.map(talentName => {
+                  let ranked = talentName.match(/\s(\d+)$/);
+                  let ranks = ranked ? ranked[1] : 1;
 
-            let description = getTalent(talentName)?.description;
-            description = statify(description, "", ranks);
+                  let description = getTalent(talentName)?.description;
+                  description = statify(description, "", ranks);
 
-            return (<ParsedText color="white"><strong>{talentName}:</strong> {description}</ParsedText>)
-          }
-        )}
-      </List>
+                  return (<ParsedText color="white"><strong>{talentName}:</strong> {description}</ParsedText>)
+                }
+              )}
+            </List>
+          </>
+        )
+      }
 
-      <Divider />
 
-      <Heading paddingTop="5" color="white" size="lg">
+      <Heading paddingTop="10px" color="white" size="md" as="h2">
         Description
       </Heading>
       <Divider />
