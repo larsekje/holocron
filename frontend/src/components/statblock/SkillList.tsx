@@ -78,4 +78,18 @@ class Skill {
   }
 }
 
+function isRecord(obj: unknown): obj is Record<string, number> {
+  return (typeof obj === 'object' && obj !== null && !Array.isArray(obj));
+}
+
+function getRank(skillName: string, profileSkills: Record<string, number> | string[], minions: number | undefined){
+  if (isRecord(profileSkills))
+    return profileSkills[skillName] || 0;
+  else if (minions !== undefined) {
+    return profileSkills.includes(skillName) ? minions : 0;
+  } else
+    console.warn("Unable to find rank for ", skillName);
+  return 0;
+}
+
 export default SkillList;
