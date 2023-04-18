@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import {
-  HStack,
-  Text, Tooltip,
-} from "@chakra-ui/react";
-import { BsCircle, BsCircleFill } from "react-icons/bs";
-import { IconType } from "react-icons";
+import {HStack, Text} from "@chakra-ui/react";
 import { capitalize } from "@/utils";
 import {DicePool, DicePoolC} from "./DicePool";
+import ListedSkill from "@components/statblock/ListedSkill";
 
 interface Props {
   name: string;
@@ -15,18 +11,13 @@ interface Props {
   currentCharacteristic?: string;
   group?: boolean;
   onClick: () => void;
+  abbreviated?: boolean;
 }
 
-const SkillItem = ({name, rank, pool, onClick, group = false}: Props) => {
+const SkillItem = ({name, rank, pool, onClick, group = false, abbreviated=false}: Props) => {
   const [hover, setHover] = useState(false);
 
-  const listedSkill: boolean = group || rank > 0
-
-  const icon: IconType = listedSkill ? BsCircleFill : BsCircle;
-  const iconElement = React.createElement(icon, {
-    color: "white",
-    fontSize: "10px",
-  });
+  const isListedSkill: boolean = group || rank > 0
 
   return (
     <HStack
@@ -37,11 +28,7 @@ const SkillItem = ({name, rank, pool, onClick, group = false}: Props) => {
       onClick={onClick}
     >
       <HStack>
-        <Tooltip hasArrow placement="top" openDelay={200} label={listedSkill ? "Skill listed in profile" : "Skill not listed in profile"}>
-          <div>
-            {iconElement}
-          </div>
-        </Tooltip>
+        {!abbreviated && <ListedSkill listedSkill={isListedSkill}/>}
         <Text as={hover ? "u" : undefined} userSelect="none" color="white">
           {capitalize(name)}
         </Text>

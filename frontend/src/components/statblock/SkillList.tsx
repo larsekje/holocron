@@ -11,23 +11,10 @@ interface Props {
   characteristics: Adversary["characteristics"];
   currentCharacteristic: string;
   minions?: number;
+  abbreviated?: boolean;
 }
 
-function isRecord(obj: unknown): obj is Record<string, number> {
-  return (typeof obj === 'object' && obj !== null && !Array.isArray(obj));
-}
-
-function getRank(skillName: string, profileSkills: Record<string, number> | string[], minions: number | undefined){
-  if (isRecord(profileSkills))
-    return profileSkills[skillName] || 0;
-  else if (minions !== undefined) {
-    return profileSkills.includes(skillName) ? minions : 0;
-  } else
-    console.warn("Unable to find rank for ", skillName);
-    return 0;
-}
-
-const SkillList = ({profileSkills, characteristics, minions}: Props) => {
+const SkillList = ({profileSkills, characteristics, minions, abbreviated=false}: Props) => {
   let characterSkills: Skill[] = []
 
   // Create dice pool for skills
@@ -49,6 +36,9 @@ const SkillList = ({profileSkills, characteristics, minions}: Props) => {
     })
   }
 
+  if (abbreviated)
+    characterSkills = characterSkills.filter(s => s.rank > 0)
+
   return (
     <SimpleGrid columns={3} spacingX={3}>
       {characterSkills.map(skill => (
@@ -57,6 +47,7 @@ const SkillList = ({profileSkills, characteristics, minions}: Props) => {
           rank={skill.rank}
           pool={skill.pool}
           onClick={() => showToast(skill.name)}
+          abbreviated={abbreviated}
         />
       ))}
     </SimpleGrid>
