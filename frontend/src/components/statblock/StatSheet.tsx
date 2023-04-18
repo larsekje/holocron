@@ -10,10 +10,10 @@ import {book, capitalize, statify} from "@/utils";
 
 import Sources from "@components/statblock/Sources";
 import AdversaryType from "@components/statblock/AdversaryType";
-import StatusCard from "@components/statuscard/StatusCard";
 import {ParsedText} from "@components/textFormatting/ParsedChakra";
 import {useDataStore} from "@/dataStore";
 import SkillList from "@components/statblock/SkillList";
+import TargetStatus from "@components/statblock/targetStatus/TargetStatus";
 
 export interface Skill {
   name: string;
@@ -46,8 +46,7 @@ const StatSheet = ({ target }: Props) => {
         <Sources sources={adversary.tags}/>
       </HStack>
 
-      <StatusCard target={target}/>
-
+      <TargetStatus target={target} type={target.template.type} talents={target.template.talents} minions={target.minions}/>
 
       <SkillList profileSkills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic="Intellect" minions={target.minions}/>
       <Divider />

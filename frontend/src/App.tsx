@@ -21,7 +21,7 @@ function App() {
     <>
       <Box display='flex' alignItems='center' h='50' bg='#2F3136'><NavBar/></Box>
       <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
-             gridTemplateColumns={'3fr 3fr 4fr 1fr'} gap='5px' padding='5px'>
+             gridTemplateColumns={'3fr 4fr 3fr 1fr'} gap='5px' padding='5px'>
         {/*<GridItem area='turn'><TurnBar/></GridItem>*/}
         <GridItem area='active'><ContentCardActive/></GridItem>
         <GridItem area='targets'><ContentCardTargets/></GridItem>
