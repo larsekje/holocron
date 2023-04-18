@@ -1,15 +1,19 @@
 import React from "react";
 import {
-    Divider,
-    Heading,
-    HStack, List,
-    Text,
+  Divider,
+  Heading,
+  HStack, List,
+  Text, VStack,
 } from "@chakra-ui/react";
-import StatusCard from "../statuscard/StatusCard";
 import {Target} from "@/target";
-import {ParsedText} from "../textFormatting/ParsedChakra";
-import {statify} from "@/utils";
+import {book, capitalize, statify} from "@/utils";
+
+import Sources from "@components/statblock/Sources";
+import AdversaryType from "@components/statblock/AdversaryType";
+import StatusCard from "@components/statuscard/StatusCard";
+import {ParsedText} from "@components/textFormatting/ParsedChakra";
 import {useDataStore} from "@/dataStore";
+import SkillList from "@components/statblock/SkillList";
 
 export interface Skill {
   name: string;
@@ -21,48 +25,44 @@ interface Props {
 }
 
 const StatSheet = ({ target }: Props) => {
-    const getTalent = useDataStore((state) => state.getTalent);
-
-
+  const getTalent = useDataStore(state => state.getTalent);
   const adversary = target.template;
 
+  const tags = adversary.tags
+    .filter(t => !t.includes("book"))
+    .map(t => capitalize(t))
+    .join(", ");
+
   return (
-    <div>
-      <HStack>
-        <Heading size="md" color="white">
-          {adversary.name}
-        </Heading>
-        <Text color="white" as="i">
-          EotE 404
-        </Text>
+    <>
+      <HStack height="50px" marginBottom="10px" marginRight="5">
+        <AdversaryType type={adversary.type}/>
+        <VStack alignItems="left" spacing="0px" width="100%">
+          <HStack justifyContent="space-between">
+            <Heading size="md" color="white">{adversary.name}</Heading>
+          </HStack>
+          <Text color="white" as="i">{tags}</Text>
+        </VStack>
+        <Sources sources={adversary.tags}/>
       </HStack>
-      <Text color="white" as="i">
-        {adversary.type}, {adversary.tags.join(", ")}
-      </Text>
 
-      <Divider />
       <StatusCard target={target}/>
-      <Divider />
 
-      <Heading color="white" size="lg">
-        Skills
-      </Heading>
-      <Divider />
 
-      {/*<SkillList skills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic={currentCharacteristic} />*/}
+      <SkillList profileSkills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic="Intellect" minions={target.minions}/>
       <Divider />
 
       <List>
-          {adversary.talents && adversary.talents.map(talentName => {
-                  let ranked = talentName.match(/\s(\d+)$/);
-                  let ranks = ranked ? ranked[1] : 1;
+        {adversary.talents && adversary.talents.map(talentName => {
+            let ranked = talentName.match(/\s(\d+)$/);
+            let ranks = ranked ? ranked[1] : 1;
 
-                  let description = getTalent(talentName)?.description;
-                  description = statify(description, "", ranks);
+            let description = getTalent(talentName)?.description;
+            description = statify(description, "", ranks);
 
-                  return (<ParsedText color="white"><strong>{talentName}:</strong> {description}</ParsedText>)
-              }
-          )}
+            return (<ParsedText color="white"><strong>{talentName}:</strong> {description}</ParsedText>)
+          }
+        )}
       </List>
 
       <Divider />
@@ -82,7 +82,8 @@ const StatSheet = ({ target }: Props) => {
           </Text>
         </>
       )}
-    </div>
+
+    </>
   );
 };
 

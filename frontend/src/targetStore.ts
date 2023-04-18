@@ -42,7 +42,7 @@ export function useSetInitialTargets() {
       setTargets([
         new Target(adversaries[0]),
         new Target(adversaries[2]),
-        new Target(adversaries[52]),
+        new Target(adversaries[52], 3),
         new Target(adversaries[13]),
       ]);
   }, [loading]);

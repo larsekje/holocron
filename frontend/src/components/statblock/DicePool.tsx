@@ -10,8 +10,8 @@ export class DicePool {
   yellow: number;
 
   constructor(skillRank: number, characteristic: number) {
-    this.green = skillRank;
-    this.yellow = characteristic;
+    this.yellow = Math.min(skillRank, characteristic);
+    this.green = Math.max(skillRank, characteristic) - this.yellow;
   }
 }
 

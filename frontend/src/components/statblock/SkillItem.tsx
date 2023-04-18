@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import {
   HStack,
-  Text,
+  Text, Tooltip,
 } from "@chakra-ui/react";
 import { BsCircle, BsCircleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
-import skillMap from "@/skillMap";
 import { capitalize } from "@/utils";
 import {DicePool, DicePoolC} from "./DicePool";
 
@@ -15,37 +14,35 @@ interface Props {
   pool: DicePool;
   currentCharacteristic?: string;
   group?: boolean;
+  onClick: () => void;
 }
 
-const SkillItem = ({
-  name,
-  rank,
-  pool,
-  currentCharacteristic = "",
-  group = false,
-}: Props) => {
+const SkillItem = ({name, rank, pool, onClick, group = false}: Props) => {
   const [hover, setHover] = useState(false);
 
-  const icon: IconType = (group || rank > 0) ? BsCircleFill : BsCircle;
+  const listedSkill: boolean = group || rank > 0
+
+  const icon: IconType = listedSkill ? BsCircleFill : BsCircle;
   const iconElement = React.createElement(icon, {
     color: "white",
     fontSize: "10px",
   });
 
-  const characteristic = skillMap[name];
-  const characteristicHighlighted = characteristic === currentCharacteristic || currentCharacteristic === "";
-  const color = characteristicHighlighted ? "white" : "gray";
-
   return (
     <HStack
       justifyContent="space-between"
-      bg={hover ? "tomato" : ""}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      cursor="pointer"
+      onClick={onClick}
     >
       <HStack>
-        {iconElement}
-        <Text userSelect="none" color={color}>
+        <Tooltip hasArrow placement="top" openDelay={200} label={listedSkill ? "Skill listed in profile" : "Skill not listed in profile"}>
+          <div>
+            {iconElement}
+          </div>
+        </Tooltip>
+        <Text as={hover ? "u" : undefined} userSelect="none" color="white">
           {capitalize(name)}
         </Text>
       </HStack>

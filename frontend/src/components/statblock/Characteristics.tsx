@@ -6,12 +6,11 @@ import {Adversary} from "@/adversary";
 
 interface Props {
   characteristics: Adversary["characteristics"];
-  setCurrentCharacteristic: (characteristic: string) => void;
+  setCurrentCharacteristic?: (characteristic: string) => void;
 }
 
 const Characteristics = ({
   characteristics,
-  setCurrentCharacteristic,
 }: Props) => {
   let items = [];
   for (const [name, value] of Object.entries(characteristics)) {
@@ -19,7 +18,7 @@ const Characteristics = ({
       <CharacteristicItem
         name={capitalize(name)}
         value={value}
-        setCurrentCharacteristic={setCurrentCharacteristic}
+        setCurrentCharacteristic={() => console.log("hei")}
       />
     );
   }

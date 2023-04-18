@@ -5,7 +5,7 @@ import StatSheet from "@components/statblock/StatSheet";
 import {Text} from "@chakra-ui/react";
 import {useTargetStore} from "@/targetStore";
 
-const ContentCardTargeted = () => {
+const ContentCardTarget = () => {
   const selectedTarget = useTargetStore(state => state.selectedTarget);
   const setActiveTarget = useTargetStore(state => state.setActiveTarget);
 
@@ -13,7 +13,7 @@ const ContentCardTargeted = () => {
   const buttons = [setActiveTargetButton]
 
   return (
-    <ContentCard heading='Targeted' buttons={buttons}>
+    <ContentCard heading='Target' buttons={buttons}>
       {selectedTarget
         ? <StatSheet target={selectedTarget}/>
         : <Text>No target selected. Select a target from the Targets list.</Text>}
@@ -21,4 +21,4 @@ const ContentCardTargeted = () => {
   );
 };
 
-export default ContentCardTargeted;
+export default ContentCardTarget;

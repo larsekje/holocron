@@ -11,6 +11,7 @@ export interface Adversary extends Data {
     Cunning: number;
     Willpower: number;
     Presence: number;
+    [key: string]: number;
   };
   derived: {
     soak: number;

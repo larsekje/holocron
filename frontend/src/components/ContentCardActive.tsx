@@ -1,6 +1,7 @@
 import React from 'react';
 import ContentCard from "./contentCardMain/ContentCard";
 import {useTargetStore} from "@/targetStore";
+import StatSheet from "@components/statblock/StatSheet";
 
 const ContentCardActive = () => {
 
@@ -15,8 +16,8 @@ const ContentCardActive = () => {
   }
 
   return (
-    <ContentCard heading={activeTarget.template.name}>
-
+    <ContentCard heading="Active">
+      <StatSheet target={activeTarget}/>
     </ContentCard>
   );
 };
