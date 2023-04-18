@@ -1,6 +1,6 @@
 import React from 'react';
 import SkillItem from "./SkillItem";
-import {SimpleGrid, useToast} from "@chakra-ui/react";
+import {Divider, Heading, HStack, SimpleGrid, useMediaQuery, useToast} from "@chakra-ui/react";
 import {DicePool} from "./DicePool";
 import {capitalize} from "@/utils";
 import {Adversary} from "@/adversary";
@@ -11,10 +11,13 @@ interface Props {
   characteristics: Adversary["characteristics"];
   currentCharacteristic: string;
   minions?: number;
-  abbreviated?: boolean;
 }
 
-const SkillList = ({profileSkills, characteristics, minions, abbreviated=false}: Props) => {
+const SkillList = ({profileSkills, characteristics, minions}: Props) => {
+
+  const [isSmallScreen] = useMediaQuery("(max-width: 1668px)");
+  const [isLargeScreen] = useMediaQuery("(min-width: 2500px)");
+
   let characterSkills: Skill[] = []
 
   // Create dice pool for skills
@@ -36,21 +39,28 @@ const SkillList = ({profileSkills, characteristics, minions, abbreviated=false}:
     })
   }
 
-  if (abbreviated)
+  if (isSmallScreen)
     characterSkills = characterSkills.filter(s => s.rank > 0)
 
+
   return (
-    <SimpleGrid columns={3} spacingX={3}>
-      {characterSkills.map(skill => (
-        <SkillItem
-          name={skill.name}
-          rank={skill.rank}
-          pool={skill.pool}
-          onClick={() => showToast(skill.name)}
-          abbreviated={abbreviated}
-        />
-      ))}
-    </SimpleGrid>
+    <>
+      <HStack justifyContent="space-between" paddingBottom="5px">
+        <Heading size="md" as="h2" color="white">Skills</Heading>
+      </HStack>
+      <Divider/>
+      <SimpleGrid spacingX={3} columns={isSmallScreen ? 1 : isLargeScreen ? 3 : 2}>
+        {characterSkills.map(skill => (
+          <SkillItem
+            name={skill.name}
+            rank={skill.rank}
+            pool={skill.pool}
+            onClick={() => showToast(skill.name)}
+            abbreviated={isSmallScreen}
+          />
+        ))}
+      </SimpleGrid>
+    </>
   );
 };
 
