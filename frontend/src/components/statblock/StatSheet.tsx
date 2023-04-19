@@ -14,6 +14,7 @@ import {ParsedText} from "@components/textFormatting/ParsedChakra";
 import {useDataStore} from "@/dataStore";
 import SkillList from "@components/statblock/SkillList";
 import TargetStatus from "@components/statblock/targetStatus/TargetStatus";
+import WeaponStat from "@components/statblock/WeaponStat";
 
 export interface Skill {
   name: string;
@@ -26,6 +27,7 @@ interface Props {
 
 const StatSheet = ({ target }: Props) => {
   const getTalent = useDataStore(state => state.getTalent);
+  const getWeapon = useDataStore(state => state.getWeapon);
   const adversary = target.template;
 
   const tags = adversary.tags
@@ -49,6 +51,26 @@ const StatSheet = ({ target }: Props) => {
       <TargetStatus target={target} type={target.template.type} talents={target.template.talents} minions={target.minions}/>
 
       <SkillList profileSkills={adversary.skills} characteristics={adversary.characteristics} currentCharacteristic="Intellect" minions={target.minions}/>
+
+      {adversary.weapons && (
+        <>
+          <Heading size="md" as="h2" color="white" marginTop="10px">Weapons</Heading>
+          <Divider/>
+          <List>
+            {adversary.weapons && adversary.weapons.map(w => {
+
+              if (typeof w === "string"){
+                let weapon = getWeapon(w);
+                if (weapon === undefined)
+                  return null;
+                return (<WeaponStat weapon={weapon} characteristics={adversary.characteristics} minions={target.minions} profileSkills={adversary.skills}/>)
+              } else
+                return (<WeaponStat weapon={w} characteristics={adversary.characteristics} minions={target.minions} profileSkills={adversary.skills}/>)
+            })}
+          </List>
+        </>
+      )
+      }
 
       {
         adversary.talents && (

@@ -1,4 +1,4 @@
-import {Data} from "@/dataStore";
+import {Data, Weapon} from "@/dataStore";
 
 export interface Adversary extends Data {
   name: string;
@@ -25,7 +25,7 @@ export interface Adversary extends Data {
     name: string;
     description: string;
   } | string>;
-  weapons?: string[];
+  weapons?: Array<string | Weapon>;
   gear?: string[];
   tags: string[];
 }
