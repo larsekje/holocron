@@ -58,6 +58,9 @@ const SkillList = ({profileSkills, characteristics, minions}: Props) => {
   if (!showAll)
     characterSkills = characterSkills.filter(s => s.rank > 0);
 
+  const columns = characterSkills.length <= 5 ? 1: (isSmallScreen ? 1 : isLargeScreen ? 3 : 2);
+  characterSkills = rearrange(characterSkills, columns);
+
   return (
     <Box padding="0 5px">
       <HStack justifyContent="space-between" paddingBottom="5px" paddingTop="10px">
@@ -68,7 +71,7 @@ const SkillList = ({profileSkills, characteristics, minions}: Props) => {
         </HStack>
       </HStack>
       <Divider/>
-      <SimpleGrid spacingX={3} columns={isSmallScreen ? 1 : isLargeScreen ? 3 : 2}>
+      <SimpleGrid spacingX={3} columns={columns}>
         {characterSkills.map(skill => (
           <SkillItem
             name={skill.name}
@@ -109,6 +112,23 @@ export function getRank(skillName: string, profileSkills: Record<string, number>
   } else
     console.warn("Unable to find rank for ", skillName);
   return 0;
+}
+
+// This function rearranges the items in the desired order
+function rearrange(items: Skill[], columns: number) {
+  const numRows = Math.ceil(items.length / columns);
+  const rearranged = [];
+
+  for (let i = 0; i < numRows; i++) {
+    for (let j = 0; j < columns; j++) {
+      const index = j * numRows + i;
+      if (index < items.length) {
+        rearranged.push(items[index]);
+      }
+    }
+  }
+
+  return rearranged;
 }
 
 export default SkillList;
