@@ -1,6 +1,7 @@
 import React, {ReactElement, ReactNode} from 'react';
 import {Box, ButtonProps, Card, CardBody, CardHeader, Heading, HStack} from "@chakra-ui/react";
 import {IconProps, SearchIcon} from "@chakra-ui/icons";
+import useDisableArrowKeyScrolling from "@/useDisableArrowKeyScrolling";
 
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const ContentCard = ({heading, children, buttons, icon}: Props) => {
+  useDisableArrowKeyScrolling();
 
   icon = icon || <SearchIcon/>;
   const clonedIcon = React.cloneElement(icon, {color: 'white'});
