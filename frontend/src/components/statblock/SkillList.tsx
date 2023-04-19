@@ -1,6 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SkillItem from "./SkillItem";
-import {Divider, Heading, HStack, SimpleGrid, useMediaQuery, useToast} from "@chakra-ui/react";
+import {
+  Checkbox,
+  Divider,
+  Text,
+  Heading,
+  HStack,
+  SimpleGrid,
+  useMediaQuery,
+  useToast, Box
+} from "@chakra-ui/react";
 import {DicePool} from "./DicePool";
 import {capitalize} from "@/utils";
 import {Adversary} from "@/adversary";
@@ -15,12 +24,19 @@ interface Props {
 
 const SkillList = ({profileSkills, characteristics, minions}: Props) => {
 
+  // hooks
+  const [showAll, setShowAll] = useState(true);
+
+  // media queries
   const [isSmallScreen] = useMediaQuery("(max-width: 1668px)");
   const [isLargeScreen] = useMediaQuery("(min-width: 2500px)");
 
-  let characterSkills: Skill[] = []
+  useEffect(() => {
+    setShowAll(!isSmallScreen);
+  }, [isSmallScreen]);
 
   // Create dice pool for skills
+  let characterSkills: Skill[] = []
   skills
     .filter(s => !s.name.includes("("))
     .forEach(s => {
@@ -39,14 +55,17 @@ const SkillList = ({profileSkills, characteristics, minions}: Props) => {
     })
   }
 
-  if (isSmallScreen)
-    characterSkills = characterSkills.filter(s => s.rank > 0)
-
+  if (!showAll)
+    characterSkills = characterSkills.filter(s => s.rank > 0);
 
   return (
-    <>
-      <HStack justifyContent="space-between" paddingBottom="5px">
+    <Box padding="0 5px">
+      <HStack justifyContent="space-between" paddingBottom="5px" paddingTop="10px">
         <Heading size="md" as="h2" color="white">Skills</Heading>
+        <HStack>
+          <Text color="white" fontSize="sm">Show all</Text>
+          <Checkbox onChange={() => setShowAll(!showAll)} isChecked={showAll}/>
+        </HStack>
       </HStack>
       <Divider/>
       <SimpleGrid spacingX={3} columns={isSmallScreen ? 1 : isLargeScreen ? 3 : 2}>
@@ -56,11 +75,11 @@ const SkillList = ({profileSkills, characteristics, minions}: Props) => {
             rank={skill.rank}
             pool={skill.pool}
             onClick={() => showToast(skill.name)}
-            abbreviated={isSmallScreen}
+            abbreviated={isSmallScreen || !showAll}
           />
         ))}
       </SimpleGrid>
-    </>
+    </Box>
   );
 };
 
@@ -82,7 +101,7 @@ function isRecord(obj: unknown): obj is Record<string, number> {
   return (typeof obj === 'object' && obj !== null && !Array.isArray(obj));
 }
 
-function getRank(skillName: string, profileSkills: Record<string, number> | string[], minions: number | undefined){
+export function getRank(skillName: string, profileSkills: Record<string, number> | string[], minions: number | undefined){
   if (isRecord(profileSkills))
     return profileSkills[skillName] || 0;
   else if (minions !== undefined) {
