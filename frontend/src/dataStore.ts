@@ -19,6 +19,16 @@ export interface Talent extends Data {
   ranked?: boolean;
 }
 
+export interface Weapon extends Data {
+  name: string;
+  skill: string;
+  damage?: number;
+  plusDamage?: number;
+  critical: number;
+  range: "Short" | "Medium" | "Long" | "Extreme"
+  qualities: string[];
+}
+
 // enforce id
 const idify = <T extends Data>(data: Omit<T, 'id'>[]) => {
   return data.map(item => ({
@@ -34,6 +44,10 @@ interface DataStore {
   talents: Talent[];
   getTalent: (name: string) => Talent | undefined;
   setTalents: (talents: Talent[]) => void;
+
+  weapons: Weapon[];
+  getWeapon: (name: string) => Weapon | undefined;
+  setWeapons: (weapons: Weapon[]) => void;
 
   adversaries: Adversary[];
   getAdversary: (name: string) => Adversary | undefined;
@@ -51,6 +65,13 @@ export const useDataStore = create<DataStore>((set, get) => ({
     return get().talents.find(i => i.id === lookUpId);
   },
 
+  weapons: [],
+  setWeapons: weapons => set({weapons}),
+  getWeapon: (name) => {
+    const lookUpId = id(name);
+    return get().weapons.find(i => i.id === lookUpId);
+  },
+
   adversaries: [],
   setAdversaries: adversaries => set({adversaries}),
   getAdversary: (name) => {
@@ -65,11 +86,12 @@ type SetData<T> = (data: T[]) => void;
 export function useLoadData() {
   const setLoading = useDataStore(state => state.setLoading);
   const setTalents = useDataStore(state => state.setTalents);
+  const setWeapons = useDataStore(state => state.setWeapons);
   const setAdversaries = useDataStore(state => state.setAdversaries);
 
   // files to load (and their setters)
-  const files: string[] = ["talents", "adversaries"];
-  const setters = [setTalents, setAdversaries].map(fn => fn as SetData<Data>);
+  const files: string[] = ["talents", "weapons", "adversaries"];
+  const setters = [setTalents, setWeapons, setAdversaries].map(fn => fn as SetData<Data>);
 
   useEffect(() => {
     Promise.all(
