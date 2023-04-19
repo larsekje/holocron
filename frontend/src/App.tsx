@@ -8,11 +8,8 @@ import TurnBar from "./components/initiative/TurnBar";
 import Sidebar from "./components/Sidebar";
 
 import "./assets/sass/dice.sass"
-import {useLoadData} from "@/dataStore";
 
 function App() {
-  useLoadData();
-
   const templateAreas = `"turn   turn    turn     turn"
                          "active targets targeted sidebar"`
 
