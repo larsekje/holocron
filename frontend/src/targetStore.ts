@@ -10,6 +10,7 @@ interface TargetStore {
   activeTarget: Target | undefined;
   setSelectedTarget: (activeTarget: Target) => void;
   setActiveTarget: (activeTarget: Target | undefined) => void;
+  updateTarget: (target: Target) => void;
 }
 
 export const useTargetStore = create<TargetStore>((set, get) => ({
@@ -29,7 +30,22 @@ export const useTargetStore = create<TargetStore>((set, get) => ({
   setActiveTarget: activeTarget => {
     if (activeTarget !== undefined)
       set({activeTarget})
+  },
+  updateTarget: updatedTarget => {
+    updatedTarget = updatedTarget.clone();
+
+    if (get().selectedTarget?.id === updatedTarget.id)
+      set(() => ({selectedTarget: updatedTarget}))
+
+    if (get().activeTarget?.id === updatedTarget.id)
+      set(() => ({activeTarget: updatedTarget}))
+
+    set((state) => ({
+      targets: state.targets.map(target =>
+        target.id === updatedTarget.id ? updatedTarget : target
+      )}))
   }
+
 }))
 
 export function useSetInitialTargets() {
