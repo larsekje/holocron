@@ -6,7 +6,6 @@ const NavBar = () => {
 
   return (
     <HStack padding={'0 10px'}>
-      <IconButton aria-label='Expand menu' icon={<HamburgerIcon />} colorScheme='blackAlpha'></IconButton>
       <Heading>GM Holocron</Heading>
     </HStack>
   );
