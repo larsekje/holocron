@@ -1,34 +1,21 @@
 import {Box, Grid, GridItem} from "@chakra-ui/react";
-import NavBar from "./components/NavBar";
 import React from "react";
-import ContentCardActive from "./components/ContentCardActive";
-import ContentCardTargets from "@components/contentCardTargets/ContentCardTargets";
-import ContentCardTarget from "@components/ContentCardTarget";
-import Sidebar from "./components/Sidebar";
+
 
 import "./assets/sass/dice.sass"
-import {useLoadData} from "@/dataStore";
-import {useSetInitialTargets} from "@/targetStore";
-import TurnBar from "@components/TurnBar/TurnBar";
-import CharacterList from "@components/CharacterList/CharacterList";
-import useCharacterStore from "@/state/characterStore";
-import Character from "@components/Character/Character";
 
 function App() {
-  useLoadData();
-  useSetInitialTargets();
-
   const templateAreas = `"turn   turn    turn     turn"
                          "active targets targeted sidebar"`
 
   return (
     <>
-      <Box display='flex' alignItems='center' h='50' bg='#2F3136'><NavBar/></Box>
+      <Box display='flex' alignItems='center' h='50' bg='#2F3136'></Box>
       <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
-        <GridItem area='turn' bg="azure"><TurnBar/></GridItem>
-        <GridItem area='active' bg="dodgerblue"><Character/></GridItem>
-        <GridItem area='targets' bg="gold"><CharacterList/></GridItem>
+        <GridItem area='turn' bg="azure"></GridItem>
+        <GridItem area='active' bg="dodgerblue"></GridItem>
+        <GridItem area='targets' bg="gold"></GridItem>
         <GridItem area='targeted' bg="tomato"></GridItem>
         <GridItem area='sidebar' bg='orchid'></GridItem>
       </Grid>
