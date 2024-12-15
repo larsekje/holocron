@@ -1,4 +1,5 @@
 import create from 'zustand';
+import {rollInitiativeForAllCharacters} from "@/state/utils/initiative";
 
 export enum Phase {
   Idle = 'idle',
@@ -12,19 +13,22 @@ export enum Phase {
 interface GameStore {
   phase: Phase;
   initiativeOrder: string[];
-  activeTurnIndex: number | null;
+  activeTurnIndex: number;
   isCombatActive: boolean;
   transitionTo: (newPhase: Phase) => void;
   setInitiativeOrder: (order: string[]) => void;
   nextTurn: () => void;
   resetGame: () => void;
+
+  // Phase-specific actions
+  startRollingInitiative: () => void;
 }
 
 // Zustand `gameStore` with Combat Logic
 const useGameStore = create<GameStore>((set, get) => ({
   phase: Phase.Idle,
   initiativeOrder: [],
-  activeTurnIndex: null,
+  activeTurnIndex: 0,
   isCombatActive: false,
 
   transitionTo: (newPhase) => {
@@ -43,6 +47,10 @@ const useGameStore = create<GameStore>((set, get) => ({
       console.log(`Transitioned from ${currentPhase} to ${newPhase}`);
     } else {
       console.error(`Invalid transition from ${currentPhase} to ${newPhase}`);
+    }
+
+    if (newPhase === Phase.RollingInitiative) {
+      get().startRollingInitiative();
     }
   },
 
@@ -67,11 +75,17 @@ const useGameStore = create<GameStore>((set, get) => ({
     set({
       phase: Phase.Idle,
       initiativeOrder: [],
-      activeTurnIndex: null,
+      activeTurnIndex: 0,
       isCombatActive: false,
     });
     console.log('Game reset to initial state');
   },
+
+  // Logic for what happens during RollingInitiative
+  startRollingInitiative: () => {
+    console.log('Entering Rolling Initiative Phase...');
+  },
+
 }));
 
 export default useGameStore;

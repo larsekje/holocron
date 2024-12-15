@@ -1,16 +1,6 @@
 import create from 'zustand';
+import {Character} from "@/features/character/Character";
 
-export interface Character {
-  id: string; // Unique character ID
-  name: string; // Character name
-  strain: number; // Current strain level
-  maxStrain: number; // Maximum strain
-  wounds: number; // Current wound level
-  maxWounds: number; // Maximum wounds
-  equipment: string[]; // List of equipment
-  skills: Record<string, number>; // Skills with rank (e.g., {'Pilot': 2, 'Mechanics': 1})
-  destinyPoints: number; // Destiny points available
-}
 
 interface CharacterStore {
   characters: Character[]; // List of all characters
@@ -18,7 +8,10 @@ interface CharacterStore {
   addCharacter: (character: Character) => void; // Add a new character
   removeCharacter: (id: string) => void; // Remove a character by ID
   updateCharacter: (id: string, updates: Partial<Character>) => void; // Update an existing character
-  getCharacter: (id: string) => Character | undefined; // Get character by ID
+  updateCharacters: (
+    condition: (character: Character) => boolean,
+    updates: Partial<Character> | ((character: Character) => Partial<Character>)
+  ) => void;  getCharacter: (id: string) => Character | undefined; // Get character by ID
   setActiveCharacter: (id: string) => void; // Set the active character
   adjustStrain: (id: string, amount: number) => void; // Adjust strain points
   adjustWounds: (id: string, amount: number) => void; // Adjust wounds
@@ -45,15 +38,31 @@ const useCharacterStore = create<CharacterStore>((set, get) => ({
   },
 
   // Update a character by ID
-  updateCharacter: (id, updates) => {
+  updateCharacter: (id: string, updates: Partial<Character>) =>
     set((state) => ({
-      characters: state.characters.map((char) =>
-        char.id === id ? { ...char, ...updates } : char
+      characters: state.characters.map((character) =>
+        character.id === id
+          ? { ...character, ...updates }
+          : character
       ),
-    }));
-    console.log(`Character with ID ${id} updated.`);
-  },
+    })),
 
+  // Generic function for updating characters based on a condition
+  updateCharacters: (
+    condition: (character: Character) => boolean,
+    updates: Partial<Character> | ((character: Character) => Partial<Character>)
+  ) =>
+    set((state) => ({
+      characters: state.characters.map((character) =>
+        condition(character)
+          ? {
+            ...character,
+            ...(typeof updates === "function" ? updates(character) : updates), // Handle both static and dynamic updates
+          }
+          : character
+      ),
+    })),
+  
   // Get a character by ID
   getCharacter: (id) => {
     return get().characters.find((char) => char.id === id);
