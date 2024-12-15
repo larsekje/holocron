@@ -6,12 +6,18 @@ import useCharacterStore from "@/state/characterStore";
 
 
 interface Props {
-  character: Character; // The character data to display
+  id: string; // The character data to display
 }
 
-const CharacterListItem: React.FC<Props> = ({ character }) => {
+const CharacterListItem: React.FC<Props> = ({ id }) => {
 
+  const character = useCharacterStore((state) => state.getCharacter(id));
   const updateCharacter = useCharacterStore((state) => state.updateCharacter);
+  const setActiveCharacter = useCharacterStore((state) => state.setActiveCharacter);
+
+  console.log("CharacterListItem", character);
+
+  if (!character) return null;
 
   const handleRollInitiative = () => {
     console.log("Roll Initiative");
@@ -23,7 +29,10 @@ const CharacterListItem: React.FC<Props> = ({ character }) => {
     updateCharacter(character.id, { ...character, initiative: newInitiative });
   };
 
-
+  const handleSetActive = () => {
+    console.log("Set Active Character to id:", id);
+    setActiveCharacter(id);
+  }
 
   return (
     <HStack
@@ -50,6 +59,10 @@ const CharacterListItem: React.FC<Props> = ({ character }) => {
           Roll Initiative
         </Button>
       )}
+
+      <Button onClick={handleSetActive}>
+        Active
+      </Button>
 
       <Text fontSize="md" fontWeight="bold" color="white">
         {character.initiative}

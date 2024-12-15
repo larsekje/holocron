@@ -1,5 +1,4 @@
 import create from 'zustand';
-import {rollInitiativeForAllCharacters} from "@/state/utils/initiative";
 
 export enum Phase {
   Idle = 'idle',

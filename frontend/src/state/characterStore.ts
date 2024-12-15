@@ -11,8 +11,10 @@ interface CharacterStore {
   updateCharacters: (
     condition: (character: Character) => boolean,
     updates: Partial<Character> | ((character: Character) => Partial<Character>)
-  ) => void;  getCharacter: (id: string) => Character | undefined; // Get character by ID
+  ) => void;
+  getCharacter: (id: string) => Character | undefined; // Get character by ID
   setActiveCharacter: (id: string) => void; // Set the active character
+  getActiveCharacter: () => Character | undefined;
   adjustStrain: (id: string, amount: number) => void; // Adjust strain points
   adjustWounds: (id: string, amount: number) => void; // Adjust wounds
 }
@@ -65,7 +67,20 @@ const useCharacterStore = create<CharacterStore>((set, get) => ({
   
   // Get a character by ID
   getCharacter: (id) => {
+    const characters = get().characters;
+    console.log("characters: ", characters);
+    console.log("id:", id);
+    const character = characters.find((char) => char.id === id);
+
+    console.log("character:", character)
     return get().characters.find((char) => char.id === id);
+  },
+
+  getActiveCharacter: () => {
+    const state = get(); // Access current store state
+    return state.activeCharacterId
+        ? state.getCharacter(state.activeCharacterId)
+        : undefined;
   },
 
   // Set the active character

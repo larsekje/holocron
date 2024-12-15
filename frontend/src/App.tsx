@@ -12,6 +12,7 @@ import {useSetInitialTargets} from "@/targetStore";
 import TurnBar from "@components/TurnBar/TurnBar";
 import CharacterList from "@components/CharacterList/CharacterList";
 import useCharacterStore from "@/state/characterStore";
+import Character from "@components/Character/Character";
 
 function App() {
   useLoadData();
@@ -26,7 +27,7 @@ function App() {
       <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
         <GridItem area='turn' bg="azure"><TurnBar/></GridItem>
-        <GridItem area='active' bg="dodgerblue"></GridItem>
+        <GridItem area='active' bg="dodgerblue"><Character/></GridItem>
         <GridItem area='targets' bg="gold"><CharacterList/></GridItem>
         <GridItem area='targeted' bg="tomato"></GridItem>
         <GridItem area='sidebar' bg='orchid'></GridItem>
