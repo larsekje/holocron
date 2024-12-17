@@ -1,4 +1,4 @@
-import {Box, Grid, GridItem} from "@chakra-ui/react";
+import {Box, Grid, GridItem, VStack} from "@chakra-ui/react";
 import React from "react";
 
 
@@ -6,6 +6,7 @@ import "./assets/sass/dice.sass"
 import GameplayInfo from "@components/debug/GameplayInfo";
 import ToolBar from "@components/turnbar/ToolBar";
 import StructuredGameplayManager from "@components/debug/StructuredGameplayManager";
+import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
@@ -20,7 +21,12 @@ function App() {
         <GridItem area='active' bg="dodgerblue"></GridItem>
         <GridItem area='targets' bg="gold"><StructuredGameplayManager/></GridItem>
         <GridItem area='targeted' bg="tomato"></GridItem>
-        <GridItem area='sidebar' bg='orchid'><GameplayInfo/></GridItem>
+        <GridItem area='sidebar' bg='orchid'>
+            <VStack>
+                <GameplayInfo/>
+                <DestinyPointManager/>
+            </VStack>
+        </GridItem>
       </Grid>
     </>
   )
