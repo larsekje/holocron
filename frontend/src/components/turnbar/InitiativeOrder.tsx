@@ -6,15 +6,6 @@ const InitiativeOrder: React.FC = () => {
     const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
     const currentTurnIndex = useGameplayStore((state) => state.context.currentTurnIndex);
 
-    const getBoxShadow = (isActive: boolean, isPC: boolean): string => {
-        if (isActive) {
-            return isPC
-                ? "0px 4px 10px rgba(72,187,120,0.5)" // Green for active PC
-                : "0px 4px 10px rgba(128,90,213,0.5)"; // Purple for active NPC
-        }
-        return "sm"; // Small default shadow for inactive
-    };
-
     return (
         <Box
             w="100%"
