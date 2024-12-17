@@ -95,7 +95,7 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({
     const currentTeam = currentSlot?.team ?? null; // Determine the current team's turn (PC/NPC)
 
     return (
-        <Box mt={4} p={4} borderWidth="1px" borderRadius="md" boxShadow="sm">
+        <Box  p={4} borderRadius="md" boxShadow="sm">
 
             {/* Participants Manager */}
             <Box mt={6} p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
@@ -209,26 +209,6 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({
                     </Flex>
                 ))}
             </Box>
-
-            {/* Navigation Buttons */}
-            <HStack mt={6} spacing={4} justify="space-between">
-                <Button
-                    colorScheme="blue"
-                    size="sm"
-                    onClick={previousTurn}
-                    isDisabled={round === 1 && currentTurnIndex === 0}
-                >
-                    Previous Turn
-                </Button>
-                <Button
-                    colorScheme="blue"
-                    size="sm"
-                    onClick={handleNextTurn}
-                    isDisabled={!activeParticipantId}
-                >
-                    Next Turn
-                </Button>
-            </HStack>
         </Box>
     );
 };

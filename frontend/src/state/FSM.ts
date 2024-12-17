@@ -2,7 +2,7 @@ import {InitiativeSlot} from "@/types/initiativeSlot";
 import useParticipantStore, {Participant} from "@/state/participantsStore";
 import {context} from "esbuild";
 
-type State = 'preparation' | 'inProgress' | 'completed' | 'idle'; // Add 'idle' here
+type State = 'preparation' | 'inProgress' | 'completed' | 'idle';
 type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE';
 
 // Extend the EncounterContext to include `mode`
@@ -247,6 +247,12 @@ export function createEncounterFSM(): FSM {
                             context.isInitiativeRolled = false;
                         },
                     },
+                    EXIT_STRUCTURED: {
+                        target: 'idle',
+                        action: (context) => {
+                            context.mode = 'non-structured';
+                        },
+                    }
                 },
             },
         }

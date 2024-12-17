@@ -38,11 +38,7 @@ const StructuredGameplayManager: React.FC = () => {
 
     return (
         <Box>
-            <Heading>Initiative Order</Heading>
             <InitiativeTracker initiativeOrder={initiativeOrder} participants={participants}/>
-            <Button colorScheme="blue" mt={4} onClick={handleOpenModal}>
-                Set Initiative
-            </Button>
 
             <InitiativeModal
                 isOpen={isModalOpen}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
     AccordionButton,
     Box,
@@ -15,6 +15,7 @@ import {
 import InitiativeOrder from "@components/turnbar/InitiativeOrder";
 import useGameplayStore from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
+import EndEncounterModal from "@components/turnbar/EndEncounterModal";
 
 interface Props { }
 
@@ -25,11 +26,31 @@ const ToolBarStructured = ({ }: Props) => {
     const round = useGameplayStore((state) => state.context.round);
     const state = useGameplayStore((state) => state.state);
 
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+
     return (
         <>
             {/* Left Area */}
             <HStack paddingLeft={4}>
+                {/* End Encounter Button */}
+                <Button
+                    colorScheme="red"
+                    size="sm"
+                    onClick={openModal}
+                    isDisabled={state !== 'inProgress'} // Only enabled during 'inProgress'
+                >
+                    End Encounter
+                </Button>
 
+                {/* End Encounter Modal */}
+                <EndEncounterModal
+                    isOpen={isModalOpen}
+                    onClose={closeModal}
+                    onConfirm={() => console.log("Confirmed")}
+                />
             </HStack>
 
 
