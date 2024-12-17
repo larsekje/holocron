@@ -74,3 +74,85 @@ export class FSM {
         return guard ? guard(this.context) : true;
     }
 }
+
+export function createEncounterFSM(): FSM {
+    const canStartEncounter = (context: EncounterContext): boolean =>
+        context.isInitiativeRolled && context.participantCount > 0 && context.mode === 'structured';
+
+    return new FSM(
+        'preparation',
+        {
+            mode: 'structured',
+            round: 1,
+            activeTurnIndex: 0,
+            participantCount: 3,
+            isInitiativeRolled: false,
+        },
+        {
+            idle: {
+                on: {
+                    ENTER_STRUCTURED: {
+                        target: 'preparation',
+                        action: (context: EncounterContext) => {
+                            context.mode = 'structured';
+                            console.log('Entering structured mode');
+                        },
+                    },
+                },
+            },
+            preparation: {
+                on: {
+                    ROLL_INITIATIVE: {
+                        target: 'preparation',
+                        action: (context: EncounterContext) => {
+                            context.isInitiativeRolled = true;
+                            console.log('Initiative rolled!');
+                        },
+                    },
+                    START_ENCOUNTER: {
+                        target: 'inProgress',
+                        guard: canStartEncounter,
+                        action: (context: EncounterContext) => console.log('Encounter started!'),
+                    },
+                    EXIT_STRUCTURED: {
+                        target: 'idle',
+                        action: (context) => {
+                            context.mode = 'idle';
+                            console.log('Exiting structured mode');
+                        },
+                    },
+                },
+            },
+            inProgress: {
+                on: {
+                    NEXT_TURN: {
+                        target: 'inProgress',
+                        action: (context) => {
+                            if (context.activeTurnIndex + 1 >= context.participantCount) {
+                                context.round++;
+                                context.activeTurnIndex = 0;
+                            } else {
+                                context.activeTurnIndex++;
+                            }
+                        },
+                    },
+                    END_ENCOUNTER: {
+                        target: 'completed',
+                        action: () => console.log('Encounter ended!'),
+                    },
+                },
+            },
+            completed: {
+                on: {
+                    RESET: {
+                        target: 'preparation',
+                        action: (context) => {
+                            context.round = 1;
+                            context.isInitiativeRolled = false;
+                        },
+                    },
+                },
+            },
+        }
+    );
+}
