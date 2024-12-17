@@ -1,14 +1,8 @@
 import create from "zustand";
 import EventBus from "@/utils/events";
+import {InitiativeSlot} from "@/types/initiativeSlot";
 
 type GameplayType = 'non-structured' | 'structured' | 'skill-challenge';
-
-export interface InitiativeSlot {
-    team: "PC" | "NPC"; // Team who owns the slot
-    initiative: number; // Initiative value rolled
-    used?: boolean; // Optional flag to indicate if the slot has been used
-    name?: string;
-}
 
 interface GameplayStore {
     mode: GameplayType; // Determines the active gameplay type
@@ -119,7 +113,6 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
             }));
         },
         setActiveParticipantId: (participantId) => set(() => ({ activeParticipantId: participantId })),
-
 
         // Go to the next turn in the initiative
         nextTurn: () => {

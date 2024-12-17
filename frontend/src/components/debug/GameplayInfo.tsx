@@ -9,14 +9,16 @@ import {
     Switch,
     Flex, HStack, Button,
 } from "@chakra-ui/react";
-import useGameplayStore from "@/state/gameplayStore";
+import useGameplayStore from "@/state/newGameplayStore";
 import useParticipantsStore from "@/state/participantsStore";
 import {createRandomParticipant} from "@/utils/participantUtils";
 
 const GameplayInfo: React.FC = () => {
-    const { mode, turnBased, skillChallengeActive, toggleTurnBased } =
+    const { state, context, isTurnBased: turnBased, toggleMode: toggleTurnBased } =
         useGameplayStore();
     const { participants, addParticipant, removeParticipant } = useParticipantsStore();
+
+    const mode = context.mode;
 
     const handleAddRandomParticipant = () => {
         const isPC = Math.random() < 0.4
@@ -41,8 +43,11 @@ const GameplayInfo: React.FC = () => {
                 {/* Display Gameplay Mode */}
                 <Box>
                     <Text fontWeight="bold">Mode:</Text>
-                    <Badge colorScheme="blue" fontSize="md" mt={1}>
+                    <Badge colorScheme="blue" fontSize="md" mt={1} marginRight={2}>
                         {mode}
+                    </Badge>
+                    <Badge colorScheme="yellow" fontSize="md" mt={1}>
+                        {state}
                     </Badge>
                 </Box>
 
@@ -52,25 +57,13 @@ const GameplayInfo: React.FC = () => {
                         <Text fontWeight="bold">Turn-Based:</Text>
                         <Switch
                             colorScheme="green"
-                            isChecked={turnBased}
+                            isChecked={context.mode === "structured"}
                             onChange={toggleTurnBased}
                         />
                     </Flex>
                     <Text fontSize="sm" color="gray.500" mt={1}>
-                        {turnBased ? "Turn-Based is enabled" : "Turn-Based is disabled"}
+                        {context.mode === "structured" ? "Turn-Based is enabled" : "Turn-Based is disabled"}
                     </Text>
-                </Box>
-
-                {/* Display Skill Challenge Status */}
-                <Box>
-                    <Text fontWeight="bold">Skill Challenge Active:</Text>
-                    <Badge
-                        colorScheme={skillChallengeActive ? "green" : "red"}
-                        fontSize="md"
-                        mt={1}
-                    >
-                        {skillChallengeActive ? "Yes" : "No"}
-                    </Badge>
                 </Box>
             </Stack>
 
@@ -94,7 +87,8 @@ const GameplayInfo: React.FC = () => {
                             >
                                 {participant.isPC ? "PC" : "NPC"}
                             </Badge>
-                            <Text>{participant.name}</Text>
+                            <Badge>{participant.initiative}</Badge>
+                            <Text mr={2}>{participant.name}</Text>
                             <Button
                                 size="xs"
                                 ml="auto"

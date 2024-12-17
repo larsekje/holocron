@@ -1,13 +1,19 @@
+import {InitiativeSlot} from "@/types/initiativeSlot";
+import useParticipantStore, {Participant} from "@/state/participantsStore";
+import {context} from "esbuild";
+
 type State = 'preparation' | 'inProgress' | 'completed' | 'idle'; // Add 'idle' here
-type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE';
+type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE';
 
 // Extend the EncounterContext to include `mode`
 export interface EncounterContext {
-    mode: 'idle' | 'structured';
+    mode: 'non-structured' | 'structured';
     round: number;
-    activeTurnIndex: number;
-    participantCount: number;
+    currentTurnIndex: number;
+    initiativeOrder: InitiativeSlot[];
     isInitiativeRolled: boolean;
+    activeParticipantId: string | null;
+    actedParticipants: string[];
 }
 
 // Define the structure of a transition: event -> state
@@ -70,6 +76,12 @@ export class FSM {
 
         const { guard } = eventConfig;
 
+        console.log(guard)
+        const foo = guard ? guard(this.context) : true;
+        console.log(foo);
+        console.log(this.context);
+
+
         // Check guard condition (if any)
         return guard ? guard(this.context) : true;
     }
@@ -77,16 +89,84 @@ export class FSM {
 
 export function createEncounterFSM(): FSM {
     const canStartEncounter = (context: EncounterContext): boolean =>
-        context.isInitiativeRolled && context.participantCount > 0 && context.mode === 'structured';
+        context.isInitiativeRolled && useParticipantStore.getState().participants.length > 0 && context.mode === 'structured';
+
+    const canDecreaseTurn = (context: EncounterContext): boolean =>
+         !(context.currentTurnIndex === 0 && context.round === 1);
+
+    const getActiveParticipant = (context: EncounterContext): Participant | undefined => {
+        const participants = useParticipantStore.getState().participants;
+        const activeParticipantId = context.activeParticipantId;
+        return participants.find((participant) => participant.id === activeParticipantId);
+    };
+
+    const canAdvanceTurn = (context: EncounterContext): boolean => {
+        const activeParticipant = getActiveParticipant(context);
+
+        if (activeParticipant === undefined)
+        {
+            console.log('Active participant is undefined');
+            return false;
+        }
+
+
+        const currentInitiativeSlot = context.initiativeOrder[context.currentTurnIndex];
+
+        if (currentInitiativeSlot === undefined){
+            console.log('Current initiative slot is undefined');
+            return false;
+        }
+
+        if (context.actedParticipants.includes(activeParticipant.id)) {
+            console.log('Participant has already acted');
+            return false;
+        }
+
+        return isSlotValidForParticipant(currentInitiativeSlot, activeParticipant);
+    }
+
+    const processTurn = (context: EncounterContext): void => {
+        const activeParticipant = getActiveParticipant(context);
+
+        if (activeParticipant && !context.actedParticipants.includes(activeParticipant.id)){
+            context.actedParticipants.push(activeParticipant.id);
+        }
+    }
+
+    const isEndOfRound = (context: EncounterContext): boolean => {
+        return context.currentTurnIndex + 1 >= useParticipantStore.getState().participants.length;
+    };
+
+    const startNewRound = (context: EncounterContext): void => {
+        context.round++;
+        context.currentTurnIndex = 0;
+        context.actedParticipants = []; // Clear acted participants for the new round
+        context.activeParticipantId = null;
+    };
+
+    const advanceTurnIndex = (context: EncounterContext): void => {
+        context.currentTurnIndex++;
+    };
+
+    const isSlotValidForParticipant = (currentInitiativeSlot: InitiativeSlot, activeParticipant: Participant): boolean =>
+    {
+        const isPcOnPcTurn = currentInitiativeSlot.team === "PC" && activeParticipant.isPC;
+        const isNpcOnNpcTurn = currentInitiativeSlot.team === "NPC" && !activeParticipant.isPC;
+
+        console.log(isPcOnPcTurn, isNpcOnNpcTurn);
+        return isPcOnPcTurn || isNpcOnNpcTurn;
+    }
 
     return new FSM(
-        'preparation',
+        'idle',
         {
-            mode: 'structured',
+            mode: 'non-structured',
             round: 1,
-            activeTurnIndex: 0,
-            participantCount: 3,
+            currentTurnIndex: 0,
+            initiativeOrder: [],
             isInitiativeRolled: false,
+            activeParticipantId: null,
+            actedParticipants: []
         },
         {
             idle: {
@@ -117,7 +197,7 @@ export function createEncounterFSM(): FSM {
                     EXIT_STRUCTURED: {
                         target: 'idle',
                         action: (context) => {
-                            context.mode = 'idle';
+                            context.mode = 'non-structured';
                             console.log('Exiting structured mode');
                         },
                     },
@@ -127,12 +207,28 @@ export function createEncounterFSM(): FSM {
                 on: {
                     NEXT_TURN: {
                         target: 'inProgress',
+                        guard: canAdvanceTurn,
                         action: (context) => {
-                            if (context.activeTurnIndex + 1 >= context.participantCount) {
-                                context.round++;
-                                context.activeTurnIndex = 0;
+                            processTurn(context);
+
+                            if (isEndOfRound(context)){
+                                startNewRound(context);
                             } else {
-                                context.activeTurnIndex++;
+                                advanceTurnIndex(context);
+                            }
+
+                            console.log('Turn advanced!', context.actedParticipants);
+                        },
+                    },
+                    PREV_TURN: {
+                        target: 'inProgress',
+                        guard: canDecreaseTurn,
+                        action: (context) => {
+                            if (context.currentTurnIndex  === 0) {
+                                context.round--;
+                                context.currentTurnIndex = useParticipantStore.getState().participants.length - 1;
+                            } else {
+                                context.currentTurnIndex--;
                             }
                         },
                     },

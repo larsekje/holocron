@@ -14,6 +14,7 @@ import {
     Input,
 } from "@chakra-ui/react";
 import {Participant} from "@/state/participantsStore";
+import useGameplayStore from "@/state/newGameplayStore";
 
 interface InitiativeModalProps {
     isOpen: boolean; // Controls when the modal is displayed

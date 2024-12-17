@@ -12,6 +12,7 @@ import {
     Divider,
 } from "@chakra-ui/react";
 import useGameplayStore from "@/state/gameplayStore";
+import useGameplayStoreNew from "@/state/newGameplayStore";
 
 interface InitiativeSlot {
     team: "PC" | "NPC";
@@ -34,8 +35,11 @@ const InitiativeTracker: React.FC<InitiativeTrackerProps> = ({
                                                                  participants,
                                                              }) => {
     // const [currentTurnIndex, setCurrentTurnIndex] = useState(0); // Current turn index in initiative order
-    const { currentTurnIndex, nextTurn, prevTurn, resetTurnOrder, setCurrentTurnIndex, setActiveParticipantId, activeParticipantId } = useGameplayStore();
-    const { actedParticipants, addActedParticipant, clearActedParticipants } = useGameplayStore();
+    const { currentTurnIndex, nextTurn, prevTurn, resetTurnOrder, setCurrentTurnIndex } = useGameplayStore();
+    const { setActiveParticipantId, addActedParticipant, clearActedParticipants, context } = useGameplayStoreNew();
+
+    const activeParticipantId = context.activeParticipantId;
+    const actedParticipants = context.actedParticipants;
 
     const [round, setRound] = useState(1); // Tracks the current round
     //const [actedParticipants, setActedParticipants] = useState<string[]>([]); // Tracks participants who have already acted

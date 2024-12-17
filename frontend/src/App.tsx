@@ -4,9 +4,7 @@ import React from "react";
 
 import "./assets/sass/dice.sass"
 import GameplayInfo from "@components/debug/GameplayInfo";
-import StructuredGameplayManager from "@components/debug/StructuredGameplayManager";
 import ToolBar from "@components/turnbar/ToolBar";
-import FSMTester from "@components/debug/FSMTester";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
@@ -19,8 +17,8 @@ function App() {
              gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
         <GridItem area='turn'><ToolBar/></GridItem>
         <GridItem area='active' bg="dodgerblue"></GridItem>
-        <GridItem area='targets' bg="gold"><StructuredGameplayManager/></GridItem>
-        <GridItem area='targeted' bg="tomato"><FSMTester/></GridItem>
+        <GridItem area='targets' bg="gold"></GridItem>
+        <GridItem area='targeted' bg="tomato"></GridItem>
         <GridItem area='sidebar' bg='orchid'><GameplayInfo/></GridItem>
       </Grid>
     </>

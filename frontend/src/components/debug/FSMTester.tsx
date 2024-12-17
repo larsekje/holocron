@@ -1,20 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Box, Button, VStack, Text } from "@chakra-ui/react";
-import useGameplayStore from "@/state/gameplayStore";
-import useFSMStore from "@/state/FSMStore";
+import useGameplayStore from "@/state/newGameplayStore";
+import useParticipantStore from "@/state/participantsStore";
 
 const FSMTester: React.FC = () => {
-    const { state, context, transition, setMode } = useFSMStore();
-    const mode = useGameplayStore((state) => state.mode);
-
-    // Update FSM mode when gameplay mode changes
-    useEffect(() => {
-        setMode(mode);
-    }, [mode, setMode]);
-
-    const isTransitionAllowed = (event: string): boolean => {
-        return useFSMStore.getState().canTransition(event);
-    };
+    const { state, context, transition, canTransition, isInitiativeModalOpen} = useGameplayStore();
+    const participants  = useParticipantStore((state) => state.participants.length);
+    const mode = context.mode;
 
     return (
         <Box p={5} borderWidth="1px" borderRadius="lg" maxW="md" mx="auto" textAlign="center">
@@ -24,11 +16,10 @@ const FSMTester: React.FC = () => {
                 </Text>
                 <Text>Current State: {state}, Mode: {mode}</Text>
                 <Text>Round: {context.round}</Text>
-                <Text>Active Turn: {context.activeTurnIndex}</Text>
-                <Text>Player Count: {context.participantCount}</Text>
+                <Text>Active Turn: {context.currentTurnIndex}</Text>
+                <Text>Player Count: {participants}</Text>
                 <Text>Initiative Rolled: {context.isInitiativeRolled ? 'Yes' : 'No'}</Text>
-                <Text>Context Mode: {context.mode}</Text>
-                <Text>Context Mode: {context.isInitiativeRolled ? 'Yes' : 'No'}</Text>
+                <Text>Initiative Modal Open: { isInitiativeModalOpen ? 'Yes' : 'No'}</Text>
                 <VStack spacing={3}>
 
                     {/* Button to Roll Initiative */}
@@ -44,7 +35,7 @@ const FSMTester: React.FC = () => {
                     <Button
                         colorScheme="teal"
                         onClick={() => transition('START_ENCOUNTER')}
-                        isDisabled={!isTransitionAllowed('START_ENCOUNTER')}
+                        isDisabled={!canTransition('START_ENCOUNTER')}
                     >
                         Start Encounter
                     </Button>

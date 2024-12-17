@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Heading, VStack, Text } from "@chakra-ui/react";
-import useGameplayStore, {InitiativeSlot} from "@/state/gameplayStore";
+import useGameplayStore from "@/state/newGameplayStore";
 import InitiativeModal from "./InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import InitiativeList from "@components/debug/InitiativeList";
@@ -10,9 +10,9 @@ const StructuredGameplayManager: React.FC = () => {
     // Fetch participants from a participants store
     const participants = useParticipantsStore((state) => state.participants);
 
-    const initiativeOrder = useGameplayStore((state) => state.initiativeOrder);
+    const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
     const setInitiativeOrder = useGameplayStore((state) => state.setInitiativeOrder);
-    const mode = useGameplayStore((state) => state.mode);
+    const mode = useGameplayStore((state) => state.context.mode);
 
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -26,15 +26,7 @@ const StructuredGameplayManager: React.FC = () => {
 
     const handleSetInitiative = (updatedParticipants: Participant[]) => {
         // Map participants to InitiativeSlot[] shape and sort them
-        const order = updatedParticipants
-            .filter((p) => p.initiative !== null) // Ensure all initiatives are present
-            .map((p) => ({
-                team: p.isPC ? "PC" : "NPC", // Map to the store's type
-                initiative: p.initiative!,
-            }))
-            .sort((a, b) => b.initiative - a.initiative) as InitiativeSlot[]; // Sort descending
 
-        setInitiativeOrder(order); // Update store
     };
 
     if (mode !== "structured") return (
