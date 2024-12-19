@@ -4,7 +4,8 @@ import useGameplayStore from "@/state/newGameplayStore";
 import InitiativeModal from "./InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import InitiativeList from "@components/debug/InitiativeList";
-import InitiativeTracker from "@components/debug/InitiativeTracker"; // Hypothetical participants store
+import InitiativeTracker from "@components/debug/InitiativeTracker";
+import {ParticipantsList} from "@components/debug/ParticipantsList"; // Hypothetical participants store
 
 const StructuredGameplayManager: React.FC = () => {
     // Fetch participants from a participants store
@@ -30,10 +31,7 @@ const StructuredGameplayManager: React.FC = () => {
     };
 
     if (mode !== "structured") return (
-        <Box>
-            <Heading>Initiative Order</Heading>
-            <Text>This feature is only available in structured gameplay.</Text>
-        </Box>
+        <ParticipantsList/>
     )
 
     return (

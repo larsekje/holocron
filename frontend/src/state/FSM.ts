@@ -1,6 +1,7 @@
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import useParticipantStore, {Participant} from "@/state/participantsStore";
 import {context} from "esbuild";
+import {useEffectStore} from "@/state/effectStore";
 
 type State = 'preparation' | 'inProgress' | 'completed' | 'idle';
 type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE';
@@ -127,6 +128,13 @@ export function createEncounterFSM(): FSM {
 
     const processTurn = (context: EncounterContext): void => {
         const activeParticipant = getActiveParticipant(context);
+        const effects = useEffectStore.getState().effects;
+
+        for (const effect of effects){
+            if (activeParticipant)
+                effect.effect.apply(activeParticipant);
+        }
+
 
         if (activeParticipant && !context.actedParticipants.includes(activeParticipant.id)){
             context.actedParticipants.push(activeParticipant.id);

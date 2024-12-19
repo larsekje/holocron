@@ -16,6 +16,7 @@ import InitiativeOrder from "@components/turnbar/InitiativeOrder";
 import useGameplayStore from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
+import PocketedResults from "@components/turnbar/PocketedResults";
 
 interface Props { }
 
@@ -76,6 +77,8 @@ const ToolBarStructured = ({ }: Props) => {
             </Button>
             </HStack>
         )}
+
+            <PocketedResults/>
 
         {/* Right Area */}
         <Flex gap={4}>

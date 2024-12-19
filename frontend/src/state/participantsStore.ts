@@ -15,6 +15,9 @@ interface ParticipantStore {
     addParticipant: (participant: Participant) => void;
     removeParticipant: (id: string) => void;
     updateParticipants: (updatedParticipants: Participant[]) => void;
+
+    // Wound and strain
+    addWounds: (id: string, wounds: number) => void;
 }
 
 const useParticipantStore = create<ParticipantStore>((set) => ({
@@ -31,6 +34,11 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
         })),
     updateParticipants: (updatedParticipants) =>
         set(() => ({ participants: updatedParticipants })),
+
+    addWounds: (id, wounds) => {
+        console.log("Updated wounds for " + id + ": " + wounds + "")
+    }
+
 }));
 
 export default useParticipantStore;

@@ -14,8 +14,8 @@ import useParticipantsStore from "@/state/participantsStore";
 import {createRandomParticipant} from "@/utils/participantUtils";
 
 const GameplayInfo: React.FC = () => {
-    const { state, context, isTurnBased: turnBased, toggleMode: toggleTurnBased } =
-        useGameplayStore();
+    const { state, context, isTurnBased: turnBased, toggleMode: toggleTurnBased, setActiveParticipantId } = useGameplayStore();
+    const { activeParticipantId} = useGameplayStore((state) => state.context);
     const { participants, addParticipant, removeParticipant } = useParticipantsStore();
 
     const mode = context.mode;
@@ -24,6 +24,10 @@ const GameplayInfo: React.FC = () => {
         const isPC = Math.random() < 0.4
         const newParticipant = createRandomParticipant(isPC ? "PC" : "NPC");
         addParticipant(newParticipant); // Add the participant to the store
+    };
+
+    const handleSetActive = (participantId: string) => {
+        setActiveParticipantId(participantId); // Update active participant in gameplayStore
     };
 
     return (
@@ -80,8 +84,16 @@ const GameplayInfo: React.FC = () => {
             {participants.length > 0 ? (
                 <Stack spacing={2}>
                     {participants.map((participant) => (
-                        <Flex key={participant.id} align="center">
-                            <Badge
+                        <Flex
+                            key={participant.id}
+                            align="center"
+                            bg={participant.id === activeParticipantId ? "teal.100" : "transparent"}
+                            borderRadius="md"
+                            p={2}
+                            _hover={{ cursor: "pointer", bg: "teal.200" }}
+                            onClick={() => handleSetActive(participant.id)}
+                        >
+                             <Badge
                                 colorScheme={participant.isPC ? "green" : "purple"}
                                 mr={2}
                             >
