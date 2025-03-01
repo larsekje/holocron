@@ -3,7 +3,7 @@ import {Box, Flex, Text, Badge, Stack, IconButton, Tooltip, HStack, VStack} from
 import { CloseIcon, TimeIcon } from '@chakra-ui/icons';
 import { useEffectStore } from '@/state/effectStore';
 
-export const ActiveEffectsList: React.FC = () => {
+    export const ActiveEffectsList: React.FC = () => {
     const allEffects = useEffectStore((state) =>
         Object.values(state.effects).flat()
     ); // Flatten all effects across participants

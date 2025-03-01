@@ -78,8 +78,6 @@ const ToolBarStructured = ({ }: Props) => {
             </HStack>
         )}
 
-            <PocketedResults/>
-
         {/* Right Area */}
         <Flex gap={4}>
             <RoundNumberDisplay roundNumber={round}/>

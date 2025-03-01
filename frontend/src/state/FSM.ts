@@ -1,10 +1,9 @@
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import useParticipantStore, {Participant} from "@/state/participantsStore";
 import {context} from "esbuild";
-import {useEffectStore} from "@/state/effectStore";
 
 type State = 'preparation' | 'inProgress' | 'completed' | 'idle';
-type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE';
+type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE' | 'TURN_START' | 'TURN_END';
 
 // Extend the EncounterContext to include `mode`
 export interface EncounterContext {
@@ -28,6 +27,25 @@ interface Transition {
 interface StateConfig {
     on: Partial<Record<FSMEvent, Transition>>; // Events are now optional
 }
+
+// Event emitter for FSM events
+export type FSMEventListener = (event: { type: string; participantId?: string }) => void;
+const listeners: FSMEventListener[] = [];
+
+export const addFSMEventListener = (listener: FSMEventListener) => {
+    listeners.push(listener);
+};
+
+export const removeFSMEventListener = (listener: FSMEventListener) => {
+    const index = listeners.indexOf(listener);
+    if (index > -1) {
+        listeners.splice(index, 1);
+    }
+};
+
+const emitFSMEvent = (type: string, participantId?: string) => {
+    listeners.forEach(listener => listener({ type, participantId }));
+};
 
 // The FSM implementation
 export class FSM {
@@ -110,7 +128,6 @@ export function createEncounterFSM(): FSM {
             return false;
         }
 
-
         const currentInitiativeSlot = context.initiativeOrder[context.currentTurnIndex];
 
         if (currentInitiativeSlot === undefined){
@@ -123,20 +140,18 @@ export function createEncounterFSM(): FSM {
             return false;
         }
 
-        return isSlotValidForParticipant(currentInitiativeSlot, activeParticipant);
+        const isPcOnPcTurn = currentInitiativeSlot.team === "PC" && activeParticipant.isPC;
+        const isNpcOnNpcTurn = currentInitiativeSlot.team === "NPC" && !activeParticipant.isPC;
+
+        console.log(isPcOnPcTurn, isNpcOnNpcTurn);
+        return isPcOnPcTurn || isNpcOnNpcTurn;
     }
 
     const processTurn = (context: EncounterContext): void => {
         const activeParticipant = getActiveParticipant(context);
-        const effects = useEffectStore.getState().effects;
-
-        for (const effect of effects){
-            if (activeParticipant)
-                effect.effect.apply(activeParticipant);
-        }
-
 
         if (activeParticipant && !context.actedParticipants.includes(activeParticipant.id)){
+            emitFSMEvent('TURN_START', activeParticipant.id);
             context.actedParticipants.push(activeParticipant.id);
         }
     }
@@ -153,17 +168,12 @@ export function createEncounterFSM(): FSM {
     };
 
     const advanceTurnIndex = (context: EncounterContext): void => {
+        const currentParticipant = getActiveParticipant(context);
+        if (currentParticipant) {
+            emitFSMEvent('TURN_END', currentParticipant.id);
+        }
         context.currentTurnIndex++;
     };
-
-    const isSlotValidForParticipant = (currentInitiativeSlot: InitiativeSlot, activeParticipant: Participant): boolean =>
-    {
-        const isPcOnPcTurn = currentInitiativeSlot.team === "PC" && activeParticipant.isPC;
-        const isNpcOnNpcTurn = currentInitiativeSlot.team === "NPC" && !activeParticipant.isPC;
-
-        console.log(isPcOnPcTurn, isNpcOnNpcTurn);
-        return isPcOnPcTurn || isNpcOnNpcTurn;
-    }
 
     return new FSM(
         'idle',
@@ -200,7 +210,10 @@ export function createEncounterFSM(): FSM {
                     START_ENCOUNTER: {
                         target: 'inProgress',
                         guard: canStartEncounter,
-                        action: (context: EncounterContext) => console.log('Encounter started!'),
+                        action: (context: EncounterContext) => {
+                            console.log('Encounter started!');
+                            emitFSMEvent('START_ENCOUNTER');
+                        },
                     },
                     EXIT_STRUCTURED: {
                         target: 'idle',
@@ -232,17 +245,28 @@ export function createEncounterFSM(): FSM {
                         target: 'inProgress',
                         guard: canDecreaseTurn,
                         action: (context) => {
-                            if (context.currentTurnIndex  === 0) {
+                            const currentParticipant = getActiveParticipant(context);
+                            if (currentParticipant) {
+                                emitFSMEvent('TURN_END', currentParticipant.id);
+                            }
+
+                            if (context.currentTurnIndex === 0) {
                                 context.round--;
                                 context.currentTurnIndex = useParticipantStore.getState().participants.length - 1;
                             } else {
                                 context.currentTurnIndex--;
                             }
+                            
+                            processTurn(context);
+                            console.log('Turn reversed!', context.actedParticipants);
                         },
                     },
                     END_ENCOUNTER: {
                         target: 'completed',
-                        action: () => console.log('Encounter ended!'),
+                        action: () => {
+                            console.log('Encounter ended!');
+                            emitFSMEvent('END_ENCOUNTER');
+                        },
                     },
                 },
             },
@@ -259,7 +283,7 @@ export function createEncounterFSM(): FSM {
                         target: 'idle',
                         action: (context) => {
                             context.mode = 'non-structured';
-                        },
+                        }
                     }
                 },
             },
