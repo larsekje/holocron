@@ -69,7 +69,6 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
         },
 
         setInitiativeModalOpen: (open) => {
-            console.log("setInitiativeModalOpen", open);
             set({isInitiativeModalOpen: open})
         },
 

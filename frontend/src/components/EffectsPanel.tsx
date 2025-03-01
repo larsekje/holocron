@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useEffectStore } from '@/state/effectStore';
 import useParticipantStore from "@/state/participantsStore"
-import {ActiveEffect, EffectTarget, EffectBehavior, Effect} from '@/types/effectTypes';
+import { Effect, EffectTarget } from '@/types/effectTypes';
 import {
     Box,
     VStack,
@@ -30,52 +30,40 @@ import {
 } from '@chakra-ui/react';
 
 const EffectsPanel: React.FC = () => {
-    const { effects, addEffect, removeEffect, triggerEffects, reduceDuration } = useEffectStore();
+    const { effects, addEffect, removeEffect } = useEffectStore();
     const { participants } = useParticipantStore();
     const [newEffectName, setNewEffectName] = useState('');
     const [newEffectDescription, setNewEffectDescription] = useState('');
     const [targetType, setTargetType] = useState<EffectTarget['type']>('character');
     const [selectedParticipantId, setSelectedParticipantId] = useState<string>('');
-    const [selectedParticipantForTrigger, setSelectedParticipantForTrigger] = useState<string>('');
-    const [duration, setDuration] = useState<number>(3);
+    const [triggerType, setTriggerType] = useState<'turn-start' | 'turn-end'>('turn-start');
     const toast = useToast();
 
     const handleAddEffect = () => {
-        const newEffect: ActiveEffect = {
-            effect: {
-                id: `effect-${Date.now()}`,
-                name: newEffectName,
-                description: newEffectDescription,
-                type: 'reminder',
-                duration: duration,
-                target: getTargetFromForm(),
-                behavior: {
-                    type: 'reminder',
-                    trigger: 'turn-start'
-                },
-                apply: () => {
-                    const target = getTargetFromForm();
-                    let targetDesc = '';
-                    if (target.type === 'character') {
-                        const participant = participants.find(p => p.id === target.participantId);
-                        targetDesc = participant ? ` on ${participant.name}` : '';
-                    }
-                    
-                    toast({
-                        title: newEffectName,
-                        description: newEffectDescription || `Effect triggered${targetDesc}`,
-                        status: 'info',
-                        duration: 5000,
-                        isClosable: true,
-                    });
-                },
+        const target = getTargetFromForm();
+        const effect: Effect = {
+            name: newEffectName,
+            description: newEffectDescription,
+            behavior: {
+                trigger: triggerType
             },
-            remainingDuration: duration,
-            target: getTargetFromForm(),
-            appliedAt: Date.now()
+            apply: (participant) => {
+                let targetDesc = '';
+                if (target.type === 'character' && participant) {
+                    targetDesc = ` on ${participant.name}`;
+                }
+                
+                toast({
+                    title: newEffectName,
+                    description: newEffectDescription || `Effect triggered${targetDesc}`,
+                    status: 'info',
+                    duration: 5000,
+                    isClosable: true,
+                });
+            },
         };
 
-        addEffect(newEffect);
+        addEffect(effect, target);
         setNewEffectName('');
         setNewEffectDescription('');
         toast({
@@ -109,7 +97,6 @@ const EffectsPanel: React.FC = () => {
                 };
         }
     };
-
 
     return (
         <Box p={4} bg="gray.800" borderRadius="lg">
@@ -155,22 +142,18 @@ const EffectsPanel: React.FC = () => {
                                 </Select>
                             )}
 
-                            <NumberInput
-                                value={duration}
-                                onChange={(_, value) => setDuration(value)}
-                                min={1}
+                            <Select
+                                value={triggerType}
+                                onChange={(e) => setTriggerType(e.target.value as 'turn-start' | 'turn-end')}
                             >
-                                <NumberInputField placeholder="Duration (rounds)" />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
+                                <option value="turn-start">Turn Start</option>
+                                <option value="turn-end">Turn End</option>
+                            </Select>
 
                             <Button
                                 colorScheme="blue"
                                 onClick={handleAddEffect}
-                                isDisabled={!newEffectName}
+                                isDisabled={!newEffectName || (targetType === 'character' && !selectedParticipantId)}
                                 width="full"
                             >
                                 Add Effect
@@ -188,7 +171,7 @@ const EffectsPanel: React.FC = () => {
                             <Tooltip label="Reduce the duration of all effects by 1">
                                 <Button
                                     onClick={() => {
-                                        reduceDuration();
+                                        // reduceDuration();
                                         toast({
                                             title: 'Durations Reduced',
                                             description: 'Reduced all effect durations by 1',

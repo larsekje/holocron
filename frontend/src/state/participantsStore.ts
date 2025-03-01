@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import EventBus from "@/utils/events";
 
 export interface Participant {

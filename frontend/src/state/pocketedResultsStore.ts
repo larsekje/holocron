@@ -1,5 +1,5 @@
 // src/state/pocketedResultsStore.ts
-import create from "zustand";
+import { create } from "zustand";
 
 interface PocketedResult {
     id: string;
