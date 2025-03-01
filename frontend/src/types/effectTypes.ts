@@ -1,35 +1,41 @@
 import {Participant} from "@/state/participantsStore";
 
-export type EffectTrigger = 'SLOT_CLAIMED' | 'TURN_END' | 'ROUND_START' | 'ROUND_END';
-
 export type EffectTarget = {
-    type: 'character';
-    participantId: string;
-} | {
-    type: 'global';
+    type: 'character' | 'initiative' | 'global';
+    participantId?: string;
+    slot?: number;
 };
 
-export type EffectAction = {
-    trigger: EffectTrigger;
-    apply: (participant?: Participant) => void;
+export type EffectBehavior = {
+    type: 'active' | 'passive' | 'reminder';
+    trigger: 'immediate' | 'turn-start' | 'turn-end';
 };
-
-export type Effect = {
-    id: string;
-    name: string;
-    description: string;
-    trigger: EffectTrigger;
-    target: EffectTarget;
-    effect: EffectAction;
-}
-
-export type ActiveEffect = {
-    id: string;
-    effect: Effect;
-}
 
 export interface ToastConfig {
     title: string;
     description?: string;
     status?: 'info' | 'warning' | 'success' | 'error';
+}
+
+export interface Effect {
+    id: string;
+    name: string;
+    description?: string;
+    target: EffectTarget;
+    behavior: EffectBehavior;
+    type: string;
+    duration: number;
+    apply?: () => void;
+}
+
+export interface ParticipantEffect extends Effect {
+    type: string;
+    duration: number;
+}
+
+export interface ActiveEffect {
+    effect: ParticipantEffect;
+    target: EffectTarget;
+    remainingDuration: number;
+    appliedAt: number;
 }

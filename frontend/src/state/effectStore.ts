@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ActiveEffect, Effect, EffectTarget, EffectTrigger } from '../types/effectTypes';
+import { ActiveEffect, Effect, EffectTarget } from '../types/effectTypes';
 import { addGameEventListener, removeGameEventListener, GameEvent } from './eventSystem';
 import useParticipantStore from './participantsStore';
 
@@ -49,10 +49,10 @@ addGameEventListener((event) => {
         // For character-targeted effects, only trigger if it matches the current participant
         if (effect.target.type === 'character' && participant) {
             if (effect.target.participantId === participant.id) {
-                if (event.type === 'SLOT_CLAIMED' && effect.effect.trigger === 'SLOT_CLAIMED') {
+                if (event.type === 'TURN_START' && effect.effect.behavior.trigger === 'turn-start') {
                     effect.effect.apply(participant);
                 }
-                if (event.type === 'TURN_END' && effect.effect.trigger === 'TURN_END') {
+                if (event.type === 'TURN_END' && effect.effect.behavior.trigger === 'turn-end') {
                     effect.effect.apply(participant);
                 }
             }
@@ -60,10 +60,10 @@ addGameEventListener((event) => {
 
         // Global effects always trigger
         if (effect.target.type === 'global') {
-            if (event.type === 'SLOT_CLAIMED' && effect.effect.trigger === 'SLOT_CLAIMED') {
+            if (event.type === 'TURN_START' && effect.effect.behavior.trigger === 'turn-start') {
                 effect.effect.apply(participant);
             }
-            if (event.type === 'TURN_END' && effect.effect.trigger === 'TURN_END') {
+            if (event.type === 'TURN_END' && effect.effect.behavior.trigger === 'turn-end') {
                 effect.effect.apply(participant);
             }
         }

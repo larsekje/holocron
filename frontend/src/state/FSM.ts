@@ -136,9 +136,8 @@ export function createEncounterFSM(): FSM {
         const activeParticipant = getActiveParticipant(context);
 
         if (activeParticipant && !context.actedParticipants.includes(activeParticipant.id)){
-            // First emit TURN_START to indicate new turn is beginning
-            console.log(`[FSM] Starting new turn`);
-            emitGameEvent('TURN_START');
+            console.log(`[FSM] Processing turn for participant: ${activeParticipant.name} (${activeParticipant.id})`);
+            emitGameEvent('TURN_START', activeParticipant.id);
             context.actedParticipants.push(activeParticipant.id);
         }
     }
