@@ -213,7 +213,8 @@ export function createEncounterFSM(): FSM {
 
     const startNewRound = (context: EncounterContext): void => {
         console.log(`[FSM] Ending round ${context.round}`);
-        eventSystem.emitGameEvent('ROUND_END');
+        // No need to emit here as it's handled in gameplayStore
+        // eventSystem.emitGameEvent('ROUND_END');
         
         console.log(`[FSM] Starting new round ${context.round + 1}`);
         context.round++;
@@ -222,7 +223,8 @@ export function createEncounterFSM(): FSM {
         context.activeParticipantId = null;
         context.turnState = null;
         
-        eventSystem.emitGameEvent('ROUND_START');
+        // No need to emit here as it's handled in gameplayStore
+        // eventSystem.emitGameEvent('ROUND_START');
     };
 
     const advanceTurnIndex = (context: EncounterContext): EncounterContext => {
@@ -234,14 +236,14 @@ export function createEncounterFSM(): FSM {
         if (nextTurnIndex === 0) {
             console.log("[FSM] Initiative order completed, starting a new round");
             
-            // Emit end of current round event
-            eventSystem.emitGameEvent('ROUND_END');
+            // No need to emit here as it's handled in gameplayStore
+            // eventSystem.emitGameEvent('ROUND_END');
             
             // Increase round counter
             const newRound = context.round + 1;
             
-            // Emit start of new round event
-            eventSystem.emitGameEvent('ROUND_START');
+            // No need to emit here as it's handled in gameplayStore
+            // eventSystem.emitGameEvent('ROUND_START');
             
             console.log(`[FSM] Starting round ${newRound}`);
             
@@ -270,7 +272,7 @@ export function createEncounterFSM(): FSM {
 
     const startEncounter = (context: EncounterContext): EncounterContext => {
         console.log("Encounter started!");
-        eventSystem.emitGameEvent('ROUND_START');
+        // eventSystem.emitGameEvent('ROUND_START');
         
         // Initialize with turn_start state rather than null
         return {

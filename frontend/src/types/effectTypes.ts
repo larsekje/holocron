@@ -23,9 +23,9 @@ export interface Effect {
     description?: string;
     target: EffectTarget;
     behavior: EffectBehavior;
-    type: string;
-    duration: number;
-    apply?: () => void;
+    type?: string;
+    duration?: number;
+    apply?: (participant?: Participant, durationMessage?: string) => void;
 }
 
 export interface ParticipantEffect extends Effect {

@@ -12,6 +12,8 @@ import {
 import useGameplayStore from "@/state/newGameplayStore";
 import useParticipantsStore from "@/state/participantsStore";
 import {createRandomParticipant} from "@/utils/participantUtils";
+import {InitiativeSlot} from "@/types/initiativeSlot";
+import {Participant} from "@/state/participantsStore";
 
 const GameplayInfo: React.FC = () => {
     const { 
@@ -22,7 +24,10 @@ const GameplayInfo: React.FC = () => {
         setActiveParticipantId, 
         getCurrentTurnState, 
         getTurnStateDescription,
-        advanceTurn
+        advanceTurn,
+        transition,
+        setInitiativeModalOpen,
+        setInitiativeOrder
     } = useGameplayStore();
     const { activeParticipantId} = useGameplayStore((state) => state.context);
     const { participants, addParticipant, removeParticipant } = useParticipantsStore();
@@ -34,6 +39,45 @@ const GameplayInfo: React.FC = () => {
         const isPC = Math.random() < 0.4
         const newParticipant = createRandomParticipant(isPC ? "PC" : "NPC");
         addParticipant(newParticipant); // Add the participant to the store
+    };
+
+    const handleInitTest = () => {
+        // 1. Add 3 characters (2 PCs and 1 NPC)
+        const pc1 = createRandomParticipant("PC");
+        const pc2 = createRandomParticipant("PC");
+        const npc = createRandomParticipant("NPC");
+        
+        // Generate random initiatives for all characters
+        const updatedParticipants: Participant[] = [
+            { ...pc1, initiative: Math.floor(Math.random() * 20) + 1 },
+            { ...pc2, initiative: Math.floor(Math.random() * 20) + 1 },
+            { ...npc, initiative: Math.floor(Math.random() * 20) + 1 }
+        ];
+        
+        // Add the participants to the store
+        updatedParticipants.forEach(p => addParticipant(p));
+        
+        // Now directly set the initiative order (bypassing the modal)
+        transition('ENTER_STRUCTURED');
+        transition('ROLL_INITIATIVE');
+        
+        // Map participants to InitiativeSlot[] shape and sort them
+        const order = updatedParticipants
+            .map((p) => ({
+                team: p.isPC ? "PC" : "NPC",
+                initiative: p.initiative!,
+                name: p.name
+            }))
+            .sort((a, b) => b.initiative - a.initiative) as InitiativeSlot[]; // Sort descending
+            
+        setInitiativeOrder(order); // Update store
+        
+        transition('START_ENCOUNTER');
+        
+        // Explicitly start the turn sequence
+        setTimeout(() => {
+            transition('START_TURN');
+        }, 100);
     };
 
     const handleSetActive = (participantId: string) => {
@@ -114,7 +158,10 @@ const GameplayInfo: React.FC = () => {
                 <Heading as="h3" size="md" mt={2} mb={2}>
                     Participants
                 </Heading>
-                <Button colorScheme="green" size="xs" onClick={handleAddRandomParticipant}>Add</Button>
+                <HStack>
+                    <Button colorScheme="green" size="xs" onClick={handleAddRandomParticipant}>Add</Button>
+                    <Button colorScheme="blue" size="xs" onClick={handleInitTest}>Init Test</Button>
+                </HStack>
             </HStack>
 
             {participants.length > 0 ? (

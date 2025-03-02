@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import EventBus from "@/utils/events";
 import {InitiativeSlot} from "@/types/initiativeSlot";
+import { emitGameEvent } from "./eventSystem";
 
 type GameplayType = 'non-structured' | 'structured' | 'skill-challenge';
 
@@ -121,6 +122,12 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
 
             if (currentTurnIndex === null || initiativeOrder.length === 0) return;
 
+            // Emit TURN_END event for the current participant before moving to the next
+            if (activeParticipantId) {
+                console.log(`[GameplayStore] Emitting TURN_END for participant: ${activeParticipantId}`);
+                emitGameEvent('TURN_END', activeParticipantId);
+            }
+
             const nextIndex = (currentTurnIndex + 1) % initiativeOrder.length;
 
             if (activeParticipantId !== null)
@@ -128,13 +135,30 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
 
             // If we've looped back to the start of the initiative order, increment the round
             if (nextIndex === 0) {
+                // Emit ROUND_END event before starting a new round
+                console.log(`[GameplayStore] Emitting ROUND_END at end of round: ${round}`);
+                emitGameEvent('ROUND_END');
+                
                 set({
                     currentTurnIndex: nextIndex,
                     round: round + 1,
                 });
                 clearActedParticipants();
+                
+                // Emit ROUND_START event for the new round
+                console.log(`[GameplayStore] Emitting ROUND_START for new round: ${round + 1}`);
+                emitGameEvent('ROUND_START');
             } else {
                 set({ currentTurnIndex: nextIndex });
+            }
+            
+            // Get the new active participant ID after state update
+            const newActiveParticipantId = initiativeOrder[nextIndex]?.participantId;
+            
+            // Emit TURN_START event for the next participant
+            if (newActiveParticipantId) {
+                console.log(`[GameplayStore] Emitting TURN_START for participant: ${newActiveParticipantId}`);
+                emitGameEvent('TURN_START', newActiveParticipantId);
             }
         },
 
