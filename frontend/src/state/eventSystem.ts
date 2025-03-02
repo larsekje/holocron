@@ -21,7 +21,7 @@ export const emitFSMEvent = (type: FSMEvent, participantId?: string) => {
 
 // Event emitter for game events
 export type GameEventListener = (event: { type: GameEvent; participantId?: string }) => void;
-export type GameEvent = 'TURN_START' | 'TURN_END' | 'ROUND_START' | 'ROUND_END';
+export type GameEvent = 'TURN_START' | 'TURN_ACTION' | 'TURN_END' | 'ROUND_START' | 'ROUND_END';
 const gameListeners: GameEventListener[] = [];
 
 export const addGameEventListener = (listener: GameEventListener) => {

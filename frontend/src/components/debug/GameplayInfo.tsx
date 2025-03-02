@@ -14,11 +14,21 @@ import useParticipantsStore from "@/state/participantsStore";
 import {createRandomParticipant} from "@/utils/participantUtils";
 
 const GameplayInfo: React.FC = () => {
-    const { state, context, isTurnBased: turnBased, toggleMode: toggleTurnBased, setActiveParticipantId } = useGameplayStore();
+    const { 
+        state, 
+        context, 
+        isTurnBased: turnBased, 
+        toggleMode: toggleTurnBased, 
+        setActiveParticipantId, 
+        getCurrentTurnState, 
+        getTurnStateDescription,
+        advanceTurn
+    } = useGameplayStore();
     const { activeParticipantId} = useGameplayStore((state) => state.context);
     const { participants, addParticipant, removeParticipant } = useParticipantsStore();
 
     const mode = context.mode;
+    const turnState = getCurrentTurnState();
 
     const handleAddRandomParticipant = () => {
         const isPC = Math.random() < 0.4
@@ -53,6 +63,32 @@ const GameplayInfo: React.FC = () => {
                     <Badge colorScheme="yellow" fontSize="md" mt={1}>
                         {state}
                     </Badge>
+                </Box>
+
+                {/* Display Turn State */}
+                {turnState && (
+                    <Box>
+                        <Text fontWeight="bold">Turn Phase:</Text>
+                        <Badge 
+                            colorScheme={
+                                turnState === 'turn_start' ? "green" : 
+                                turnState === 'turn_active' ? "blue" : 
+                                "purple"
+                            } 
+                            fontSize="md" 
+                            mt={1}
+                        >
+                            {getTurnStateDescription()}
+                        </Badge>
+                        
+                        {/* Removed the turn progress buttons since we're using the toolbar Next button */}
+                    </Box>
+                )}
+
+                {/* Round Information */}
+                <Box>
+                    <Text fontWeight="bold">Round:</Text>
+                    <Text>{context.round}</Text>
                 </Box>
 
                 {/* Turn-Based Mode Toggle */}

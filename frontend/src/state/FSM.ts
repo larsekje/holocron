@@ -4,8 +4,19 @@ import {context} from "esbuild";
 import {useEffectStore} from "@/state/effectStore";
 import {emitGameEvent} from "./eventSystem";
 
-type State = 'preparation' | 'inProgress' | 'completed' | 'idle';
-type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE';
+/**
+ * The FSM uses a hierarchical state approach:
+ * 
+ * MainState: Represents the high-level encounter state (preparation, inProgress, completed, idle)
+ * TurnState: Represents the detailed turn flow state for handling effects (turn_start, turn_active, turn_end)
+ * 
+ * Components that rely on the original state machine behavior can continue to use the MainState,
+ * while the more detailed turn flow is tracked using the turnState property in the context.
+ */
+type MainState = 'preparation' | 'inProgress' | 'completed' | 'idle';
+type TurnState = 'turn_start' | 'turn_active' | 'turn_end' | null;
+type State = MainState;
+type FSMEvent = 'START_ENCOUNTER' | 'NEXT_TURN' | 'PREV_TURN' | 'END_ENCOUNTER' | 'RESET' | 'ENTER_STRUCTURED' | 'EXIT_STRUCTURED' | 'ROLL_INITIATIVE' | 'PROCESS_TURN_START' | 'PROCESS_TURN' | 'START_TURN';
 
 // Event emitter for FSM events
 export type FSMEventListener = (event: { type: string; participantId?: string }) => void;
@@ -22,7 +33,7 @@ export const removeFSMEventListener = (listener: FSMEventListener) => {
     }
 };
 
-// Extend the EncounterContext to include `mode`
+// Extend the EncounterContext to include `mode` and turnState
 export interface EncounterContext {
     mode: 'non-structured' | 'structured';
     round: number;
@@ -31,6 +42,9 @@ export interface EncounterContext {
     isInitiativeRolled: boolean;
     activeParticipantId: string | null;
     actedParticipants: string[];
+    turnState: TurnState;
+    maxRounds: number;
+    participants: Participant[];
 }
 
 // Define the structure of a transition: event -> state
@@ -79,7 +93,7 @@ export class FSM {
 
         // Apply the state transition
         this.state = transition.target;
-        console.log(`Transitioned to state: ${this.state}`);
+        console.log(`Transitioned to state: ${this.state}, turn state: ${this.context.turnState}`);
     }
 
     // New canTransition method
@@ -95,6 +109,30 @@ export class FSM {
 
         // Check guard condition (if any)
         return guard ? guard(this.context) : true;
+    }
+
+    // Get the current turn state
+    public getCurrentTurnState(): TurnState {
+        return this.context.turnState;
+    }
+
+    // Check if we are in a specific turn state
+    public isInTurnState(turnState: TurnState): boolean {
+        return this.context.turnState === turnState;
+    }
+
+    // Get a readable description of the current turn state
+    public getTurnStateDescription(): string {
+        switch(this.context.turnState) {
+            case 'turn_start':
+                return 'Start of Turn';
+            case 'turn_active':
+                return 'Active Turn';
+            case 'turn_end':
+                return 'End of Turn';
+            default:
+                return 'No Active Turn';
+        }
     }
 }
 
@@ -132,35 +170,85 @@ export function createEncounterFSM(): FSM {
         return isSlotValidForParticipant(currentInitiativeSlot, activeParticipant);
     }
 
-    const processTurn = (context: EncounterContext): void => {
-        const activeParticipant = getActiveParticipant(context);
-
-        if (activeParticipant && !context.actedParticipants.includes(activeParticipant.id)){
-            console.log(`[FSM] Processing turn for participant: ${activeParticipant.name} (${activeParticipant.id})`);
-            emitGameEvent('TURN_START', activeParticipant.id);
-            context.actedParticipants.push(activeParticipant.id);
+    const processTurnStart = (context: EncounterContext): void => {
+        console.log('[FSM] Processing turn start...');
+        
+        if (context.activeParticipantId) {
+            const participant = context.participants.find(p => p.id === context.activeParticipantId);
+            if (participant) {
+                console.log(`[FSM] Starting turn for participant: ${participant.name} (${context.activeParticipantId})`);
+                
+                // Emit a turn start event
+                emitGameEvent('TURN_START', { participantId: context.activeParticipantId });
+            }
         }
-    }
+    };
+    
+    const processTurnAction = (context: EncounterContext): void => {
+        console.log('[FSM] Processing turn action...');
+        
+        if (context.activeParticipantId) {
+            // Emit a turn action event
+            emitGameEvent('TURN_ACTION', { participantId: context.activeParticipantId });
+        }
+    };
+    
+    const processTurnEnd = (context: EncounterContext): void => {
+        console.log('[FSM] Processing turn end...');
+        
+        if (context.activeParticipantId) {
+            // Emit a turn end event
+            emitGameEvent('TURN_END', { participantId: context.activeParticipantId });
+            
+            // Add the participant to the acted list
+            if (!context.actedParticipants.includes(context.activeParticipantId)) {
+                context.actedParticipants.push(context.activeParticipantId);
+            }
+        }
+    };
 
     const isEndOfRound = (context: EncounterContext): boolean => {
         return context.currentTurnIndex + 1 >= useParticipantStore.getState().participants.length;
     };
 
     const startNewRound = (context: EncounterContext): void => {
+        console.log(`[FSM] Ending round ${context.round}`);
+        emitGameEvent('ROUND_END');
+        
         console.log(`[FSM] Starting new round ${context.round + 1}`);
         context.round++;
         context.currentTurnIndex = 0;
         context.actedParticipants = []; // Clear acted participants for the new round
         context.activeParticipantId = null;
+        context.turnState = null;
+        
+        emitGameEvent('ROUND_START');
     };
 
-    const advanceTurnIndex = (context: EncounterContext): void => {
-        const currentParticipant = getActiveParticipant(context);
-        if (currentParticipant) {
-            console.log(`[FSM] Ending turn for participant: ${currentParticipant.name} (${currentParticipant.id})`);
-            emitGameEvent('TURN_END', currentParticipant.id);
+    const advanceTurnIndex = (context: EncounterContext): EncounterContext => {
+        console.log("[FSM] Clearing active participant and advancing turn index");
+        
+        // Clear acted participants when we've gone through the whole initiative order
+        const nextTurnIndex = (context.currentTurnIndex + 1) % context.initiativeOrder.length;
+        if (nextTurnIndex === 0) {
+            console.log("[FSM] Initiative order completed, starting a new round");
+            emitGameEvent("ROUND_END", {});
+            emitGameEvent("ROUND_START", {});
+            
+            return {
+                ...context,
+                currentTurnIndex: nextTurnIndex,
+                activeParticipantId: null,
+                actedParticipants: [],
+                round: context.round + 1
+            };
         }
-        context.currentTurnIndex++;
+        
+        return {
+            ...context,
+            currentTurnIndex: nextTurnIndex,
+            activeParticipantId: null
+        };
     };
 
     const isSlotValidForParticipant = (currentInitiativeSlot: InitiativeSlot, activeParticipant: Participant): boolean =>
@@ -169,6 +257,19 @@ export function createEncounterFSM(): FSM {
         const isNpcOnNpcTurn = currentInitiativeSlot.team === "NPC" && !activeParticipant.isPC;
         return isPcOnPcTurn || isNpcOnNpcTurn;
     }
+
+    const startEncounter = (context: EncounterContext): EncounterContext => {
+        console.log("Encounter started!");
+        emitGameEvent('ROUND_START', {});
+        
+        // Initialize with turn_start state rather than null
+        return {
+            ...context,
+            currentTurnIndex: 0,
+            round: 1,
+            turnState: 'turn_start'
+        };
+    };
 
     return new FSM(
         'idle',
@@ -179,7 +280,10 @@ export function createEncounterFSM(): FSM {
             initiativeOrder: [],
             isInitiativeRolled: false,
             activeParticipantId: null,
-            actedParticipants: []
+            actedParticipants: [],
+            turnState: null,
+            maxRounds: 10,
+            participants: useParticipantStore.getState().participants
         },
         {
             idle: {
@@ -205,7 +309,7 @@ export function createEncounterFSM(): FSM {
                     START_ENCOUNTER: {
                         target: 'inProgress',
                         guard: canStartEncounter,
-                        action: (context: EncounterContext) => console.log('Encounter started!'),
+                        action: startEncounter,
                     },
                     EXIT_STRUCTURED: {
                         target: 'idle',
@@ -218,27 +322,68 @@ export function createEncounterFSM(): FSM {
             },
             inProgress: {
                 on: {
+                    START_TURN: {
+                        target: 'inProgress',
+                        guard: () => true,
+                        action: (context) => {
+                            console.log('Starting turn sequence...');
+                            context.turnState = 'turn_start';
+                        },
+                    },
                     NEXT_TURN: {
                         target: 'inProgress',
                         guard: canAdvanceTurn,
                         action: (context) => {
-                            // First process the current turn
-                            processTurn(context);
-
-                            // Then check if we're at the end of the round
-                            if (isEndOfRound(context)) {
-                                // End the current participant's turn before starting new round
-                                const currentParticipant = getActiveParticipant(context);
-                                if (currentParticipant) {
-                                    console.log(`[FSM] Ending turn for last participant of round: ${currentParticipant.name} (${currentParticipant.id})`);
-                                    emitGameEvent('TURN_END', currentParticipant.id);
+                            console.log('[FSM] NEXT_TURN event received');
+                            
+                            // Handle the event based on current turn state
+                            if (context.turnState === 'turn_start') {
+                                // If we have an active participant, proceed to turn_active
+                                if (context.activeParticipantId) {
+                                    console.log('[FSM] Starting active turn phase for participant:', context.activeParticipantId);
+                                    context.turnState = 'turn_active';
+                                    processTurnStart(context);
+                                } else {
+                                    console.log('[FSM] No active participant selected, cannot proceed');
                                 }
-                                startNewRound(context);
-                            } else {
-                                advanceTurnIndex(context);
-                            }
+                            } 
+                            else if (context.turnState === 'turn_active') {
+                                // Move from active to end phase
+                                console.log('[FSM] Completing active turn phase');
+                                context.turnState = 'turn_end';
+                                processTurnAction(context);
 
-                            console.log('Turn advanced!', context.actedParticipants);
+                                // Complete the turn and move to the next one
+                                console.log('[FSM] Completing turn and advancing to next initiative slot');
+                                
+                                // Process any turn end effects
+                                processTurnEnd(context);
+                                
+                                // Save current turn index before advancing
+                                const currentTurnIndex = context.currentTurnIndex;
+                                
+                                // Advance to next turn index (this returns a new context)
+                                const updatedContext = advanceTurnIndex(context);
+                                
+                                // Apply all the changes from the updated context
+                                context.currentTurnIndex = updatedContext.currentTurnIndex;
+                                context.activeParticipantId = null; // Explicitly clear active participant
+                                context.turnState = 'turn_start'; // Explicitly set to turn_start
+                                
+                                // If we've completed a round, update the round counter and clear acted participants
+                                if (updatedContext.round !== context.round) {
+                                    context.round = updatedContext.round;
+                                    context.actedParticipants = [];
+                                }
+                                
+                                console.log(`[FSM] Advanced from turn index ${currentTurnIndex} to ${context.currentTurnIndex}`);
+                                console.log('[FSM] Turn sequence completed, now in turn_start state for next participant');
+                            }
+                            else {
+                                // Default behavior if turnState is null or undefined
+                                console.log('[FSM] Starting new turn sequence');
+                                context.turnState = 'turn_start';
+                            }
                         },
                     },
                     PREV_TURN: {
@@ -251,11 +396,32 @@ export function createEncounterFSM(): FSM {
                             } else {
                                 context.currentTurnIndex--;
                             }
+                            context.turnState = null;
                         },
                     },
                     END_ENCOUNTER: {
                         target: 'completed',
                         action: () => console.log('Encounter ended!'),
+                    },
+                    PROCESS_TURN_START: {
+                        target: 'inProgress',
+                        guard: (context) => context.turnState === 'turn_start',
+                        action: (context) => {
+                            console.log('[FSM] Processing turn start...');
+                            processTurnStart(context);
+                            context.turnState = 'turn_active';
+                            console.log('[FSM] Changed turn state to: turn_active');
+                        },
+                    },
+                    PROCESS_TURN: {
+                        target: 'inProgress',
+                        guard: (context) => context.turnState === 'turn_active',
+                        action: (context) => {
+                            console.log('[FSM] Processing active turn...');
+                            processTurnAction(context);
+                            context.turnState = 'turn_end';
+                            console.log('[FSM] Changed turn state to: turn_end');
+                        },
                     },
                 },
             },

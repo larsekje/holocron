@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import {createEncounterFSM, EncounterContext} from "./FSM";
+import {createEncounterFSM, EncounterContext, TurnState} from "./FSM";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import EventBus from "@/utils/events";
+import useParticipantsStore from './participantsStore'; // Import the participants store
 
 const encounterFSM = createEncounterFSM();
 
@@ -10,6 +11,11 @@ export interface GameplayStore {
     context: EncounterContext; // FSM Context
     transition: (event: string) => void; // Trigger FSM events
     canTransition: (event: string) => boolean; // Check transition guard
+
+    // Turn state
+    getCurrentTurnState: () => TurnState;
+    getTurnStateDescription: () => string;
+    isInTurnState: (turnState: TurnState) => boolean;
 
     // Initiative
     setInitiativeOrder: (order: InitiativeSlot[]) => void; // Set initiative
@@ -26,6 +32,11 @@ export interface GameplayStore {
     exitStructured: () => void;
     isTurnBased: () => boolean;
     toggleMode: () => void;
+
+    // Manual turn progression methods
+    advanceToActivePhase: () => void;
+    completeActiveTurn: () => void;
+    advanceTurn: () => void;
 }
 
 
@@ -42,6 +53,11 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
         })
     });
 
+    // Ensure the FSM always has the latest participants
+    useParticipantsStore.subscribe((state) => {
+        encounterFSM.context.participants = state.participants;
+    });
+
     return {
         state: encounterFSM.state,
         context: encounterFSM.context,
@@ -50,6 +66,10 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
         // Trigger FSM events
         transition: (event) => {
             encounterFSM.transition(event as any);
+            
+            // We're no longer auto-progressing through turn phases
+            // Let the user control the flow instead
+            
             set({
                 state: encounterFSM.state,
                 context: {...encounterFSM.context},
@@ -58,6 +78,22 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
 
         // Check guards
         canTransition: (event) => encounterFSM.canTransition(event),
+
+        // Turn state methods
+        getCurrentTurnState: () => encounterFSM.context.turnState,
+        getTurnStateDescription: () => {
+            switch(encounterFSM.context.turnState) {
+                case 'turn_start':
+                    return 'Turn start';
+                case 'turn_active':
+                    return 'Turn active';
+                case 'turn_end':
+                    return 'Turn end';
+                default:
+                    return 'Unknown';
+            }
+        },
+        isInTurnState: (turnState) => encounterFSM.context.turnState === turnState,
 
         // Set initiative
         setInitiativeOrder: (order) => {
@@ -72,11 +108,23 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
             set({isInitiativeModalOpen: open})
         },
 
-        setActiveParticipantId: (participantId) => {
+        setActiveParticipantId: (participantId: string | null) => {
             encounterFSM.context.activeParticipantId = participantId;
+            
+            // If we're in turn_start state and a participant is selected, advance to active phase
+            if (encounterFSM.context.turnState === 'turn_start' && participantId !== null) {
+                setTimeout(() => {
+                    encounterFSM.transition('PROCESS_TURN_START');
+                    set({
+                        state: encounterFSM.state,
+                        context: {...encounterFSM.context},
+                    });
+                }, 100);
+            }
+            
             set({
                 context: {...encounterFSM.context},
-            })
+            });
         },
 
         addActedParticipant: (id: string) => {
@@ -108,7 +156,39 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
             } else {
                 transition("ENTER_STRUCTURED"); // Trigger event for entering structured mode
             }
-        }
+        },
+
+        // Manual turn progression methods
+        advanceToActivePhase: () => {
+            if (encounterFSM.context.turnState === 'turn_start') {
+                console.log("Manually advancing to active turn phase...");
+                encounterFSM.transition('PROCESS_TURN_START');
+                set({
+                    state: encounterFSM.state,
+                    context: {...encounterFSM.context},
+                });
+            }
+        },
+
+        completeActiveTurn: () => {
+            if (encounterFSM.context.turnState === 'turn_active') {
+                console.log("Manually completing active turn phase...");
+                encounterFSM.transition('PROCESS_TURN');
+                set({
+                    state: encounterFSM.state,
+                    context: {...encounterFSM.context},
+                });
+            }
+        },
+
+        advanceTurn: () => {
+            console.log("Advancing turn...");
+            encounterFSM.transition('NEXT_TURN');
+            set({
+                state: encounterFSM.state,
+                context: {...encounterFSM.context},
+            });
+        },
     }
 });
 

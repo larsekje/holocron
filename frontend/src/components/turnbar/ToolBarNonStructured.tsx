@@ -26,10 +26,13 @@ interface Props { }
 
 const ToolBarNonStructured = ({ }: Props) => {
 
-    const {transition}  = useGameplayStoreNew();
+    const {transition, getCurrentTurnState, advanceTurn}  = useGameplayStoreNew();
     const isInitiativeModalOpen = useGameplayStoreNew((state) => state.isInitiativeModalOpen);
-    const { setInitiativeModalOpen } = useGameplayStoreNew();
+    const { setInitiativeModalOpen, setActiveParticipantId } = useGameplayStoreNew();
+    const { context, state } = useGameplayStoreNew();
     const { updateParticipants } = useParticipantsStore();
+    const turnState = getCurrentTurnState();
+    const activeParticipantId = context.activeParticipantId;
 
     const handleRollInitiative = () => {
         setInitiativeModalOpen(true);
@@ -43,6 +46,36 @@ const ToolBarNonStructured = ({ }: Props) => {
     const participants = useParticipantsStore((state) => state.participants);
     const participantCount = useParticipantsStore((state) => state.participants.length);
 
+    // Get current initiative slot participants
+    const getCurrentInitiativeSlot = () => {
+        if (!context.initiativeOrder || context.initiativeOrder.length === 0) {
+            return null;
+        }
+        
+        // Get the current initiative slot
+        const currentSlot = context.initiativeOrder[context.currentTurnIndex];
+        
+        // Find all participants that match this initiative
+        const slotParticipants = participants.filter(p => 
+            p.initiative === currentSlot.initiative && 
+            (p.isPC ? currentSlot.team === 'PC' : currentSlot.team === 'NPC')
+        );
+        
+        return {
+            slot: currentSlot,
+            participants: slotParticipants
+        };
+    };
+
+    const currentSlotData = getCurrentInitiativeSlot();
+
+    const handleSetActiveParticipant = (participantId: string) => {
+        setActiveParticipantId(participantId);
+    };
+
+    const handleAdvanceTurn = () => {
+        advanceTurn();
+    };
 
     const handleSetInitiative = (updatedParticipants: Participant[]) => {
         transition('ENTER_STRUCTURED');
@@ -62,25 +95,64 @@ const ToolBarNonStructured = ({ }: Props) => {
         setInitiativeOrder(order); // Update store
 
         transition('START_ENCOUNTER');
-
+        
+        // Explicitly start the turn sequence to ensure turnState is set to 'turn_start'
+        setTimeout(() => {
+            transition('START_TURN');
+        }, 100);
     };
 
     return (
       <>
-
           {/* Left Area */}
           <HStack paddingLeft={4}>
-
+            {state === 'inProgress' && (
+                <Box>
+                    <Text fontSize="sm" fontWeight="bold">Round: {context.round}</Text>
+                    
+                    {/* Current Turn Phase */}
+                    {turnState && (
+                        <Text fontSize="sm">
+                            {turnState === 'turn_start' ? 'Select active participant' : 
+                             turnState === 'turn_active' ? 'Taking actions' : 
+                             'Ending turn'}
+                        </Text>
+                    )}
+                </Box>
+            )}
           </HStack>
-
 
           {/* Button to Roll Initiative */}
           <Button
               colorScheme="purple"
               onClick={handleRollInitiative}
-              isDisabled={participantCount === 0}
+              isDisabled={participantCount === 0 || state === 'inProgress'}
           > Roll Initiative
           </Button>
+
+          {/* Turn management buttons */}
+          {state === 'inProgress' && (
+            <HStack spacing={2}>
+                {/* Show set active buttons only in turn_start phase */}
+                {turnState === 'turn_start' && currentSlotData && (
+                    <HStack>
+                        <Text fontSize="sm">Set Active:</Text>
+                        {currentSlotData.participants.map(p => (
+                            <Button 
+                                key={p.id}
+                                size="sm"
+                                colorScheme={activeParticipantId === p.id ? "green" : "gray"}
+                                onClick={() => handleSetActiveParticipant(p.id)}
+                            >
+                                {p.name}
+                            </Button>
+                        ))}
+                    </HStack>
+                )}
+                
+                {/* We're not showing these buttons anymore since we'll use the Next button in the toolbar */}
+            </HStack>
+          )}
 
           <InitiativeModal
               isOpen={isInitiativeModalOpen}
@@ -89,18 +161,12 @@ const ToolBarNonStructured = ({ }: Props) => {
               onSubmit={handleSetInitiative} // Handle initiative updates
           />
 
-
-
           {/* Right Area */}
           <Flex gap={4}>
 
           </Flex>
-
-
       </>
     );
-
-    return <Text>Non-Structured</Text>
 }
 
 export default ToolBarNonStructured
