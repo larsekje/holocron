@@ -36,6 +36,6 @@ export const removeGameEventListener = (listener: GameEventListener) => {
 };
 
 export const emitGameEvent = (type: GameEvent, participantId?: string) => {
-    console.log(`[Event System] Emitting game event: ${type}`, { participantId });
+    console.log(`[Event System] Emitting game event: ${type}`, participantId ? { participantId } : {});
     gameListeners.forEach(listener => listener({ type, participantId }));
 };

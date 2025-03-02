@@ -1,8 +1,8 @@
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import useParticipantStore, {Participant} from "./participantsStore";
-import {context} from "esbuild";
+import * as eventSystem from './eventSystem';
+import { GameEvent } from './eventSystem';
 import {useEffectStore} from "@/state/effectStore";
-import {emitGameEvent} from "./eventSystem";
 
 /**
  * The FSM uses a hierarchical state approach:
@@ -178,8 +178,8 @@ export function createEncounterFSM(): FSM {
             if (participant) {
                 console.log(`[FSM] Starting turn for participant: ${participant.name} (${context.activeParticipantId})`);
                 
-                // Emit a turn start event
-                emitGameEvent('TURN_START', { participantId: context.activeParticipantId });
+                // Emit a turn start event with proper participant ID
+                eventSystem.emitGameEvent('TURN_START', context.activeParticipantId);
             }
         }
     };
@@ -188,8 +188,8 @@ export function createEncounterFSM(): FSM {
         console.log('[FSM] Processing turn action...');
         
         if (context.activeParticipantId) {
-            // Emit a turn action event
-            emitGameEvent('TURN_ACTION', { participantId: context.activeParticipantId });
+            // Emit a turn action event with proper participant ID
+            eventSystem.emitGameEvent('TURN_ACTION', context.activeParticipantId);
         }
     };
     
@@ -197,8 +197,8 @@ export function createEncounterFSM(): FSM {
         console.log('[FSM] Processing turn end...');
         
         if (context.activeParticipantId) {
-            // Emit a turn end event
-            emitGameEvent('TURN_END', { participantId: context.activeParticipantId });
+            // Emit a turn end event with proper participant ID
+            eventSystem.emitGameEvent('TURN_END', context.activeParticipantId);
             
             // Add the participant to the acted list
             if (!context.actedParticipants.includes(context.activeParticipantId)) {
@@ -213,7 +213,7 @@ export function createEncounterFSM(): FSM {
 
     const startNewRound = (context: EncounterContext): void => {
         console.log(`[FSM] Ending round ${context.round}`);
-        emitGameEvent('ROUND_END');
+        eventSystem.emitGameEvent('ROUND_END');
         
         console.log(`[FSM] Starting new round ${context.round + 1}`);
         context.round++;
@@ -222,25 +222,35 @@ export function createEncounterFSM(): FSM {
         context.activeParticipantId = null;
         context.turnState = null;
         
-        emitGameEvent('ROUND_START');
+        eventSystem.emitGameEvent('ROUND_START');
     };
 
     const advanceTurnIndex = (context: EncounterContext): EncounterContext => {
+        // Clear the active participant ID to allow selecting a new one in the next turn
         console.log("[FSM] Clearing active participant and advancing turn index");
         
         // Clear acted participants when we've gone through the whole initiative order
         const nextTurnIndex = (context.currentTurnIndex + 1) % context.initiativeOrder.length;
         if (nextTurnIndex === 0) {
             console.log("[FSM] Initiative order completed, starting a new round");
-            emitGameEvent("ROUND_END", {});
-            emitGameEvent("ROUND_START", {});
+            
+            // Emit end of current round event
+            eventSystem.emitGameEvent('ROUND_END');
+            
+            // Increase round counter
+            const newRound = context.round + 1;
+            
+            // Emit start of new round event
+            eventSystem.emitGameEvent('ROUND_START');
+            
+            console.log(`[FSM] Starting round ${newRound}`);
             
             return {
                 ...context,
                 currentTurnIndex: nextTurnIndex,
                 activeParticipantId: null,
                 actedParticipants: [],
-                round: context.round + 1
+                round: newRound
             };
         }
         
@@ -260,7 +270,7 @@ export function createEncounterFSM(): FSM {
 
     const startEncounter = (context: EncounterContext): EncounterContext => {
         console.log("Encounter started!");
-        emitGameEvent('ROUND_START', {});
+        eventSystem.emitGameEvent('ROUND_START');
         
         // Initialize with turn_start state rather than null
         return {
@@ -341,8 +351,12 @@ export function createEncounterFSM(): FSM {
                                 // If we have an active participant, proceed to turn_active
                                 if (context.activeParticipantId) {
                                     console.log('[FSM] Starting active turn phase for participant:', context.activeParticipantId);
-                                    context.turnState = 'turn_active';
+                                    
+                                    // Process turn start effects
                                     processTurnStart(context);
+                                    
+                                    // Update state
+                                    context.turnState = 'turn_active';
                                 } else {
                                     console.log('[FSM] No active participant selected, cannot proceed');
                                 }
@@ -350,9 +364,13 @@ export function createEncounterFSM(): FSM {
                             else if (context.turnState === 'turn_active') {
                                 // Move from active to end phase
                                 console.log('[FSM] Completing active turn phase');
-                                context.turnState = 'turn_end';
+                                
+                                // Process turn action effects
                                 processTurnAction(context);
-
+                                
+                                // Update state
+                                context.turnState = 'turn_end';
+                                
                                 // Complete the turn and move to the next one
                                 console.log('[FSM] Completing turn and advancing to next initiative slot');
                                 

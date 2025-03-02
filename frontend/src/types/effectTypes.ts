@@ -8,7 +8,7 @@ export type EffectTarget = {
 
 export type EffectBehavior = {
     type: 'active' | 'passive' | 'reminder';
-    trigger: 'immediate' | 'turn-start' | 'turn-end';
+    trigger: 'immediate' | 'turn-start' | 'turn-action' | 'turn-end' | 'round-start' | 'round-end';
 };
 
 export interface ToastConfig {
