@@ -49,7 +49,7 @@ const ActiveEffectsDisplay: React.FC = () => {
     };
 
     return (
-        <Box p={4}>
+        <Box>
             <Heading size="md" mb={4} color="white">Active Effects ({effects.length})</Heading>
             <VStack spacing={3}>
                 {effects.map((effect: ParticipantEffect) => (

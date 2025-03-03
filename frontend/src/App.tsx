@@ -6,9 +6,7 @@ import GameplayInfo from "@components/debug/GameplayInfo";
 import ToolBar from "@components/turnbar/ToolBar";
 import StructuredGameplayManager from "@components/debug/StructuredGameplayManager";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
-import EffectManager from "@components/debug/EffectManager";
 import EffectsPanel from "@components/EffectsPanel";
-import ActiveEffectsDisplay from "@components/ActiveEffectsDisplay";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
@@ -27,7 +25,6 @@ function App() {
             <StructuredGameplayManager/>
         </GridItem>
         <GridItem area='targeted'>
-            <ActiveEffectsDisplay/>
         </GridItem>
         <GridItem area='sidebar' bg='orchid'>
             <VStack>

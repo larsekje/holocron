@@ -5,7 +5,8 @@ import InitiativeModal from "./InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import InitiativeList from "@components/debug/InitiativeList";
 import InitiativeTracker from "@components/debug/InitiativeTracker";
-import {ParticipantsList} from "@components/debug/ParticipantsList"; // Hypothetical participants store
+import {ParticipantsList} from "@components/debug/ParticipantsList";
+import ParticipantStatusList from "@components/participantStatus/ParticipantStatusList";
 
 const StructuredGameplayManager: React.FC = () => {
     // Fetch participants from a participants store
@@ -36,15 +37,16 @@ const StructuredGameplayManager: React.FC = () => {
 
     return (
         <Box>
-            <InitiativeTracker initiativeOrder={initiativeOrder} participants={participants}/>
-
             <InitiativeModal
                 isOpen={isModalOpen}
                 participants={participants} // Pass current participants
                 onClose={handleCloseModal}
                 onSubmit={handleSetInitiative} // Handle initiative updates
             />
+
+            <ParticipantStatusList/>
         </Box>
+
     );
 };
 

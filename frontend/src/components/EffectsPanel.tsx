@@ -29,6 +29,7 @@ import {
     Textarea,
     Divider
 } from '@chakra-ui/react';
+import ActiveEffectsDisplay from "@components/ActiveEffectsDisplay";
 
 // Define the effect types
 type EffectType = 'custom' | 'staggered';
@@ -217,7 +218,9 @@ const EffectsPanel: React.FC = () => {
                 </Card>
                 
                 <Divider />
-                
+
+                <ActiveEffectsDisplay/>
+
                 {/* Custom Effect Card */}
                 <Card>
                     <CardBody>
