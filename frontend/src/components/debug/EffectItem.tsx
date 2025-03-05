@@ -27,7 +27,7 @@ const EffectItem: React.FC<Props> = ({ effect }) => {
 
             {/* Effect Description */}
             <Text fontSize="sm" mt={2}>
-                {effect.description}
+                {effect.description || 'No description available'}
             </Text>
 
             <Divider my={2} />

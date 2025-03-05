@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     Text,
@@ -8,12 +8,15 @@ import {
     Divider,
     Switch,
     Flex, HStack, Button,
+    useToast,
 } from "@chakra-ui/react";
 import useGameplayStore from "@/state/newGameplayStore";
 import useParticipantsStore from "@/state/participantsStore";
 import {createRandomParticipant} from "@/utils/participantUtils";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import {Participant} from "@/state/participantsStore";
+import adversaryService from "@/services/adversaryService";
+import { Adversary } from "@/types/adversaryTypes";
 
 const GameplayInfo: React.FC = () => {
     const { 
@@ -31,6 +34,34 @@ const GameplayInfo: React.FC = () => {
     } = useGameplayStore();
     const { activeParticipantId} = useGameplayStore((state) => state.context);
     const { participants, addParticipant, removeParticipant } = useParticipantsStore();
+    const toast = useToast();
+    
+    // State for adversaries
+    const [adversaries, setAdversaries] = useState<Adversary[]>([]);
+    const [loadingAdversaries, setLoadingAdversaries] = useState(false);
+
+    // Load adversaries when component mounts
+    useEffect(() => {
+        const loadAdversaries = async () => {
+            setLoadingAdversaries(true);
+            try {
+                const data = await adversaryService.getAdversaries();
+                setAdversaries(data);
+            } catch (error) {
+                console.error('Error loading adversaries:', error);
+                toast({
+                    title: "Error loading adversaries",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            } finally {
+                setLoadingAdversaries(false);
+            }
+        };
+        
+        loadAdversaries();
+    }, [toast]);
 
     const mode = context.mode;
     const turnState = getCurrentTurnState();
@@ -41,43 +72,142 @@ const GameplayInfo: React.FC = () => {
         addParticipant(newParticipant); // Add the participant to the store
     };
 
-    const handleInitTest = () => {
-        // 1. Add 3 characters (2 PCs and 1 NPC)
+    const handleInitTest = async () => {
+        // Create some random participants
         const pc1 = createRandomParticipant("PC");
         const pc2 = createRandomParticipant("PC");
-        const npc = createRandomParticipant("NPC");
         
-        // Generate random initiatives for all characters
-        const updatedParticipants: Participant[] = [
-            { ...pc1, initiative: Math.floor(Math.random() * 20) + 1 },
-            { ...pc2, initiative: Math.floor(Math.random() * 20) + 1 },
-            { ...npc, initiative: Math.floor(Math.random() * 20) + 1 }
-        ];
+        // Get adversaries (load if not already loaded)
+        let availableAdversaries = adversaries;
         
-        // Add the participants to the store
-        updatedParticipants.forEach(p => addParticipant(p));
+        // Select two random adversaries from different types if possible
+        const allTypes = ["Minion", "Rival", "Nemesis"];
         
-        // Now directly set the initiative order (bypassing the modal)
-        transition('ENTER_STRUCTURED');
-        transition('ROLL_INITIATIVE');
+        if (!availableAdversaries.length) {
+            toast({
+                title: "Using default adversaries",
+                description: "Could not load adversaries, using generic NPCs instead.",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+            });
+            
+            // Create generic NPCs instead
+            const npc1 = createRandomParticipant("NPC");
+            const npc2 = createRandomParticipant("NPC");
+            
+            // Add all participants
+            addParticipant(pc1);
+            addParticipant(pc2);
+            addParticipant(npc1);
+            addParticipant(npc2);
+            
+            // Roll initiative for all
+            initiativeRoll([pc1, pc2, npc1, npc2]);
+            return;
+        }
         
+        // Filter adversaries by type and pick one of each if possible
+        const minionAdversaries = availableAdversaries.filter(adv => adv.type === "Minion");
+        const rivalAdversaries = availableAdversaries.filter(adv => adv.type === "Rival");
+        const nemesisAdversaries = availableAdversaries.filter(adv => adv.type === "Nemesis");
+        
+        // Select random adversaries by type
+        const selectedAdversaries: Adversary[] = [];
+        
+        if (minionAdversaries.length) {
+            selectedAdversaries.push(minionAdversaries[Math.floor(Math.random() * minionAdversaries.length)]);
+        }
+        
+        if (rivalAdversaries.length) {
+            selectedAdversaries.push(rivalAdversaries[Math.floor(Math.random() * rivalAdversaries.length)]);
+        }
+        
+        // If we don't have 2 adversaries yet, add a nemesis or another random type
+        if (selectedAdversaries.length < 2 && nemesisAdversaries.length) {
+            selectedAdversaries.push(nemesisAdversaries[Math.floor(Math.random() * nemesisAdversaries.length)]);
+        }
+        
+        // If we still don't have 2, add another random adversary of any type
+        if (selectedAdversaries.length < 2 && availableAdversaries.length) {
+            const randomAdversary = availableAdversaries[Math.floor(Math.random() * availableAdversaries.length)];
+            // Avoid duplicates
+            if (!selectedAdversaries.some(adv => adv.name === randomAdversary.name)) {
+                selectedAdversaries.push(randomAdversary);
+            }
+        }
+        
+        // Convert adversaries to participants
+        const npcParticipants = selectedAdversaries.map(adv => {
+            const participant = adversaryService.convertToParticipant(adv);
+            
+            // Add some random dice to demonstrate the dice pouch system
+            const diceTypes: (keyof DicePouch)[] = ['boost', 'setback', 'advantage', 'threat', 'success', 'failure'];
+            const randomDiceType = diceTypes[Math.floor(Math.random() * diceTypes.length)];
+            
+            // Initialize dice pouch if not present (should be handled by addParticipant, but just to be safe)
+            if (!participant.dicePouch) {
+                participant.dicePouch = {
+                    boost: 0,
+                    setback: 0,
+                    advantage: 0,
+                    threat: 0,
+                    success: 0,
+                    failure: 0,
+                    triumph: 0,
+                    despair: 0,
+                    force: 0
+                };
+            }
+            
+            // Add random dice
+            participant.dicePouch[randomDiceType] = Math.floor(Math.random() * 3) + 1;
+            
+            return participant;
+        });
+        
+        // Add all participants
+        addParticipant(pc1);
+        addParticipant(pc2);
+        npcParticipants.forEach(npc => addParticipant(npc));
+        
+        // Combine all participants for initiative roll
+        const allParticipants = [pc1, pc2, ...npcParticipants];
+        
+        // Roll initiative for all
+        initiativeRoll(allParticipants);
+    };
+
+    const initiativeRoll = (participants: Participant[]) => {
         // Map participants to InitiativeSlot[] shape and sort them
-        const order = updatedParticipants
+        const order = participants
             .map((p) => ({
                 team: p.isPC ? "PC" : "NPC",
-                initiative: p.initiative!,
-                name: p.name
+                initiative: Math.floor(Math.random() * 20) + 1,
+                name: p.name,
+                participantId: p.id
             }))
             .sort((a, b) => b.initiative - a.initiative) as InitiativeSlot[]; // Sort descending
-            
+        
+        // Update the initiative in the store
         setInitiativeOrder(order); // Update store
         
+        transition('ENTER_STRUCTURED');
+        transition('ROLL_INITIATIVE');
         transition('START_ENCOUNTER');
         
         // Explicitly start the turn sequence
-        setTimeout(() => {
-            transition('START_TURN');
-        }, 100);
+        if (order.length > 0) {
+            setActiveParticipantId(order[0].participantId!);
+        }
+        
+        toast({
+            title: "Encounter started",
+            description: `Initiative order set with ${order.length} participants`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     const handleSetActive = (participantId: string) => {

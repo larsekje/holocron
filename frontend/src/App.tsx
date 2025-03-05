@@ -15,22 +15,37 @@ function App() {
   return (
     <>
       <Box display='flex' alignItems='center' h='50' bg='#2F3136'></Box>
-      <Grid templateAreas={templateAreas} gridTemplateRows={'60px calc(100vh - 125px)'}
-             gridTemplateColumns={'3fr 4fr 3fr 2fr'} gap='5px' padding='5px'>
-        <GridItem area='turn'><ToolBar/></GridItem>
-        <GridItem area='active' bg="dodgerblue">
-            <EffectsPanel/>
+      <Grid 
+        templateAreas={templateAreas} 
+        gridTemplateRows={'60px calc(100vh - 125px)'}
+        gridTemplateColumns={'3fr 4fr 3fr 2fr'} 
+        gap='5px' 
+        padding='5px'
+        bg="#36393F"
+      >
+        <GridItem area='turn'>
+          <ToolBar/>
         </GridItem>
-        <GridItem area='targets' bg="gold">
-            <StructuredGameplayManager/>
+        
+        <GridItem area='active'>
+          <EffectsPanel/>
         </GridItem>
+        
+        <GridItem area='targets'>
+          <StructuredGameplayManager/>
+        </GridItem>
+        
         <GridItem area='targeted'>
+          {/* This area is reserved for future use */}
         </GridItem>
-        <GridItem area='sidebar' bg='orchid'>
-            <VStack>
-                <GameplayInfo/>
-                <DestinyPointManager/>
-            </VStack>
+
+        <GridItem area='sidebar'>
+          <VStack spacing={4} height="100%">
+            <Box width="100%" height="50%">
+              <GameplayInfo/>
+              <DestinyPointManager/>
+            </Box>
+          </VStack>
         </GridItem>
       </Grid>
     </>

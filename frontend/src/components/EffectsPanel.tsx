@@ -220,74 +220,7 @@ const EffectsPanel: React.FC = () => {
                 <Divider />
 
                 <ActiveEffectsDisplay/>
-
-                {/* Custom Effect Card */}
-                <Card>
-                    <CardBody>
-                        <VStack spacing={4}>
-                            <Heading size="sm">Custom Effect</Heading>
-                            
-                            <Select
-                                value={targetType}
-                                onChange={(e) => setTargetType(e.target.value as EffectTarget['type'])}
-                            >
-                                <option value="character">Character</option>
-                                <option value="initiative">Initiative Slot</option>
-                                <option value="global">Global</option>
-                            </Select>
-
-                            {targetType === 'character' && (
-                                <Select
-                                    value={selectedParticipantId}
-                                    onChange={(e) => setSelectedParticipantId(e.target.value)}
-                                    placeholder="Select target"
-                                    isDisabled={participants.length === 0}
-                                >
-                                    {participants.map(p => (
-                                        <option key={p.id} value={p.id}>
-                                            {p.name}
-                                        </option>
-                                    ))}
-                                </Select>
-                            )}
-
-                            <Select
-                                value={triggerType}
-                                onChange={(e) => setTriggerType(e.target.value as 'turn-start' | 'turn-end')}
-                                placeholder="Select trigger"
-                            >
-                                <option value="turn-start">Turn Start</option>
-                                <option value="turn-end">Turn End</option>
-                            </Select>
-
-                            <Box w="100%">
-                                <Text mb="2" fontSize="sm">Duration (rounds)</Text>
-                                <NumberInput
-                                    value={duration}
-                                    onChange={(e) => setDuration(parseInt(e))}
-                                    min={0}
-                                    max={10}
-                                >
-                                    <NumberInputField />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                            </Box>
-
-                            <Button
-                                colorScheme="blue"
-                                onClick={handleAddEffect}
-                                isDisabled={targetType === 'character' && !selectedParticipantId}
-                                width="full"
-                            >
-                                Add Effect
-                            </Button>
-                        </VStack>
-                    </CardBody>
-                </Card>
-
+                
                 {/* Debug Controls */}
                 <Card>
                     <CardBody>

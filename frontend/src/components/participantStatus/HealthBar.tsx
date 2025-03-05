@@ -42,8 +42,16 @@ const HealthBar = ({ name, max, current, minions, onDecrease, onIncrease }: Prop
  * For minions, creates multiple bars, one for each minion
  */
 function createHealthBar(currentWounds: number, woundThreshold: number, minions?: number) {
-  const defaultBar = (wounds: number) =>
-    <Progress width="100%" colorScheme='red' bg='green.500' value={wounds} max={woundThreshold} borderRadius='5px' />
+  const defaultBar = (wounds: number, key?: number) =>
+    <Progress 
+      key={key}
+      width="100%" 
+      colorScheme='red' 
+      bg='green.500' 
+      value={wounds} 
+      max={woundThreshold} 
+      borderRadius='5px' 
+    />
 
   if (minions === undefined)
     return defaultBar(currentWounds);
@@ -54,7 +62,7 @@ function createHealthBar(currentWounds: number, woundThreshold: number, minions?
     for (let i = 0; i < minions; i++) {
       let woundsRemaining = woundThreshold * minions - currentWounds;
       let cappedWoundsRemaining = Math.max(Math.min(woundsRemaining - (i * woundThreshold), woundThreshold), 0);
-      bars.unshift(defaultBar(woundThreshold - cappedWoundsRemaining))
+      bars.unshift(defaultBar(woundThreshold - cappedWoundsRemaining, i))
     }
 
     return (

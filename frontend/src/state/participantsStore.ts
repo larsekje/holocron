@@ -2,6 +2,19 @@ import { create } from "zustand";
 import EventBus from "@/utils/events";
 import { nanoid } from "nanoid";
 
+// DicePouch interface for handling dice modifications
+export interface DicePouch {
+    boost: number;
+    setback: number;
+    advantage: number;
+    threat: number;
+    success: number;
+    failure: number;
+    triumph: number;
+    despair: number;
+    force: number;
+}
+
 export interface Participant {
     id: string;
     name: string;
@@ -17,7 +30,9 @@ export interface Participant {
         type?: string;
         talents?: string[];
         minions?: number;
+        adversaryId?: string; // ID reference to the adversary data source
     };
+    dicePouch?: DicePouch; // Dice modifications
 }
 
 // Zustand Store
@@ -30,6 +45,11 @@ interface ParticipantStore {
     // Wound and strain
     addWounds: (id: string, wounds: number) => void;
     removeWounds: (id: string, wounds: number) => void;
+    
+    // Dice pouch management
+    addDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
+    removeDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
+    clearDicePouch: (id: string) => void;
 }
 
 const useParticipantStore = create<ParticipantStore>((set) => ({
@@ -55,6 +75,21 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
 
         if (participant.stats.type === undefined) {
             participant.stats.type = participant.isPC ? "PC" : "Rival";
+        }
+
+        // Initialize empty dice pouch if not present
+        if (!participant.dicePouch) {
+            participant.dicePouch = {
+                boost: 0,
+                setback: 0,
+                advantage: 0,
+                threat: 0,
+                success: 0,
+                failure: 0,
+                triumph: 0,
+                despair: 0,
+                force: 0
+            };
         }
 
         if (!participant.id) {
@@ -99,6 +134,64 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
                         stats: {
                             ...participant.stats,
                             wounds: Math.max(0, (participant.stats?.wounds || 0) - wounds)
+                        }
+                    };
+                }
+                return participant;
+            })
+        }));
+    },
+    
+    // Dice Pouch Management
+    addDice: (id, diceType, amount) => {
+        set((state) => ({
+            participants: state.participants.map(participant => {
+                if (participant.id === id) {
+                    // Create dice pouch if it doesn't exist
+                    const currentDicePouch = participant.dicePouch || {
+                        boost: 0, setback: 0, advantage: 0, threat: 0,
+                        success: 0, failure: 0, triumph: 0, despair: 0, force: 0
+                    };
+                    
+                    return {
+                        ...participant,
+                        dicePouch: {
+                            ...currentDicePouch,
+                            [diceType]: (currentDicePouch[diceType] || 0) + amount
+                        }
+                    };
+                }
+                return participant;
+            })
+        }));
+    },
+    
+    removeDice: (id, diceType, amount) => {
+        set((state) => ({
+            participants: state.participants.map(participant => {
+                if (participant.id === id && participant.dicePouch) {
+                    return {
+                        ...participant,
+                        dicePouch: {
+                            ...participant.dicePouch,
+                            [diceType]: Math.max(0, (participant.dicePouch[diceType] || 0) - amount)
+                        }
+                    };
+                }
+                return participant;
+            })
+        }));
+    },
+    
+    clearDicePouch: (id) => {
+        set((state) => ({
+            participants: state.participants.map(participant => {
+                if (participant.id === id) {
+                    return {
+                        ...participant,
+                        dicePouch: {
+                            boost: 0, setback: 0, advantage: 0, threat: 0,
+                            success: 0, failure: 0, triumph: 0, despair: 0, force: 0
                         }
                     };
                 }

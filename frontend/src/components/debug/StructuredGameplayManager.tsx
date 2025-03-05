@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Box, Button, Heading, VStack, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import useGameplayStore from "@/state/newGameplayStore";
-import InitiativeModal from "./InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
-import InitiativeList from "@components/debug/InitiativeList";
+import ContentCardTargets from "@components/ContentCardTargets";
+import InitiativeModal from "./InitiativeModal";
 import InitiativeTracker from "@components/debug/InitiativeTracker";
-import {ParticipantsList} from "@components/debug/ParticipantsList";
-import ParticipantStatusList from "@components/participantStatus/ParticipantStatusList";
 
 const StructuredGameplayManager: React.FC = () => {
     // Fetch participants from a participants store
@@ -28,26 +26,23 @@ const StructuredGameplayManager: React.FC = () => {
 
     const handleSetInitiative = (updatedParticipants: Participant[]) => {
         // Map participants to InitiativeSlot[] shape and sort them
-
     };
 
-    if (mode !== "structured") return (
-        <ParticipantsList/>
-    )
-
+    // Use ContentCardTargets for both structured and non-structured modes
     return (
-        <Box>
+        <Box height="100%">
+            {/* Initiative Modal for setting initiative order */}
             <InitiativeModal
                 isOpen={isModalOpen}
-                participants={participants} // Pass current participants
+                participants={participants}
                 onClose={handleCloseModal}
-                onSubmit={handleSetInitiative} // Handle initiative updates
+                onSubmit={handleSetInitiative}
             />
 
-            <ParticipantStatusList/>
+            {/* ContentCardTargets for both modes */}
+            <ContentCardTargets />
         </Box>
-
     );
 };
 
-export default StructuredGameplayManager;
+export default StructuredGameplayManager;   

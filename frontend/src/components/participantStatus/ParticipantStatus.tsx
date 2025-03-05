@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardBody,
@@ -8,13 +8,17 @@ import {
   Badge,
   Button,
   Flex,
-  Heading
+  Heading,
+  IconButton
 } from "@chakra-ui/react";
+import { InfoIcon } from '@chakra-ui/icons';
 import { Participant } from "@/state/participantsStore";
 import useParticipantStore from "@/state/participantsStore";
 import useGameplayStore from "@/state/newGameplayStore";
 import Talent from "@components/participantStatus/Talent";
 import HealthBar from "@components/participantStatus/HealthBar";
+import StatSheetModal from './StatSheetModal';
+import DicePouch from './DicePouch';
 
 interface Props {
   participant: Participant;
@@ -26,6 +30,7 @@ interface Props {
  */
 const ParticipantStatus = ({ participant, participantId }: Props) => {
   const { addWounds, removeWounds } = useParticipantStore();
+  const [showStatSheet, setShowStatSheet] = useState(false);
   
   // Get active participant state from the new gameplayStore
   const activeParticipantId = useGameplayStore(state => state.context.activeParticipantId);
@@ -104,14 +109,23 @@ const ParticipantStatus = ({ participant, participantId }: Props) => {
             )}
           </Flex>
           
-          <Button
-            size="xs"
-            colorScheme="blue"
-            onClick={setAsActive}
-            isDisabled={isActive && !hasActed}
-          >
-            {hasActed ? "Set Active (override)" : "Set Active"}
-          </Button>
+          <Flex>
+            <IconButton
+              aria-label="Show character sheet"
+              icon={<InfoIcon />}
+              size="xs"
+              mr={2}
+              onClick={() => setShowStatSheet(true)}
+            />
+            <Button
+              size="xs"
+              colorScheme="blue"
+              onClick={setAsActive}
+              isDisabled={isActive && !hasActed}
+            >
+              {hasActed ? "Set Active (override)" : "Set Active"}
+            </Button>
+          </Flex>
         </Flex>
         
         {healthBar}
@@ -124,8 +138,15 @@ const ParticipantStatus = ({ participant, participantId }: Props) => {
             onIncrease={() => {}}
           />
         )}
-
+        <DicePouch participant={participant} participantId={participantId} />
       </CardBody>
+      
+      {/* Stat Sheet Modal */}
+      <StatSheetModal 
+        isOpen={showStatSheet} 
+        onClose={() => setShowStatSheet(false)} 
+        participant={participant} 
+      />
     </Card>
   );
 };
