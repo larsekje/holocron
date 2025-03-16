@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     Modal,
     ModalOverlay,
     ModalContent,
     ModalHeader,
-    ModalBody,
     ModalFooter,
+    ModalBody,
     Button,
-    Stack,
     Flex,
     Text,
-    Badge,
-    Input,
-    Switch,
-    Box,
-    HStack,
     IconButton,
+    Input,
+    InputGroup,
+    InputLeftAddon,
     Tooltip,
-    useTheme,
+    Box,
+    Stack,
+    HStack,
+    Badge,
+    Switch,
 } from "@chakra-ui/react";
 import {Participant} from "@/state/participantsStore";
 import { MdRefresh } from "react-icons/md";
+import '../../assets/sass/dice.sass'; // Import dice styles
 
 interface InitiativeModalProps {
     isOpen: boolean; // Controls when the modal is displayed
@@ -29,8 +31,25 @@ interface InitiativeModalProps {
     onSubmit: (updatedParticipants: Participant[]) => void; // Callback function to return updated participants
 }
 
-// Rolls a random initiative for NPCs
-const rollForNPCInitiative = (): number => Math.floor(Math.random() * 20) + 1;
+// Edge of the Empire dice symbol mapping
+type DiceSymbol = 's' | 'f' | 'a' | 't' | 'X' | 'Y';
+type DieName = 'ability' | 'proficiency' | 'boost' | 'difficulty' | 'challenge' | 'setback' | 'force';
+
+// Component for displaying dice symbols
+const DiceSymbol: React.FC<{ symbol: DiceSymbol, size?: string, color?: string }> = ({ symbol, size = '1.5em', color = 'black' }) => {
+    const symbolClass = {
+        's': 'success',
+        'f': 'failure',
+        'a': 'advantage',
+        't': 'threat',
+        'X': 'despair',
+        'Y': 'triumph'
+    }[symbol];
+
+    return (
+        <Box as="span" className={`icon ${symbolClass}`} fontSize={size} color={color} />
+    );
+};
 
 const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                                              isOpen,
@@ -43,12 +62,15 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
     const [pcUseCool, setPcUseCool] = useState<boolean>(false);
     // Track which NPCs have their skills overridden
     const [overriddenNpcs, setOverriddenNpcs] = useState<Record<string, boolean>>({});
+    // Edge of the Empire dice results
+    const [diceResults, setDiceResults] = useState<Record<string, DiceSymbol[]>>({});
+    // Dice pools for each participant
+    const [dicePools, setDicePools] = useState<Record<string, DieName[]>>({});
 
     // Dark mode color constants
     const coolColor = 'cyan.400';
     const vigilanceColor = 'green.400';
-    const inactiveColor = "gray.500";
-    
+
     // Dark mode UI elements
     const modalBg = "gray.800";
     const cardBg = "gray.700";
@@ -59,34 +81,218 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
     const inputColor = "white";
 
     useEffect(() => {
+        console.log("Modal opened, isOpen=", isOpen);
+
         if (isOpen) {
+
+            // Generate dice pools for all participants
+            const newDicePools = { ...dicePools };
+            participants.forEach(participant => {
+                newDicePools[participant.id] = generateDicePoolForParticipant(participant);
+            });
+            setDicePools(newDicePools);
+
+            console.log("Do stuff when modal is opened");
+
             // Automatically roll NPC initiatives when the modal opens
             rollAllNpcInitiatives();
-            setOverriddenNpcs({});  // Reset overrides when modal reopens
+            // setOverriddenNpcs({});  // Reset overrides when modal reopens
+            setDiceResults({});     // Reset dice results when modal reopens
         }
-    }, [isOpen, participants]);
+    }, [isOpen, participants, pcUseCool]);
+
+    // Define dice face distributions according to the Star Wars RPG system
+    const diceFaces = {
+        boost: [
+            null, // Blank
+            null, // Blank
+            's',  // Success
+            'sa', // Success + Advantage
+            'aa', // Double Advantage
+            'a'   // Advantage
+        ],
+        ability: [
+            null, // Blank
+            's',  // Success
+            's',  // Success
+            'ss', // Double Success
+            'a',  // Advantage
+            'a',  // Advantage
+            'sa', // Success + Advantage
+            'aa'  // Double Advantage
+        ],
+        proficiency: [
+            null, // Blank
+            's',  // Success
+            's',  // Success
+            'ss', // Double Success
+            'ss', // Double Success
+            'a',  // Advantage
+            'sa', // Success + Advantage
+            'sa', // Success + Advantage
+            'sa', // Success + Advantage
+            'aa', // Double Advantage
+            'aa', // Double Advantage
+            'Y'   // Triumph
+        ]
+    };
+
+    // Roll a specific die type and return the results
+    const rollDie = (dieType: DieName): DiceSymbol[] => {
+        let faces: (string | null)[] = [];
+        
+        // Get the appropriate face distribution
+        if (dieType === 'boost') {
+            faces = diceFaces.boost;
+        } else if (dieType === 'ability') {
+            faces = diceFaces.ability;
+        } else if (dieType === 'proficiency') {
+            faces = diceFaces.proficiency;
+        } else {
+            // For other dice types (not needed for initiative)
+            return [];
+        }
+        
+        // Roll the die
+        const roll = Math.floor(Math.random() * faces.length);
+        const result = faces[roll];
+        
+        // Convert the result to individual symbols
+        if (!result) return []; // Blank result
+        
+        const symbols: DiceSymbol[] = [];
+        
+        // Split the result into individual symbols
+        for (const char of result) {
+            symbols.push(char as DiceSymbol);
+        }
+        
+        return symbols;
+    };
+
+    // Generate a dice pool based on participant skills
+    const generateDicePoolForParticipant = (participant: Participant): DieName[] => {
+        const skill = getSkillForParticipant(participant.isPC, participant.id);
+        const stats = participant.stats || {};
+        const dicePool: DieName[] = [];
+        
+        // In Edge of the Empire, Vigilance is based on Willpower, Cool is based on Presence
+        // Get the relevant characteristic value
+        const characteristicValue = skill === 'Cool' 
+            ? (stats.presence || 2) // Presence for Cool
+            : (stats.willpower || 2); // Willpower for Vigilance
+        
+        // Get skill ranks - skills are stored with first letter capitalized
+        const skills = stats.skills || {};
+        
+        // The skill value is stored with the first letter capitalized
+        let skillRank = 0;
+        if (skills && typeof skills === 'object') {
+            // Skills are stored with first letter capitalized (e.g., "Vigilance", "Cool")
+            skillRank = skills[skill] || 0;
+        }
+        
+        // Per Edge of the Empire rules:
+        // 1. Total dice count is the higher of characteristic value or skill rank
+        // 2. Yellow dice (proficiency) equal skill rank (limited by total dice count)
+        // 3. Green dice (ability) are the remainder
+        
+        const totalDice = Math.max(characteristicValue, skillRank);
+        const yellowDice = Math.min(skillRank, characteristicValue);
+        const greenDice = totalDice - yellowDice;
+        
+        // Add proficiency dice (yellow)
+        for (let i = 0; i < yellowDice; i++) {
+            dicePool.push('proficiency');
+        }
+        
+        // Add ability dice (green)
+        for (let i = 0; i < greenDice; i++) {
+            dicePool.push('ability');
+        }
+        
+        // Add boost/setback dice from the dice pouch if present
+        if (participant.dicePouch) {
+            // Add boost dice from the dice pouch
+            for (let i = 0; i < (participant.dicePouch.boost || 0); i++) {
+                dicePool.push('boost');
+            }
+            
+            // Add setback dice from the dice pouch
+            for (let i = 0; i < (participant.dicePouch.setback || 0); i++) {
+                dicePool.push('setback');
+            }
+        }
+        
+        return dicePool;
+    };
+
+    // Generate random dice results for Edge of the Empire initiative roll
+    // based on the participant's dice pool
+    const generateRandomDiceResults = (pool: DieName[]): DiceSymbol[] => {
+        // const pool = dicePools[participantId] || [];
+        let results: DiceSymbol[] = [];
+
+        //console.log("Dice pool for", participantId, ":", pool);
+
+        // Roll each die in the pool
+        for (const dieType of pool) {
+            const dieResults = rollDie(dieType);
+
+            console.log("Die result", dieResults);
+            results = [...results, ...dieResults];
+        }
+
+        return results;
+    };
+
+    const calculateInitiativeFromResults = (results: DiceSymbol[]): number => {
+        // Count successes (s and Y)
+        const successCount = results.filter(
+            symbol => symbol === 's' || symbol === 'Y'
+        ).length;
+        
+        // Count advantages (a)
+        const advantageCount = results.filter(
+            symbol => symbol === 'a'
+        ).length;
+        
+        // Initiative is success count with advantages as decimal
+        // For example, 4 successes and 3 advantages would be 4.3
+        return Math.max(0, successCount) + (advantageCount / 10);
+    };
 
     const rollAllNpcInitiatives = () => {
         const newInitiatives = { ...initiatives };
+        const newDiceResults = { ...diceResults };
+        const newDicePools = { ...dicePools };
         
         participants.forEach((participant) => {
             if (!participant.isPC) {
-                // NPC rolls automatically
-                newInitiatives[participant.id] = rollForNPCInitiative();
+
+                // Generate dice pool for the NPC
+                newDicePools[participant.id] = generateDicePoolForParticipant(participant);
+
+                console.log("Dice pool for NPC", participant.name, ":", newDicePools[participant.id]);
+                
+                // Generate random dice results by rolling the dice pool
+                newDiceResults[participant.id] = generateRandomDiceResults(newDicePools[participant.id]);
+
+                console.log("Dice results for NPC", participant.name, ":", newDiceResults[participant.id]);
+                
+                // Calculate initiative value from dice results
+                newInitiatives[participant.id] = calculateInitiativeFromResults(newDiceResults[participant.id]);
+
+                console.log("Initiative roll for NPC", participant.name, ":", newInitiatives[participant.id]);
+
             }
         });
-        
-        setInitiatives(newInitiatives);
-    };
 
-    const handlePCInitiativeChange = (id: string, value: string) => {
-        const numericValue = parseInt(value, 10);
-        if (!isNaN(numericValue)) {
-            setInitiatives((prev) => ({
-                ...prev,
-                [id]: numericValue,
-            }));
-        }
+        console.log("Initiative rolls:", newInitiatives);
+
+        setInitiatives(newInitiatives);
+        setDiceResults(newDiceResults);
+        setDicePools(newDicePools);
     };
 
     const handleSubmit = () => {
@@ -103,6 +309,13 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
 
     const toggleInitiativeSkill = () => {
         setPcUseCool(!pcUseCool);
+        
+        // Update dice pools when initiative skill changes
+        const newDicePools = { ...dicePools };
+        participants.forEach(participant => {
+            newDicePools[participant.id] = generateDicePoolForParticipant(participant);
+        });
+        setDicePools(newDicePools);
     };
 
     const toggleNpcOverride = (npcId: string) => {
@@ -114,10 +327,30 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
 
     // Re-roll initiative for a specific NPC
     const rerollInitiative = (npcId: string) => {
-        setInitiatives(prev => ({
-            ...prev,
-            [npcId]: rollForNPCInitiative()
-        }));
+        // Make sure the dice pool is updated
+        const participant = participants.find(p => p.id === npcId);
+        if (participant) {
+            setDicePools(prev => ({
+                ...prev,
+                [npcId]: generateDicePoolForParticipant(participant)
+            }));
+            
+            // Generate new dice results
+            const newResults = generateRandomDiceResults(dicePools[npcId]);
+            setDiceResults(prev => ({
+                ...prev,
+                [npcId]: newResults
+            }));
+            
+            // Calculate initiative value from dice results
+            const initiativeValue = calculateInitiativeFromResults(newResults);
+            
+            // Update the initiative value
+            setInitiatives(prev => ({
+                ...prev,
+                [npcId]: initiativeValue
+            }));
+        }
     };
 
     // Helper function to determine which skill a participant is using
@@ -135,10 +368,120 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
         }
     };
 
+    const handleSuccessChange = (id: string, value: string) => {
+        // Remove any leading zeros to prevent numbers like "03"
+        const cleanValue = value.replace(/^0+/, '') || "0";
+        const successes = parseInt(cleanValue, 10);
+        if (isNaN(successes) || successes < 0) return;
+        
+        // Get current initiative value and extract the advantage part
+        const currentValue = initiatives[id] || 0;
+        const advantages = Math.round((currentValue - Math.floor(currentValue)) * 10);
+        
+        // Construct new initiative value with updated successes
+        const newValue = successes + (advantages / 10);
+        
+        setInitiatives((prev) => ({
+            ...prev,
+            [id]: newValue,
+        }));
+    };
+    
+    const handleAdvantageChange = (id: string, value: string) => {
+        // Remove any leading zeros to prevent numbers like "03"
+        const cleanValue = value.replace(/^0+/, '') || "0";
+        const advantages = parseInt(cleanValue, 10);
+        if (isNaN(advantages) || advantages < 0) return;
+        
+        // Get current initiative value and extract the success part
+        const currentValue = initiatives[id] || 0;
+        const successes = Math.floor(currentValue);
+        
+        // Construct new initiative value with updated advantages
+        const newValue = successes + (advantages / 10);
+        
+        setInitiatives((prev) => ({
+            ...prev,
+            [id]: newValue,
+        }));
+    };
+
+    // Add a simple component for displaying initiative with different styling for success vs advantage
+    const InitiativeDisplay = ({ value }: { value: number }) => {
+        const successes = Math.floor(value);
+        const advantages = Math.round((value - successes) * 10);
+        
+        // If no successes or advantages, show 0
+        if (successes === 0 && advantages === 0) {
+            return <Text>0</Text>;
+        }
+        
+        return (
+            <>
+                {successes > 0 && (
+                    <Text as="span" fontWeight="bold" fontSize="md" mr={1}>
+                        {successes}<DiceSymbol symbol="s" color="white" />
+                    </Text>
+                )}
+                
+                {advantages > 0 && (
+                    <Text as="span" fontSize="sm" color="gray.300">
+                        {advantages}<DiceSymbol symbol="a" color="white" />
+                    </Text>
+                )}
+            </>
+        );
+    };
+
+    // Reference for the first PC input field
+    const firstPCInputRef = useRef<HTMLInputElement>(null);
+
+    // Focus the first PC input when the modal opens
+    useEffect(() => {
+        if (isOpen && firstPCInputRef.current) {
+            // Use a small timeout to ensure the modal is fully rendered
+            setTimeout(() => {
+                firstPCInputRef.current?.focus();
+                firstPCInputRef.current?.select();
+            }, 100);
+        }
+    }, [isOpen]);
+
+    // Handler to select all text when any input is focused
+    const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.select();
+    };
+
+    // Handler for Enter key press
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+            // Check if the active element is an input field
+            const activeElement = document.activeElement;
+            if (activeElement && 
+                activeElement.tagName === 'INPUT' && 
+                activeElement.getAttribute('type') === 'number') {
+                // Move focus to next input or confirm if at last input
+                const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+                const currentIndex = inputs.indexOf(activeElement as HTMLInputElement);
+                
+                if (currentIndex < inputs.length - 1) {
+                    // Move to next input
+                    (inputs[currentIndex + 1] as HTMLInputElement).focus();
+                } else {
+                    // At last input, confirm the modal
+                    handleSubmit();
+                }
+            } else {
+                // Not in an input, just confirm
+                handleSubmit();
+            }
+        }
+    };
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay backdropFilter="blur(10px)" />
-            <ModalContent bg={modalBg} color={textColor} borderRadius="lg" boxShadow="dark-lg">
+            <ModalContent bg={modalBg} color={textColor} borderRadius="lg" boxShadow="dark-lg" onKeyDown={handleKeyDown}>
                 <ModalHeader borderBottomWidth="1px" borderColor="gray.600">
                     <Flex justify="space-between" align="center" width="100%">
                         <Text fontWeight="bold">Roll for Initiative</Text>
@@ -208,7 +551,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                         </Box>
 
                         {/* Iterate over all participants to display their initiative details */}
-                        {participants.map((participant) => (
+                        {participants.map((participant, index) => (
                             <Flex
                                 key={participant.id}
                                 justify="space-between"
@@ -234,10 +577,10 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                     <Flex align="center">
                                         <Text fontSize="xs" color={secondaryTextColor}>
                                             Using: {!participant.isPC ? (
-                                                <Tooltip 
-                                                    label={overriddenNpcs[participant.id] 
-                                                        ? "Using PC skill instead of opposite" 
-                                                        : "Click to use same skill as PCs"} 
+                                                <Tooltip
+                                                    label={overriddenNpcs[participant.id]
+                                                        ? "Using PC skill instead of opposite"
+                                                        : "Click to use same skill as PCs"}
                                                     fontSize="xs"
                                                     bg="gray.900"
                                                     color="white"
@@ -245,7 +588,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                                     <Text
                                                         as="span"
                                                         fontWeight="bold"
-                                                        color={getSkillForParticipant(participant.isPC, participant.id) === "Cool" ? 
+                                                        color={getSkillForParticipant(participant.isPC, participant.id) === "Cool" ?
                                                             coolColor : vigilanceColor}
                                                         cursor="pointer"
                                                         _hover={{ textDecoration: "underline" }}
@@ -258,7 +601,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                                 <Text
                                                     as="span"
                                                     fontWeight="bold"
-                                                    color={getSkillForParticipant(participant.isPC, participant.id) === "Cool" ? 
+                                                    color={getSkillForParticipant(participant.isPC, participant.id) === "Cool" ?
                                                         coolColor : vigilanceColor}
                                                 >
                                                     {getSkillForParticipant(participant.isPC, participant.id)}
@@ -268,30 +611,63 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                     </Flex>
                                 </Flex>
 
-                                {/* PC Handling: Input field for manual initiative */}
+                                {/* PC Handling: Input fields for success and advantage */}
                                 {participant.isPC ? (
-                                    <Input
-                                        placeholder="Enter initiative"
-                                        size="sm"
-                                        width="100px"
-                                        value={initiatives[participant.id] || ""}
-                                        onChange={(e) =>
-                                            handlePCInitiativeChange(participant.id, e.target.value)
-                                        }
-                                        bg={inputBg}
-                                        color={inputColor}
-                                        borderColor="gray.600"
-                                        _focus={{
-                                            borderColor: "cyan.400",
-                                            boxShadow: "0 0 0 1px cyan.400"
-                                        }}
-                                    />
+                                    <Flex direction="column" align="center">
+                                        <Flex justify="space-between" width="100%" mb={2}>
+                                            <InputGroup size="sm" mr={2}>
+                                                <InputLeftAddon bg="gray.700" borderColor="gray.600">
+                                                    <DiceSymbol symbol="s" color="white" size="1.4em" />
+                                                </InputLeftAddon>
+                                                <Input
+                                                    placeholder="0"
+                                                    width="60px"
+                                                    type="number"
+                                                    min="0"
+                                                    value={Math.floor(initiatives[participant.id] || 0)}
+                                                    onChange={(e) => handleSuccessChange(participant.id, e.target.value)}
+                                                    bg={inputBg}
+                                                    color={inputColor}
+                                                    borderColor="gray.600"
+                                                    _hover={{
+                                                        bg: inputBg,
+                                                    }}
+                                                    // Add ref to the first PC's input field
+                                                    ref={participant.isPC && index === participants.findIndex(p => p.isPC) ? firstPCInputRef : undefined}
+                                                    tabIndex={participant.isPC ? (index * 2) + 1 : undefined}
+                                                    onFocus={handleInputFocus}
+                                                />
+                                            </InputGroup>
+                                            
+                                            <InputGroup size="sm">
+                                                <InputLeftAddon bg="gray.700" borderColor="gray.600">
+                                                    <DiceSymbol symbol="a" color="white" size="1.4em" />
+                                                </InputLeftAddon>
+                                                <Input
+                                                    placeholder="0"
+                                                    width="60px"
+                                                    type="number"
+                                                    min="0"
+                                                    value={Math.round(((initiatives[participant.id] || 0) % 1) * 10)}
+                                                    onChange={(e) => handleAdvantageChange(participant.id, e.target.value)}
+                                                    bg={inputBg}
+                                                    color={inputColor}
+                                                    borderColor="gray.600"
+                                                    _hover={{
+                                                        bg: inputBg,
+                                                    }}
+                                                    tabIndex={participant.isPC ? (index * 2) + 2 : undefined}
+                                                    onFocus={handleInputFocus}
+                                                />
+                                            </InputGroup>
+                                        </Flex>
+                                    </Flex>
                                 ) : (
                                     // NPC Handling: Display rolled initiative with re-roll button
                                     <Flex align="center">
-                                        <Text mr={2}>
-                                            Rolled: <strong>{initiatives[participant.id]}</strong>
-                                        </Text>
+                                        <Box mr={2} fontWeight="bold">
+                                            <InitiativeDisplay value={initiatives[participant.id] || 0} />
+                                        </Box>
                                         <Tooltip label="Re-roll initiative" fontSize="xs" bg="gray.900" color="white">
                                             <IconButton
                                                 aria-label="Re-roll initiative"
