@@ -33,7 +33,8 @@ export const useEffectStore = create<EffectStore>((set, get) => ({
                     id, 
                     effect, 
                     target,
-                    remainingDuration: effect.duration || 0 // Initialize remaining duration
+                    // Preserve undefined for indefinite statuses (e.g., Prone)
+                    remainingDuration: effect.duration !== undefined ? effect.duration : undefined
                 }
             ]
         }));

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useEffectStore } from '@/state/effectStore';
 import useParticipantStore from "@/state/participantsStore"
-import { Effect, EffectTarget } from '@/types/effectTypes';
+import { Effect, EffectTarget, StatusFactories } from '@/types/effectTypes';
 import {
     Box,
     VStack,
     HStack,
-    Input,
     Select,
     Button,
     Text,
@@ -14,11 +13,6 @@ import {
     Card,
     CardBody,
     Badge,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    AccordionIcon,
     NumberInput,
     NumberInputField,
     NumberInputStepper,
@@ -26,153 +20,294 @@ import {
     NumberDecrementStepper,
     Tooltip,
     useToast,
-    Textarea,
-    Divider
+    Divider,
+    SimpleGrid,
 } from '@chakra-ui/react';
 import ActiveEffectsDisplay from "@components/ActiveEffectsDisplay";
-
-// Define the effect types
-type EffectType = 'custom' | 'staggered';
+import { nanoid } from 'nanoid';
+import { emitGameEvent } from '@/state/eventSystem';
+import ContentCard from "./ContentCard";
 
 const EffectsPanel: React.FC = () => {
-    const { effects, addEffect, removeEffect, decrementEffectDuration } = useEffectStore();
+    const { effects, addEffect, decrementEffectDuration } = useEffectStore();
     const { participants } = useParticipantStore();
-    const [targetType, setTargetType] = useState<EffectTarget['type']>('character');
-    const [selectedParticipantId, setSelectedParticipantId] = useState<string>('');
-    const [staggeredParticipantId, setStaggeredParticipantId] = useState<string>('');
-    const [triggerType, setTriggerType] = useState<'turn-start' | 'turn-end'>('turn-start');
-    const [duration, setDuration] = useState<number>(1); // Add state for duration
+
     const toast = useToast();
 
-    // Set default participant when participants list changes
+    // Shared target selection
+    const [selectedParticipantId, setSelectedParticipantId] = useState<string>('');
     useEffect(() => {
-        if (participants.length > 0) {
-            if (!selectedParticipantId) {
-                setSelectedParticipantId(participants[0].id);
-            }
-            if (!staggeredParticipantId) {
-                setStaggeredParticipantId(participants[0].id);
-            }
+        if (participants.length > 0 && !selectedParticipantId) {
+            setSelectedParticipantId(participants[0].id);
         }
     }, [participants]);
 
-    const handleAddStaggeredEffect = () => {
-        if (!staggeredParticipantId) return;
-        
-        const target: EffectTarget = {
-            type: 'character',
-            participantId: staggeredParticipantId
-        };
-        
-        // Get the participant name
-        const targetParticipantName = participants.find(p => p.id === staggeredParticipantId)?.name || 'Unknown';
-        
+    // Disoriented controls
+    const [disRank, setDisRank] = useState<number>(1);
+    const [disDuration, setDisDuration] = useState<number>(1);
+
+    // Immobilized controls
+    const [immDuration, setImmDuration] = useState<number>(1);
+
+    // Ensnared controls
+    const [ensRank, setEnsRank] = useState<number>(1);
+    const [ensDuration, setEnsDuration] = useState<number | undefined>(undefined);
+
+    // Burn controls
+    const [burnRank, setBurnRank] = useState<number>(1);
+    const [burnDuration, setBurnDuration] = useState<number | undefined>(undefined);
+
+    const participantOptions = (
+        <Select
+            value={selectedParticipantId}
+            onChange={(e) => setSelectedParticipantId(e.target.value)}
+            placeholder="Select target"
+            isDisabled={participants.length === 0}
+        >
+            {participants.map(p => (
+                <option key={p.id} value={p.id}>
+                    {p.name}
+                </option>
+            ))}
+        </Select>
+    );
+
+    const withTarget = (pid: string): EffectTarget => ({
+        type: 'character',
+        participantId: pid,
+    });
+
+    const successToast = (msg: string) => toast({
+        title: 'Effect Added',
+        description: msg,
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+    });
+
+    // Helper: resolve participant by id
+    const findParticipantName = (pid?: string) =>
+        participants.find(p => p.id === pid)?.name || 'Unknown';
+
+    // Add STAGGERED
+    const handleAddStaggered = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        const eff = StatusFactories.staggered(nanoid(), target, 2);
         const effect: Effect = {
-            id: Math.random().toString(36).substring(7), // Generate a unique ID
-            name: `STAGGERED: ${targetParticipantName}`,
-            description: 'Cannot perform actions until end of next turn',
-            target: target, // Include target in the effect object
-            behavior: {
-                type: 'active', // The effect is active
-                trigger: 'turn-start'  // Always trigger at turn start for staggered
-            },
-            duration: 2, // Set duration to 2 rounds
-            type: 'debuff',
+            ...eff,
             apply: (participant, durationMessage = '') => {
                 toast({
-                    title: `STAGGERED: ${participant?.name || targetParticipantName}`,
+                    title: `STAGGERED: ${participant?.name || targetName}`,
                     description: `Cannot perform actions until end of next turn${durationMessage}`,
                     status: 'warning',
                     duration: 5000,
                     isClosable: true,
                 });
-            },
+            }
         };
 
         addEffect(effect, target);
+        successToast(`Added STAGGERED to ${targetName} (2 rounds)`);
+    };
+
+    // Add PRONE (indefinite)
+    const handleAddProne = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        const eff = StatusFactories.prone(nanoid(), target);
+        const effect: Effect = {
+            ...eff,
+            apply: (participant) => {
+                toast({
+                    title: `PRONE: ${participant?.name || targetName}`,
+                    description: `Stand up with a maneuver; melee/ranged modifiers apply.`,
+                    status: 'info',
+                    duration: 4000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        addEffect(effect, target);
+        successToast(`Added PRONE to ${targetName} (until they stand)`);
+    };
+
+    // Add DISORIENTED X for N rounds
+    const handleAddDisoriented = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        const eff = StatusFactories.disoriented(nanoid(), target, disRank, disDuration);
+        const effect: Effect = {
+            ...eff,
+            apply: (participant, durationMessage = '') => {
+                toast({
+                    title: `DISORIENTED ${eff.rank}: ${participant?.name || targetName}`,
+                    description: `Add ${eff.rank} Setback to all checks${durationMessage ? ` ${durationMessage}` : ''}`,
+                    status: 'warning',
+                    duration: 4000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        addEffect(effect, target);
+        successToast(`Added DISORIENTED ${eff.rank} to ${targetName} (${disDuration} rounds)`);
+    };
+
+    // Add IMMOBILIZED for N rounds
+    const handleAddImmobilized = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        const eff = StatusFactories.immobilized(nanoid(), target, immDuration);
+        const effect: Effect = {
+            ...eff,
+            apply: (participant, durationMessage = '') => {
+                toast({
+                    title: `IMMOBILIZED: ${participant?.name || targetName}`,
+                    description: `Cannot perform maneuvers${durationMessage ? ` ${durationMessage}` : ''}`,
+                    status: 'warning',
+                    duration: 4000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        addEffect(effect, target);
+        successToast(`Added IMMOBILIZED to ${targetName} (${immDuration} rounds)`);
+    };
+
+    // Add ENSNARED X (duration defaults to rank if not set)
+    const handleAddEnsnared = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        const eff = StatusFactories.ensnared(nanoid(), target, ensRank, ensDuration);
+        const displayDuration = eff.duration ?? ensRank;
+        const effect: Effect = {
+            ...eff,
+            apply: (participant, durationMessage = '') => {
+                toast({
+                    title: `ENSNARED ${eff.rank}: ${participant?.name || targetName}`,
+                    description: `Cannot perform maneuvers${durationMessage ? ` ${durationMessage}` : ''}`,
+                    status: 'warning',
+                    duration: 4000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        addEffect(effect, target);
+        successToast(`Added ENSNARED ${eff.rank} to ${targetName} (${displayDuration} rounds)`);
+    };
+
+    // Add KNOCKED DOWN (also add PRONE for ongoing state)
+    const handleAddKnockedDown = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        // Immediate reminder toast
         toast({
-            title: 'Effect Added',
-            description: `Added STAGGERED effect to ${targetParticipantName} (3 rounds)`,
-            status: 'success',
-            duration: 2000,
+            title: `KNOCKED DOWN: ${targetName}`,
+            description: `Treat as Prone until they spend a maneuver to stand.`,
+            status: 'info',
+            duration: 4000,
             isClosable: true,
         });
+
+        // Add a 'prone' ongoing effect to represent the state
+        const eff = StatusFactories.prone(nanoid(), target);
+        const effect: Effect = {
+            ...eff,
+            apply: (participant) => {
+                toast({
+                    title: `PRONE (from Knocked Down): ${participant?.name || targetName}`,
+                    description: `Stand up with a maneuver.`,
+                    status: 'info',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        addEffect(effect, target);
+        successToast(`Added KNOCKED DOWN (Prone) to ${targetName}`);
+    };
+
+    // Add BURN X for N rounds, deal wounds each round-end
+    const handleAddBurn = () => {
+        if (!selectedParticipantId) return;
+        const target = withTarget(selectedParticipantId);
+        const targetName = findParticipantName(selectedParticipantId);
+
+        const eff = StatusFactories.burn(nanoid(), target, burnRank, burnDuration);
+        const effect: Effect = {
+            ...eff,
+            apply: (participant) => {
+                if (!participant) return;
+                const dmg = eff.overTimeDamage ?? eff.rank ?? 1;
+                // Apply wounds directly
+                const store = useParticipantStore.getState();
+                if (participant.id) {
+                    store.addWounds(participant.id, dmg);
+                }
+                toast({
+                    title: `BURN ${eff.rank}: ${participant.name}`,
+                    description: `Suffers ${dmg} wounds at round end.`,
+                    status: 'warning',
+                    duration: 4000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        addEffect(effect, target);
+        successToast(`Added BURN ${eff.rank} to ${targetName}${eff.duration ? ` (${eff.duration} rounds)` : ''}`);
     };
 
     return (
-        <Box p={4} bg="gray.800" borderRadius="lg">
-            <VStack spacing={6} align="stretch">
-                <Heading size="md" color="white">Effects Manager</Heading>
-                
-                {/* Staggered Effect Card */}
-                <Card>
-                    <CardBody>
-                        <VStack spacing={4}>
-                            <Heading size="sm">STAGGERED</Heading>
-                            <Text fontSize="sm" color="gray.600">Cannot perform actions until end of next turn (Duration: 3 rounds)</Text>
-                            
-                            <Select
-                                value={staggeredParticipantId}
-                                onChange={(e) => setStaggeredParticipantId(e.target.value)}
-                                placeholder="Select target"
-                                isDisabled={participants.length === 0}
-                            >
-                                {participants.map(p => (
-                                    <option key={p.id} value={p.id}>
-                                        {p.name}
-                                    </option>
-                                ))}
-                            </Select>
+        <ContentCard heading="Effects">
+            <VStack spacing={4} align="stretch">
+                <ActiveEffectsDisplay />
 
-                            <Button
-                                colorScheme="red"
-                                onClick={handleAddStaggeredEffect}
-                                isDisabled={!staggeredParticipantId}
-                                width="full"
-                            >
-                                Add STAGGERED
-                            </Button>
-                        </VStack>
-                    </CardBody>
-                </Card>
-                
-                <Divider />
-
-                <ActiveEffectsDisplay/>
-                
                 {/* Debug Controls */}
-                <Card>
+                <Card bg="gray.700" borderColor="gray.600" borderWidth="1px">
                     <CardBody>
-                        <VStack spacing={4}>
-                            <Heading size="sm" color="gray.700">Debug Controls</Heading>
-                            
+                        <VStack spacing={4} align="stretch">
+                            <Heading size="sm" color="gray.200">Debug Controls</Heading>
+
                             <Tooltip label="Reduce the duration of all effects by 1">
                                 <Button
                                     onClick={() => {
-                                        // Get all effects
                                         const allEffects = effects;
-                                        
-                                        // Loop through all active effects
                                         allEffects.forEach(effect => {
-                                            // Apply manual decrement for debugging purposes
-                                            if (effect.remainingDuration && effect.remainingDuration > 0) {
-                                                // For debugging, directly decrement all durations
+                                            if (typeof effect.remainingDuration === 'number' && effect.remainingDuration > 0) {
                                                 decrementEffectDuration(effect.id);
-                                                
-                                                // Also apply the effect to show updated duration in toast
                                                 if (effect.effect.apply) {
-                                                    const participant = effect.target.type === 'character' && effect.target.participantId ?
-                                                        participants.find(p => p.id === effect.target.participantId) : undefined;
-                                                    
-                                                    const durationMessage = effect.remainingDuration && effect.remainingDuration > 0 ? 
-                                                        ` (${effect.remainingDuration - 1} rounds remaining)` : 
-                                                        ' (expiring)';
-                                                    
+                                                    const participant = effect.target.type === 'character' && effect.target.participantId
+                                                        ? participants.find(p => p.id === effect.target.participantId)
+                                                        : undefined;
+
+                                                    const durationMessage =
+                                                        typeof effect.remainingDuration === 'number' && effect.remainingDuration > 0
+                                                            ? ` (${effect.remainingDuration - 1} rounds remaining)`
+                                                            : ' (expiring)';
+
                                                     effect.effect.apply(participant, durationMessage);
                                                 }
                                             }
                                         });
-                                        
+
                                         toast({
                                             title: 'Durations Reduced',
                                             description: 'Manually reduced all effect durations by 1',
@@ -187,11 +322,12 @@ const EffectsPanel: React.FC = () => {
                                     Reduce All Durations
                                 </Button>
                             </Tooltip>
+
                         </VStack>
                     </CardBody>
                 </Card>
             </VStack>
-        </Box>
+        </ContentCard>
     );
 };
 

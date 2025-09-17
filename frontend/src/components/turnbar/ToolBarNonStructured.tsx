@@ -21,6 +21,7 @@ import InitiativeModal from "@components/debug/InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
+import CritRollerModal from "@components/crit/CritRollerModal";
 
 interface Props { }
 
@@ -43,6 +44,7 @@ const ToolBarNonStructured = ({ }: Props) => {
     };
 
     const {setInitiativeOrder} = useGameplayStoreNew();
+    const [isCritOpen, setCritOpen] = useState(false);
     const participants = useParticipantsStore((state) => state.participants);
     const participantCount = useParticipantsStore((state) => state.participants.length);
 
@@ -162,9 +164,14 @@ const ToolBarNonStructured = ({ }: Props) => {
           />
 
           {/* Right Area */}
-          <Flex gap={4}>
-
+          <Flex gap={4} align="center" pr={4}>
+            <Button size="sm" colorScheme="purple" onClick={() => setCritOpen(true)}>
+              Crit Roller
+            </Button>
           </Flex>
+
+          {/* Crit Roller Modal */}
+          <CritRollerModal isOpen={isCritOpen} onClose={() => setCritOpen(false)} />
       </>
     );
 }

@@ -17,6 +17,7 @@ import useGameplayStore from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
 import PocketedResults from "@components/turnbar/PocketedResults";
+import CritRollerModal from "@components/crit/CritRollerModal";
 
 interface Props { }
 
@@ -28,6 +29,7 @@ const ToolBarStructured = ({ }: Props) => {
     const state = useGameplayStore((state) => state.state);
 
     const [isModalOpen, setModalOpen] = useState(false);
+    const [isCritOpen, setCritOpen] = useState(false);
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -79,9 +81,15 @@ const ToolBarStructured = ({ }: Props) => {
         )}
 
         {/* Right Area */}
-        <Flex gap={4}>
+        <Flex gap={4} align="center" pr={4}>
             <RoundNumberDisplay roundNumber={round}/>
+            <Button size="sm" colorScheme="purple" onClick={() => setCritOpen(true)}>
+                Crit Roller
+            </Button>
         </Flex>
+
+        {/* Crit Roller Modal */}
+        <CritRollerModal isOpen={isCritOpen} onClose={() => setCritOpen(false)} />
     </>
 );
 }

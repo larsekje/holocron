@@ -15,6 +15,8 @@ export interface DicePouch {
     force: number;
 }
 
+import { CritInjury } from "@/data/critTable";
+
 export interface Participant {
     id: string;
     name: string;
@@ -33,6 +35,7 @@ export interface Participant {
         adversaryId?: string; // ID reference to the adversary data source
     };
     dicePouch?: DicePouch; // Dice modifications
+    criticalInjuries?: CritInjury[];
 }
 
 // Zustand Store
@@ -42,10 +45,14 @@ interface ParticipantStore {
     removeParticipant: (id: string) => void;
     updateParticipants: (updatedParticipants: Participant[]) => void;
 
+    // Critical injuries
+    addCriticalInjury: (id: string, injury: CritInjury) => void;
+    removeCriticalInjury: (id: string, injuryId: string) => void;
+
     // Wound and strain
     addWounds: (id: string, wounds: number) => void;
     removeWounds: (id: string, wounds: number) => void;
-    
+
     // Dice pouch management
     addDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
     removeDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
@@ -58,6 +65,10 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
         // Make sure stats object exists
         if (!participant.stats) {
             participant.stats = {};
+        }
+        // Initialize critical injuries array
+        if (!participant.criticalInjuries) {
+            participant.criticalInjuries = [];
         }
 
         // Ensure required stat fields have sensible defaults
@@ -198,7 +209,27 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
                 return participant;
             })
         }));
-    }
+    },
+
+    addCriticalInjury: (id, injury) => {
+        set((state) => ({
+            participants: state.participants.map(p =>
+                p.id === id
+                    ? { ...p, criticalInjuries: [...(p.criticalInjuries || []), injury] }
+                    : p
+            )
+        }));
+    },
+
+    removeCriticalInjury: (id, injuryId) => {
+        set((state) => ({
+            participants: state.participants.map(p =>
+                p.id === id
+                    ? { ...p, criticalInjuries: (p.criticalInjuries || []).filter(ci => ci.id !== injuryId) }
+                    : p
+            )
+        }));
+    },
 }));
 
 export default useParticipantStore;

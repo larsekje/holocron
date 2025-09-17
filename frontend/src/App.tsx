@@ -20,7 +20,7 @@ function App() {
       <Grid 
         templateAreas={templateAreas} 
         gridTemplateRows={'60px calc(100vh - 125px)'}
-        gridTemplateColumns={'3fr 4fr 3fr 2fr'} 
+        gridTemplateColumns={'3fr 4fr 3fr 2fr'}
         gap='5px' 
         padding='5px'
         bg="#36393F"
