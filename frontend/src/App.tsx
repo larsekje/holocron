@@ -7,6 +7,8 @@ import ToolBar from "@components/turnbar/ToolBar";
 import StructuredGameplayManager from "@components/debug/StructuredGameplayManager";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
 import EffectsPanel from "@components/EffectsPanel";
+import ContentCardActive from "@components/ContentCardActive";
+import ContentCardActiveOld from "@/ContentCardActiveOld";
 
 function App() {
   const templateAreas = `"turn   turn    turn     turn"
@@ -28,7 +30,7 @@ function App() {
         </GridItem>
         
         <GridItem area='active'>
-          <EffectsPanel/>
+          <ContentCardActiveOld/>
         </GridItem>
         
         <GridItem area='targets'>
@@ -36,7 +38,7 @@ function App() {
         </GridItem>
         
         <GridItem area='targeted'>
-          {/* This area is reserved for future use */}
+          <EffectsPanel/>
         </GridItem>
 
         <GridItem area='sidebar'>

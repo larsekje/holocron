@@ -56,64 +56,6 @@ const EffectsPanel: React.FC = () => {
         }
     }, [participants]);
 
-    const handleAddEffect = () => {
-        // Configure the target
-        const target: EffectTarget = {
-            type: targetType
-        };
-
-        // For character effects, set the participantId
-        if (targetType === 'character') {
-            target.participantId = selectedParticipantId;
-        }
-        
-        const targetParticipantName = targetType === 'character' 
-            ? participants.find(p => p.id === selectedParticipantId)?.name || 'Unknown'
-            : '';
-            
-        // Configure the effect
-        const effectName = targetType === 'character' 
-            ? `Effect on ${targetParticipantName}`
-            : `${targetType.charAt(0).toUpperCase() + targetType.slice(1)} Effect`;
-        const effectDescription = `Triggers on ${triggerType}${duration > 0 ? ` (${duration} rounds)` : ''}`;
-            
-        const effect: Effect = {
-            id: Math.random().toString(36).substring(7), // Generate a unique ID
-            name: effectName,
-            description: effectDescription,
-            target: target, // Include target in the effect object
-            behavior: {
-                type: 'active', // The effect is active by default
-                trigger: triggerType
-            },
-            duration: duration, // Set duration from state
-            type: 'buff', // Default to buff type
-            apply: (participant, durationMessage = '') => {
-                let targetDesc = '';
-                if (target.type === 'character' && participant) {
-                    targetDesc = ` on ${participant.name}`;
-                }
-                
-                toast({
-                    title: effectName,
-                    description: `${effectDescription}${targetDesc}${durationMessage}`,
-                    status: 'info',
-                    duration: 5000,
-                    isClosable: true,
-                });
-            },
-        };
-
-        addEffect(effect, target);
-        toast({
-            title: 'Effect Added',
-            description: `Added ${targetType} effect${duration > 0 ? ` (${duration} rounds)` : ''}`,
-            status: 'success',
-            duration: 2000,
-            isClosable: true,
-        });
-    };
-
     const handleAddStaggeredEffect = () => {
         if (!staggeredParticipantId) return;
         
@@ -155,29 +97,6 @@ const EffectsPanel: React.FC = () => {
             duration: 2000,
             isClosable: true,
         });
-    };
-
-    const getTargetFromForm = (): EffectTarget => {
-        switch (targetType) {
-            case 'character':
-                return {
-                    type: 'character',
-                    participantId: selectedParticipantId
-                };
-            case 'initiative':
-                return {
-                    type: 'initiative',
-                    slot: 1 // TODO: Add initiative slot selection
-                };
-            case 'global':
-                return {
-                    type: 'global'
-                };
-            default:
-                return {
-                    type: 'global'
-                };
-        }
     };
 
     return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   VStack,
@@ -9,29 +9,19 @@ import {
   Divider,
   Badge,
   Heading,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Spinner,
+  List,
+  ListItem,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from '@chakra-ui/react';
 import { Participant } from '@/state/participantsStore';
-import adversaryService from '@/services/adversaryService';
-import { Adversary } from '@/types/adversaryTypes';
+import DicePouch from '@components/participantStatus/DicePouch';
+import SkillList from '@components/participantStatus/SkillList';
 
-// Define the weapon type
-interface Weapon {
-  name: string;
-  skill?: string;
-  damage?: number;
-  'plus-damage'?: number;
-  plusDamage?: number; // Alternative property name
-  critical?: number;
-  range?: string;
-  qualities?: string | string[];
-  [key: string]: any; // Allow any other properties
-}
+
 
 interface StatSheetProps {
   participant: Participant;
@@ -41,72 +31,6 @@ interface StatSheetProps {
  * Component to display detailed participant statistics in a character sheet format
  */
 const StatSheet: React.FC<StatSheetProps> = ({ participant }) => {
-  const [adversary, setAdversary] = useState<Adversary | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [weaponsData, setWeaponsData] = useState<Weapon[]>([]);
-  const [weaponsLookup, setWeaponsLookup] = useState<Record<string, Weapon>>({});
-  
-  // Load weapons data
-  useEffect(() => {
-    const loadWeaponsData = async () => {
-      try {
-        const response = await fetch('/assets/data/weapons.json');
-        if (!response.ok) {
-          throw new Error('Failed to load weapons data');
-        }
-        const data = await response.json();
-        
-        // Create a lookup map by weapon name
-        const lookup: Record<string, Weapon> = {};
-        data.forEach((weapon: Weapon) => {
-          if (weapon.name) {
-            lookup[weapon.name.toLowerCase()] = weapon;
-          }
-        });
-        
-        setWeaponsLookup(lookup);
-      } catch (error) {
-        console.error('Failed to load weapons data:', error);
-      }
-    };
-    
-    loadWeaponsData();
-  }, []);
-  
-  // Load adversary data if participant has an adversaryId
-  useEffect(() => {
-    const loadAdversaryData = async () => {
-      const adversaryId = participant.stats?.adversaryId;
-      if (!adversaryId) return;
-      
-      setLoading(true);
-      try {
-        const data = await adversaryService.getAdversaryByName(adversaryId);
-        if (data) {
-          setAdversary(data);
-          
-          // Process weapons for this adversary
-          if (data.weapons && data.weapons.length > 0) {
-            const processedWeapons = data.weapons.map((weapon: string | Weapon) => {
-              if (typeof weapon === 'string') {
-                return weaponsLookup[weapon.toLowerCase()] || { name: weapon };
-              }
-              return weapon;
-            });
-            
-            setWeaponsData(processedWeapons);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load adversary data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadAdversaryData();
-  }, [participant.stats?.adversaryId, weaponsLookup]);
-  
   const stats = participant.stats || {};
   
   // Character basic info
@@ -122,7 +46,7 @@ const StatSheet: React.FC<StatSheetProps> = ({ participant }) => {
   const wounds = stats.wounds || 0;
   const strain = stats.strain || 0;
   
-  // Characteristics with PC defaults
+  // Characteristics with defaults
   const brawn = stats.brawn || (isPC ? 2 : 2);
   const agility = stats.agility || (isPC ? 2 : 2);
   const intellect = stats.intellect || (isPC ? 2 : 2);
@@ -130,7 +54,7 @@ const StatSheet: React.FC<StatSheetProps> = ({ participant }) => {
   const willpower = stats.willpower || (isPC ? 2 : 2);
   const presence = stats.presence || (isPC ? 2 : 2);
   
-  // Skills
+  // Skills and abilities
   const skills = stats.skills || {};
   const talents = stats.talents || [];
   const abilities = stats.abilities || [];
@@ -138,17 +62,19 @@ const StatSheet: React.FC<StatSheetProps> = ({ participant }) => {
   // Derived statistics
   const encumbranceThreshold = brawn * 5 + (stats.encumbranceBonus || 0);
   const encumbranceCurrent = stats.encumbrance || 0;
-
-  if (loading) {
-    return (
-      <Box p={4} borderWidth="1px" borderRadius="lg" bg="white" shadow="md">
-        <Spinner />
-      </Box>
-    );
-  }
+  
+  // Characteristics object for SkillList
+  const characteristics = {
+    brawn,
+    agility,
+    intellect,
+    cunning,
+    willpower,
+    presence
+  };
 
   return (
-    <Box p={4} borderWidth="1px" borderRadius="lg" bg="white" shadow="md">
+    <Box p={4} borderWidth="1px" borderRadius="lg" bg="#2A2C30" shadow="md" color="white">
       <VStack spacing={4} align="stretch">
         {/* Header */}
         <HStack justifyContent="space-between" alignItems="center">
@@ -188,6 +114,15 @@ const StatSheet: React.FC<StatSheetProps> = ({ participant }) => {
         
         <Divider />
         
+        {/* Dice Pouch */}
+        {participant.dicePouch && (
+          <>
+            <Heading size="sm">Dice Modifications</Heading>
+            <DicePouch participant={participant} participantId={participant.id} />
+            <Divider />
+          </>
+        )}
+        
         {/* Characteristics */}
         <Heading size="sm">Characteristics</Heading>
         <Grid templateColumns="repeat(6, 1fr)" gap={2}>
@@ -201,130 +136,61 @@ const StatSheet: React.FC<StatSheetProps> = ({ participant }) => {
         
         <Divider />
         
-        {/* Description (if available from adversary) */}
-        {adversary?.description && (
+        {/* Skills */}
+        <Heading size="sm">Skills</Heading>
+        <Tabs variant="soft-rounded" size="sm" colorScheme="blue" mt={2}>
+          <TabList>
+            <Tab>All</Tab>
+            <Tab>Combat</Tab>
+            <Tab>Social</Tab>
+            <Tab>General</Tab>
+            <Tab>Knowledge</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel p={2}>
+              <SkillList skills={skills} characteristics={characteristics} showEmpty={false} />
+            </TabPanel>
+            <TabPanel p={2}>
+              <SkillList skills={skills} characteristics={characteristics} filterByCategory="combat" showEmpty={true} />
+            </TabPanel>
+            <TabPanel p={2}>
+              <SkillList skills={skills} characteristics={characteristics} filterByCategory="social" showEmpty={true} />
+            </TabPanel>
+            <TabPanel p={2}>
+              <SkillList skills={skills} characteristics={characteristics} filterByCategory="general" showEmpty={true} />
+            </TabPanel>
+            <TabPanel p={2}>
+              <SkillList skills={skills} characteristics={characteristics} filterByCategory="knowledge" showEmpty={true} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+        
+        <Divider />
+        
+        {/* Talents */}
+        <Heading size="sm">Talents</Heading>
+        <List spacing={1}>
+          {talents.length > 0 ? (
+            talents.map((talent, index) => (
+              <ListItem key={index} fontSize="sm">{talent}</ListItem>
+            ))
+          ) : (
+            <Text fontSize="sm" color="gray.500">No talents recorded</Text>
+          )}
+        </List>
+        
+        {/* Abilities */}
+        {abilities.length > 0 && (
           <>
-            <Heading size="sm">Description</Heading>
-            <Text fontSize="sm">{adversary.description}</Text>
             <Divider />
+            <Heading size="sm">Special Abilities</Heading>
+            <List spacing={1}>
+              {abilities.map((ability, index) => (
+                <ListItem key={index} fontSize="sm">{ability}</ListItem>
+              ))}
+            </List>
           </>
         )}
-        
-        {/* Expandable sections */}
-        <Accordion allowMultiple defaultIndex={[0]}>
-          {/* Skills */}
-          <AccordionItem>
-            <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Heading size="sm">Skills</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              <Grid templateColumns="repeat(2, 1fr)" gap={2}>
-                {Object.entries(skills).map(([skillName, rank]) => (
-                  <GridItem key={skillName}>
-                    <Text fontSize="sm">
-                      <strong>{formatSkillName(skillName)}</strong>: {rank}
-                    </Text>
-                  </GridItem>
-                ))}
-                {Object.keys(skills).length === 0 && (
-                  <Text fontSize="sm" color="gray.500">No skills recorded</Text>
-                )}
-              </Grid>
-            </AccordionPanel>
-          </AccordionItem>
-          
-          {/* Talents */}
-          <AccordionItem>
-            <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Heading size="sm">Talents</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              {talents.length > 0 ? (
-                talents.map((talent, index) => (
-                  <Text key={index} fontSize="sm">{talent}</Text>
-                ))
-              ) : (
-                <Text fontSize="sm" color="gray.500">No talents recorded</Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-          
-          {/* Weapons */}
-          <AccordionItem>
-            <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Heading size="sm">Weapons</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              {weaponsData.length > 0 ? (
-                <VStack align="stretch" spacing={2}>
-                  {weaponsData.map((weapon, index) => (
-                    <Box key={index} p={2} borderWidth="1px" borderRadius="md">
-                      <Text fontWeight="bold" fontSize="sm">{weapon.name}</Text>
-                      {weapon.skill && <Text fontSize="xs">Skill: {weapon.skill}</Text>}
-                      {weapon.range && <Text fontSize="xs">Range: {weapon.range}</Text>}
-                      {weapon.damage && <Text fontSize="xs">Damage: {weapon.damage}</Text>}
-                      {(weapon['plus-damage'] || weapon.plusDamage) && 
-                        <Text fontSize="xs">+Damage: {weapon['plus-damage'] || weapon.plusDamage}</Text>}
-                      {weapon.critical && <Text fontSize="xs">Critical: {weapon.critical}</Text>}
-                      {weapon.qualities && (
-                        <Text fontSize="xs">
-                          Qualities: {Array.isArray(weapon.qualities) 
-                            ? weapon.qualities.join(', ') 
-                            : weapon.qualities}
-                        </Text>
-                      )}
-                    </Box>
-                  ))}
-                </VStack>
-              ) : (
-                <Text fontSize="sm" color="gray.500">No weapons recorded</Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-          
-          {/* Abilities */}
-          <AccordionItem>
-            <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Heading size="sm">Special Abilities</Heading>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel pb={4}>
-              {abilities.length > 0 ? (
-                abilities.map((ability, index) => (
-                  <Text key={index} fontSize="sm">{ability}</Text>
-                ))
-              ) : (
-                <Text fontSize="sm" color="gray.500">No special abilities recorded</Text>
-              )}
-            </AccordionPanel>
-          </AccordionItem>
-          
-          {/* Notes (if available from adversary) */}
-          {adversary?.notes && (
-            <AccordionItem>
-              <AccordionButton>
-                <Box flex="1" textAlign="left">
-                  <Heading size="sm">GM Notes</Heading>
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={4}>
-                <Text fontSize="sm">{adversary.notes}</Text>
-              </AccordionPanel>
-            </AccordionItem>
-          )}
-        </Accordion>
       </VStack>
     </Box>
   );
@@ -337,7 +203,7 @@ interface CharacteristicBoxProps {
 }
 
 const CharacteristicBox: React.FC<CharacteristicBoxProps> = ({ label, value }) => (
-  <Box textAlign="center" borderWidth="1px" borderRadius="md" p={2}>
+  <Box textAlign="center" borderWidth="1px" borderRadius="md" p={2} borderColor="gray.600">
     <Text fontWeight="bold" fontSize="sm">{label}</Text>
     <Text fontSize="xl">{value}</Text>
   </Box>
@@ -352,7 +218,7 @@ interface StatBoxProps {
 }
 
 const StatBox: React.FC<StatBoxProps> = ({ label, value, current, max }) => (
-  <Box textAlign="center" borderWidth="1px" borderRadius="md" p={2}>
+  <Box textAlign="center" borderWidth="1px" borderRadius="md" p={2} borderColor="gray.600">
     <Text fontWeight="bold" fontSize="sm">{label}</Text>
     {value !== undefined ? (
       <Text fontSize="lg">{value}</Text>
@@ -364,11 +230,6 @@ const StatBox: React.FC<StatBoxProps> = ({ label, value, current, max }) => (
   </Box>
 );
 
-// Format skill names for display
-function formatSkillName(skillName: string): string {
-  return skillName
-    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-    .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
-}
+
 
 export default StatSheet;
