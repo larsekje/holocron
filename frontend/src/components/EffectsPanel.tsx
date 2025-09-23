@@ -27,12 +27,15 @@ import ActiveEffectsDisplay from "@components/ActiveEffectsDisplay";
 import { nanoid } from 'nanoid';
 import { emitGameEvent } from '@/state/eventSystem';
 import ContentCard from "./ContentCard";
+import Spotlight from '@/components/Spotlight';
+import { useSpotlightStore } from '@/state/spotlightStore';
 
 const EffectsPanel: React.FC = () => {
     const { effects, addEffect, decrementEffectDuration } = useEffectStore();
     const { participants } = useParticipantStore();
 
     const toast = useToast();
+    const { open: openSpotlight } = useSpotlightStore();
 
     // Shared target selection
     const [selectedParticipantId, setSelectedParticipantId] = useState<string>('');
@@ -323,10 +326,22 @@ const EffectsPanel: React.FC = () => {
                                 </Button>
                             </Tooltip>
 
+                            <Tooltip label="Open Spotlight search (Cmd/Ctrl+K)">
+                                <Button
+                                    onClick={openSpotlight}
+                                    width="full"
+                                    colorScheme="purple"
+                                    variant="outline"
+                                >
+                                    Open Spotlight
+                                </Button>
+                            </Tooltip>
+
                         </VStack>
                     </CardBody>
                 </Card>
             </VStack>
+            <Spotlight />
         </ContentCard>
     );
 };

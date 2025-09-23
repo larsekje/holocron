@@ -1,0 +1,126 @@
+[
+  {
+    "id": "rule_personal-scale",
+    "type": "rule",
+    "name": "Personal Scale",
+    "subtitle": "Rules Reference",
+    "tags": ["Rules", "Combat", "Personal"],
+    "detail": {
+      "id": "rule_personal-scale",
+      "type": "rule",
+      "name": "Personal Scale",
+      "markdown": "[B]Personal Scale[b]\n[P]Most characters, gear, and weapons operate on the personal scale. Attacks, movement, and ranges use the standard rules unless otherwise noted.",
+      "category": "Rules",
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "rule_critical-injuries",
+    "type": "rule",
+    "name": "Critical Injuries",
+    "subtitle": "Rules Reference",
+    "tags": ["Rules", "Combat"],
+    "detail": {
+      "id": "rule_critical-injuries",
+      "type": "rule",
+      "name": "Critical Injuries",
+      "markdown": "[B]Critical Injuries[b]\n[P]When a character suffers a Critical Injury, roll d100 on the Critical Injury table, adding modifiers as appropriate.",
+      "category": "Rules",
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "rule_encumbrance",
+    "type": "rule",
+    "name": "Encumbrance",
+    "subtitle": "Rules Reference",
+    "tags": ["Rules", "Equipment"],
+    "detail": {
+      "id": "rule_encumbrance",
+      "type": "rule",
+      "name": "Encumbrance",
+      "markdown": "[B]Encumbrance[b]\n[P]Encumbrance measures how much gear a character can comfortably carry before suffering penalties.",
+      "category": "Rules",
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "adversary_stormtrooper",
+    "type": "adversary",
+    "name": "Stormtrooper",
+    "subtitle": "Imperial Minion",
+    "tags": ["Imperial", "Minion", "Soldier"],
+    "detail": {
+      "id": "adversary_stormtrooper",
+      "type": "adversary",
+      "name": "Stormtrooper",
+      "description": "Elite soldiers of the Galactic Empire, equipped with blaster rifles and standard armor.",
+      "category": "Minion",
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "adversary_tie-fighter-pilot",
+    "type": "adversary",
+    "name": "TIE Fighter Pilot",
+    "subtitle": "Imperial Rival",
+    "tags": ["Imperial", "Pilot", "Rival"],
+    "detail": {
+      "id": "adversary_tie-fighter-pilot",
+      "type": "adversary",
+      "name": "TIE Fighter Pilot",
+      "description": "Imperial starfighter pilots trained for ruthless efficiency in dogfights.",
+      "category": "Rival",
+      "source": "SRD"
+    }
+  },
+
+  { "id": "quality_autofire",
+    "type": "quality",
+    "name": "Autofire",
+    "detail": { "id": "quality_autofire", "type": "quality", "name": "Autofire", "markdown": "May spend [AD] to hit the same or another target within range an additional time. GM may apply increased ammo usage or difficulty.", "category": "Active", "ranked": false, "source": "SRD" } },
+  { "id": "quality_stun-setting", "type": "quality", "name": "Stun Setting",
+    "detail": { "id": "quality_stun-setting", "type": "quality", "name": "Stun Setting", "markdown": "Weapon can switch to non-lethal mode, dealing strain damage instead of wounds.", "category": "Passive", "ranked": false, "source": "SRD" } },
+  { "id": "quality_blast", "type": "quality", "name": "Blast",
+    "detail": { "id": "quality_blast", "type": "quality", "name": "Blast", "markdown": "On a hit (or with sufficient [TR]), nearby targets suffer X damage (at GM's discretion for minions).", "category": "Active", "ranked": true, "source": "SRD" } },
+  { "id": "quality_pierce", "type": "quality", "name": "Pierce",
+    "detail": { "id": "quality_pierce", "type": "quality", "name": "Pierce", "markdown": "Ignore X points of soak when determining damage.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_breach", "type": "quality", "name": "Breach",
+    "detail": { "id": "quality_breach", "type": "quality", "name": "Breach", "markdown": "Ignore 10 × X points of vehicle armor (treat as Pierce 10×X vs. personal targets).", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_vicious", "type": "quality", "name": "Vicious",
+    "detail": { "id": "quality_vicious", "type": "quality", "name": "Vicious", "markdown": "Increase Critical Injury rolls by X.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_concussive", "type": "quality", "name": "Concussive",
+    "detail": { "id": "quality_concussive", "type": "quality", "name": "Concussive", "markdown": "On a hit (or with [TR]), target is staggered for X rounds.", "category": "Active", "ranked": true, "source": "SRD" } },
+  { "id": "quality_cumbersome", "type": "quality", "name": "Cumbersome",
+    "detail": { "id": "quality_cumbersome", "type": "quality", "name": "Cumbersome", "markdown": "Requires Brawn X to use without penalty; otherwise add [SE] to checks.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_defensive", "type": "quality", "name": "Defensive",
+    "detail": { "id": "quality_defensive", "type": "quality", "name": "Defensive", "markdown": "While wielded, add +X to melee defense.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_deflection", "type": "quality", "name": "Deflection",
+    "detail": { "id": "quality_deflection", "type": "quality", "name": "Deflection", "markdown": "While wielded, add +X to ranged defense.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_disorient", "type": "quality", "name": "Disorient",
+    "detail": { "id": "quality_disorient", "type": "quality", "name": "Disorient", "markdown": "On a hit, may spend [AD] to inflict Disoriented for X rounds.", "category": "Active", "ranked": true, "source": "SRD" } },
+  { "id": "quality_ensnare", "type": "quality", "name": "Ensnare",
+    "detail": { "id": "quality_ensnare", "type": "quality", "name": "Ensnare", "markdown": "On a hit (or with [TR]), target is immobilized for X rounds.", "category": "Active", "ranked": true, "source": "SRD" } },
+  { "id": "quality_guided", "type": "quality", "name": "Guided",
+    "detail": { "id": "quality_guided", "type": "quality", "name": "Guided", "markdown": "On a miss, may spend [AD] to trigger a homing attack; resolve with difficulty based on range and rating.", "category": "Active", "ranked": true, "source": "SRD" } },
+  { "id": "quality_ion", "type": "quality", "name": "Ion",
+    "detail": { "id": "quality_ion", "type": "quality", "name": "Ion", "markdown": "Primarily affects electronics, droids, and vehicles; typically inflicts strain or system strain.", "category": "Passive", "ranked": false, "source": "SRD" } },
+  { "id": "quality_knockdown", "type": "quality", "name": "Knockdown",
+    "detail": { "id": "quality_knockdown", "type": "quality", "name": "Knockdown", "markdown": "May spend [AD] to knock the target prone.", "category": "Active", "ranked": false, "source": "SRD" } },
+  { "id": "quality_linked", "type": "quality", "name": "Linked",
+    "detail": { "id": "quality_linked", "type": "quality", "name": "Linked", "markdown": "May spend [AD] to hit an additional time, up to X times total, when the attack hits.", "category": "Active", "ranked": true, "source": "SRD" } },
+  { "id": "quality_prepared", "type": "quality", "name": "Prepared",
+    "detail": { "id": "quality_prepared", "type": "quality", "name": "Prepared", "markdown": "Requires X maneuvers to ready before it can be used.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_accurate", "type": "quality", "name": "Accurate",
+    "detail": { "id": "quality_accurate", "type": "quality", "name": "Accurate", "markdown": "Add [BO] per rating to attacks made with this weapon.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_inaccurate", "type": "quality", "name": "Inaccurate",
+    "detail": { "id": "quality_inaccurate", "type": "quality", "name": "Inaccurate", "markdown": "Add [SE] per rating to attacks made with this weapon.", "category": "Passive", "ranked": true, "source": "SRD" } },
+  { "id": "quality_superior", "type": "quality", "name": "Superior",
+    "detail": { "id": "quality_superior", "type": "quality", "name": "Superior", "markdown": "Well-crafted; often provides a small bonus such as +1 damage and improved reliability.", "category": "Passive", "ranked": false, "source": "SRD" } },
+  { "id": "quality_inferior", "type": "quality", "name": "Inferior",
+    "detail": { "id": "quality_inferior", "type": "quality", "name": "Inferior", "markdown": "Poorly made; often imposes a small penalty such as -1 damage or [SE] on checks.", "category": "Passive", "ranked": false, "source": "SRD" } },
+  { "id": "quality_sunder", "type": "quality", "name": "Sunder",
+    "detail": { "id": "quality_sunder", "type": "quality", "name": "Sunder", "markdown": "May spend [AD] to damage an opponent's item or weapon.", "category": "Active", "ranked": false, "source": "SRD" } },
+  { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo",
+    "detail": { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo", "markdown": "Weapon has restricted shots; [TH] may deplete remaining ammo at the GM's discretion.", "category": "Passive", "ranked": true, "source": "SRD" } }
+]

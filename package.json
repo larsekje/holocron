@@ -1,0 +1,11 @@
+{
+  "name": "holocron-root",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build:spotlight": "npm --prefix frontend install --no-audit --no-fund && node ./frontend/scripts/buildSpotlightIndex.mjs",
+    "dev": "npm --prefix frontend install --no-audit --no-fund && npm --prefix frontend run dev",
+    "build": "npm --prefix frontend install --no-audit --no-fund && npm --prefix frontend run build",
+    "preview": "npm --prefix frontend install --no-audit --no-fund && npm --prefix frontend run preview"
+  }
+}

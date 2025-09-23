@@ -1,0 +1,86 @@
+import React from 'react';
+import { Badge, Box, HStack, Text } from '@chakra-ui/react';
+import type { SpotlightResult } from '@/state/spotlightStore';
+import { getDetail } from '@/data/spotlightIndex';
+
+type SpotlightResultRowProps = {
+  r: SpotlightResult;
+  idx: number;
+  isSelected: boolean;
+  onHoverIndex: (idx: number) => void;
+  onClickResult: (r: SpotlightResult) => void;
+  rowHeight: number;
+  rowHoverBg?: string;
+  rowSelectedBg?: string;
+};
+
+const charKeyToName = (k?: string): string | undefined => {
+  const v = (k || '').toUpperCase();
+  switch (v) {
+    case 'BR': return 'Brawn';
+    case 'AG':
+    case 'AGI': return 'Agility';
+    case 'INT': return 'Intellect';
+    case 'CUN': return 'Cunning';
+    case 'WIL': return 'Willpower';
+    case 'PR': return 'Presence';
+    default: return undefined;
+  }
+};
+
+const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
+  r,
+  idx,
+  isSelected,
+  onHoverIndex,
+  onClickResult,
+  rowHeight,
+  rowHoverBg = 'gray.600',
+  rowSelectedBg = 'gray.700',
+}) => {
+  // Pull characteristic for skills (from detail.characteristic, detail.charKey, or tags)
+  const skillCharacteristic =
+    r.type === 'skill'
+      ? (
+          (r as any).detail?.characteristic ??
+          charKeyToName((r as any).detail?.charKey) ??
+          (r.tags || []).find((t) =>
+            ['Brawn', 'Agility', 'Intellect', 'Cunning', 'Willpower', 'Presence'].includes(t)
+          )
+        )
+      : undefined;
+
+  // Fetch detail lazily for lightweight results (searchIndex omits detail)
+  const detail = React.useMemo(() => getDetail(r.type, r.id), [r.type, r.id]);
+
+  return (
+    <HStack
+      key={`${r.type}:${r.id}`}
+      onMouseEnter={() => onHoverIndex(idx)}
+      onClick={() => onClickResult(r)}
+      px={4}
+      height={`${rowHeight}px`}
+      spacing={3}
+      cursor="pointer"
+      bg={isSelected ? rowSelectedBg : 'transparent'}
+      _hover={{ bg: rowHoverBg }}
+      borderLeftWidth="3px"
+      borderLeftColor={isSelected ? 'purple.400' : 'transparent'}
+      transition="background 120ms ease, border-color 120ms ease"
+    >
+      <Box flex="1">
+        <Text fontWeight="semibold" color="gray.100">
+          {r.name}
+        </Text>
+        <HStack spacing={2}>
+          {detail?.category && <Text fontSize="sm" color="gray.400">{detail?.category}</Text>}
+        </HStack>
+      </Box>
+      <HStack spacing={2} align="center">
+        <Badge colorScheme="purple" variant="outline">{r.type}</Badge>
+      </HStack>
+    </HStack>
+  );
+};
+
+export default SpotlightResultRow;
