@@ -11,12 +11,10 @@ import {
   Wrap,
   WrapItem,
 } from '@chakra-ui/react';
-import { Tooltip } from '@chakra-ui/react';
 import type { SpotlightDetail } from '@/state/spotlightStore';
 import { Interweave } from 'interweave';
 import { oggToHtml, oggInlineToHtml } from '@/utils/oggMarkup';
 import DetailStat from './DetailStat';
-import adversaryService from '@/services/adversaryService';
 
 interface SpotlightDetailPaneProps {
   detail: SpotlightDetail | null;
@@ -127,46 +125,6 @@ function normalizeBaseMods(detail: any): string[] {
 }
 
 const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detailLoading }) => {
-  const [advMeta, setAdvMeta] = React.useState<{
-    factions: string[];
-    roles: string[];
-    traits: string[];
-    factionReasons: Record<string, string[]>;
-    roleReasons: Record<string, string[]>;
-    traitReasons: Record<string, string[]>;
-  } | null>(null);
-
-  React.useEffect(() => {
-    let alive = true;
-    async function load() {
-      setAdvMeta(null);
-      if (!detail) return;
-      const kind = ((detail as any).__kind ?? detail.type);
-      if (kind !== 'adversary') return;
-      try {
-        const name = detail.name;
-        await adversaryService.loadAdversaries();
-        const adv = await adversaryService.getAdversaryByName(name);
-        if (!alive) return;
-        if (!adv) {
-          setAdvMeta({ factions: [], roles: [], traits: [], factionReasons: {}, roleReasons: {}, traitReasons: {} });
-          return;
-        }
-        const factions = adversaryService.getFactionsFor(adv) ?? [];
-        const roles = adversaryService.getArchetypesFor(adv) ?? [];
-        const traits = adversaryService.getTraitsFor(adv) ?? [];
-        const factionReasons = adversaryService.getFactionExplanations(adv) ?? {};
-        const roleReasons = adversaryService.getArchetypeExplanations(adv) ?? {};
-        const traitReasons = adversaryService.getTraitExplanations(adv) ?? {};
-        setAdvMeta({ factions, roles, traits, factionReasons, roleReasons, traitReasons });
-      } catch (e) {
-        if (!alive) return;
-        setAdvMeta({ factions: [], roles: [], traits: [], factionReasons: {}, roleReasons: {}, traitReasons: {} });
-      }
-    }
-    load();
-    return () => { alive = false; };
-  }, [detail]);
   return (
     <Box w="100%" p={4}>
       {detailLoading && (
@@ -217,78 +175,6 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
             </Badge>
             </HStack>
           </HStack>
-
-          {/* Inferred meta for adversaries: Factions, Roles, Traits */}
-          {(((detail as any).__kind ?? detail.type) === 'adversary') && advMeta && (
-            <VStack align="stretch" spacing={2}>
-              {advMeta.factions && advMeta.factions.length > 0 && (
-                <HStack>
-                  <Text as="span" fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" minW="72px">
-                    Faction
-                  </Text>
-                  <Wrap spacing={2} shouldWrapChildren>
-                    {advMeta.factions.map((f) => (
-                      <Tooltip key={`tf-${f}`} placement="top" hasArrow bg="gray.700" color="gray.100" label={
-                        <Box>
-                          {(advMeta.factionReasons?.[f] || ['Inferred from tags/name']).map((line, i) => (
-                            <Text key={i} fontSize="xs">• {line}</Text>
-                          ))}
-                        </Box>
-                      }>
-                        <Tag colorScheme="blue" variant="subtle" size="sm">
-                          {f}
-                        </Tag>
-                      </Tooltip>
-                    ))}
-                  </Wrap>
-                </HStack>
-              )}
-              {advMeta.roles && advMeta.roles.length > 0 && (
-                <HStack>
-                  <Text as="span" fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" minW="72px">
-                    Role
-                  </Text>
-                  <Wrap spacing={2} shouldWrapChildren>
-                    {advMeta.roles.map((r) => (
-                      <Tooltip key={`tr-${r}`} placement="top" hasArrow bg="gray.700" color="gray.100" label={
-                        <Box>
-                          {(advMeta.roleReasons?.[r] || ['Inferred from skills/gear']).map((line, i) => (
-                            <Text key={i} fontSize="xs">• {line}</Text>
-                          ))}
-                        </Box>
-                      }>
-                        <Tag colorScheme="green" variant="subtle" size="sm">
-                          {r}
-                        </Tag>
-                      </Tooltip>
-                    ))}
-                  </Wrap>
-                </HStack>
-              )}
-              {advMeta.traits && advMeta.traits.length > 0 && (
-                <HStack>
-                  <Text as="span" fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" minW="72px">
-                    Traits
-                  </Text>
-                  <Wrap spacing={2} shouldWrapChildren>
-                    {advMeta.traits.map((t) => (
-                      <Tooltip key={`tt-${t}`} placement="top" hasArrow bg="gray.700" color="gray.100" label={
-                        <Box>
-                          {(advMeta.traitReasons?.[t] || ['Inferred from stats/qualities']).map((line, i) => (
-                            <Text key={i} fontSize="xs">• {line}</Text>
-                          ))}
-                        </Box>
-                      }>
-                        <Tag colorScheme="orange" variant="subtle" size="sm">
-                          {t}
-                        </Tag>
-                      </Tooltip>
-                    ))}
-                  </Wrap>
-                </HStack>
-              )}
-            </VStack>
-          )}
 
           {(((detail as any).__kind ?? detail.type) === 'talent') && (
             <HStack spacing={2} mt={1} wrap="wrap">

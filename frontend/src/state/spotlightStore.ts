@@ -4,6 +4,7 @@ export type SpotlightEntityType =
   | 'talent'
   | 'rule'
   | 'weapon'
+  | 'adversary'
   | 'gear'
   | 'armor'
   | 'skill'
@@ -13,8 +14,7 @@ export type SpotlightEntityType =
   | 'species'
   | 'forcepower'
   | 'attachment'
-  | 'quality'
-  | 'adversary';
+  | 'quality';
 
 export interface SpotlightResult {
   id: string;

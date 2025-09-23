@@ -24,6 +24,7 @@ const Spotlight: React.FC = () => {
     'talent',
     'rule',
     'weapon',
+    'adversary',
     'gear',
     'armor',
     'skill',
@@ -34,7 +35,6 @@ const Spotlight: React.FC = () => {
     'forcepower',
     'attachment',
     'quality',
-    'adversary',
   ];
   const [includedTypes, setIncludedTypes] = useState<Set<SpotlightEntityType>>(new Set(allTypes));
 
@@ -81,24 +81,36 @@ const Spotlight: React.FC = () => {
     }
   }, [isOpen]);
 
-  // Run search or browse when query or open state changes
+  // Debounced search (when query present) or browse (when empty)
   useEffect(() => {
     if (!isOpen) return;
-    setLoading(true);
-    try {
-      const q = query.trim();
-      if (q.length === 0) {
-        // Show a pleasant browse list by default (top 100 across all types)
-        const items = browseIndex(100);
-        setResults(items);
-      } else {
-        const items = searchIndex(q);
-        setResults(items);
-      }
-    } finally {
-      setLoading(false);
+
+    const q = query.trim();
+    if (!q) {
+      // Browse first 100 items based on current filters
+      const initial = browseIndex(100, Array.from(includedTypes));
+      setResults(initial);
+      setDetail(null);
+      return;
     }
-  }, [isOpen, query]);
+
+    setLoading(true);
+    const handle = setTimeout(() => {
+      try {
+        const data = searchIndex(q);
+        setResults(data);
+        setSelectedIndex(0);
+        // Don't load detail here; wait until after filtering to pick first visible
+      } catch (e) {
+        console.error('Spotlight search error', e);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 150);
+
+    return () => clearTimeout(handle);
+  }, [query, isOpen, includedTypes]);
 
   // Displayed results after applying type filters
   const displayedResults = useMemo(() => {
@@ -200,7 +212,7 @@ const Spotlight: React.FC = () => {
   const rowSelectedBg = 'gray.700';
 
   return (
-    <Modal isOpen={isOpen} onClose={close} size="6xl"  isCentered>
+    <Modal isOpen={isOpen} onClose={close} size="6xl" isCentered>
       <ModalOverlay backdropFilter="blur(6px)" bg="rgba(0,0,0,0.6)" />
       <ModalContent
         bg={cardBg}

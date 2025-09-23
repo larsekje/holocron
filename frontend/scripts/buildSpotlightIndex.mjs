@@ -13,8 +13,6 @@ const oggdudeDir =
   process.env.OGGDUDE_DATA_DIR ||
   defaultOggdudeDir;
 const outFile = path.resolve(projectRoot, 'frontend', 'src', 'data', 'spotlightIndex.generated.json');
-// Stoogoff adversaries (JSON) directory
-const stoogoffAdversariesDir = path.resolve(projectRoot, 'backend', 'data', 'stoogoff', 'adversaries');
 
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -50,17 +48,6 @@ async function listXmlFiles(dirPath) {
   }
 }
 
-async function listJsonFiles(dirPath) {
-  try {
-    const names = await fs.readdir(dirPath, { withFileTypes: true });
-    return names
-      .filter((e) => e.isFile() && e.name.toLowerCase().endsWith('.json'))
-      .map((e) => path.join(dirPath, e.name));
-  } catch {
-    return [];
-  }
-}
-
 function asArray(x) {
   if (!x) return [];
   return Array.isArray(x) ? x : [x];
@@ -70,126 +57,6 @@ function cleanText(x) {
   if (x == null) return '';
   if (typeof x === 'string') return x;
   return JSON.stringify(x);
-}
-
-// Inference helpers (JS versions of archetypeUtils heuristics)
-const tagIncludes = (tags, needle) => !!(tags || []).some((t) => String(t).toLowerCase().includes(String(needle).toLowerCase()));
-const nameIncludes = (name, needle) => String(name || '').toLowerCase().includes(String(needle || '').toLowerCase());
-const valOr = (n, d) => (typeof n === 'number' ? n : d);
-
-function inferFactionJS(adversary) {
-  const tags = adversary.tags || [];
-  const name = adversary.name || '';
-  const factions = new Set();
-  if (tagIncludes(tags, 'empire') || tagIncludes(tags, 'imperial')) factions.add('Imperial');
-  if (tagIncludes(tags, 'rebel') || tagIncludes(tags, 'alliance')) factions.add('Rebel');
-  if (tagIncludes(tags, 'underworld') || tagIncludes(tags, 'pirate') || tagIncludes(tags, 'hutt')) factions.add('Underworld');
-  if (tagIncludes(tags, 'corporate') || tagIncludes(tags, 'sorosuub') || tagIncludes(tags, 'czerka') || tagIncludes(tags, 'kuat')) factions.add('Corporate');
-  if (tagIncludes(tags, 'security') || tagIncludes(tags, 'police') || nameIncludes(name, 'Guard') || nameIncludes(name, 'Officer')) factions.add('Local Law');
-  if (tagIncludes(tags, 'civilian') || tagIncludes(tags, 'nobility')) factions.add('Civilian');
-  if (tagIncludes(tags, 'cis') || tagIncludes(tags, 'separatist')) factions.add('Separatist/CIS');
-  if (tagIncludes(tags, 'species:Droid')) factions.add('Droid');
-  if (tagIncludes(tags, 'creature')) factions.add('Creature');
-  if (factions.size === 0) factions.add('Other');
-  return Array.from(factions);
-}
-
-function inferArchetypesJS(adversary) {
-  const roles = new Set();
-  const skills = adversary.skills || {};
-  const weapons = adversary.weapons || [];
-  const tags = adversary.tags || [];
-  const name = adversary.name || '';
-  const abilities = adversary.abilities || [];
-  const skill = (k) => (typeof skills[k] === 'number' ? skills[k] : 0);
-  const hasWeapon = (needle) => (weapons || []).some((w) => (typeof w === 'string' ? w : (w || {}).name)?.toLowerCase().includes(String(needle).toLowerCase()));
-
-  if (skill('Brawl') >= 2 || skill('Melee') >= 2 || hasWeapon('vibro') || hasWeapon('sword') || hasWeapon('spear') || hasWeapon('shock gloves') || skill('Coercion') >= 2) roles.add('Bruiser');
-  if (skill('Ranged: Light') >= 2 || skill('Ranged: Heavy') >= 2 || hasWeapon('pistol') || hasWeapon('rifle') || hasWeapon('carbine') || hasWeapon('repeater') || hasWeapon('sniper')) roles.add('Shooter');
-
-  const stealthy = skill('Stealth') >= 2;
-  const skulExpert = skill('Skulduggery') >= 3;
-  const assassinationSignals = tagIncludes(tags, 'assassin') || nameIncludes(name, 'Assassin');
-  const sniperish = skill('Ranged: Heavy') >= 3 && hasWeapon('sniper');
-  if (stealthy || assassinationSignals || sniperish || (skulExpert && (stealthy || assassinationSignals))) roles.add('Operative');
-
-  if (skill('Computers') >= 2 || tagIncludes(tags, 'slicer') || tagIncludes(tags, 'hacker') || skill('Mechanics') >= 2 || tagIncludes(tags, 'engineer') || tagIncludes(tags, 'technician')) roles.add('Tech');
-  if (skill('Piloting: Space') >= 2 || skill('Piloting: Planetary') >= 2) roles.add('Pilot');
-  if (skill('Medicine') >= 2 || tagIncludes(tags, 'medic')) roles.add('Medic');
-  if (skill('Survival') >= 2 || skill('Perception') >= 2 || tagIncludes(tags, 'hunter') || tagIncludes(tags, 'scout')) roles.add('Scout');
-  if (skill('Leadership') >= 2 || nameIncludes(name, 'Officer') || tagIncludes(tags, 'officer') || tagIncludes(tags, 'commander')) roles.add('Leader');
-
-  const socialStrong = Math.max(skill('Charm'), skill('Deception'), skill('Negotiation')) >= 3;
-  if (socialStrong || tagIncludes(tags, 'entertainer') || tagIncludes(tags, 'nobility') || tagIncludes(tags, 'bureaucrat') || tagIncludes(tags, 'compnor') || nameIncludes(name, 'Administrator')) roles.add('Social');
-
-  if (tagIncludes(tags, 'security') || nameIncludes(name, 'Guard') || nameIncludes(name, 'Police') || tagIncludes(tags, 'police') || tagIncludes(tags, 'law')) roles.add('Security');
-  if (tagIncludes(tags, 'force') || tagIncludes(tags, 'inquisitor') || (abilities || []).some((a) => String(a).toLowerCase().includes('force'))) roles.add('Force‑User');
-  if (tagIncludes(tags, 'species:Droid')) roles.add('Droid');
-  if (tagIncludes(tags, 'creature')) roles.add('Beast/Creature');
-
-  return Array.from(roles);
-}
-
-function inferTraitsJS(adversary) {
-  const traits = new Set();
-  const skills = adversary.skills || {};
-  const weapons = adversary.weapons || [];
-  const tags = adversary.tags || [];
-  const derived = adversary.derived || {};
-  const characteristics = adversary.characteristics || {};
-  const abilities = adversary.abilities || [];
-  const skill = (k) => (typeof skills[k] === 'number' ? skills[k] : 0);
-  const hasWeapon = (needle) => (weapons || []).some((w) => (typeof w === 'string' ? w : (w || {}).name)?.toLowerCase().includes(String(needle).toLowerCase()));
-  const soak = valOr(derived.soak, valOr(characteristics.Brawn, 2));
-  const wounds = valOr(derived.wounds, 10);
-  const meleeDef = Array.isArray(derived.defense) ? valOr(derived.defense[0], 0) : 0;
-  const rangedDef = Array.isArray(derived.defense) ? valOr(derived.defense[1], 0) : 0;
-  const defense = Math.max(meleeDef, rangedDef);
-
-  const strongAttack = skill('Ranged: Heavy') >= 3 || skill('Ranged: Light') >= 3 || skill('Melee') >= 3 || skill('Brawl') >= 3;
-  const fragile = soak <= 3 && defense <= 1 && wounds <= 12;
-  if (strongAttack && fragile) traits.add('Glass Cannon');
-
-  const controlGear = hasWeapon('stun') || hasWeapon('net') || hasWeapon('ensnare') || hasWeapon('riot shield');
-  const hasAdversary = (adversary.talents || []).some((t) => String(t).toLowerCase().includes('adversary'));
-  if (defense >= 2 || soak >= 6 || (hasAdversary && (defense >= 1 || soak >= 6 || controlGear)) || controlGear) traits.add('Persistent Pest');
-
-  if (skill('Medicine') >= 2 || tagIncludes(tags, 'medic')) traits.add('Healer');
-  if (skill('Ranged: Heavy') >= 3 && (hasWeapon('sniper') || hasWeapon('rifle'))) traits.add('Sniper');
-  if (skill('Brawl') >= 2 || hasWeapon('shock') || hasWeapon('vibroknuck') || hasWeapon('vibroblade')) traits.add('Brawler');
-
-  const socialMax = Math.max(skill('Charm'), skill('Deception'), skill('Negotiation'));
-  const presence = valOr(characteristics.Presence, 2);
-  if (tagIncludes(tags, 'nobility') || tagIncludes(tags, 'bureaucrat') || tagIncludes(tags, 'compnor') || (presence >= 3 && socialMax >= 3)) traits.add('Politician');
-
-  if (tagIncludes(tags, 'creature')) {
-    traits.add('Beast');
-    if (soak >= 6 || wounds >= 18 || hasWeapon('breach') || hasWeapon('vicious')) traits.add('Nasty Beast');
-  }
-
-  if (tagIncludes(tags, 'force') || tagIncludes(tags, 'inquisitor') || (abilities || []).some((a) => String(a).toLowerCase().includes('force'))) traits.add('Force User');
-  if (skill('Piloting: Space') >= 3 || skill('Piloting: Planetary') >= 3) traits.add('Ace Pilot');
-
-  return Array.from(traits);
-}
-
-function isNamedCharacter(name, tags, sourceFileBase) {
-  // True if coming from characters.json explicitly
-  if (String(sourceFileBase || '').toLowerCase() === 'characters.json') return true;
-  const n = String(name || '').trim();
-  if (!n) return false;
-  // Titles that usually denote a specific person
-  const titled = /^(Admiral|General|Captain|Agent|Governor|Grand Moff|Moff|Commander|Senator|Duchess|Lord|Lady|Doctor|Dr\.|Professor)\b/.test(n);
-  if (titled) return true;
-  // Proper two+ word personal names (each part capitalized), excluding generic role nouns
-  const proper = /^[A-Z][A-Za-z'\-]+(?: [A-Z][A-Za-z'\-]+)+$/.test(n);
-  if (proper) {
-    const forbidden = ['Guard','Trooper','Officer','Pilot','Assassin','Droid','Beast','Creature','Staff','Mate','Thug','Henchman','Soldier','Pirate','Scout','Gunner','Laborer','Worker','Minion'];
-    const words = n.split(/\s+/);
-    const hasForbidden = words.some((w) => forbidden.includes(w));
-    if (!hasForbidden) return true;
-  }
-  return false;
 }
 
 // Helper: parse Source into friendly string
@@ -271,127 +138,28 @@ function push(results, e) {
   if (!results.some((x) => x.id === e.id)) results.push(e);
 }
 
-// Collector for normalized adversaries to publish for the frontend UI
-const adversariesOut = new Map();
-
-async function loadStoogoffAdversaries(results) {
-  // Read all JSON files in the stoogoff adversaries directory
-  let files = [];
-  try {
-    files = await listJsonFiles(stoogoffAdversariesDir);
-  } catch {
-    files = [];
-  }
-  if (!files || files.length === 0) return;
-
-  // De-duplicate by adversary name (case-insensitive)
-  const seen = new Set();
-
-  const pickSource = (tags) => {
-    if (!Array.isArray(tags)) return undefined;
-    const book = tags.find((t) => typeof t === 'string' && t.startsWith('book:'));
-    const adv = tags.find((t) => typeof t === 'string' && t.startsWith('adventure:'));
-    const nice = (s) => (s ? String(s).replace(/^.*?:/, '').trim() : undefined);
-    const parts = [nice(book), nice(adv)].filter(Boolean);
-    return parts.length ? parts.join(' • ') : undefined;
-  };
-
-  for (const file of files) {
-    try {
-      const txt = await fs.readFile(file, 'utf-8');
-      const arr = JSON.parse(txt);
-      if (!Array.isArray(arr)) continue;
-      for (const a of arr) {
-        if (!a || typeof a !== 'object') continue;
-        const name = a.name || a.Name;
-        const atype = a.type || a.Type;
-        if (!name || !atype) continue;
-        const key = String(name).toLowerCase();
-        if (seen.has(key)) continue;
-        seen.add(key);
-
-        const tags = Array.isArray(a.tags) ? a.tags.slice(0, 6) : [];
-        const source = pickSource(tags);
-
-        // Spotlight entry
-        push(
-          results,
-          entry('adversary', name, {
-            subtitle: String(atype),
-            tags: [String(atype), ...tags].filter(Boolean),
-            description: a.description || a.notes || '',
-            extra: {
-              category: String(atype),
-              source,
-            },
-          })
-        );
-
-        // Normalized adversary for frontend UI (adversaryService)
-        try {
-          const characteristics = a.characteristics || a.Characteristics || {};
-          const rawDerived = a.derived || a.Derived || {};
-          const derived = { ...(rawDerived || {}) };
-          if (Array.isArray(derived.defence) && !derived.defense) {
-            derived.defense = derived.defence; // normalize British spelling
-          }
-          const skillsRaw = a.skills || a.Skills || {};
-          const skills = Array.isArray(skillsRaw)
-            ? skillsRaw.reduce((acc, s) => {
-                if (s) acc[String(s)] = 1;
-                return acc;
-              }, {})
-            : skillsRaw || {};
-          const talents = Array.isArray(a.talents) ? a.talents : (a.talents ? [a.talents] : []);
-          const abilities = Array.isArray(a.abilities) ? a.abilities : (a.abilities ? [a.abilities] : []);
-          const weapons = Array.isArray(a.weapons) ? a.weapons : (a.weapons ? [a.weapons] : []);
-          const gear = Array.isArray(a.gear) ? a.gear : (a.gear ? [a.gear] : []);
-          const fullTags = Array.isArray(a.tags) ? a.tags : (a.tags ? [a.tags] : []);
-          const sourceBase = path.basename(file);
-
-          const normalized = {
-            name: String(name),
-            type: String(atype),
-            description: a.description || undefined,
-            notes: a.notes || undefined,
-            characteristics,
-            derived,
-            skills,
-            talents,
-            abilities,
-            weapons,
-            gear,
-            tags: fullTags,
-          };
-
-          // Build-time inference and named flag
-          const factions = inferFactionJS(normalized);
-          const archetypes = inferArchetypesJS(normalized);
-          const traits = inferTraitsJS(normalized);
-          const named = isNamedCharacter(String(name), fullTags, sourceBase);
-
-          adversariesOut.set(key, {
-            ...normalized,
-            factions,
-            archetypes,
-            traits,
-            named,
-          });
-        } catch {
-          // ignore normalization issues for this record
-        }
-      }
-    } catch {
-      // ignore malformed files
-    }
-  }
-}
-
 async function buildIndex() {
-  const results = [];
+  // Verify source directory exists
+  try {
+    const stat = await fs.stat(oggdudeDir);
+    if (!stat.isDirectory()) throw new Error('Not a directory');
+  } catch {
+    console.warn(`[spotlight] Oggdude directory not found at ${oggdudeDir}.`);
+    // If an index already exists, keep it to avoid wiping bundled data
+    try {
+      const existing = await fs.readFile(outFile, 'utf-8').catch(() => null);
+      if (existing && existing.trim().length > 2) {
+        console.warn(`[spotlight] Keeping existing index at ${path.relative(projectRoot, outFile)} (not rebuilding).`);
+        return;
+      }
+    } catch {}
+    console.warn('[spotlight] No existing index found; writing empty index.');
+    await fs.mkdir(path.dirname(outFile), { recursive: true });
+    await fs.writeFile(outFile, JSON.stringify([], null, 2), 'utf-8');
+    return;
+  }
 
-  // Include all adversaries from stoogoff JSON into Spotlight
-  await loadStoogoffAdversaries(results);
+  const results = [];
 
   // Talents
   const talentsJson = await safeRead(path.join(oggdudeDir, 'Talents.xml'));
@@ -671,15 +439,7 @@ async function buildIndex() {
   // Write output
   await fs.mkdir(path.dirname(outFile), { recursive: true });
   await fs.writeFile(outFile, JSON.stringify(results, null, 2), 'utf-8');
-
-  // Also write a flattened adversaries.json for the frontend UI
-  const adversariesFile = path.resolve(projectRoot, 'frontend', 'public', 'assets', 'data', 'adversaries.json');
-  await fs.mkdir(path.dirname(adversariesFile), { recursive: true });
-  const adversaryArray = Array.from(adversariesOut.values());
-  await fs.writeFile(adversariesFile, JSON.stringify(adversaryArray, null, 2), 'utf-8');
-
   console.log(`[spotlight] Wrote ${results.length} entries to ${path.relative(projectRoot, outFile)}`);
-  console.log(`[spotlight] Wrote ${adversaryArray.length} adversaries to ${path.relative(projectRoot, adversariesFile)}`);
 }
 
 buildIndex().catch((err) => {
