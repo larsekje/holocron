@@ -177,6 +177,7 @@ export function searchIndex(q: string): SpotlightResult[] {
       name: e.name,
       subtitle: e.subtitle,
       tags: e.tags,
+      named: (e as any).named,
     }));
 
   return results.slice(0, 200);
@@ -198,6 +199,6 @@ export function browseIndex(limit: number = 100, types?: SpotlightEntityType[]):
       if (a.type === b.type) return a.name.localeCompare(b.name);
       return a.type.localeCompare(b.type);
     })
-    .map((e) => ({ id: e.id, type: e.type, name: e.name, subtitle: e.subtitle, tags: e.tags }));
+    .map((e) => ({ id: e.id, type: e.type, name: e.name, subtitle: e.subtitle, tags: e.tags, named: (e as any).named }));
   return items.slice(0, Math.max(0, limit | 0));
 }

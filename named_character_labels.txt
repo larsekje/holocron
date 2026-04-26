@@ -1,0 +1,1431 @@
+y	0-0-0
+n	2-1B Medical Droid
+n	2-1B Medical Droid (DoD)
+y	3D-4K, Administrative Droid
+n	3PX-Series Protocol Droid
+y	4-LOM
+n	501-Z Police Droid
+n	5YQ-Series Protocol Droid
+n	87-RM Scout Collector
+y	A0-2
+y	Aayla Secura
+n	AC Law Enforcement Droid
+n	AC1-Series Surveillance Droid
+n	Accomplished Mechanic
+n	Adamite Tower Paladin
+y	Adi Gallia
+y	Admiral Ackbar
+y	Admiral Konstantine
+y	Admiral Piett
+y	Admiral Tarkin (HoBS)
+y	Admiral Trench
+y	Admiral Varth
+y	Admiral Yularen
+n	Advozse Mercenaries
+y	Agent Eren Garai
+y	Agent Ferlan
+y	Agent Kallus
+y	Agent Nath Alico
+y	Ahsoka Tano
+y	Ahsoka Tano (Fulcrum)
+y	Aimee “Flutterplume” Kraeff, Pit Fighter
+n	Aiwha
+y	Ak-Mal, Weequay Hunter
+n	Albek
+n	Alderaan Consular Guard
+n	Aleena Tribal King
+n	Aleena Villager
+n	Aleena Wanderer
+n	Alliance Commander
+n	Alliance Driver
+n	Alliance Fleet Trooper
+n	Alliance Infantry
+y	Am Vida
+n	Amani Tribal Warrior
+n	Ambrae Environmental Security Guard
+y	Anakin Skywalker
+y	Anakin Skywalker (Child)
+y	Anakin Skywalker (HoBS)
+n	Analysis Droid
+n	Ancient Hutt Security Droid
+y	Angu Drombb
+n	Antarian Ranger
+n	Anti-War Protester
+n	Antiquated Battle Droid
+y	AP-5
+n	Apprentice Bounty Hunter
+n	Aqua droid
+n	Aqualish Thug
+n	Arak-series Probe Droid
+n	Arakyd Ringneck Recon Droid
+n	Arboreal Octopus
+n	Arda I Viper Probe Droid
+y	Arend Shen
+y	Aris Shen
+n	Armed Security Guard
+n	Arms Dealer
+n	Army Trooper (DoD)
+n	Arrogant Heir
+y	Asajj Ventress
+n	Asharl Panther
+n	Ashur Sungazer
+n	ASP-19 Battle Droid
+n	Assassin Droid
+n	Assassin Probe Droid
+y	Assistant City Administrator Tol Pirilian
+n	Astromech Droid
+n	Aurateran Reenee
+n	Aurean Vulture
+y	Aurra Sing
+n	Autoturret
+y	Azmorigan
+n	Azurdactyl
+n	B1 Battle Droid
+n	B1 Heavy Weapons Droid
+n	B1 Rocket Battle Droid
+n	B1 Supervisor Droid
+n	B1-Series Battle Droid (Modified)
+n	B2 Super Battle Droid
+n	B2 Super Battle Droid (Minion)
+n	B2 Super Battle Droid (Rival)
+n	B2-HA Battle Droid
+y	Bail Organa
+y	Bail Organa (HoBS)
+n	Baktoid B1 Battle Droids
+y	Bandin Dobah
+y	Bandin Dobah Pirate Mate
+n	Banshee
+n	Bantha
+n	Barabel Enforcer
+n	Bardottan Palace Guard
+y	Bargos’s or Rebel Gamorrean
+n	Bark Rat
+y	Baron Administrator Lando Calrissian
+y	Baron Dorn Sevelle
+y	Baron Kaldo
+y	Barriss Offee
+y	Barriss Offee (Fallen)
+y	Barrows’ Thug
+y	BD-1
+n	BD10-Series Assay Support Droid
+n	Bearsloth
+n	Beast Rider Warrior
+n	Belonuk (Adult)
+n	Belonuk (Young)
+n	Besalisk Adventurer
+n	Bespin Defense Force Pilot
+y	Bhurra, Lutrillian Thug
+y	Biala Vale
+n	Big Game Hunter
+y	Bim Gizzo
+n	Binayre Pirate
+n	Bith Musician
+n	BL0-Series Non-lethal Combat Droid
+n	Black Claw Saboteur
+y	Black Krrsantan
+n	Black Marketeer
+n	Black Sun Foot Soldier
+n	Black Sun Lackey
+n	Black Sun Thug
+n	Black Sun Vigo
+n	Blackback
+y	Blaise Zirkonn
+n	Blaster Drone
+y	Bleshk Callor
+n	Blismal
+n	Blood Eagle
+n	Bloodfly
+n	Blue-Rated Constable
+n	Blurrg
+y	Bo-Katan Kryze
+y	Boba Fett
+y	Boba Fett (Child)
+y	Boddah Venik Rin
+y	Boffen Nibs
+n	Bog Spitter
+n	Boma
+n	Bonda
+n	BoSS Agent
+y	“Boss” Trelon
+y	Bossk
+y	Bothan Spy
+n	Bounty Hunters
+y	Brana Tsaro, Mercenary Leader
+n	Brezak
+y	Bric
+n	Bridge Guard
+y	Brionelle Army Cadet
+y	Brom
+y	Brossk K’yyl
+y	Brother Viscus
+y	BT-1
+n	BT-Series Ordnance Droid
+y	Burr Naxis
+n	Butterbug Remote
+n	Buzz Droid
+n	BX Commando Droid
+n	BX Commando Droid Captain
+y	BX-2R (“Toor”)
+n	BX-series droid commando
+y	C-21 Highsinger
+y	C-3PO
+n	C-8 Saboteur Droid
+y	Cacique Kal Coorsa
+y	Cad Bane
+y	Cadet Jai Kell
+y	Cadet Wedge Antilles
+y	Cadet Zare Leonis
+n	Cairnmog
+y	Camerlin
+n	Campus Security
+n	Can-Cell
+n	Cannok
+n	Canto Bight Police Officer
+n	Canto Bight Police Sergeant
+y	Captain Balrekk
+y	Captain Bialar Selis
+y	Captain Fatimah Nurii
+y	Captain Gial Ackbar (HoBS)
+y	Captain Gideon
+y	Captain Harl Bess
+y	Captain Hylo Sortuli
+y	Captain Jostero
+y	Captain Phasma
+y	Captain Rajim Armin
+y	Captain Ralchio Nervi
+y	Captain Raymus Antilles
+y	Captain Rel Harsol
+y	Captain Rex
+y	Captain Rex (HoBS)
+y	Captain Shorwarr
+y	Captain Shyndi Oglerk
+y	Captain Sirona Okeefe
+y	Captain Talkar
+y	Captain Vischera
+n	Captive Rancor
+y	Carn Truuvik
+n	Carrion Spat
+y	Cassian Andor
+y	Cassie Cryar
+y	Cato Parasitti
+y	Catrinna
+n	Cautious Smuggler
+n	Cendiary Priest
+y	Chairman Papanoida
+y	Cham Syndulla
+n	Chameleon Droid
+n	Chandrilan Agriculturalist
+n	Chandrilan Citizen
+n	Chandrilan Governor
+n	Chandrilan Navy Officer
+y	Chara Tull, Corporate Co-Pilot
+y	Chell “Cold Case” Wi’eeda, Journeyman Hunter
+n	Chemilizard
+y	Chewbacca
+y	Chief Superintendant Lomeer
+y	Chief Warden Lina Naras
+y	Chieftain Vera Beroya
+n	Chiss Mercenary
+n	Choku
+y	Cikatro Vizago
+y	Cin Drallig
+n	Cipher Agent
+y	Clay “Pops” Merra
+n	Cleaning Droid
+y	Clik
+n	Clone Ace
+n	Clone ARC Trooper
+n	Clone ARF Trooper
+n	Clone Cadet
+n	Clone Captain
+n	Clone Cold Assault Trooper
+n	Clone Combat Medic
+n	Clone Commander
+n	Clone Commando (Computers)
+n	Clone Commando (Gunnery)
+n	Clone Commando (Leadership)
+n	Clone Commando (Melee)
+n	Clone Flame Trooper
+n	Clone Gunnery Crew
+n	Clone Heavy Weapons Expert
+n	Clone Jet Trooper
+n	Clone Medical Officer
+n	Clone Naval Officer
+n	Clone Ordnance Specialist
+n	Clone Pilot
+n	Clone Riot Trooper
+n	Clone Scuba Trooper
+n	Clone Sergeant
+n	Clone Trooper
+n	Clone Trooper (Rival)
+n	Clone Vehicle Driver
+y	Cloud
+n	Cloud-Rider Marauder
+n	Club Hired Guard
+y	CN-DR, Jedi Hunter’s Droid
+y	Coleman Kcaj
+n	Colo Claw Fish
+y	Colonel Meebur Gascon
+y	Colonel Romar Kek
+n	Comm Operator
+y	Commandant Aresko
+y	Commander Abyss
+y	Commander Cody
+y	Commander Danel Qurno
+y	Commander Freila
+y	Commander Jun Sato
+y	Commander Orson Krennic
+y	Commander Treaska
+n	CompForce Security Trooper
+n	COMPNOR Agent
+n	Con Artist
+n	Consortium Starfighter Pilot
+n	Convor
+y	Cordal’s Chain Apprentice
+y	Cordal’s Chain Journeyman
+n	Corellian Bloodhound
+n	Corellian Hounds
+y	Corporal Danith Nodar
+n	Corporate Representative
+n	Corrupt Bureaucrat
+n	Corrupted Den Mother
+n	Corrupted Icewolf
+n	CorSec Investigator
+n	CorSec Officer
+n	CorSec Tactical Response Team Member
+y	Corte Voss
+y	Corte’s Smuggler Cew
+n	Coruscant Police Inspector
+n	Coruscant Underworld Police
+n	Coruscant Underworld Police (HoBS)
+n	Coruscanti Citizen
+y	Count Dooku
+y	Count Dooku (HoBS)
+n	Cracian Thumper
+y	Cratala
+n	Crazed Prisoner
+n	Creeping Posenaur
+n	Creereen
+y	Crew Chief Jerion “Jolt” Terolt
+y	Crosshair
+n	Crysifal Trollbane
+n	CSA Intrusion Specialist
+n	CSA Security Captain
+n	CSA Security Police
+n	CSA Viceprex
+n	CT-4 Medical Droid
+n	Cultist War Droid
+n	Customs Inspector
+n	Cybernetically-Enhanced Nexu
+n	Cyborg Administrator
+n	Cybot Galactica K-9 Series Hunting Droid
+n	Cybot Galactica/KDY All-Terrain Exploration Droid
+n	CZ-Series Communications/Business Droid
+n	Dactillion
+n	Dagoyan Master
+y	Dalan Oberos
+n	Dalgo
+n	Dalyrake
+n	Damaged Basilisk
+n	Dandy Gambler
+y	Dantris “Dani” Solomani
+y	Darga the Hutt
+n	Dark Hunter
+n	Dark Wolf
+n	Dark Wolf Beastmaster
+y	Daro Blunt
+n	Darrasted Villager
+y	Darth Bane (Apparition)
+y	Darth Plagueis
+y	Darth Vader
+n	Death Star Trooper
+n	Death Star Trooper Officer
+n	Death Watch Commando
+y	Deck Officer Lt. Nela Arseli
+n	Decrepit Security Droid
+n	Deep Dark Scout Trooper
+n	Defel Assassin
+y	Deil Kadru, Village Elder
+n	Demolition Droid
+y	Dengar
+y	Dengar (HoBS)
+y	Depa Billaba
+n	Deranged Expedition Guide
+y	Derrown
+n	Detention Centre Guard
+n	Detention Centre Officer
+n	Detention Centre Officer (DoD)
+n	Detention Centre Staff
+n	Devlikk
+n	Dewback
+y	Dexter Jettster
+n	Dianoga
+n	Diatek Employee
+n	Dimlurker
+n	Diplomat
+y	Doctor Aphra
+y	Doctor Lorren Morrick
+n	Doellinist High Priest
+y	Doge Nakha Urus
+y	Dokar Venas
+n	Dokma
+y	Domdees
+y	Dooku (Jedi Master)
+y	Doran’enok
+y	Dorrian Vodani, Dressellian Pilot
+n	Drall Constable
+n	Drall Police Sergeant
+n	Dream Shimmer
+n	Drendan Binary Load Lifters
+n	DRK-1 Probe Droid
+n	Droideka (Destroyer Droid)
+n	Droideka Sharpshooter
+n	DSD1 Dwarf Spider Droid
+n	DTS-Series Dismantler droid
+y	Duchess Salandra Faust
+y	Duchess Satine Kryze
+n	Dug Cavalier
+y	Duke Erron Irbian
+n	Dum-Series Pit Droid
+n	Duracrete Slug
+y	Durge
+n	Duros Ship Mechanic
+n	DZ-70 Fugitive Tracker Droid
+n	E522 Assassin Droid
+y	Echiella
+n	ED-V8 Series Envoy Droid
+y	Eerig, Nightbrother Lieutenant
+y	Eeth Koth
+n	EG-6 Power Droid
+y	El-Les
+y	Elaiza, Jedi in Exile
+y	Ellor Orgraal, Imperial Governor
+y	Embo
+y	Emperor Palpatine
+n	Emperor’s Hand
+n	Enraged Ronto
+n	EOD-Mk IV Explosives Disposal Remote
+n	Eopie (Cameloid)
+n	Eriaduan Police
+n	Escaped Dust Stalker
+y	EV-8D3, Merendata Ev Supervisor Droid
+n	Evarrian Hunter
+n	Evarrian Larva
+n	Evarrian Queen
+y	Even Piell
+n	Evocii
+n	Ewok Hunter
+n	Ewok Shaman
+n	Expedition Hunter
+n	Expert Forger
+n	FA-4 Pilot Droid
+n	Fallen Apprentice
+n	Fallen Master
+n	Fambaa
+n	Fathier
+n	FD-Series Extinguisher Droid
+n	Fecklen
+n	Fefze Beetle
+y	Fel Trech
+n	Felucian
+n	Felucian Scout
+n	Felucian Shaman Chief
+n	Felucian Villager
+y	Fenn Rau
+y	Fenn Sesslyn
+n	Fereallis Pirate Crewmate
+y	Fifth Brother
+y	Finis Valorum
+y	First Mate Kog
+n	First Order Fleet Officer
+n	First Order Junior Officer
+n	First Order Recon Agent
+n	First Order Riot Trooper
+n	First Order Specialist Trooper
+n	First Order Stormtrooper
+n	First Order Tech
+n	First Order Technician
+n	Fissrit
+n	Flame Ibbot
+n	Fleet Officer
+n	Flying Leaf-Tail
+n	Force Manifestation
+n	Forger
+n	Forsaken Jedi
+n	Frangawl Cultist
+y	Freff, Nightbrother Leader
+n	Frostwall Villager
+y	FX-769, Medical Assistant Droid
+n	Fyrnock
+n	Fyrnock (unofficial)
+n	G-100 Remote Banking Droid
+y	Gaav Fennro, Rebellion Intelligence Officer
+y	Gaff Kilvaari
+n	Galactic Senator
+y	Gall Trayvis
+n	Galva
+n	Gamorrean Guard
+n	Gamorrean Thug
+n	Gamorrean Thug (DoD)
+n	Gamorrean Thugs
+n	Gamorrean Villager
+n	Gand Findsman
+n	Gang leader
+y	Ganga Lor
+y	Ganga Lor’s Thugs
+n	Gank Hunter
+y	Gantel Dro
+y	Garulo, Hutt Cartel Gunner
+y	Gasch N’doss
+y	Gel Marcolf
+y	General Elora Silssusio
+y	General Grievous
+y	General Ran Niall
+y	General Tandin
+y	General Veers
+n	Generic Remote
+n	Geonosian Queen
+n	Geonosian Soldier
+n	Geonosian Warrior
+y	Gerk, Houk Supervisor
+y	Gerrol Hunn, Corporate Pilot
+n	Ghorla
+n	Gigantic Dragonsnake
+n	Glare Peak Security Personnel
+y	Godon Netakka
+y	Gome
+n	Gorensla Weequay Enforcer
+n	Gorgodon
+y	Gormo Vosadii Grasso
+y	Gorn Vorrox
+n	Government Bureaucrat
+n	Government Security Droid
+y	Governor Pryce
+y	Governor Varla Prule
+y	Graayl Nor
+y	Graayl’s Thugs
+n	Grabworm
+y	Graf Lind, Former Pirate
+y	Grand Admiral Thrawn
+y	Grand Inquisitor
+y	Grand Moff Tarkin
+y	Grax and Gremka
+n	Great Ibbot
+n	Greater Dianoga
+y	Greedo
+n	Green Bug Swarm
+y	Grenzo
+y	Grinder
+y	Gruuzhnag
+n	GT-Series Construction Droid
+n	Gualaar
+n	Guard Massiff
+n	Guardian Police Droid
+n	Guavian Death Gang Grenadier
+n	Guavian Death Gang Security Soldier
+n	Guf Drolg
+n	Guilded Bounty Hunter
+n	Gundark
+n	Gungan Boss
+n	Gungan Captain
+n	Gungan Warrior
+y	Gustip
+y	Gut-Guro
+n	Gutkurr
+n	GV/3-Series Guardian Droid
+n	Gyrowheel 1.42.08-Series Recycling Droid
+n	Hagark
+y	Halari Takan
+y	Halina Patel
+y	Han Solo
+y	Haril Zense, Rebel Spy
+n	Heavy Gan
+y	Heder Brant
+n	Hired Gun
+n	HK-series Assassin Droid
+n	HK-series Assassin Droid pacifist package
+n	Hologlide J57 Cam Droid
+y	Hondo Ohnaka
+y	Hondo Ohnaka (HoBS)
+n	Horse (Equinoid)
+n	Hotel Security
+n	Houjix
+n	Houk Thug
+n	Hssiss, Dark Side Dragon
+n	Human and Aqualish thugs
+n	Hunters
+n	Hurghol
+n	Hutt Crime Lord
+n	Hutt Majordomo
+n	Hutt Slave Dealer
+n	Huttlet
+n	Hydroid Medusa
+n	Hyperlane Scout
+n	IA Security Agent
+n	ID9 Seeker Droid
+n	IG Lancer Droid
+n	IG-100 MagnaGuard
+y	IG-88
+n	IG-RM Series Enforcer Droid
+y	Illo Vandin, Herglic Crime Lord
+n	Immature Zakkeg
+y	Impact
+n	Imperial Advisor
+n	Imperial Armour Corps Commander
+n	Imperial Armour Corps Crew
+n	Imperial Army “Mudtrooper” Swamp Trooper
+n	Imperial Army Officer
+n	Imperial Army Trooper
+n	Imperial Army Veteran
+n	Imperial Assassin
+n	Imperial DeStab Agent
+n	Imperial Dungeoneer
+n	Imperial Emigration Officer
+n	Imperial Ground Crew
+n	Imperial Gunnery Corps
+n	Imperial Gunnery Corps (DoD)
+n	Imperial Intelligence Agent
+n	Imperial Intelligence Watcher
+n	Imperial Moff
+n	Imperial Naval Engineer
+n	Imperial Navy Gunner
+n	Imperial Navy Officer
+n	Imperial Navy Pilot
+n	Imperial Navy Trooper
+n	Imperial Patrol Trooper
+n	Imperial Royal Guard
+n	Imperial Security Detail
+n	Imperial Security Droid
+n	Imperial Stormtrooper
+n	Imperial Stormtrooper (DoD)
+n	Imperial Technician
+n	Imperial Test Pilot
+n	Imperial Vehicle Corps
+n	Incom Engineer
+n	Industrial Automaton JC Series Pilot Droid
+n	Infochant
+n	Insectomorph
+n	Intelligence Agent
+n	Intelligence Agent (DoD)
+n	Interrogation Droid
+y	“Ironarm”, Stormtrooper Commander
+y	Irrica the Hutt
+n	ISB Agent
+y	ISB Agent Lorn Bal
+n	ISB Security Droid
+y	ISB Supervisor Cal Alsen
+n	ISB Technician
+y	Isshtharr, Wookiee Warrior
+y	IT-3PO
+n	IT-O Interrogation Droid
+n	Ithorian Storyteller
+y	Jabba the Hutt
+n	Jagomiri Swamp Stalker
+n	Jakku Criminal
+n	Jakku Mercenary
+n	Jakku Scavenger
+n	Jakku Trader
+n	Jakobeast
+y	Jalla
+y	Jango Fett
+y	Jar Jar Binks
+n	Jawa
+n	Jawa Scavenger
+y	Jax Torani
+y	Jayk, Veteran Clone Trooper
+n	Jedi Ace
+n	Jedi General
+n	Jedi in Hiding
+n	Jedi Knight
+n	Jedi Master
+n	Jedi Padawan
+n	Jedi Padawan (HoBS)
+n	Jedi Temple Guard
+n	Jedi Temple Guardian
+n	Jedi Youngling
+y	Jeela Scoria Harik
+n	Jerethian Clamberwolf
+y	Jerid Sykes, Consortium Admiral
+y	Jerserra (Early)
+y	Jerserra (Late)
+y	Jerserra’s Mercenary
+y	Jobel, Bothan slicer
+y	Jocasta Nu
+y	Jodo Kast
+n	Joopa Worm
+y	Jora
+y	Jorec and Mard Gemen
+n	Jostero Pirate
+n	Journeyman Hunter
+y	JR-12, Independent Security Contractor
+n	Jubba Bird
+n	Jungle Felucian Warrior
+n	Jungle Rancor
+y	Jyd Renyr, Arena Manager
+y	Jyn Erso
+y	K-2SO
+n	K4 Security Droid
+y	K4-76A
+n	Kaadu
+n	Kaaten
+y	Kaa’to Leeachos
+y	Kad Solus
+n	Kage Assassin
+y	Kaina Forrel
+y	Kaltho the Hutt, Crime Lord
+n	Kaminoan Scientist
+n	Kanjiklub Gangster
+y	Kanz
+n	Karazak Acquisition Agent
+n	Karazak Acquisition Specialist
+y	Karg Brothers
+y	Kargrek
+n	Karkarodon Hunter
+y	Kassh'ka, Seasoned Hunter
+n	Kath Hound
+y	Kath Scarlet
+y	Kavia Slen, junk and tech dealer
+y	Kessra
+y	Ketsu Onyo
+y	Ki-Adi-Mundi
+n	Kindalo Guardian
+y	King Katuunko
+y	King Maalva
+y	King Sanjay Rash
+n	Kintan Strider
+y	Kip Famas
+n	Kirruk Riding Beast
+y	Kit Fisto
+y	K’Kruhk
+n	Klatooinian Bruiser
+n	Klatooinian Elder
+n	Klatooinian Paddy Frog
+n	Klatooinian Thug
+n	Knytix
+y	Koochoo, ASP-Series Labor Droid
+n	Korrak
+n	Kouhun
+n	Kowakian Monkey-Lizard
+y	Krash, Sorority Kill Team Leader
+n	Krath War Droid
+n	Krath Warrior Zealot
+n	Krayt dragon
+n	Kreehawk Ganger
+y	Krezo Wasanti, Fence
+n	Krykna
+y	Kul Teska
+n	KX-Series Enforcer Droid
+n	Kybuck
+n	Kybuck (DoD)
+n	Labour Droid
+y	Lando Calrissian (Allies and Adversaries)
+y	Lando Calrissian (Dawn of Rebellion)
+y	Lanni
+y	Lar’omx Clan-scorned
+n	Lasan Honour Guard
+y	Lathe, Sorority Slicer
+y	Latts Razzi
+n	Launch Pad Guards
+y	Leia Organa
+n	LEP Servant Droid
+n	Lesser Bogwing
+y	Liddy Ravora
+y	Lieutenant Aden
+y	Lieutenant Hyzhan Troo
+y	Lieutenant Montra Varn
+y	Lieutenant Sarev
+y	Liir Wyn
+n	LM-432 Crab Droid
+n	Loan Shark
+y	Lobot, Cyborg Bureaucrat
+n	LOM-Series Protocol Droid
+y	“Lookout”, Exploration Droid
+y	Lor Keln
+n	Loth-Cat
+n	Loth-Rat
+n	Loth-wolf
+n	LR-57 Combat Droid
+n	LRD-Series Envoy Droid
+n	LSx-Series Slicer Droid
+y	Lt. Colonel Hovlinn
+y	Lt. Commander Gareth Agamar
+y	Lt. Commander Jilan Noor
+y	Lt. Corran Costi and CorSec Boarding Officers
+y	Lt. Masi Qual, Bothan Spy
+y	Lt. Rik Torrence
+y	Lt. Voor, Imperial Officer
+y	Lt.-Constable Kreeg and Security Detail
+n	Luggabeast
+y	Luke Skywalker
+y	Luminara Unduli
+n	Lurking Scrange
+n	Lutrillian Merchant
+y	Lux Bonteri
+n	M-3PO-Series Military Protocol Droid
+n	M226 Bridge Crew
+n	M226 Crew Chief
+n	M226 Navy Crewman
+n	M226 Navy Trooper
+n	M4-Series Messenger Droid
+y	M5-BZ
+n	Maalraa
+y	Mace Windu
+n	Maintenance Droid
+n	Maintenance Droid (HoBS)
+y	Major General Billek Vilneon
+y	Major Jex Karvek – Commando Raider
+y	Major Yalor
+y	Malau Jocaos, Imperial intelligence Agent
+y	Malefax
+n	Mamien
+n	Mandalorian Royal Guard
+n	Mandalorian Warrior
+y	Mandi, Revah’s Bodyguard
+n	Manifested Nardithi Nightsister
+n	Manka Cat
+n	Manta Droid Subfighter
+n	Mantellian Flutterplume
+n	Mantellian Pterosaur
+n	Mantellian Savrip
+n	Mark IV Patrol Droid
+n	Marksman-H Combat Remote
+n	Marksman-H Combat Training Remote
+n	Martle Station Dockhand
+y	Marus Grayson, Corrupt Imperial Exchequer
+y	Marv Moray
+y	Mas Amedda
+n	Massiff
+n	Master Bounty Hunter
+y	Master Hunter Tor Cordol
+n	Mature Hutt
+n	Mature Tusk Cat
+n	Mature Zakkeg
+y	Maul
+y	Maul (CotR)
+y	Maul (HoBS)
+y	Maya, Alderaanian Agent
+n	Mechanic
+n	Medical Droid
+n	Medtech Mini-Med
+y	Mehmet Alovar
+n	Menagerie Guard
+n	Mercenary Veteran
+n	Merchant
+n	Merendata KLC Series Exchequer Droid
+n	MI-Series Security Droid
+y	Micael Torval, Professional Sabacc Player
+n	Miim
+y	Mik-Los Arnet
+y	Mil Mikkir, Chagrian Executive
+n	Military Informant
+n	Military Starfighter Pilot
+n	Mimbanese Resistance Fighter
+n	Mimbanese Resistance Sniper
+y	Mina Bonteri
+n	Mining Guild Enforcer
+y	Minister Tua
+y	Misha Vontoba
+y	Moff Dardano
+y	Moff Dardano’s Bodyguard
+n	Mon Cala Eel
+n	Mon Calamari Commander
+n	Mon Calamari Guard
+n	Mon Calamari Knight
+n	Mon Calamari Mechanic
+n	Mon Calamari Shipwright
+y	Mon Mothma
+y	Mon Mothma (HoBS)
+n	Moraband Sith Phantasm
+y	Moralo Eval
+y	Morgan Artumar, Jedi Hunter
+n	Morgukai Adept
+n	Mother Fyrnock
+y	Mother Talzin
+n	Mouse Droid
+n	MSE-Series Maintenance Droid
+n	Murderous Fugitive
+n	Murra
+n	Museum Security Droid
+n	Mustafarian Lava Flea
+n	Mustafarian Miner
+n	Mutant Felucian
+n	Muun Banker
+n	Muun Security Officer
+n	Mynock
+n	Naboo Palace Guard
+n	Naboo Queen
+n	Naboo Royal Captain
+n	Naboo Royal Handmaiden
+n	Naboo Starfighter Pilot
+y	Nam Beroya
+n	Narglatch
+y	Narralla
+n	Naval Engineer
+y	Neero, Crime Broker
+n	Neimoidian Bureaucrat
+n	Neimoidian Citizen
+n	Neimoidian Kreehawk
+n	Neimoidian Ship Captain
+n	Neimoidian Soldier
+y	Nel Henol
+n	Nerf
+n	Nerf Herder
+n	New Mandalorian Cadet
+n	New Mandalorian Police
+n	New Mandalorian Police Captain
+n	Nexu
+n	Nightbrother
+n	Nightbrother (CotR)
+n	Nightsister
+y	Nik Kormir, Resistance Purchaser
+n	Nikto Enforcer
+y	Noira, Pirate Queen
+y	Norta
+y	Nosh Droma
+y	Nossor Ri
+n	NR-5 Maintenance Droid
+y	Numa
+y	Nute Gunray
+y	Nuuno
+y	Nuvo Vindi
+y	Oake, Veteran Clone Trooper
+y	Obi-Wan (Ben) Kenobi
+y	Obi-Wan Kenobi
+y	Obi-Wan Kenobi (HoBS)
+y	Obi-Wan Kenobi (Padawan)
+n	Octuparra Combat Tr-Droid
+y	Old Daka
+n	Onderon Rebel Fighter
+n	Onderon Rebel Veteran
+y	Onrein Hasa
+n	Oom Security Droid
+y	Oppo Rancisis
+n	Orange-Rated Constable
+n	Orbak
+n	Ord Radama Security Officer
+n	Oridelve Miner
+y	Orl Miscord
+y	Orphne
+y	Osi Sobeck
+y	Oso Maduk
+n	Ossus Stone Guardian
+y	Overseer Brynn
+n	P2F Hostile Environment Remote
+y	Padmé Amidala
+n	Palace Guard
+n	Pantoran Guardsman
+n	Partisan Fighter
+y	Pashna Genko
+y	Passk
+y	Pathran Helshar
+y	Patrician Lira Hardin
+y	Patrician Vilola Sargan
+n	Pau’an Administrator
+n	Pau’an Warrior
+y	Peekay 4 and Peekay 7
+n	Pehmis Canyon Charger
+y	Petty Officer Tera Wen
+n	Phantasmal Beast of Moraband
+n	Philanthropic Senator
+n	Photon Spider
+n	Physician
+n	Physician (DoD)
+n	Pilot
+n	Pilot (FLaL)
+n	Pilot Battle Droid
+y	Pinder Ukka
+n	Pirate Captain
+n	Pirate Crew
+n	Planetary Defence Trooper
+n	Planetary Governor
+y	Plo Koon
+n	Podracer Pilot
+y	Poggle The Lesser
+y	Pol Orrich
+n	Police Droid
+n	Polis Massa Base Squadron Pilot
+n	Politician
+n	Politician / Senator
+y	Pon
+y	Pong Krell
+y	Porel Vakra, Zann Consortium Underboss
+n	Porvir
+y	Pos Podura, Twi’lek associate
+y	Pravon, Gorensla Lieutenant
+y	Pre Vizsla
+n	Preelos Consortium Customised Security Droid
+y	Prime Minister Almec
+y	Prince Lee-Char
+y	Prince Sono Molec
+y	Princess Leia Organa
+y	Priska K’yyl
+n	Prisoner
+n	Private Security Guard
+n	Probe Killer Swarm
+y	Professor Huyang
+n	Protocol Droid
+n	Provincial Law Enforcement Officer
+y	Puggles Trodd
+n	Pybus Amphibipole
+n	Pyke Leader
+n	Pyke Syndicate Interrogator
+n	Pyke Syndicate Soldier
+n	Q-4 Borerr Droid
+n	Q-Signal Messenger Drone
+n	Q7-Series Astromech Droid
+y	QT-KT
+n	Quarren Agitator
+n	Quarren assassin
+n	Quarren Soldier
+y	Quarrie
+n	Quartermaster
+y	Queen Breha Organa
+y	Queen Julia
+y	Queen Miraj Scintel
+y	Qui-Gon Jinn
+y	Quinlan Vos
+n	Quolas Citizen
+n	Quolas Elder
+n	Quolas Guard
+n	Quolas Guard Captain
+y	R2-B7, Astromech Droid
+y	R2-D2
+y	R4-W9
+n	R7-Series Astromech Droid
+n	RA-7 Protocol Droid
+n	Racing Dactillion
+n	Racing Varactyl
+y	Raf, Workgang Leader
+y	Rafe, Veteran Clone Trooper
+n	Raider
+n	Raider Warlord
+n	Rakghoul
+n	Rakghoul Fiend
+y	Rako Hardeen
+n	Ranat Scout
+n	Ranat Stalker
+n	Rancor
+n	Rass
+y	Rasz Kal
+n	Rathtar
+y	Rav Naaran
+y	Rawwk
+n	Razhak
+n	RDC Peacekeeper
+y	Rear Admiral Olenka Zavalle
+n	Rebel Alliance Liaison
+n	Rebel Cell Leader
+n	Rebel Specforce Infiltrator
+y	Red-Eye Dren
+n	Reek
+y	Reevos
+y	Regent Credi Solfinn
+y	Reom
+n	Repbulic Investigator
+n	Republic Diplomat
+n	Republic Fleet Captain
+n	Republic Fleet Officer
+n	Republic Judicial
+n	Resistance Medical Droid
+n	Resistance Officer
+n	Resistance Starfighter Ace
+n	Resistance Trooper
+n	Resistance Trooper 1
+n	Resistance Trooper 10
+n	Resistance Trooper 2
+n	Resistance Trooper 3
+n	Resistance Trooper 4
+n	Resistance Trooper 5
+n	Resistance Trooper 6
+n	Resistance Trooper 7
+n	Resistance Trooper 8
+n	Resistance Trooper 9
+y	Revah, Decoy Pirate Queen
+n	RH-Series Research Droid
+n	Riar Air Patrol Pursuit Drone
+n	Riar Royal Guard
+y	Riff Tamson
+y	Rig Nema
+n	RM-Series Military Intelligence Droid
+n	RMD-20 “Eye in the Sky”
+y	Robonino
+n	Roche J9 Worker Drone
+n	Roche Siak-Series Protocol Droid
+n	Rodian Lackeys
+y	Rolo Presat
+n	Ronto
+y	Roowarra
+y	Roowarra’s Crew
+n	Royal Onderon Militia
+y	RT-3PO
+n	Rubat Spinner
+n	Runderen
+n	Ruping
+n	Ruping (AoR Bonus adventure)
+y	Rush Clovis
+y	RX-7246
+y	Ryale Wei, Majordomo
+y	Ryder Azadi
+n	S-43 Enforcer Droid
+n	Sabacc Player
+n	Saboteur Astromech
+n	Saboteur Load Lifter
+n	Saboteur Medical Droid
+n	Saboteur Protocol Droid
+n	Sacorrian Grey Bear
+y	Saesee Tiin
+n	Sakiyan Bounty Hunter
+y	Sala Vindako, Human Beastmaster
+y	Salana
+n	Salerodrex
+n	Sand Panther
+n	Sando Aqua Monster
+n	Sarlacc
+y	Savage Opress
+y	Savage Opress (Natural)
+y	Savo
+n	Savrip Guards
+y	Saw Gerrera
+y	Saw Gerrera (HoBS)
+n	SBD Series Assistance and Rescue Droid
+n	Scarred Gladiator
+n	Scout survey droid
+n	Scout Trooper Speeder Bike Pilot
+n	Scrap Nomad
+n	SDMN-Series Session Droid
+y	Sebulba
+n	Sector Ranger
+n	Security Droid
+n	Security Enforcer
+n	Security Investigator
+n	Selonian Thug
+n	Selonian Wanderer
+n	Senate Guard
+n	Senate Guard (D20Radio)
+n	Senate Guard Captain
+n	Senator
+y	Senator Lott Dod
+y	Senex, Krath War Droid
+y	Senior Advisor Setenna Hase
+n	Sentry Droid
+n	Separatist Commander
+n	Separatist Council Member
+y	Sera Riggers
+n	Seraphs Gang Member
+y	Sergeant Hunter
+y	Seripas
+y	Seripas (Armoured)
+n	Service Patch Remote
+y	Seventh Sister
+y	Shaak Ti
+n	Shadowport Mechanic
+y	Shalo Sherin
+n	Shaoryn
+y	Shelish
+y	Shen’s Goons
+n	Shield Remote
+n	Shipjacker
+y	Shmi Skywalker
+y	Shreya Ordassa, Togrutan Academic
+n	Shyrack
+y	Sianna Sekko
+y	Sifo-Dyas
+n	Siluuk Eel
+y	Sinasu the Hutt
+y	Sionver Boll
+n	Sith Juggernaut
+n	Skuir Fish
+n	Skyholme Astromancer
+n	Skyholme Lucite
+n	Skysnare
+n	Slaver
+n	Slaver Guard
+n	Slicer
+n	Sludge Panther
+y	Sly Moore
+n	Small Dianoga
+n	Smuggler
+n	Smuggler Baron
+n	Snowfeather
+n	Soaring Accipiptero
+y	Sora Bulq
+n	Sorority Bodyguard
+n	Sorority Courtier
+n	Sorority Crew
+n	Sorority Defender
+n	Sorority Engineer
+n	Sorority Fighter Jockey
+n	Sorority Kill Team Member
+n	Sorority Palace Guard
+n	Sorority Pirate
+n	Sorority Pirate Queensguard
+n	Sorority Saboteur
+n	SoroSuub Corporate Security
+n	Sorosuub G2 Repair Droid
+n	Sorosuub Wanderer Scout Survey Droid
+n	Spaceport Administrator
+n	Spaceport Official
+n	Spaceport Overseer
+n	Spaceport Security Detail
+n	Spaceport Security Droids
+n	Spaceport Security Officer
+n	Spaceport Urchin
+n	Spade-Headed Smooka
+n	Specforce Infiltrator
+y	Spectre 1: Kanan Jarrus
+y	Spectre 2: Hera Syndulla
+y	Spectre 3: Chopper
+y	Spectre 4: Garazeb “Zeb” Orrelios
+y	Spectre 5: Sabine Wren
+y	Spectre 6: Ezra Bridger
+y	Speng
+n	Spice Pusher
+n	Spintiri Glowbat
+n	Spintiri Icewolves
+y	Spir Fraxis
+n	Spooked Ronto
+y	Sprantal
+n	Spukami
+n	SR-7 Series Scout / Observation Droid
+n	Staff Officer
+n	Stalking Acklay
+n	Starfighter Ace
+n	Starfighter Pilot
+y	Steela Gerrera
+n	Stone Guardian
+y	Storm
+y	Stormtrooper Captain TH-313
+n	Stormtrooper Sergeant
+n	Stormtrooper Sergeant (DoD)
+n	Stormtrooper: Cavetrooper
+n	Stormtrooper: Dark Trooper
+n	Stormtrooper: Death Trooper
+n	Stormtrooper: Jet Trooper
+n	Stormtrooper: Mimban Stormtrooper
+n	Stormtrooper: Novatrooper
+n	Stormtrooper: Patrol Troopers
+n	Stormtrooper: Radtrooper
+n	Stormtrooper: Range Trooper
+n	Stormtrooper: Range Trooper (d20radio)
+n	Stormtrooper: Sandtrooper
+n	Stormtrooper: Scout Trooper
+n	Stormtrooper: Shoretrooper
+n	Stormtrooper: Snowtrooper
+n	Stormtrooper: Storm Commando
+n	Stormtrooper: Storm Commando Officer
+n	Stormtrooper: Swamptrooper
+n	Street Tough
+y	Strike
+n	Strus Clan Enforcer
+n	Strus Clan Gansters
+n	Strus Clan Leader
+n	Strus Clan Warrior
+n	Styanax
+y	Sugi
+y	Suljo Warde
+n	Sullustan Pilot-for-Hire
+n	Sullustan Resistance Fighter
+y	Sunny Bounder
+n	Super Battle Droid Rocket Trooper
+n	Super Tactical Droid
+n	Survivor
+y	Switch, 3rd Degree Protocol Droid
+y	Switch’s Thugs
+n	Swoop Ace
+n	Swoop Ganger
+n	Swooper
+y	Sy Snootles
+n	T-Series Tactical Droid
+n	T-Series Tactical Droid (RotS)
+y	Tabarith’s Thug
+n	Tactical Assassin Droid
+n	Talz Chieftain
+n	Talz Chieftain (HoBS)
+n	Talz Hunter
+n	Talz Warrior
+y	Tam Blackstar
+y	Tarfful
+y	Tarryn Rayzer, Eccentric Pilot
+n	Tarvix
+y	Taska Mastigar
+y	Taskmaster Grint
+n	Tauntaun
+n	Tayan Falcon
+n	TC-SC Infiltration Droid
+n	TC-Series Protocol Droid
+n	Tech
+n	Techtank Tech
+n	Tempest Runner
+y	Tennom
+y	Tera Sinube
+n	Terentatek
+n	Terentatek (d20radio)
+n	Terentatek Mauler
+n	Teryx
+n	Tetan Guard
+y	Thaelo
+n	Thalassian Slaver
+y	Thamoss
+y	Thamoss’s Security Guards
+y	The Anvil, Arena Fighter
+y	The Carbine, Hutt Cartel Pilot
+n	The Challenger
+n	The Consultant
+y	The Gatekeeper
+n	The Lost
+n	The Trainer
+y	Therm Scissorpunch
+y	Tholme
+n	Thranta
+y	Thweek, Kubaz Spy
+n	Tibannuck
+n	TIE Ace
+n	TIE Pilot
+y	Tik, Ranat Leader
+y	Tiplar
+y	Tiplee
+y	TJ-11, Saboteur Tactical Droid
+y	T’landa Til Charlatan
+y	Todo 360
+n	Togruta Royal Guard
+y	Tojo, Veteran Clone Trooper
+y	“Too Low” Talo
+y	Tor Haido
+y	Torani Kulda
+n	Toydarian Agent
+n	Toydarian Farmer
+n	Toydarian Infochant
+n	Toydarian Merchant
+n	Toydarian Royal Guard
+n	Toydarian Royal Guard (HoBS)
+y	Tracer
+n	Trained Keelkana
+n	Trandoshan Guild Master
+n	Trandoshan Heavy
+n	Trandoshan hunter
+n	Trandoshan Mercenary
+n	Trandoshan Scavenger Droid
+n	Trandoshan Slaver
+n	Trandoshan Slaver (Custom)
+y	Trex, Trandoshan Slaver
+n	TRF-2 Sparring Droid
+n	TS-Series Interrogation Droid
+y	TT-3P0
+n	TTS20-Series Dialectic Droid
+n	Tuk’ata
+n	Tunnel Worm
+n	Tunnelling Garrix
+n	Tusken Raider
+n	Tusken Raider (AaA)
+n	Tusken Raider (Never Tell Me the Odds)
+n	Tusken Raider Chieftain
+n	Tusken Raider Huntsman
+n	Tusken Raider Lorekeeper
+n	Tusken Raider Reaver
+n	Tusken Raider Sniper
+n	Twi’lek Black Marketeer
+n	Twi’lek Blurrg Rider
+n	Twi’lek Dancer
+n	Twi’lek Freedom Fighter
+n	Twi’lek poisoner
+n	Twisted Beast
+n	Twisted Beast Alpha
+y	U9-C4
+n	Ugnaught Laborer
+n	Ugnaught Mechanic
+n	Umbaran Commander
+n	Umbaran Militia
+n	Umbaran Starfighter Pilot
+n	Umbaran Tank Crew
+n	Undead Nightsister
+n	Underworld Operator
+n	Urban Security Droid
+y	Urel Haydon
+n	Ursosaur
+y	Urtuaa Haaot, Ithorian Diplomat
+n	Utai Mechanic
+n	Uxibeast
+n	Vapor Station Inhabitant
+y	Var Narek, Lt. Field Assistant
+n	Varactyl
+y	Vazus Mandrake
+n	Venerable Hutt
+y	Venlana Sipal, Consortium Underboss
+y	Verannis
+y	Verd Ramos
+n	Viewponte Tower Security
+y	Vinon Scorne
+n	Viper Probe Droid
+n	Vixus
+n	Vodran Enforcer
+y	Voralla Morbo
+y	Vorn Tel-Ovis
+n	Vornskr
+y	Vorse Tabarith, Mob Boss
+n	Vossport City Guard
+n	Vrblther
+y	Vrixx’tt
+y	Vursonk
+y	VX-19, Engineer Droid
+n	Vynock
+y	WAC-47
+y	Walisi
+n	Walker Ace
+n	Wampa
+n	Wanderer Scout Surveyor
+n	Warden Droid
+y	Warg, Savrip Guard
+y	Warrick Raden
+y	Warrick’s Thugs
+y	Wat Tambor
+y	Watto
+n	Wealthy Noble
+n	Webweaver
+n	Wed Treadwell Repair Droid
+y	Wedge Antilles
+n	Weequay Gunsel
+n	Weequay Sniper
+n	Weequay Thug
+n	Whaladon
+n	Wheel Security
+n	Wheel Security Pilot
+n	Whiphid Thug
+n	Whisper Base Sentries
+n	Wild Crawler
+n	Wild Felid Hunter
+n	Wing Guard Officer
+n	Wing Guard Sergeant
+n	Wingrider
+y	Wol Kessix, Resistance Agent
+n	Wookiee Gladiator
+n	Wookiee Warrior
+n	Wounded Mantellian Savrip
+y	Wrecker
+y	Wrecker (HoBS)
+n	Wrix
+n	WSW MK-III “Harrier” Combat Remote
+n	Yacht Crew
+n	Yarkora Treasure Hunter
+y	Yav Yiyar
+y	Yeel Dresk
+y	Yiyar Clan Members
+y	Yiyar Salvage Tech
+y	Yoda
+n	Young Krayt Dragon
+n	Ysalamir
+n	Ysanna Hunter
+y	Zam Wesell
+y	Zardra
+y	Zayda
+y	Zeke, Clone Trooper Platoon Leader
+y	“Zekra Fol”, ISB Operative
+y	Zel N’got
+n	Zelcomm Enforcer
+y	Zerala Dinn
+n	Zillo Beast
+y	Zirkonn’s ISB Strike Team
+y	Ziro the Hutt
+y	Zuckuss
+n	Zygerrian Royal Guard
+n	Zygerrian Slave Master
+n	Zygerrian Slaver

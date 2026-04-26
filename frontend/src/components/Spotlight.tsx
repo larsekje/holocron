@@ -37,6 +37,7 @@ const Spotlight: React.FC = () => {
     'quality',
   ];
   const [includedTypes, setIncludedTypes] = useState<Set<SpotlightEntityType>>(new Set(allTypes));
+  const [hideNamedAdversaries, setHideNamedAdversaries] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -112,10 +113,14 @@ const Spotlight: React.FC = () => {
     return () => clearTimeout(handle);
   }, [query, isOpen, includedTypes]);
 
-  // Displayed results after applying type filters
+  // Displayed results after applying type filters and the named-adversary toggle
   const displayedResults = useMemo(() => {
-    return results.filter((r) => includedTypes.has(r.type));
-  }, [results, includedTypes]);
+    return results.filter((r) => {
+      if (!includedTypes.has(r.type)) return false;
+      if (hideNamedAdversaries && r.type === 'adversary' && r.named) return false;
+      return true;
+    });
+  }, [results, includedTypes, hideNamedAdversaries]);
 
   // When displayed results change (new search or filters), reset selection and auto-load first detail
   useEffect(() => {
@@ -255,6 +260,8 @@ const Spotlight: React.FC = () => {
               }}
               onSetAll={() => setIncludedTypes(new Set(allTypes))}
               onSetNone={() => setIncludedTypes(new Set())}
+              hideNamedAdversaries={hideNamedAdversaries}
+              onToggleHideNamed={() => setHideNamedAdversaries((v) => !v)}
             />
 
             <Flex h="70vh">

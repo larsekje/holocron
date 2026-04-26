@@ -11,6 +11,8 @@ interface SpotlightHeaderProps {
   onToggleType: (t: SpotlightEntityType | 'items') => void;
   onSetAll: () => void;
   onSetNone: () => void;
+  hideNamedAdversaries: boolean;
+  onToggleHideNamed: () => void;
 }
 
 const typeOrder: Array<SpotlightEntityType | 'items'> = [
@@ -40,7 +42,7 @@ const labelFor: Record<SpotlightEntityType | 'items', string> = {
   quality: 'Qualities',
 };
 
-const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({ query, setQuery, inputRef, includedTypes, onToggleType, onSetAll, onSetNone }) => {
+const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({ query, setQuery, inputRef, includedTypes, onToggleType, onSetAll, onSetNone, hideNamedAdversaries, onToggleHideNamed }) => {
   const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform || '');
   const headerBg = '#1f2226';
   const borderCol = 'gray.700';
@@ -112,6 +114,20 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({ query, setQuery, inpu
             </WrapItem>
           );
         })}
+        {includedTypes.has('adversary') && (
+          <WrapItem>
+            <Tag
+              size="sm"
+              colorScheme={hideNamedAdversaries ? 'orange' : 'gray'}
+              variant={hideNamedAdversaries ? 'solid' : 'outline'}
+              cursor="pointer"
+              onClick={onToggleHideNamed}
+              title="Hide named characters (e.g. Darth Vader) from adversary results"
+            >
+              Hide Named
+            </Tag>
+          </WrapItem>
+        )}
       </Wrap>
     </Box>
   );

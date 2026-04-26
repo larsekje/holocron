@@ -452,6 +452,25 @@ async function buildIndex() {
   }
 
   // Adversaries (Stoogoff JSON)
+  // Load named-character labels so we can mark each adversary as named/unnamed.
+  // The file format is `<y|n>\t<display name>` per line. Names not present default to unnamed.
+  const labelsPath = path.resolve(projectRoot, 'named_character_labels.txt');
+  const namedSet = new Set();
+  try {
+    const labelsRaw = await fs.readFile(labelsPath, 'utf-8');
+    for (const line of labelsRaw.split('\n')) {
+      if (!line.trim()) continue;
+      const tab = line.indexOf('\t');
+      if (tab < 0) continue;
+      const label = line.slice(0, tab).trim().toLowerCase();
+      const name = line.slice(tab + 1);
+      if (label === 'y') namedSet.add(name);
+    }
+    console.log(`[spotlight] Loaded ${namedSet.size} named-adversary labels.`);
+  } catch (e) {
+    console.warn(`[spotlight] No named_character_labels.txt found at ${path.relative(projectRoot, labelsPath)}; all adversaries will be treated as unnamed.`);
+  }
+
   const adversariesDir = path.resolve(projectRoot, 'backend', 'data', 'stoogoff', 'adversaries');
   const advFiles = await listJsonFiles(adversariesDir);
   const advRaw = [];
@@ -479,29 +498,36 @@ async function buildIndex() {
   for (const { adv } of advRaw) {
     advNameCounts.set(adv.name, (advNameCounts.get(adv.name) || 0) + 1);
   }
+  let labeledHits = 0;
   for (const { adv, source } of advRaw) {
     const isDup = (advNameCounts.get(adv.name) || 0) > 1;
     const displayName = isDup && source ? `${adv.name} (${source})` : adv.name;
     const advType = adv.type || undefined; // Minion / Rival / Nemesis
-    push(
-      results,
-      entry('adversary', displayName, {
-        subtitle: advType || undefined,
-        tags: Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : undefined,
-        description: cleanText(adv.description),
-        extra: {
-          adversaryType: advType,
-          characteristics: adv.characteristics,
-          derived: adv.derived,
-          skills: adv.skills,
-          talents: adv.talents,
-          abilities: adv.abilities,
-          weapons: adv.weapons,
-          gear: adv.gear,
-          source,
-        },
-      })
-    );
+    const named = namedSet.has(displayName);
+    if (namedSet.size > 0) labeledHits += namedSet.has(displayName) ? 1 : 0;
+    const e = entry('adversary', displayName, {
+      subtitle: advType || undefined,
+      tags: Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : undefined,
+      description: cleanText(adv.description),
+      extra: {
+        adversaryType: advType,
+        named,
+        characteristics: adv.characteristics,
+        derived: adv.derived,
+        skills: adv.skills,
+        talents: adv.talents,
+        abilities: adv.abilities,
+        weapons: adv.weapons,
+        gear: adv.gear,
+        source,
+      },
+    });
+    // Surface `named` at the top level so search/browse can filter without loading detail.
+    e.named = named;
+    push(results, e);
+  }
+  if (namedSet.size > 0) {
+    console.log(`[spotlight] Matched ${labeledHits}/${namedSet.size} named labels against adversary entries.`);
   }
 
   // Vehicles parsing intentionally disabled (ignore vehicles for now)
