@@ -4,7 +4,7 @@
 
 import generatedIndex from './spotlightIndex.generated.json';
 import extras from './spotlightExtras.json';
-import { FIELDS, lookupField, SKILL_FIELDS } from './spotlightQuery';
+import { FIELDS, getNumericStats, lookupField, SKILL_FIELDS } from './spotlightQuery';
 import type { FieldDef } from './spotlightQuery';
 
 export type SuggestionKind = 'field' | 'value';
@@ -92,35 +92,9 @@ for (const e of indexEntries) {
 // Canonical SWRPG skills (from spotlightQuery) supplement anything we found.
 for (const s of SKILL_FIELDS) skillNamesAll.add(s.full);
 
-// Per-field numeric range (min / max observed across the index). Used to
-// preview what `high` / `low` actually mean for a given field.
-const NUMERIC_STATS = new Map<string, { min: number; max: number }>();
-const getPath = (obj: any, path: string[]): any => {
-  let cur = obj;
-  for (const k of path) {
-    if (cur == null) return undefined;
-    cur = cur[k];
-  }
-  return cur;
-};
-for (const f of FIELDS) {
-  if (f.kind !== 'numeric') continue;
-  const path = f.detailPath || [];
-  let min = Infinity;
-  let max = -Infinity;
-  for (const e of indexEntries) {
-    if (f.appliesTo && !f.appliesTo.includes(e.type as any)) continue;
-    const v = getPath(e.detail, path);
-    const n = typeof v === 'number' ? v : typeof v === 'string' ? parseFloat(v) : NaN;
-    if (Number.isFinite(n)) {
-      if (n < min) min = n;
-      if (n > max) max = n;
-    }
-  }
-  if (Number.isFinite(min) && Number.isFinite(max)) {
-    NUMERIC_STATS.set(f.name, { min, max });
-  }
-}
+// (Numeric range/quartile stats live in spotlightQuery.ts now and are accessed
+// via getNumericStats so both the popup hints and the predicate evaluator share
+// a single source of truth.)
 
 // Sort suggestions by frequency descending, then alphabetically.
 function rank(m: Map<string, number>): Array<{ name: string; count: number }> {
@@ -285,9 +259,13 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
       // Operator stubs + order shorthands, always shown so a user editing
       // `soak:<5` can pick `low` / `high` / `>=4` without the popup going
       // empty. The list is short (7 items) so no prefix filter is needed.
-      const stats = NUMERIC_STATS.get(field.name);
-      const highHint = stats ? `sort descending — top is ${stats.max}` : 'sort descending';
-      const lowHint = stats ? `sort ascending — bottom is ${stats.min}` : 'sort ascending';
+      const stats = getNumericStats(field.name);
+      const highHint = stats
+        ? `top 25% — ${field.name} ≥ ${stats.p75} (max ${stats.max})`
+        : 'sort descending';
+      const lowHint = stats
+        ? `bottom 25% — ${field.name} ≤ ${stats.p25} (min ${stats.min})`
+        : 'sort ascending';
       return [
         { display: '>=3', insert: '>=3' },
         { display: '>=4', insert: '>=4' },

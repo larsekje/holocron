@@ -7,6 +7,8 @@
 // and the autocomplete tractable.
 
 import type { SpotlightEntityType } from '@/state/spotlightStore';
+import generatedIndex from './spotlightIndex.generated.json';
+import extras from './spotlightExtras.json';
 
 export type Op = '=' | '!=' | '>' | '>=' | '<' | '<=';
 
@@ -326,12 +328,24 @@ function asStringArray(v: any): string[] {
   return [];
 }
 
-// Single token against a single index entry. Order tokens are not filters —
-// they always pass.
+// Single token against a single index entry. Order tokens normally don't
+// filter, but `:high` / `:low` shorthands additionally narrow to the top /
+// bottom quartile for the relevant field, so the user gets "high-soak units"
+// rather than "every adversary sorted by soak descending".
 export function evaluateToken(entry: any, t: Token): boolean {
-  if (t.order) return true;
   const def = t.fieldDef;
   const detail = entry?.detail ?? {};
+  if (t.order) {
+    const v = t.value.toLowerCase();
+    if ((v === 'high' || v === 'low') && def.kind === 'numeric' && def.detailPath) {
+      const val = asNumber(getPath(detail, def.detailPath));
+      if (val == null) return false;
+      const stats = NUMERIC_STATS_BY_FIELD.get(def.name);
+      if (!stats) return true; // no data ⇒ don't drop
+      return v === 'high' ? val >= stats.p75 : val <= stats.p25;
+    }
+    return true;
+  }
 
   // Type-scope: filter strictly by entity type.
   if (def.kind === 'type-scope') {
@@ -396,6 +410,57 @@ export function evaluate(entry: any, tokens: Token[]): boolean {
 // Pull just the order tokens — used by searchIndex to sort filtered results.
 export function orderTokens(tokens: Token[]): Token[] {
   return tokens.filter((t) => !!t.order);
+}
+
+// ---------------------------------------------------------------------------
+// Per-field numeric stats (min, max, 25th/75th percentile). Used to decide
+// what `:high` / `:low` mean for a given field — they're treated as filters
+// on the top / bottom quartile, not just sort directions. Computed once at
+// module load by walking the bundled index.
+
+export interface NumericStats {
+  min: number;
+  max: number;
+  p25: number;
+  p75: number;
+}
+
+const NUMERIC_STATS_BY_FIELD = new Map<string, NumericStats>();
+
+const _allIndexEntries: Array<{ type: string; detail?: any }> = [
+  ...(Array.isArray(generatedIndex) ? (generatedIndex as any[]) : []),
+  ...(Array.isArray(extras) ? (extras as any[]) : []),
+];
+
+(function buildNumericStats() {
+  const percentile = (sorted: number[], q: number): number => {
+    if (sorted.length === 0) return NaN;
+    if (sorted.length === 1) return sorted[0];
+    const i = Math.min(sorted.length - 1, Math.max(0, Math.floor((sorted.length - 1) * q)));
+    return sorted[i];
+  };
+  for (const f of FIELDS) {
+    if (f.kind !== 'numeric' || !f.detailPath) continue;
+    const values: number[] = [];
+    for (const e of _allIndexEntries) {
+      if (f.appliesTo && !f.appliesTo.includes(e.type as SpotlightEntityType)) continue;
+      const v = getPath(e.detail ?? {}, f.detailPath);
+      const n = typeof v === 'number' ? v : typeof v === 'string' ? parseFloat(v) : NaN;
+      if (Number.isFinite(n)) values.push(n);
+    }
+    if (values.length === 0) continue;
+    values.sort((a, b) => a - b);
+    NUMERIC_STATS_BY_FIELD.set(f.name, {
+      min: values[0],
+      max: values[values.length - 1],
+      p25: percentile(values, 0.25),
+      p75: percentile(values, 0.75),
+    });
+  }
+})();
+
+export function getNumericStats(fieldName: string): NumericStats | undefined {
+  return NUMERIC_STATS_BY_FIELD.get(fieldName);
 }
 
 // Compare two index entries for a single order token. Returns -1/0/+1 with
