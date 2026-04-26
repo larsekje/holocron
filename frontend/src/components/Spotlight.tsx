@@ -30,7 +30,7 @@ const Spotlight: React.FC = () => {
     'quality',
   ];
   const [includedTypes, setIncludedTypes] = useState<Set<SpotlightEntityType>>(new Set(allTypes));
-  const [hideNamedAdversaries, setHideNamedAdversaries] = useState<boolean>(false);
+  const [hideNamedAdversaries, setHideNamedAdversaries] = useState<boolean>(true);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -163,7 +163,8 @@ const Spotlight: React.FC = () => {
     }
   };
 
-  // Keyboard navigation inside modal
+  // Keyboard navigation inside modal — fire even while the search input has focus,
+  // so the user never has to mouse over to the result list.
   useHotkeys(
     'up',
     (e) => {
@@ -173,6 +174,7 @@ const Spotlight: React.FC = () => {
       const next = (selectedIndex - 1 + displayedResults.length) % displayedResults.length;
       selectByIndex(next);
     },
+    { enableOnFormTags: true },
     [isOpen, displayedResults, selectedIndex]
   );
 
@@ -185,20 +187,7 @@ const Spotlight: React.FC = () => {
       const next = (selectedIndex + 1) % displayedResults.length;
       selectByIndex(next);
     },
-    [isOpen, displayedResults, selectedIndex]
-  );
-
-  useHotkeys(
-    'enter',
-    (e) => {
-      if (!isOpen) return;
-      if (displayedResults.length === 0) return;
-      e.preventDefault();
-      const r = displayedResults[selectedIndex];
-      if (r) {
-        loadDetail(r);
-      }
-    },
+    { enableOnFormTags: true },
     [isOpen, displayedResults, selectedIndex]
   );
 

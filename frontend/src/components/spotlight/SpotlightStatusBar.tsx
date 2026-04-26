@@ -29,7 +29,6 @@ const SpotlightStatusBar: React.FC = () => {
     >
       <HStack spacing={4} flexWrap="wrap">
         <Hint keys={['↑', '↓']} label="navigate" />
-        <Hint keys={['↵']} label="open" />
         <Hint keys={[cmd, 'K']} label="toggle" />
         <Hint keys={['esc']} label="close" />
       </HStack>
