@@ -1,5 +1,14 @@
 import React from 'react';
-import { Badge, Box, HStack, Text } from '@chakra-ui/react';
+import { Badge, Box, HStack, Icon, Text } from '@chakra-ui/react';
+import type { IconType } from 'react-icons';
+import {
+  FiActivity,
+  FiAlertTriangle,
+  FiCompass,
+  FiHeart,
+  FiShield,
+  FiTarget,
+} from 'react-icons/fi';
 import type { SpotlightResult } from '@/state/spotlightStore';
 import { getDetail } from '@/data/spotlightIndex';
 import { lookupField } from '@/data/spotlightQuery';
@@ -59,26 +68,53 @@ function renderHighlighted(text: string, indexes?: number[]): React.ReactNode {
   return parts;
 }
 
-// Compact "label value" pill, used for inline stats. Highlights when its label
-// is being filtered/sorted on so the user can spot the relevant number.
-const StatPill: React.FC<{ label: string; value: number | string; highlighted?: boolean }> = ({
-  label,
-  value,
-  highlighted,
-}) => (
-  <HStack
-    spacing={1}
-    px={1.5}
-    py={0.5}
-    borderRadius="sm"
-    bg={highlighted ? 'orange.700' : 'gray.700'}
-    fontSize="xs"
-    fontFamily="mono"
-  >
-    <Text color={highlighted ? 'orange.100' : 'gray.400'}>{label}</Text>
-    <Text color="gray.50" fontWeight="bold">{value}</Text>
-  </HStack>
-);
+// Fixed-width "icon value" pill used for inline stats. Rendered in the same
+// column slot for every row of a given type so the eye can scan straight down.
+// Highlights orange when its field is being filtered/sorted on.
+const PILL_WIDTH = '46px';
+const StatPill: React.FC<{
+  icon: IconType;
+  value: number | string | null | undefined;
+  highlighted?: boolean;
+  title?: string;
+}> = ({ icon, value, highlighted, title }) => {
+  const present = value != null && value !== '';
+  return (
+    <HStack
+      spacing={1}
+      px={1.5}
+      py={0.5}
+      borderRadius="sm"
+      bg={highlighted ? 'orange.700' : 'gray.700'}
+      fontSize="xs"
+      fontFamily="mono"
+      minW={PILL_WIDTH}
+      justify="center"
+      title={title}
+      opacity={present ? 1 : 0.4}
+    >
+      <Icon as={icon} boxSize={3} color={highlighted ? 'orange.100' : 'gray.300'} />
+      <Text color="gray.50" fontWeight="bold">{present ? value : '—'}</Text>
+    </HStack>
+  );
+};
+
+// Map of canonical field name → icon, used for "extra" highlighted stats
+// (characteristics or skills the user has filtered on that aren't in the
+// default per-type stat columns).
+const FIELD_ICON: Record<string, IconType> = {
+  soak: FiShield,
+  wounds: FiHeart,
+  strain: FiActivity,
+  brawn: FiActivity,
+  agility: FiActivity,
+  intellect: FiActivity,
+  cunning: FiActivity,
+  willpower: FiActivity,
+  presence: FiActivity,
+  damage: FiTarget,
+  crit: FiAlertTriangle,
+};
 
 // Adversary tier badge — coloured by tier so Minion / Rival / Nemesis pop visually.
 const TierBadge: React.FC<{ tier?: string }> = ({ tier }) => {
@@ -102,52 +138,22 @@ function getPath(obj: any, path: string[]): any {
   return cur;
 }
 
-// For an adversary, build the stat pills shown on the row. Always shows the
-// core derived stats (soak / wounds / strain), plus any other field that's
-// currently being filtered/sorted on, to keep the relevant value visible
-// without cluttering rows with all 6 characteristics.
-function adversaryStats(detail: any, highlighted: Set<string>): Array<{ label: string; value: number | string; highlighted?: boolean }> {
-  const out: Array<{ label: string; value: number | string; highlighted?: boolean }> = [];
-  const derived = detail?.derived || {};
-  if (derived.soak != null) {
-    out.push({ label: 'soak', value: derived.soak, highlighted: highlighted.has('soak') });
-  }
-  if (derived.wounds != null) {
-    out.push({
-      label: 'w',
-      value: derived.wounds,
-      highlighted: highlighted.has('wounds') || highlighted.has('hp') || highlighted.has('wt'),
-    });
-  }
-  if (derived.strain != null) {
-    out.push({
-      label: 'str',
-      value: derived.strain,
-      highlighted: highlighted.has('strain') || highlighted.has('st'),
-    });
-  }
-  // Any extra highlighted field the user has filtered by — show its value too,
-  // even if it's a characteristic or a skill. Skip the ones we already showed.
-  const alreadyShown = new Set(['soak', 'wounds', 'strain']);
+// Build the "extra" pills the user has explicitly filtered/sorted on, beyond
+// the per-type defaults. Lets `brawn:>=3` add a Brawn pill to every adversary
+// row alongside the standard soak / wounds / strain trio.
+function extraPills(detail: any, highlighted: Set<string>, defaultsAlreadyShown: string[]): Array<{ key: string; icon: IconType; value: number | string }> {
+  const out: Array<{ key: string; icon: IconType; value: number | string }> = [];
+  const skip = new Set(defaultsAlreadyShown);
+  // Aliased forms of defaults map to the same canonical field; skip those too.
+  for (const a of ['hp', 'wt', 'st']) skip.add(a);
   for (const fname of highlighted) {
-    if (alreadyShown.has(fname)) continue;
     const def = lookupField(fname);
     if (!def || def.kind !== 'numeric' || !def.detailPath) continue;
+    if (skip.has(def.name)) continue;
     const v = getPath(detail, def.detailPath);
     if (v == null) continue;
-    // Use the canonical name for the label so aliases (br/ag/...) all show their
-    // canonical form.
-    out.push({ label: def.name, value: v, highlighted: true });
+    out.push({ key: def.name, icon: FIELD_ICON[def.name] || FiActivity, value: v });
   }
-  return out;
-}
-
-// For weapons, show damage / crit / range; highlight when those fields are queried.
-function weaponStats(detail: any, highlighted: Set<string>): Array<{ label: string; value: number | string; highlighted?: boolean }> {
-  const out: Array<{ label: string; value: number | string; highlighted?: boolean }> = [];
-  if (detail?.damage != null) out.push({ label: 'dmg', value: detail.damage, highlighted: highlighted.has('damage') });
-  if (detail?.crit != null) out.push({ label: 'crit', value: detail.crit, highlighted: highlighted.has('crit') });
-  if (detail?.range) out.push({ label: 'rng', value: String(detail.range) });
   return out;
 }
 
@@ -170,26 +176,39 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
   let subtitleLine: React.ReactNode = null;
 
   if (r.type === 'adversary') {
+    const derived = (detail as any)?.derived || {};
     const tier = (detail as any)?.adversaryType ?? r.subtitle;
-    const stats = adversaryStats(detail, hl);
+    const extras = extraPills(detail, hl, ['soak', 'wounds', 'strain']);
     trailing = (
       <HStack spacing={1.5} align="center">
         <TierBadge tier={tier} />
-        {stats.map((s) => (
-          <StatPill key={s.label} label={s.label} value={s.value} highlighted={s.highlighted} />
+        <StatPill icon={FiShield} value={derived.soak} highlighted={hl.has('soak')} title="Soak" />
+        <StatPill
+          icon={FiHeart}
+          value={derived.wounds}
+          highlighted={hl.has('wounds') || hl.has('hp') || hl.has('wt')}
+          title="Wound threshold"
+        />
+        <StatPill
+          icon={FiActivity}
+          value={derived.strain}
+          highlighted={hl.has('strain') || hl.has('st')}
+          title="Strain threshold"
+        />
+        {extras.map((e) => (
+          <StatPill key={e.key} icon={e.icon} value={e.value} highlighted title={e.key} />
         ))}
       </HStack>
     );
   } else if (r.type === 'weapon') {
-    const stats = weaponStats(detail, hl);
     trailing = (
       <HStack spacing={1.5} align="center">
         <Badge colorScheme="purple" variant="outline" fontSize="0.65rem" textTransform="uppercase">
           weapon
         </Badge>
-        {stats.map((s) => (
-          <StatPill key={s.label} label={s.label} value={s.value} highlighted={s.highlighted} />
-        ))}
+        <StatPill icon={FiTarget} value={detail?.damage} highlighted={hl.has('damage')} title="Damage" />
+        <StatPill icon={FiAlertTriangle} value={detail?.crit} highlighted={hl.has('crit')} title="Crit" />
+        <StatPill icon={FiCompass} value={detail?.range} title="Range" />
       </HStack>
     );
     if (r.subtitle) {
