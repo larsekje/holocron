@@ -99,6 +99,28 @@ const StatPill: React.FC<{
   );
 };
 
+// Short descriptor for each adversary archetype, shown in the row tooltip so
+// the GM doesn't have to remember what each label means. Keys are normalised
+// (lowercase, plain hyphen) so unicode hyphens like "Force‑User" still match.
+const ARCHETYPE_DESCRIPTOR: Record<string, string> = {
+  shooter: 'precise ranged combatant',
+  bruiser: 'brute-force melee fighter',
+  scout: 'stealthy survey / recon',
+  social: 'charm, persuasion, manipulation',
+  leader: 'commands and inspires others',
+  'beast/creature': 'natural predator or monstrous threat',
+  droid: 'robotic / mechanical NPC',
+  operative: 'covert infiltrator or assassin',
+  pilot: 'starship or vehicle ace',
+  tech: 'slicer, engineer, or remote operator',
+  'force-user': 'Force-sensitive caster or duellist',
+  security: 'guard, sentry, enforcer',
+  medic: 'healer or field medic',
+};
+
+const archetypeKey = (s: string) =>
+  s.toLowerCase().replace(/[‐-―]/g, '-').trim();
+
 // Map of canonical field name → icon, used for "extra" highlighted stats
 // (characteristics or skills the user has filtered on that aren't in the
 // default per-type stat columns).
@@ -206,10 +228,17 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     const archetypeTooltip = (
       <Box>
         {archetypes.length > 0 && (
-          <Text fontSize="xs">
-            <Text as="span" color="gray.400">Archetypes: </Text>
-            {archetypes.join(' · ')}
-          </Text>
+          <Box mb={(factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
+            {archetypes.map((a) => {
+              const desc = ARCHETYPE_DESCRIPTOR[archetypeKey(a)];
+              return (
+                <Text key={a} fontSize="xs">
+                  <Text as="span" fontWeight="bold" color="cyan.200">{a}</Text>
+                  {desc && <Text as="span" color="gray.400"> — {desc}</Text>}
+                </Text>
+              );
+            })}
+          </Box>
         )}
         {factions.length > 0 && (
           <Text fontSize="xs">
@@ -246,7 +275,7 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
       <HStack spacing={1.5} align="center">
         {archetypeLabel && (
           <Tooltip label={archetypeTooltip} placement="top" hasArrow openDelay={200} bg="gray.900" color="gray.100">
-            <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase" cursor="help">
+            <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase">
               {archetypeLabel}
               {archetypes.length > 1 && (
                 <Text as="span" color="cyan.300" ml={1}>+{archetypes.length - 1}</Text>
