@@ -51,6 +51,9 @@ const talentNames = new Map<string, number>(); // name → entries containing it
 const weaponNames = new Map<string, number>();
 const abilityNames = new Map<string, number>();
 const gearNames = new Map<string, number>();
+const archetypeCounts = new Map<string, number>();
+const factionCounts = new Map<string, number>();
+const traitCounts = new Map<string, number>();
 const skillNamesAll = new Set<string>();
 
 const bumpMap = (m: Map<string, number>, k: string) => {
@@ -78,6 +81,9 @@ for (const e of indexEntries) {
     if (d.skills && typeof d.skills === 'object') {
       for (const k of Object.keys(d.skills)) skillNamesAll.add(k);
     }
+    for (const a of (d.archetypes || []) as string[]) bumpMap(archetypeCounts, String(a));
+    for (const f of (d.factions || []) as string[]) bumpMap(factionCounts, String(f));
+    for (const t of (d.traits || []) as string[]) bumpMap(traitCounts, String(t));
   }
   if (e.type === 'talent') bumpMap(talentNames, String(e.name));
   if (e.type === 'weapon') bumpMap(weaponNames, String(e.name));
@@ -128,6 +134,9 @@ const RANKED_TALENTS = rank(talentNames);
 const RANKED_WEAPONS = rank(weaponNames);
 const RANKED_ABILITIES = rank(abilityNames);
 const RANKED_GEAR = rank(gearNames);
+const RANKED_ARCHETYPES = rank(archetypeCounts);
+const RANKED_FACTIONS = rank(factionCounts);
+const RANKED_TRAITS = rank(traitCounts);
 const RANKED_SKILLS = Array.from(skillNamesAll).sort();
 
 // ---------------------------------------------------------------------------
@@ -165,11 +174,12 @@ function fieldSuggestions(prefix: string): Suggestion[] {
     }
   }
 
-  // 2. Smart value matches across all enum/bool fields. Lets the user type
-  //    `mini` and pick `type:minion` directly without remembering the field
-  //    name first. Each such suggestion is a complete token (commits to a chip
-  //    on accept).
+  // 2. Smart value matches across `smart`-flagged fields. Lets the user type
+  //    `mini` and pick `type:minion`, or `creat` and pick `archetype:Beast/Creature`,
+  //    without remembering the field name first. Substring match for lookup-name
+  //    fields (so "creature" matches "Beast/Creature") and prefix for enum/bool.
   for (const f of FIELDS) {
+    if (!f.smart) continue;
     if (f.kind === 'enum' && f.enumValues) {
       for (const v of f.enumValues) {
         const lv = v.toLowerCase();
@@ -194,6 +204,29 @@ function fieldSuggestions(prefix: string): Suggestion[] {
           display: `${f.name}:${v}`,
           insert: `${f.name}:${v}`,
           hint: f.description,
+          complete: true,
+        });
+      }
+    } else if (f.kind === 'lookup-name' && f.arrayPath) {
+      const path = f.arrayPath.join('.');
+      const list =
+        path === 'archetypes'
+          ? RANKED_ARCHETYPES
+          : path === 'factions'
+          ? RANKED_FACTIONS
+          : path === 'traits'
+          ? RANKED_TRAITS
+          : [];
+      for (const v of list) {
+        const lv = v.name.toLowerCase();
+        const key = `v:${f.name}:${lv}`;
+        if (seen.has(key)) continue;
+        if (lower && !lv.includes(lower)) continue; // substring (so "creature" matches "Beast/Creature")
+        seen.add(key);
+        items.push({
+          display: `${f.name}:${v.name}`,
+          insert: `${f.name}:${v.name.toLowerCase()}`,
+          hint: `${v.count} ${v.count === 1 ? 'entry' : 'entries'}`,
           complete: true,
         });
       }
@@ -237,18 +270,25 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
           ? RANKED_GEAR
           : arrayPath === 'weapons'
           ? RANKED_WEAPONS
+          : arrayPath === 'archetypes'
+          ? RANKED_ARCHETYPES
+          : arrayPath === 'factions'
+          ? RANKED_FACTIONS
+          : arrayPath === 'traits'
+          ? RANKED_TRAITS
           : [];
       return filterByPrefix(list, valuePrefix)
         .slice(0, 30)
-        .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'use' : 'uses'}` }));
+        .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}` }));
     }
     case 'numeric': {
-      // Operator stubs + order shorthands. Caller already strips any typed
-      // operator before we get here, so this is the bare/empty-value case.
+      // Operator stubs + order shorthands, always shown so a user editing
+      // `soak:<5` can pick `low` / `high` / `>=4` without the popup going
+      // empty. The list is short (7 items) so no prefix filter is needed.
       const stats = NUMERIC_STATS.get(field.name);
       const highHint = stats ? `sort descending — top is ${stats.max}` : 'sort descending';
       const lowHint = stats ? `sort ascending — bottom is ${stats.min}` : 'sort ascending';
-      const stubs: Suggestion[] = [
+      return [
         { display: '>=3', insert: '>=3' },
         { display: '>=4', insert: '>=4' },
         { display: '>=5', insert: '>=5' },
@@ -257,7 +297,6 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
         { display: 'high', insert: 'high', hint: highHint, complete: true },
         { display: 'low', insert: 'low', hint: lowHint, complete: true },
       ];
-      return stubs.filter((s) => !lower || s.display.startsWith(lower));
     }
     case 'text':
       return [];
@@ -280,16 +319,25 @@ export function getSuggestions(input: string, caret: number): SuggestResult | nu
   const def = lookupField(fieldName);
   if (!def) return null;
 
-  // Skip the operator if the user already typed one — it stays in the input.
   const after = word.text.slice(colon + 1);
-  const opMatch = /^(>=|<=|!=|>|<|=)/.exec(after);
-  const opLen = opMatch ? opMatch[0].length : 0;
-  const valuePrefix = after.slice(opLen);
+  // For numeric fields, replace the whole value half (operator included) so a
+  // user editing `soak:<5` can pick `low` / `high` / `>=4` and have it cleanly
+  // overwrite. For other kinds, an operator doesn't apply — replace from `:`.
+  const replaceStart = word.start + colon + 1;
+
+  // Compute the prefix to filter suggestions by. Strip a leading operator for
+  // numeric so `>=` doesn't kill the suggestion list when the user reopens
+  // the popup on an existing chip.
+  let valuePrefix = after;
+  if (def.kind === 'numeric') {
+    const opMatch = /^(>=|<=|!=|>|<|=)/.exec(after);
+    if (opMatch) valuePrefix = after.slice(opMatch[0].length);
+  }
 
   const items = valueSuggestions(def, valuePrefix);
   if (items.length === 0) return null;
   return {
-    replaceRange: [word.start + colon + 1 + opLen, word.end],
+    replaceRange: [replaceStart, word.end],
     kind: 'value',
     field: def,
     items,

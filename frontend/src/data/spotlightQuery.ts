@@ -31,6 +31,11 @@ export interface FieldDef {
   detailPath?: string[];   // path into entry.detail for numeric / bool / text fields
   arrayPath?: string[];    // path into entry.detail for lookup-name (array of strings or {name})
   appliesTo?: SpotlightEntityType[]; // narrow which entity types this field applies to
+  // When true, this field's values participate in bare-prefix smart autocomplete
+  // (typing `creat` suggests `archetype:Beast/Creature`). Only enable for
+  // fields with a small, bounded value set — talents/weapons would explode the
+  // popup with hundreds of options.
+  smart?: boolean;
 }
 
 // Canonical SWRPG skill list. Used to register top-level skill fields and to
@@ -90,10 +95,10 @@ export const FIELDS: FieldDef[] = [
     description: 'Show only weapon qualities.', examples: ['quality:'], group: 'Scope' },
 
   // Booleans / enums on adversaries
-  { name: 'named', kind: 'bool', detailPath: ['named'], appliesTo: ['adversary'],
+  { name: 'named', kind: 'bool', detailPath: ['named'], appliesTo: ['adversary'], smart: true,
     description: 'Filter named (true) vs unnamed (false) adversaries.',
     examples: ['named:false', 'named:true'], group: 'Adversary' },
-  { name: 'type', kind: 'enum', detailPath: ['adversaryType'], appliesTo: ['adversary'],
+  { name: 'type', kind: 'enum', detailPath: ['adversaryType'], appliesTo: ['adversary'], smart: true,
     enumValues: ['Minion', 'Rival', 'Nemesis'],
     description: 'Adversary tier.',
     examples: ['type:minion', 'type:rival', 'type:nemesis'], group: 'Adversary' },
@@ -139,6 +144,15 @@ export const FIELDS: FieldDef[] = [
   ...skillNumericFields,
 
   // Lookups across adversary lists
+  { name: 'archetype', kind: 'lookup-name', arrayPath: ['archetypes'], appliesTo: ['adversary'], smart: true,
+    description: 'Adversary archetype (Shooter, Bruiser, Scout, Beast/Creature, Droid, ...).',
+    examples: ['archetype:droid', 'archetype:scout'], group: 'Adversary groupings' },
+  { name: 'faction', kind: 'lookup-name', arrayPath: ['factions'], appliesTo: ['adversary'], smart: true,
+    description: 'Adversary faction (Imperial, Rebel, Underworld, Creature, Droid, ...).',
+    examples: ['faction:imperial', 'faction:rebel', 'faction:creature'], group: 'Adversary groupings' },
+  { name: 'trait', kind: 'lookup-name', arrayPath: ['traits'], appliesTo: ['adversary'], smart: true,
+    description: 'Adversary trait/role (Persistent Pest, Brawler, Sniper, Politician, ...).',
+    examples: ['trait:sniper', 'trait:nasty'], group: 'Adversary groupings' },
   { name: 'talent', kind: 'lookup-name', arrayPath: ['talents'], appliesTo: ['adversary'],
     description: 'Adversary has a talent matching this substring.',
     examples: ['talent:adversary', 'talent:nemesis'], group: 'Adversary lookups' },

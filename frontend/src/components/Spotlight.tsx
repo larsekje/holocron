@@ -5,6 +5,17 @@ import { useSpotlightStore } from '@/state/spotlightStore';
 import type { SpotlightResult, SpotlightDetail, SpotlightEntityType } from '@/state/spotlightStore';
 import { searchIndex, getDetail, browseIndex, parseQuery, tokenEntityTypes } from '@/data/spotlightIndex';
 import { extractCompletedTokens } from '@/data/spotlightQuery';
+
+// Only one order-by token may be active at a time. When new chips contain an
+// order token, drop any existing order chips so picking `↑ wounds` replaces
+// `↓ soak` instead of stacking them.
+function mergeChipsWithOrderConstraint(prev: string[], incoming: string[]): string[] {
+  const incomingHasOrder = incoming.some((raw) => parseQuery(raw).tokens[0]?.order);
+  const base = incomingHasOrder
+    ? prev.filter((raw) => !parseQuery(raw).tokens[0]?.order)
+    : prev;
+  return [...base, ...incoming];
+}
 import { applySuggestion, getSuggestions } from '@/data/spotlightSuggest';
 import type { SuggestResult } from '@/data/spotlightSuggest';
 import SpotlightHeader from './spotlight/SpotlightHeader';
@@ -252,12 +263,18 @@ const Spotlight: React.FC = () => {
     [isOpen, popupOpen, suggest, displayedResults, selectedIndex]
   );
 
+  // When the residual carries the just-edited chip back into the input via
+  // backspace, we hold the original raw so a second backspace can wipe it
+  // entirely. Cleared as soon as the user does anything else.
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+
   // Whenever the residual changes, see if any complete tokens (i.e. followed
   // by whitespace) can be extracted and committed as chips. Then update suggest.
   const handleResidualChange = (value: string, caret: number) => {
+    setPendingDelete(null);
     const { committed, remaining, remainingCaret } = extractCompletedTokens(value, caret);
     if (committed.length > 0) {
-      setChips((prev) => [...prev, ...committed]);
+      setChips((prev) => mergeChipsWithOrderConstraint(prev, committed));
       setResidual(remaining);
       setSuggest(getSuggestions(remaining, remainingCaret));
       setSuggestIndex(0);
@@ -310,11 +327,12 @@ const Spotlight: React.FC = () => {
     if (!suggest || suggest.items.length === 0) return;
     const item = suggest.items[suggestIndex];
     const { next, caret } = applySuggestion(residual, suggest, item);
+    setPendingDelete(null);
     // The suggestion may have completed a token (`field:value `). Run the
     // extractor in case it produced something that should immediately commit.
     const { committed, remaining, remainingCaret } = extractCompletedTokens(next, caret);
     if (committed.length > 0) {
-      setChips((prev) => [...prev, ...committed]);
+      setChips((prev) => mergeChipsWithOrderConstraint(prev, committed));
       setResidual(remaining);
       setSuggest(getSuggestions(remaining, remainingCaret));
       setSuggestIndex(0);
@@ -335,6 +353,9 @@ const Spotlight: React.FC = () => {
 
   // Tab/Enter accept the highlighted suggestion when popup is open. Esc closes
   // the popup first, then the help overlay, and only finally lets the modal close.
+  // Backspace at start of empty input is two-stage: first press pulls the last
+  // chip back into the input for editing (popup opens with its values); the
+  // immediate next backspace clears it entirely.
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (popupOpen) {
       if (e.key === 'Tab' || e.key === 'Enter') {
@@ -353,6 +374,44 @@ const Spotlight: React.FC = () => {
       e.preventDefault();
       e.stopPropagation();
       setHelpOpen(false);
+      return;
+    }
+
+    if (e.key === 'Backspace') {
+      const target = e.currentTarget;
+      const caretAtStart = (target.selectionStart ?? 0) === 0 && (target.selectionEnd ?? 0) === 0;
+      // Stage 2: backspace right after we just pulled a chip back, with the
+      // chip text still untouched in the input — wipe it.
+      if (pendingDelete && residual === pendingDelete) {
+        e.preventDefault();
+        setResidual('');
+        setSuggest(null);
+        setSuggestIndex(0);
+        setPendingDelete(null);
+        return;
+      }
+      // Stage 1: empty input → bring the most recent chip back, place caret
+      // right after `field:` so the value popup can adjust it.
+      if (caretAtStart && residual === '' && chips.length > 0) {
+        e.preventDefault();
+        const lastIdx = chips.length - 1;
+        const raw = chips[lastIdx];
+        setChips((prev) => prev.slice(0, -1));
+        setResidual(raw);
+        setPendingDelete(raw);
+        const colon = raw.indexOf(':');
+        const caretAt = colon >= 0 ? colon + 1 : raw.length;
+        setSuggest(getSuggestions(raw, caretAt));
+        setSuggestIndex(0);
+        requestAnimationFrame(() => {
+          inputRef.current?.setSelectionRange(caretAt, caretAt);
+          inputRef.current?.focus();
+        });
+        return;
+      }
+      // Any other backspace: clear the pending-delete flag (user is editing
+      // for real now) and let the input handle it.
+      if (pendingDelete) setPendingDelete(null);
     }
   };
 
