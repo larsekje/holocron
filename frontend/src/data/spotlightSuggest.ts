@@ -4,8 +4,8 @@
 
 import generatedIndex from './spotlightIndex.generated.json';
 import extras from './spotlightExtras.json';
-import { FIELDS, getNumericStats, lookupField, SKILL_FIELDS } from './spotlightQuery';
-import type { FieldDef } from './spotlightQuery';
+import { computeNumericStats, FIELDS, getNumericStats, lookupField, SKILL_FIELDS } from './spotlightQuery';
+import type { FieldDef, Token } from './spotlightQuery';
 
 export type SuggestionKind = 'field' | 'value';
 
@@ -216,7 +216,7 @@ function filterByPrefix<T extends { name: string }>(list: T[], prefix: string): 
   return list.filter((x) => x.name.toLowerCase().includes(lower));
 }
 
-function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
+function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: Token[] = []): Suggestion[] {
   const lower = valuePrefix.toLowerCase();
   switch (field.kind) {
     case 'type-scope':
@@ -260,7 +260,9 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
       // `wounds:` (range 1–80) doesn't suggest `>=3`. Always show all options
       // so a user editing an existing chip can swap operators / pick low/high
       // without the popup going empty.
-      const stats = getNumericStats(field.name);
+      // Use stats from the active filter context so `wounds:` after
+      // `type:nemesis` shows nemesis-tier thresholds, not the union.
+      const stats = computeNumericStats(field.name, contextTokens) ?? getNumericStats(field.name);
       const items: Suggestion[] = [];
       if (stats) {
         const { p25, p50, p75, min, max } = stats;
@@ -310,7 +312,11 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
   return [];
 }
 
-export function getSuggestions(input: string, caret: number): SuggestResult | null {
+export function getSuggestions(
+  input: string,
+  caret: number,
+  contextTokens: Token[] = [],
+): SuggestResult | null {
   const word = currentWord(input, caret);
   if (!word) return null;
   const colon = word.text.indexOf(':');
@@ -340,7 +346,7 @@ export function getSuggestions(input: string, caret: number): SuggestResult | nu
     if (opMatch) valuePrefix = after.slice(opMatch[0].length);
   }
 
-  const items = valueSuggestions(def, valuePrefix);
+  const items = valueSuggestions(def, valuePrefix, contextTokens);
   if (items.length === 0) return null;
   return {
     replaceRange: [replaceStart, word.end],

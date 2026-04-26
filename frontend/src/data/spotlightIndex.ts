@@ -4,7 +4,7 @@ import type {
   SpotlightEntityType,
   SpotlightResult,
 } from '@/state/spotlightStore';
-import { compareEntries, evaluate, orderTokens, parseQuery } from './spotlightQuery';
+import { compareEntries, computeNumericStats, evaluate, orderTokens, parseQuery } from './spotlightQuery';
 
 // The generator writes an array of entries of shape:
 // { id, type, name, subtitle?, tags?, detail: SpotlightDetail }
@@ -181,8 +181,35 @@ export function searchIndex(q: string): SpotlightResult[] {
   if (!query) return [];
 
   const { tokens, residual } = parseQuery(query);
-  const filtered: Augmented[] =
-    tokens.length > 0 ? augmentedIndex.filter((e) => evaluate(e, tokens)) : augmentedIndex;
+  // Pass 1: apply non-order filter tokens. evaluate() naturally skips order
+  // tokens.
+  let filtered: Augmented[] =
+    tokens.length > 0 ? augmentedIndex.filter((e) => evaluate(e, tokens)) : augmentedIndex.slice();
+
+  // Pass 2: apply `:high` / `:low` quartile filtering using the actual subset
+  // we just produced. That way `type:nemesis wounds:high` uses nemesis-only
+  // wound stats, not the union — otherwise the thresholds suggested by the
+  // popup don't match what the filter does.
+  const filterTokensForStats = tokens.filter((t) => !t.order);
+  for (const t of tokens) {
+    if (!t.order || t.fieldDef.kind !== 'numeric' || !t.fieldDef.detailPath) continue;
+    const v = t.value.toLowerCase();
+    if (v !== 'high' && v !== 'low') continue;
+    const stats = computeNumericStats(t.fieldDef.name, filterTokensForStats);
+    if (!stats) continue;
+    const isHigh = v === 'high';
+    const path = t.fieldDef.detailPath;
+    filtered = filtered.filter((e) => {
+      let cur: any = e.detail;
+      for (const k of path) {
+        if (cur == null) return false;
+        cur = cur[k];
+      }
+      const num = typeof cur === 'number' ? cur : typeof cur === 'string' ? parseFloat(cur) : NaN;
+      if (!Number.isFinite(num)) return false;
+      return isHigh ? num >= stats.p75 : num <= stats.p25;
+    });
+  }
 
   const orderTok = orderTokens(tokens);
   const applyOrder = (arr: Augmented[]): Augmented[] => {

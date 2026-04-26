@@ -54,6 +54,7 @@ const Spotlight: React.FC = () => {
   // Autocomplete popup
   const [suggest, setSuggest] = useState<SuggestResult | null>(null);
   const [suggestIndex, setSuggestIndex] = useState(0);
+  const [caret, setCaret] = useState(0);
   const popupOpen = suggest !== null && suggest.items.length > 0;
 
   // Help overlay (`?`)
@@ -268,16 +269,17 @@ const Spotlight: React.FC = () => {
   // entirely. Cleared as soon as the user does anything else.
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
-  // Whenever the residual changes, see if any complete tokens (i.e. followed
-  // by whitespace) can be extracted and committed as chips. Then update suggest.
-  const handleResidualChange = (value: string, caret: number) => {
+  // Suggestions are recomputed whenever the residual / caret / chip context
+  // changes via a single useEffect below — the various edit handlers below
+  // just update those state pieces and let the effect refresh the popup.
+
+  const handleResidualChange = (value: string, c: number) => {
     setPendingDelete(null);
-    const { committed, remaining, remainingCaret } = extractCompletedTokens(value, caret);
+    const { committed, remaining, remainingCaret } = extractCompletedTokens(value, c);
     if (committed.length > 0) {
       setChips((prev) => mergeChipsWithOrderConstraint(prev, committed));
       setResidual(remaining);
-      setSuggest(getSuggestions(remaining, remainingCaret));
-      setSuggestIndex(0);
+      setCaret(remainingCaret);
       requestAnimationFrame(() => {
         inputRef.current?.setSelectionRange(remainingCaret, remainingCaret);
         inputRef.current?.focus();
@@ -285,19 +287,16 @@ const Spotlight: React.FC = () => {
       return;
     }
     setResidual(value);
-    setSuggest(getSuggestions(value, caret));
-    setSuggestIndex(0);
+    setCaret(c);
   };
 
-  // Removing a chip = deleting it from `chips`. Index is the position in the array.
   const handleChipRemove = (index: number) => {
     setChips((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Click the chip body. For sort chips (order tokens), a click is overloaded
-  // as a direction toggle — click `↓ soak` to flip to `↑ soak` and vice versa.
-  // For filter chips, the click pulls the token back into the input so the
-  // user can edit its value (popup opens with the field's value suggestions).
+  // Click the chip body. Sort chips toggle direction; filter chips pull the
+  // field-only form back into the input so the popup re-opens with that
+  // field's full value menu.
   const handleChipClick = (index: number) => {
     const chip = chips[index];
     if (!chip) return;
@@ -309,16 +308,12 @@ const Spotlight: React.FC = () => {
       return;
     }
     setChips((prev) => prev.filter((_, i) => i !== index));
-    // Strip the value half so the popup re-opens with the full set of options
-    // for that field (otherwise the existing value acts as a prefix filter and
-    // hides every alternative). The user picks a new value from the menu.
     const colon = chip.indexOf(':');
     const fieldOnly = colon >= 0 ? chip.slice(0, colon + 1) : chip;
     const newResidual = residual ? `${fieldOnly} ${residual}` : fieldOnly;
     const caretAt = fieldOnly.length;
     setResidual(newResidual);
-    setSuggest(getSuggestions(newResidual, caretAt));
-    setSuggestIndex(0);
+    setCaret(caretAt);
     requestAnimationFrame(() => {
       inputRef.current?.setSelectionRange(caretAt, caretAt);
       inputRef.current?.focus();
@@ -328,16 +323,13 @@ const Spotlight: React.FC = () => {
   const acceptSuggestion = () => {
     if (!suggest || suggest.items.length === 0) return;
     const item = suggest.items[suggestIndex];
-    const { next, caret } = applySuggestion(residual, suggest, item);
+    const { next, caret: nextCaret } = applySuggestion(residual, suggest, item);
     setPendingDelete(null);
-    // The suggestion may have completed a token (`field:value `). Run the
-    // extractor in case it produced something that should immediately commit.
-    const { committed, remaining, remainingCaret } = extractCompletedTokens(next, caret);
+    const { committed, remaining, remainingCaret } = extractCompletedTokens(next, nextCaret);
     if (committed.length > 0) {
       setChips((prev) => mergeChipsWithOrderConstraint(prev, committed));
       setResidual(remaining);
-      setSuggest(getSuggestions(remaining, remainingCaret));
-      setSuggestIndex(0);
+      setCaret(remainingCaret);
       requestAnimationFrame(() => {
         inputRef.current?.setSelectionRange(remainingCaret, remainingCaret);
         inputRef.current?.focus();
@@ -345,10 +337,9 @@ const Spotlight: React.FC = () => {
       return;
     }
     setResidual(next);
-    setSuggest(getSuggestions(next, caret));
-    setSuggestIndex(0);
+    setCaret(nextCaret);
     requestAnimationFrame(() => {
-      inputRef.current?.setSelectionRange(caret, caret);
+      inputRef.current?.setSelectionRange(nextCaret, nextCaret);
       inputRef.current?.focus();
     });
   };
@@ -387,24 +378,23 @@ const Spotlight: React.FC = () => {
       if (pendingDelete && residual === pendingDelete) {
         e.preventDefault();
         setResidual('');
-        setSuggest(null);
-        setSuggestIndex(0);
+        setCaret(0);
         setPendingDelete(null);
         return;
       }
-      // Stage 1: empty input → bring the most recent chip back, place caret
-      // right after `field:` so the value popup can adjust it.
+      // Stage 1: empty input → bring the most recent chip back, strip the
+      // value half so the popup re-opens with the full menu for that field.
       if (caretAtStart && residual === '' && chips.length > 0) {
         e.preventDefault();
         const lastIdx = chips.length - 1;
         const raw = chips[lastIdx];
         setChips((prev) => prev.slice(0, -1));
-        setResidual(raw);
-        setPendingDelete(raw);
         const colon = raw.indexOf(':');
-        const caretAt = colon >= 0 ? colon + 1 : raw.length;
-        setSuggest(getSuggestions(raw, caretAt));
-        setSuggestIndex(0);
+        const fieldOnly = colon >= 0 ? raw.slice(0, colon + 1) : raw;
+        const caretAt = fieldOnly.length;
+        setResidual(fieldOnly);
+        setCaret(caretAt);
+        setPendingDelete(fieldOnly);
         requestAnimationFrame(() => {
           inputRef.current?.setSelectionRange(caretAt, caretAt);
           inputRef.current?.focus();
@@ -416,6 +406,19 @@ const Spotlight: React.FC = () => {
       if (pendingDelete) setPendingDelete(null);
     }
   };
+
+  // Single source of truth for the suggestion popup: whenever residual / caret
+  // / chips change, recompute. Passing chip tokens as context makes numeric
+  // thresholds tier-aware (`type:nemesis wounds:` uses nemesis stats).
+  useEffect(() => {
+    if (!isOpen) {
+      setSuggest(null);
+      setSuggestIndex(0);
+      return;
+    }
+    setSuggest(getSuggestions(residual, caret, chipTokens));
+    setSuggestIndex(0);
+  }, [residual, caret, chipTokens, isOpen]);
 
   // ⌘/ (or Ctrl+/) toggles the help overlay. Avoiding `?` so users can still
   // type a literal question mark inside descriptions.
