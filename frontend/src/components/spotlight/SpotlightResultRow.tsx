@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Box, HStack, Icon, Text } from '@chakra-ui/react';
+import { Badge, Box, HStack, Icon, Text, Tooltip } from '@chakra-ui/react';
 import type { IconType } from 'react-icons';
 import {
   FiActivity,
@@ -196,7 +196,35 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     const archetypes: string[] = Array.isArray((detail as any)?.archetypes)
       ? (detail as any).archetypes
       : [];
+    const factions: string[] = Array.isArray((detail as any)?.factions)
+      ? (detail as any).factions
+      : [];
+    const traits: string[] = Array.isArray((detail as any)?.traits)
+      ? (detail as any).traits
+      : [];
     const archetypeLabel = archetypes[0];
+    const archetypeTooltip = (
+      <Box>
+        {archetypes.length > 0 && (
+          <Text fontSize="xs">
+            <Text as="span" color="gray.400">Archetypes: </Text>
+            {archetypes.join(' · ')}
+          </Text>
+        )}
+        {factions.length > 0 && (
+          <Text fontSize="xs">
+            <Text as="span" color="gray.400">Factions: </Text>
+            {factions.join(' · ')}
+          </Text>
+        )}
+        {traits.length > 0 && (
+          <Text fontSize="xs">
+            <Text as="span" color="gray.400">Traits: </Text>
+            {traits.join(' · ')}
+          </Text>
+        )}
+      </Box>
+    );
     const numericPills: React.ReactNode[] = [];
     if (hl.has('soak') && derived.soak != null) {
       numericPills.push(
@@ -217,9 +245,14 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     trailing = (
       <HStack spacing={1.5} align="center">
         {archetypeLabel && (
-          <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase">
-            {archetypeLabel}
-          </Badge>
+          <Tooltip label={archetypeTooltip} placement="top" hasArrow openDelay={200} bg="gray.900" color="gray.100">
+            <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase" cursor="help">
+              {archetypeLabel}
+              {archetypes.length > 1 && (
+                <Text as="span" color="cyan.300" ml={1}>+{archetypes.length - 1}</Text>
+              )}
+            </Badge>
+          </Tooltip>
         )}
         {numericPills}
         {extras.map((e) => (
