@@ -256,53 +256,44 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
         .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}` }));
     }
     case 'numeric': {
-      // Operator stubs are derived from the field's actual distribution so
-      // `wounds:` (range 1–80) doesn't suggest `>=3`. Always show all options
-      // so a user editing an existing chip can swap operators / pick low/high
-      // without the popup going empty.
-      // Use stats from the active filter context so `wounds:` after
-      // `type:nemesis` shows nemesis-tier thresholds, not the union.
+      // Human-named buckets, anchored on the field's actual distribution
+      // (contextually scoped so `wounds:` under `type:nemesis` uses nemesis
+      // stats, not the union). The display label reads naturally; the hint
+      // shows the operator/value behind the label so the user can verify
+      // what each bucket maps to numerically.
       const stats = computeNumericStats(field.name, contextTokens) ?? getNumericStats(field.name);
       const items: Suggestion[] = [];
       if (stats) {
         const { p25, p50, p75, min, max } = stats;
-        const stubs: Array<{ op: '>=' | '<'; threshold: number; pct: string }> = [
-          { op: '>=', threshold: p25, pct: 'p25' },
-          { op: '>=', threshold: p50, pct: 'median' },
-          { op: '>=', threshold: p75, pct: 'p75' },
-          { op: '<', threshold: p25, pct: 'p25' },
-          { op: '<', threshold: p50, pct: 'median' },
-        ];
-        const seenStub = new Set<string>();
-        for (const s of stubs) {
-          const text = `${s.op}${s.threshold}`;
-          if (seenStub.has(text)) continue;
-          seenStub.add(text);
+        items.push({
+          display: 'Low',
+          insert: 'low',
+          hint: `${field.name} ≤ ${p25} (bottom 25%, min ${min})`,
+          complete: true,
+        });
+        if (p50 > p25) {
           items.push({
-            display: text,
-            insert: text,
-            hint: s.op === '>=' ? `at or above ${s.pct}` : `below ${s.pct}`,
+            display: 'Below average',
+            insert: `<${p50}`,
+            hint: `${field.name} < ${p50}`,
+          });
+        }
+        if (p75 > p50) {
+          items.push({
+            display: 'Above average',
+            insert: `>=${p50}`,
+            hint: `${field.name} ≥ ${p50}`,
           });
         }
         items.push({
-          display: 'high',
+          display: 'High',
           insert: 'high',
-          hint: `top 25% — ${field.name} ≥ ${p75} (max ${max})`,
-          complete: true,
-        });
-        items.push({
-          display: 'low',
-          insert: 'low',
-          hint: `bottom 25% — ${field.name} ≤ ${p25} (min ${min})`,
+          hint: `${field.name} ≥ ${p75} (top 25%, max ${max})`,
           complete: true,
         });
       } else {
-        // Fallback when we have no distribution data — generic thresholds.
-        for (const text of ['>=3', '>=4', '>=5', '<3', '<5']) {
-          items.push({ display: text, insert: text });
-        }
-        items.push({ display: 'high', insert: 'high', hint: 'sort descending', complete: true });
-        items.push({ display: 'low', insert: 'low', hint: 'sort ascending', complete: true });
+        items.push({ display: 'Low', insert: 'low', hint: 'sort ascending', complete: true });
+        items.push({ display: 'High', insert: 'high', hint: 'sort descending', complete: true });
       }
       return items;
     }
