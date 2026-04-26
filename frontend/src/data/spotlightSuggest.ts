@@ -256,13 +256,13 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
         .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}` }));
     }
     case 'numeric': {
-      // Two groups of options:
-      //   1. Filter buckets — Low / Below avg / Above avg / High — sized to
-      //      the field's actual distribution (contextually scoped so
-      //      `wounds:` under `type:nemesis` uses nemesis stats).
-      //   2. Sort-only directions — `↑ asc` / `↓ desc` — for when the user
-      //      wants ordering without trimming results.
-      // Display label reads naturally; hint reveals the operator/threshold.
+      // Two independent groups; user can pick from either or both:
+      //   1. Filter buckets — Low / Below avg / Above avg / High — anchored
+      //      on the field's actual contextual distribution.
+      //   2. Sort-only directions — `↑ asc` / `↓ desc` — sorts the whole list
+      //      without filtering.
+      // Filter and sort are separate chips; combine them by accepting one
+      // and then re-opening the popup on the same field for the other.
       const stats = computeNumericStats(field.name, contextTokens) ?? getNumericStats(field.name);
       const items: Suggestion[] = [];
       if (stats) {
@@ -270,7 +270,7 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
         items.push({
           display: 'Low',
           insert: 'low',
-          hint: `${field.name} ≤ ${p25} (bottom 25%, min ${min}) · sorts ascending`,
+          hint: `${field.name} ≤ ${p25} (bottom 25%, min ${min})`,
           complete: true,
         });
         if (p50 > p25) {
@@ -290,22 +290,20 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
         items.push({
           display: 'High',
           insert: 'high',
-          hint: `${field.name} ≥ ${p75} (top 25%, max ${max}) · sorts descending`,
+          hint: `${field.name} ≥ ${p75} (top 25%, max ${max})`,
           complete: true,
         });
       }
-      // Sort-only options — useful when the user wants the full list ordered
-      // by this field rather than trimmed to a quartile.
       items.push({
         display: '↑ Sort ascending',
         insert: 'asc',
-        hint: `lowest ${field.name} first (no filter)`,
+        hint: `lowest ${field.name} first`,
         complete: true,
       });
       items.push({
         display: '↓ Sort descending',
         insert: 'desc',
-        hint: `highest ${field.name} first (no filter)`,
+        hint: `highest ${field.name} first`,
         complete: true,
       });
       return items;

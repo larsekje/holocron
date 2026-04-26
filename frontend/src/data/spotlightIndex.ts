@@ -4,7 +4,7 @@ import type {
   SpotlightEntityType,
   SpotlightResult,
 } from '@/state/spotlightStore';
-import { compareEntries, computeNumericStats, evaluate, orderTokens, parseQuery } from './spotlightQuery';
+import { bucketTokens, compareEntries, computeNumericStats, evaluate, orderTokens, parseQuery } from './spotlightQuery';
 
 // The generator writes an array of entries of shape:
 // { id, type, name, subtitle?, tags?, detail: SpotlightDetail }
@@ -186,18 +186,14 @@ export function searchIndex(q: string): SpotlightResult[] {
   let filtered: Augmented[] =
     tokens.length > 0 ? augmentedIndex.filter((e) => evaluate(e, tokens)) : augmentedIndex.slice();
 
-  // Pass 2: apply `:high` / `:low` quartile filtering using the actual subset
-  // we just produced. That way `type:nemesis wounds:high` uses nemesis-only
-  // wound stats, not the union — otherwise the thresholds suggested by the
-  // popup don't match what the filter does.
-  const filterTokensForStats = tokens.filter((t) => !t.order);
-  for (const t of tokens) {
-    if (!t.order || t.fieldDef.kind !== 'numeric' || !t.fieldDef.detailPath) continue;
-    const v = t.value.toLowerCase();
-    if (v !== 'high' && v !== 'low') continue;
-    const stats = computeNumericStats(t.fieldDef.name, filterTokensForStats);
+  // Pass 2: apply `:high` / `:low` quartile filters using the actual subset
+  // we just produced. Thresholds are tier-aware so `type:nemesis wounds:high`
+  // uses nemesis-only wound stats, not the union.
+  for (const t of bucketTokens(tokens)) {
+    if (t.fieldDef.kind !== 'numeric' || !t.fieldDef.detailPath) continue;
+    const stats = computeNumericStats(t.fieldDef.name, tokens);
     if (!stats) continue;
-    const isHigh = v === 'high';
+    const isHigh = t.bucket === 'high';
     const path = t.fieldDef.detailPath;
     filtered = filtered.filter((e) => {
       let cur: any = e.detail;

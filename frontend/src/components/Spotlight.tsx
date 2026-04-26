@@ -294,15 +294,15 @@ const Spotlight: React.FC = () => {
     setChips((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Click the chip body. Sort chips toggle direction; filter chips pull the
-  // field-only form back into the input so the popup re-opens with that
-  // field's full value menu.
+  // Click the chip body. Sort chips toggle direction in place; bucket and
+  // filter chips pull the field-only form back into the input so the popup
+  // re-opens with the field's full value menu.
   const handleChipClick = (index: number) => {
     const chip = chips[index];
     if (!chip) return;
     const parsedChip = parseQuery(chip).tokens[0];
     if (parsedChip?.order) {
-      const flipped = parsedChip.order === 'desc' ? 'low' : 'high';
+      const flipped = parsedChip.order === 'desc' ? 'asc' : 'desc';
       const next = `${parsedChip.field}:${flipped}`;
       setChips((prev) => prev.map((c, i) => (i === index ? next : c)));
       return;

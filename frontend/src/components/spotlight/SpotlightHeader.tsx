@@ -38,10 +38,14 @@ const labelFor: Partial<Record<SpotlightEntityType, string>> = {
   quality: 'Qualities',
 };
 
-// How a token should read inside its chip — value half is hidden for type-scope,
-// order tokens show with an arrow.
+// How a token should read inside its chip:
+//  - sort tokens show as `↓ field` / `↑ field`
+//  - bucket tokens show as `field: High` / `field: Low`
+//  - type-scope tokens collapse the value
+//  - everything else: `field:opvalue`
 function chipLabel(t: Token): string {
   if (t.order) return `${t.order === 'desc' ? '↓' : '↑'} ${t.field}`;
+  if (t.bucket) return `${t.field}: ${t.bucket === 'high' ? 'High' : 'Low'}`;
   if (t.fieldDef.kind === 'type-scope') return `${t.field}:`;
   const op = t.op === '=' ? '' : t.op;
   return `${t.field}:${op}${t.value}`;
