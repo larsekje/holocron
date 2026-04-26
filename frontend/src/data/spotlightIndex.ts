@@ -4,7 +4,7 @@ import type {
   SpotlightEntityType,
   SpotlightResult,
 } from '@/state/spotlightStore';
-import { bucketTokens, compareEntries, computeNumericStats, evaluate, orderTokens, parseQuery } from './spotlightQuery';
+import { compareEntries, computeNumericStats, evaluate, lookupField, orderTokens, parseQuery } from './spotlightQuery';
 
 // The generator writes an array of entries of shape:
 // { id, type, name, subtitle?, tags?, detail: SpotlightDetail }
@@ -173,10 +173,17 @@ function toResult(e: Augmented, matches?: number[]): SpotlightResult {
   };
 }
 
+export interface ActiveSort {
+  fieldName: string;
+  direction: 'asc' | 'desc';
+}
+
 // Apply the query language: parse the input into tokens + residual, filter the
 // index by token predicates, and run a fuzzy search on the residual (or
-// alphabetical browse if there's no residual). Results are capped at 200.
-export function searchIndex(q: string): SpotlightResult[] {
+// alphabetical browse if there's no residual). When `sort` is given (from the
+// chip-level arrow toggle), it overrides any parsed-token sort direction.
+// Results are capped at 200.
+export function searchIndex(q: string, sort?: ActiveSort | null): SpotlightResult[] {
   const query = q.trim();
   if (!query) return [];
 
@@ -186,14 +193,18 @@ export function searchIndex(q: string): SpotlightResult[] {
   let filtered: Augmented[] =
     tokens.length > 0 ? augmentedIndex.filter((e) => evaluate(e, tokens)) : augmentedIndex.slice();
 
-  // Pass 2: apply `:high` / `:low` quartile filters using the actual subset
-  // we just produced. Thresholds are tier-aware so `type:nemesis wounds:high`
-  // uses nemesis-only wound stats, not the union.
-  for (const t of bucketTokens(tokens)) {
-    if (t.fieldDef.kind !== 'numeric' || !t.fieldDef.detailPath) continue;
-    const stats = computeNumericStats(t.fieldDef.name, tokens);
+  // Pass 2: apply `:high` / `:low` quartile filtering using the actual subset
+  // we just produced. That way `type:nemesis wounds:high` uses nemesis-only
+  // wound stats, not the union — otherwise the thresholds suggested by the
+  // popup don't match what the filter does.
+  const filterTokensForStats = tokens.filter((t) => !t.order);
+  for (const t of tokens) {
+    if (!t.order || t.fieldDef.kind !== 'numeric' || !t.fieldDef.detailPath) continue;
+    const v = t.value.toLowerCase();
+    if (v !== 'high' && v !== 'low') continue;
+    const stats = computeNumericStats(t.fieldDef.name, filterTokensForStats);
     if (!stats) continue;
-    const isHigh = t.bucket === 'high';
+    const isHigh = v === 'high';
     const path = t.fieldDef.detailPath;
     filtered = filtered.filter((e) => {
       let cur: any = e.detail;
@@ -207,23 +218,52 @@ export function searchIndex(q: string): SpotlightResult[] {
     });
   }
 
+  // Resolve the sort directive: chip-level `sort` arg wins; if absent, fall
+  // back to any parsed-token order (so a freshly-typed `:high` still sorts
+  // even before the chip is committed).
   const orderTok = orderTokens(tokens);
-  const applyOrder = (arr: Augmented[]): Augmented[] => {
-    if (orderTok.length === 0) return arr;
-    return arr.slice().sort((a, b) => {
-      for (const t of orderTok) {
-        const cmp = compareEntries(a, b, t);
-        if (cmp !== 0) return cmp;
-      }
-      return a.name.localeCompare(b.name);
-    });
+  const sortPath: string[] | null = (() => {
+    if (sort) {
+      const def = lookupField(sort.fieldName);
+      return def?.kind === 'numeric' && def.detailPath ? def.detailPath : null;
+    }
+    if (orderTok.length > 0) {
+      const t = orderTok[0];
+      return t.fieldDef.kind === 'numeric' && t.fieldDef.detailPath ? t.fieldDef.detailPath : null;
+    }
+    return null;
+  })();
+  const sortDir: 'asc' | 'desc' | null =
+    sort?.direction ?? (orderTok.length > 0 ? orderTok[0].order ?? null : null);
+  const compareBySort = (a: Augmented, b: Augmented): number => {
+    if (!sortPath || !sortDir) return 0;
+    let av: any = a.detail;
+    let bv: any = b.detail;
+    for (const k of sortPath) {
+      av = av == null ? undefined : av[k];
+      bv = bv == null ? undefined : bv[k];
+    }
+    const an = typeof av === 'number' ? av : typeof av === 'string' ? parseFloat(av) : NaN;
+    const bn = typeof bv === 'number' ? bv : typeof bv === 'string' ? parseFloat(bv) : NaN;
+    if (!Number.isFinite(an) && !Number.isFinite(bn)) return 0;
+    if (!Number.isFinite(an)) return 1;
+    if (!Number.isFinite(bn)) return -1;
+    if (an === bn) return 0;
+    return sortDir === 'desc' ? bn - an : an - bn;
   };
 
   if (!residual) {
-    // Token-only query: order tokens win when present; otherwise alphabetical
-    // by type, then name. Lets `type:nemesis` act like a guided browse.
-    if (orderTok.length > 0) {
-      return applyOrder(filtered).slice(0, 200).map((e) => toResult(e));
+    // Token-only query: sort wins when present; otherwise alphabetical by
+    // type, then name. Lets `type:nemesis` act like a guided browse.
+    if (sortPath && sortDir) {
+      return filtered
+        .slice()
+        .sort((a, b) => {
+          const cmp = compareBySort(a, b);
+          return cmp !== 0 ? cmp : a.name.localeCompare(b.name);
+        })
+        .slice(0, 200)
+        .map((e) => toResult(e));
     }
     return filtered
       .slice()
@@ -248,20 +288,17 @@ export function searchIndex(q: string): SpotlightResult[] {
     },
   });
 
-  // If order tokens are present, override fuzzysort ranking with explicit sort
-  // (preserving match indexes for highlighting).
+  // If a sort is active, override fuzzysort ranking (preserving match
+  // indexes for highlighting).
   const mapped = fzResults.map((r: any) => {
     const e = r.obj as Augmented;
     const nameMatch = r[0]?.indexes ? Array.from(r[0].indexes as ArrayLike<number>) : undefined;
     return { e, nameMatch };
   });
-  if (orderTok.length > 0) {
+  if (sortPath && sortDir) {
     mapped.sort((a, b) => {
-      for (const t of orderTok) {
-        const cmp = compareEntries(a.e, b.e, t);
-        if (cmp !== 0) return cmp;
-      }
-      return a.e.name.localeCompare(b.e.name);
+      const cmp = compareBySort(a.e, b.e);
+      return cmp !== 0 ? cmp : a.e.name.localeCompare(b.e.name);
     });
   }
   return mapped.map(({ e, nameMatch }) => toResult(e, nameMatch));
