@@ -23,6 +23,7 @@ export interface SpotlightResult {
   subtitle?: string;
   tags?: string[];
   named?: boolean; // Adversary-only: whether the entry is a named character.
+  matches?: number[]; // Match indexes against `name`, for highlighted rendering.
   detail?: SpotlightDetail;
 }
 

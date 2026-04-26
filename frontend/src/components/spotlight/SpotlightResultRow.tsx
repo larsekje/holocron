@@ -28,6 +28,46 @@ const charKeyToName = (k?: string): string | undefined => {
   }
 };
 
+// Wrap matched character indexes in a styled span so we can see *why* something matched.
+function renderHighlighted(text: string, indexes?: number[]): React.ReactNode {
+  if (!indexes || indexes.length === 0) return text;
+  const set = new Set(indexes);
+  const parts: React.ReactNode[] = [];
+  let buf = '';
+  let inMatch = false;
+  for (let i = 0; i < text.length; i++) {
+    const matched = set.has(i);
+    if (matched !== inMatch) {
+      if (buf) {
+        parts.push(
+          inMatch ? (
+            <Box as="span" key={`m-${parts.length}`} color="yellow.300" fontWeight="700">
+              {buf}
+            </Box>
+          ) : (
+            <React.Fragment key={`p-${parts.length}`}>{buf}</React.Fragment>
+          ),
+        );
+        buf = '';
+      }
+      inMatch = matched;
+    }
+    buf += text[i];
+  }
+  if (buf) {
+    parts.push(
+      inMatch ? (
+        <Box as="span" key={`m-${parts.length}`} color="yellow.300" fontWeight="700">
+          {buf}
+        </Box>
+      ) : (
+        <React.Fragment key={`p-${parts.length}`}>{buf}</React.Fragment>
+      ),
+    );
+  }
+  return parts;
+}
+
 const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
   r,
   idx,
@@ -70,7 +110,7 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     >
       <Box flex="1">
         <Text fontWeight="semibold" color="gray.100">
-          {r.name}
+          {renderHighlighted(r.name, r.matches)}
         </Text>
         <HStack spacing={2}>
           {detail?.category && <Text fontSize="sm" color="gray.400">{detail?.category}</Text>}

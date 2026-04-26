@@ -7,6 +7,7 @@ import { searchIndex, getDetail, browseIndex } from '@/data/spotlightIndex';
 import SpotlightHeader from './spotlight/SpotlightHeader';
 import SpotlightResults from './spotlight/SpotlightResults';
 import SpotlightDetailPane from './spotlight/SpotlightDetailPane';
+import SpotlightStatusBar from './spotlight/SpotlightStatusBar';
 
 const RESULT_ROW_HEIGHT = 48;
 
@@ -19,21 +20,13 @@ const Spotlight: React.FC = () => {
   const [detail, setDetail] = useState<SpotlightDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
 
-  // Filter: included types
+  // Filter: included types. Reflects what's actually in the curated dataset
+  // (adversaries/talents/weapons from public/assets/data + rules/qualities from extras).
   const allTypes: SpotlightEntityType[] = [
-    'talent',
-    'rule',
-    'weapon',
     'adversary',
-    'gear',
-    'armor',
-    'skill',
-    'vehicle',
-    'career',
-    'specialization',
-    'species',
-    'forcepower',
-    'attachment',
+    'talent',
+    'weapon',
+    'rule',
     'quality',
   ];
   const [includedTypes, setIncludedTypes] = useState<Set<SpotlightEntityType>>(new Set(allTypes));
@@ -235,28 +228,12 @@ const Spotlight: React.FC = () => {
               inputRef={inputRef}
               includedTypes={includedTypes}
               onToggleType={(t) => {
-                const itemTypes: SpotlightEntityType[] = ['weapon', 'armor', 'gear', 'attachment'];
-                if (t === 'items') {
-                  setIncludedTypes((prev) => {
-                    const next = new Set(prev);
-                    const allIncluded = itemTypes.every((it) => next.has(it));
-                    if (allIncluded) {
-                      // remove all item types
-                      itemTypes.forEach((it) => next.delete(it));
-                    } else {
-                      // include all item types
-                      itemTypes.forEach((it) => next.add(it));
-                    }
-                    return next;
-                  });
-                } else {
-                  setIncludedTypes((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(t)) next.delete(t);
-                    else next.add(t);
-                    return next;
-                  });
-                }
+                setIncludedTypes((prev) => {
+                  const next = new Set(prev);
+                  if (next.has(t)) next.delete(t);
+                  else next.add(t);
+                  return next;
+                });
               }}
               onSetAll={() => setIncludedTypes(new Set(allTypes))}
               onSetNone={() => setIncludedTypes(new Set())}
@@ -288,6 +265,8 @@ const Spotlight: React.FC = () => {
                 </Box>
               </Box>
             </Flex>
+
+            <SpotlightStatusBar />
           </VStack>
         </ModalBody>
       </ModalContent>

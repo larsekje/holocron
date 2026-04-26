@@ -1,3 +1,4 @@
+import fuzzysort from 'fuzzysort';
 import type {
   SpotlightDetail,
   SpotlightEntityType,
@@ -144,43 +145,52 @@ function qualitySearchTerms(d: SpotlightDetail): string[] {
   return Array.from(new Set(terms));
 }
 
-// Simple score function to improve relevance: name match > tags/qualities > subtitle > description
-function scoreEntry(e: IndexEntry, q: string): number {
-  const query = q.toLowerCase();
-  let score = 0;
-  const name = e.name.toLowerCase();
-  const subtitle = (e.subtitle || '').toLowerCase();
+// Augment each entry with pre-computed search blobs so fuzzysort can index them once.
+type Augmented = IndexEntry & { _searchBlob: string };
+
+const augmentedIndex: Augmented[] = index.map((e) => {
   const category = (e.detail as any)?.category ? String((e.detail as any).category) : '';
+  const tagText = (e.tags || []).join(' ');
   const qualityBlob = qualitySearchTerms(e.detail).join(' ');
-  const tagBlob = ((e.tags || []).join(' ') + ' ' + category + ' ' + qualityBlob).toLowerCase();
-  const desc = (e.detail.description || e.detail.html || e.detail.markdown || '').toString().toLowerCase();
+  return {
+    ...e,
+    _searchBlob: [tagText, category, qualityBlob].filter(Boolean).join(' '),
+  };
+});
 
-  if (name === query) score += 100;
-  if (name.includes(query)) score += 50;
-  if (tagBlob.includes(query)) score += 30; // slight boost as this is more curated
-  if (subtitle.includes(query)) score += 10;
-  if (desc.includes(query)) score += 5;
-
-  return score;
-}
+const SEARCH_KEYS = ['name', 'subtitle', '_searchBlob'] as const;
 
 export function searchIndex(q: string): SpotlightResult[] {
   const query = q.trim();
   if (!query) return [];
-  const results = index
-    .map((e) => ({ e, s: scoreEntry(e, query) }))
-    .filter((x) => x.s > 0)
-    .sort((a, b) => b.s - a.s)
-    .map(({ e }) => ({
+
+  // Fuzzysort score is closer to 0 = better; -1000+ is junk. We weight name matches
+  // highest, subtitle medium, blob lowest, by penalising the lower-priority keys.
+  const fzResults = fuzzysort.go(query, augmentedIndex, {
+    keys: SEARCH_KEYS as unknown as string[],
+    threshold: -10000,
+    limit: 200,
+    scoreFn: (a: any) => {
+      const sName = a[0] ? a[0].score : -1e9;
+      const sSubtitle = a[1] ? a[1].score : -1e9;
+      const sBlob = a[2] ? a[2].score : -1e9;
+      return Math.max(sName, sSubtitle - 50, sBlob - 100);
+    },
+  });
+
+  return fzResults.map((r: any) => {
+    const e = r.obj as Augmented;
+    const nameMatch = r[0]?.indexes ? Array.from(r[0].indexes as ArrayLike<number>) : undefined;
+    return {
       id: e.id,
       type: e.type,
       name: e.name,
       subtitle: e.subtitle,
       tags: e.tags,
       named: (e as any).named,
-    }));
-
-  return results.slice(0, 200);
+      matches: nameMatch as number[] | undefined,
+    };
+  });
 }
 
 export function getDetail(type: SpotlightEntityType, id: string): SpotlightDetail | null {

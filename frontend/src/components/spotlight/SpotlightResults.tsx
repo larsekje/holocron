@@ -31,12 +31,20 @@ const SpotlightResults: React.FC<SpotlightResultsProps> = ({
   const grouped = React.useMemo(() => {
     const map = new Map<string, SpotlightResult[]>();
     for (const r of results) {
-      const key = (r.type === 'weapon' || r.type === 'armor' || r.type === 'gear' || r.type === 'attachment') ? 'items' : r.type;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(r);
+      if (!map.has(r.type)) map.set(r.type, []);
+      map.get(r.type)!.push(r);
     }
     return Array.from(map.entries());
   }, [results]);
+
+  const titleFor = (type: string) =>
+    ({
+      adversary: 'Adversaries',
+      talent: 'Talents',
+      weapon: 'Weapons',
+      rule: 'Rules',
+      quality: 'Qualities',
+    } as Record<string, string>)[type] ?? type;
 
   return (
     <Box ref={listRef} w="45%" overflowY="auto" borderRight="1px solid" borderColor={borderCol}>
@@ -64,7 +72,7 @@ const SpotlightResults: React.FC<SpotlightResultsProps> = ({
         <VStack align="stretch" spacing={0}>
           {grouped.map(([type, items]) => (
             <Box key={type}>
-              <SpotlightResultsHeader title={type === 'items' ? 'Items' : type} headerBg={headerBg} borderCol={borderCol} />
+              <SpotlightResultsHeader title={titleFor(type)} count={items.length} headerBg={headerBg} borderCol={borderCol} />
               {items.map((r) => {
                 const idx = results.findIndex((x) => x.id === r.id && x.type === r.type);
                 const isSelected = idx === selectedIndex;

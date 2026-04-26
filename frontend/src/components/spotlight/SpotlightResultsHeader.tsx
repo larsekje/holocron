@@ -3,12 +3,14 @@ import { Box, HStack, Text } from '@chakra-ui/react';
 
 type SpotlightResultsHeaderProps = {
   title: string;
+  count?: number;
   headerBg?: string;
   borderCol?: string;
 };
 
 const SpotlightResultsHeader: React.FC<SpotlightResultsHeaderProps> = ({
   title,
+  count,
   headerBg = '#1f2226',
   borderCol = 'gray.700',
 }) => {
@@ -23,7 +25,7 @@ const SpotlightResultsHeader: React.FC<SpotlightResultsHeaderProps> = ({
       borderBottom="1px solid"
       borderColor={borderCol}
     >
-      <HStack>
+      <HStack spacing={2}>
         <Text
           fontSize="xs"
           textTransform="uppercase"
@@ -33,6 +35,11 @@ const SpotlightResultsHeader: React.FC<SpotlightResultsHeaderProps> = ({
         >
           {title}
         </Text>
+        {count != null && (
+          <Text fontSize="xs" color="gray.500" letterSpacing="0.04em">
+            · {count}
+          </Text>
+        )}
       </HStack>
     </Box>
   );

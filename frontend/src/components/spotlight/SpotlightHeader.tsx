@@ -8,37 +8,26 @@ interface SpotlightHeaderProps {
   setQuery: (v: string) => void;
   inputRef: React.RefObject<HTMLInputElement>;
   includedTypes: Set<SpotlightEntityType>;
-  onToggleType: (t: SpotlightEntityType | 'items') => void;
+  onToggleType: (t: SpotlightEntityType) => void;
   onSetAll: () => void;
   onSetNone: () => void;
   hideNamedAdversaries: boolean;
   onToggleHideNamed: () => void;
 }
 
-const typeOrder: Array<SpotlightEntityType | 'items'> = [
-  'talent',
-  'rule',
-  'skill',
-  'quality',
-  'items',
+const typeOrder: SpotlightEntityType[] = [
   'adversary',
+  'talent',
+  'weapon',
+  'rule',
+  'quality',
 ];
 
-const labelFor: Record<SpotlightEntityType | 'items', string> = {
-  talent: 'Talents',
-  rule: 'Rules',
-  items: 'Items',
+const labelFor: Partial<Record<SpotlightEntityType, string>> = {
   adversary: 'Adversaries',
-  gear: 'Gear',
-  armor: 'Armor',
+  talent: 'Talents',
   weapon: 'Weapons',
-  attachment: 'Attachments',
-  skill: 'Skills',
-  vehicle: 'Vehicles',
-  career: 'Careers',
-  specialization: 'Specs',
-  species: 'Species',
-  forcepower: 'Force Powers',
+  rule: 'Rules',
   quality: 'Qualities',
 };
 
@@ -78,28 +67,7 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({ query, setQuery, inpu
           </Tag>
         </WrapItem>
         {typeOrder.map((t) => {
-          const isItems = t === 'items';
-          const itemTypes = ['weapon', 'armor', 'gear', 'attachment'] as const;
-          const isActive = isItems
-            ? itemTypes.some((tt) => includedTypes.has(tt))
-            : includedTypes.has(t as SpotlightEntityType);
-
-          if (isItems) {
-            return (
-              <WrapItem key={t}>
-                <Tag
-                  size="sm"
-                  colorScheme={isActive ? 'purple' : 'gray'}
-                  variant={isActive ? 'solid' : 'outline'}
-                  cursor="pointer"
-                  onClick={() => onToggleType('items')}
-                >
-                  {labelFor[t]}
-                </Tag>
-              </WrapItem>
-            );
-          }
-
+          const isActive = includedTypes.has(t);
           return (
             <WrapItem key={t}>
               <Tag
@@ -107,9 +75,9 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({ query, setQuery, inpu
                 colorScheme={isActive ? 'purple' : 'gray'}
                 variant={isActive ? 'solid' : 'outline'}
                 cursor="pointer"
-                onClick={() => onToggleType(t as SpotlightEntityType)}
+                onClick={() => onToggleType(t)}
               >
-                {labelFor[t]}
+                {labelFor[t] ?? t}
               </Tag>
             </WrapItem>
           );
