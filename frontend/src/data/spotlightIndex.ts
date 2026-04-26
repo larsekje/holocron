@@ -4,6 +4,7 @@ import type {
   SpotlightEntityType,
   SpotlightResult,
 } from '@/state/spotlightStore';
+import { evaluate, parseQuery } from './spotlightQuery';
 
 // The generator writes an array of entries of shape:
 // { id, type, name, subtitle?, tags?, detail: SpotlightDetail }
@@ -160,13 +161,44 @@ const augmentedIndex: Augmented[] = index.map((e) => {
 
 const SEARCH_KEYS = ['name', 'subtitle', '_searchBlob'] as const;
 
+function toResult(e: Augmented, matches?: number[]): SpotlightResult {
+  return {
+    id: e.id,
+    type: e.type,
+    name: e.name,
+    subtitle: e.subtitle,
+    tags: e.tags,
+    named: (e as any).named,
+    matches,
+  };
+}
+
+// Apply the query language: parse the input into tokens + residual, filter the
+// index by token predicates, and run a fuzzy search on the residual (or
+// alphabetical browse if there's no residual). Results are capped at 200.
 export function searchIndex(q: string): SpotlightResult[] {
   const query = q.trim();
   if (!query) return [];
 
+  const { tokens, residual } = parseQuery(query);
+  const filtered: Augmented[] =
+    tokens.length > 0 ? augmentedIndex.filter((e) => evaluate(e, tokens)) : augmentedIndex;
+
+  if (!residual) {
+    // Token-only query: alphabetical by type, then name. Lets `type:nemesis`
+    // act like a guided browse.
+    return filtered
+      .slice()
+      .sort((a, b) =>
+        a.type === b.type ? a.name.localeCompare(b.name) : a.type.localeCompare(b.type),
+      )
+      .slice(0, 200)
+      .map((e) => toResult(e));
+  }
+
   // Fuzzysort score is closer to 0 = better; -1000+ is junk. We weight name matches
   // highest, subtitle medium, blob lowest, by penalising the lower-priority keys.
-  const fzResults = fuzzysort.go(query, augmentedIndex, {
+  const fzResults = fuzzysort.go(residual, filtered, {
     keys: SEARCH_KEYS as unknown as string[],
     threshold: -10000,
     limit: 200,
@@ -181,17 +213,14 @@ export function searchIndex(q: string): SpotlightResult[] {
   return fzResults.map((r: any) => {
     const e = r.obj as Augmented;
     const nameMatch = r[0]?.indexes ? Array.from(r[0].indexes as ArrayLike<number>) : undefined;
-    return {
-      id: e.id,
-      type: e.type,
-      name: e.name,
-      subtitle: e.subtitle,
-      tags: e.tags,
-      named: (e as any).named,
-      matches: nameMatch as number[] | undefined,
-    };
+    return toResult(e, nameMatch);
   });
 }
+
+// Re-export so consumers that want the parsed shape (e.g. for chip rendering)
+// can avoid importing the query module directly.
+export { parseQuery, tokenEntityTypes } from './spotlightQuery';
+export type { Token } from './spotlightQuery';
 
 export function getDetail(type: SpotlightEntityType, id: string): SpotlightDetail | null {
   const found = index.find((e) => e.type === type && e.id === id);

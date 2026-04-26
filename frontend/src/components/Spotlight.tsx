@@ -3,7 +3,7 @@ import { Box, Flex, HStack, Modal, ModalBody, ModalContent, ModalOverlay, Text, 
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useSpotlightStore } from '@/state/spotlightStore';
 import type { SpotlightResult, SpotlightDetail, SpotlightEntityType } from '@/state/spotlightStore';
-import { searchIndex, getDetail, browseIndex } from '@/data/spotlightIndex';
+import { searchIndex, getDetail, browseIndex, parseQuery, tokenEntityTypes } from '@/data/spotlightIndex';
 import SpotlightHeader from './spotlight/SpotlightHeader';
 import SpotlightResults from './spotlight/SpotlightResults';
 import SpotlightDetailPane from './spotlight/SpotlightDetailPane';
@@ -106,14 +106,20 @@ const Spotlight: React.FC = () => {
     return () => clearTimeout(handle);
   }, [query, isOpen, includedTypes]);
 
+  // Type-scope tokens in the query string take precedence over the chip filter
+  // for the duration of that search, so e.g. typing `t:` shows talents even when
+  // the Talents chip is off. Persisted prefs are unchanged.
+  const parsedTypeScope = useMemo(() => tokenEntityTypes(parseQuery(query).tokens), [query]);
+  const hasTypeScope = parsedTypeScope.size > 0;
+
   // Displayed results after applying type filters and the named-adversary toggle
   const displayedResults = useMemo(() => {
     return results.filter((r) => {
-      if (!includedTypes.has(r.type)) return false;
+      if (!hasTypeScope && !includedTypes.has(r.type)) return false;
       if (hideNamedAdversaries && r.type === 'adversary' && r.named) return false;
       return true;
     });
-  }, [results, includedTypes, hideNamedAdversaries]);
+  }, [results, includedTypes, hideNamedAdversaries, hasTypeScope]);
 
   // When displayed results change (new search or filters), reset selection and auto-load first detail
   useEffect(() => {
