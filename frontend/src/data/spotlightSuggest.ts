@@ -13,6 +13,10 @@ export interface Suggestion {
   display: string; // shown in the popup
   insert: string;  // text inserted into the input
   hint?: string;   // optional small caption (e.g. count, tier)
+  /** When true, accepting this suggestion produces a complete token (inserts a
+   *  trailing space, which the parent extractor turns into a chip). Used for
+   *  smart suggestions like `type:minion` from a bare `mini` prefix. */
+  complete?: boolean;
 }
 
 export interface SuggestResult {
@@ -111,16 +115,18 @@ function currentWord(input: string, caret: number): { start: number; end: number
 
 function fieldSuggestions(prefix: string): Suggestion[] {
   const lower = prefix.toLowerCase();
-  // For each field, prefer the canonical name; show aliases as separate rows so
-  // the user discovers shorthand like `t:` and `br:`.
   const items: Suggestion[] = [];
   const seen = new Set<string>();
+
+  // 1. Field-name completions. Aliases get their own row so shorthand like
+  //    `t:` and `br:` is discoverable.
   for (const f of FIELDS) {
     const candidates = [f.name, ...(f.aliases || [])];
     for (const c of candidates) {
-      if (seen.has(c)) continue;
+      const key = `f:${c}`;
+      if (seen.has(key)) continue;
       if (lower && !c.startsWith(lower)) continue;
-      seen.add(c);
+      seen.add(key);
       items.push({
         display: `${c}:`,
         insert: `${c}:`,
@@ -128,6 +134,42 @@ function fieldSuggestions(prefix: string): Suggestion[] {
       });
     }
   }
+
+  // 2. Smart value matches across all enum/bool fields. Lets the user type
+  //    `mini` and pick `type:minion` directly without remembering the field
+  //    name first. Each such suggestion is a complete token (commits to a chip
+  //    on accept).
+  for (const f of FIELDS) {
+    if (f.kind === 'enum' && f.enumValues) {
+      for (const v of f.enumValues) {
+        const lv = v.toLowerCase();
+        const key = `v:${f.name}:${lv}`;
+        if (seen.has(key)) continue;
+        if (lower && !lv.startsWith(lower)) continue;
+        seen.add(key);
+        items.push({
+          display: `${f.name}:${lv}`,
+          insert: `${f.name}:${lv}`,
+          hint: f.description,
+          complete: true,
+        });
+      }
+    } else if (f.kind === 'bool') {
+      for (const v of ['true', 'false']) {
+        const key = `v:${f.name}:${v}`;
+        if (seen.has(key)) continue;
+        if (lower && !v.startsWith(lower)) continue;
+        seen.add(key);
+        items.push({
+          display: `${f.name}:${v}`,
+          insert: `${f.name}:${v}`,
+          hint: f.description,
+          complete: true,
+        });
+      }
+    }
+  }
+
   return items.slice(0, 30);
 }
 
@@ -171,15 +213,18 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
         .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'use' : 'uses'}` }));
     }
     case 'numeric': {
-      // Operator-only stubs if user hasn't typed an op yet (caller already
-      // strips a typed op before we get here, so this is the empty-value case).
-      return [
+      // Operator stubs + order shorthands. Caller already strips any typed
+      // operator before we get here, so this is the bare/empty-value case.
+      const stubs: Suggestion[] = [
         { display: '>=3', insert: '>=3' },
         { display: '>=4', insert: '>=4' },
         { display: '>=5', insert: '>=5' },
         { display: '<3', insert: '<3' },
         { display: '<5', insert: '<5' },
-      ].filter((s) => !lower || s.display.startsWith(lower));
+        { display: 'high', insert: 'high', hint: 'sort descending', complete: true },
+        { display: 'low', insert: 'low', hint: 'sort ascending', complete: true },
+      ];
+      return stubs.filter((s) => !lower || s.display.startsWith(lower));
     }
     case 'text':
       return [];
@@ -219,16 +264,18 @@ export function getSuggestions(input: string, caret: number): SuggestResult | nu
 }
 
 // Apply an accepted suggestion, returning the new input string and the caret
-// position after the inserted text.
+// position after the inserted text. Trailing space is added when the suggestion
+// is a complete token (value-half completions, or smart matches like
+// `type:minion` from a bare prefix), so the parent extractor can immediately
+// commit it as a chip.
 export function applySuggestion(
   input: string,
   result: SuggestResult,
   item: Suggestion,
 ): { next: string; caret: number } {
   const [start, end] = result.replaceRange;
-  // Field suggestions already include the colon; value suggestions get a trailing
-  // space so the user can immediately type the next token.
-  const trail = result.kind === 'value' ? ' ' : '';
+  const wantsSpace = result.kind === 'value' || item.complete === true;
+  const trail = wantsSpace ? ' ' : '';
   const inserted = item.insert + trail;
   const next = input.slice(0, start) + inserted + input.slice(end);
   return { next, caret: start + inserted.length };
