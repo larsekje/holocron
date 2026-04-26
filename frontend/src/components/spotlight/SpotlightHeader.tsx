@@ -1,21 +1,18 @@
 import React from 'react';
-import { Box, HStack, Icon, IconButton, Input, Kbd, Tag, TagCloseButton, TagLabel, Wrap, WrapItem } from '@chakra-ui/react';
-import { FiArrowDown, FiArrowUp, FiMinus, FiSearch } from 'react-icons/fi';
+import { HStack, Icon, Input, Kbd, Wrap, WrapItem, Tag, TagCloseButton, TagLabel, Box } from '@chakra-ui/react';
+import { FiSearch } from 'react-icons/fi';
 import type { SpotlightEntityType } from '@/state/spotlightStore';
 import type { Token } from '@/data/spotlightQuery';
 
-export interface ChipTokenView {
-  token: Token;
-  sort: 'asc' | 'desc' | null;
-}
-
 interface SpotlightHeaderProps {
-  /** Committed token chips (parsed + sort role from the parent). */
-  chipTokens: ChipTokenView[];
+  /** Committed token chips (parsed from `chips` state in the parent). */
+  chipTokens: Token[];
   onChipRemove: (index: number) => void;
   onChipClick: (index: number) => void;
-  /** Cycle a chip's sort role (none → default → opposite → none). */
-  onChipArrow: (index: number) => void;
+  /** Click on the sort arrow inside a numeric filter chip. */
+  onChipSortToggle: (index: number) => void;
+  /** Currently active sort, anchored on a chip's field. */
+  activeSort: { field: string; direction: 'asc' | 'desc' } | null;
   /** Freeform residual text — what the user is currently typing. */
   residual: string;
   onResidualChange: (value: string, caret: number) => void;
@@ -45,21 +42,45 @@ const labelFor: Partial<Record<SpotlightEntityType, string>> = {
   quality: 'Qualities',
 };
 
-// How a token reads inside its chip body. Type-scope hides the empty value
-// half; order tokens (`:high` / `:low`) show their semantic name; everything
-// else shows the operator + value.
+// How a token should read inside its chip — value half is hidden for
+// type-scope tokens.
 function chipLabel(t: Token): string {
   if (t.fieldDef.kind === 'type-scope') return `${t.field}:`;
-  if (t.order) return `${t.field}:${t.value}`;
   const op = t.op === '=' ? '' : t.op;
   return `${t.field}:${op}${t.value}`;
 }
+
+// The clickable sort arrow on a numeric filter chip. Three states: inactive
+// (`–`, low contrast), active asc (`↑`), active desc (`↓`).
+const SortArrow: React.FC<{ state: 'asc' | 'desc' | 'none'; onClick: () => void }> = ({ state, onClick }) => {
+  const glyph = state === 'asc' ? '↑' : state === 'desc' ? '↓' : '–';
+  return (
+    <Box
+      as="button"
+      onClick={(e: React.MouseEvent) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      px={1}
+      mr={0.5}
+      fontFamily="mono"
+      fontSize="xs"
+      fontWeight="bold"
+      color={state === 'none' ? 'gray.500' : 'orange.300'}
+      _hover={{ color: state === 'none' ? 'gray.300' : 'orange.200' }}
+      title={state === 'none' ? 'Sort by this field' : 'Click to toggle direction'}
+    >
+      {glyph}
+    </Box>
+  );
+};
 
 const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
   chipTokens,
   onChipRemove,
   onChipClick,
-  onChipArrow,
+  onChipSortToggle,
+  activeSort,
   residual,
   onResidualChange,
   onInputKeyDown,
@@ -81,54 +102,27 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
         <Icon as={FiSearch} color="gray.300" boxSize={5} />
         {chipTokens.length > 0 && (
           <HStack spacing={1.5} flexShrink={0}>
-            {chipTokens.map((c, i) => {
-              const t = c.token;
-              const sortable = t.fieldDef.kind === 'numeric';
-              const sortIcon = c.sort === 'desc' ? FiArrowDown : c.sort === 'asc' ? FiArrowUp : FiMinus;
-              const sortColor = c.sort ? 'orange.300' : 'gray.500';
+            {chipTokens.map((t, i) => {
+              const isNumericFilter = t.fieldDef.kind === 'numeric';
+              const isSorted = isNumericFilter && activeSort?.field === t.fieldDef.name;
+              const sortState: 'asc' | 'desc' | 'none' = isSorted
+                ? activeSort!.direction
+                : 'none';
               return (
                 <Tag
                   key={`${i}-${t.field}-${t.value}`}
                   size="sm"
-                  colorScheme={c.sort ? 'orange' : 'purple'}
+                  colorScheme={isSorted ? 'orange' : 'purple'}
                   variant="subtle"
                   borderRadius="md"
+                  cursor="pointer"
+                  onClick={() => onChipClick(i)}
+                  title="Click to edit"
                 >
-                  <TagLabel
-                    fontFamily="mono"
-                    fontSize="xs"
-                    cursor="pointer"
-                    onClick={() => onChipClick(i)}
-                    title="Click to edit"
-                  >
-                    {chipLabel(t)}
-                  </TagLabel>
-                  {sortable && (
-                    <IconButton
-                      aria-label={
-                        c.sort
-                          ? `Sort by ${t.field} ${c.sort === 'desc' ? 'descending' : 'ascending'} (click to cycle)`
-                          : `Sort by ${t.field}`
-                      }
-                      title={
-                        c.sort
-                          ? `Sort by ${t.field} ${c.sort === 'desc' ? 'descending' : 'ascending'} — click to cycle`
-                          : `Click to sort by ${t.field}`
-                      }
-                      icon={<Icon as={sortIcon} boxSize={2.5} />}
-                      size="xs"
-                      variant="ghost"
-                      minW="18px"
-                      h="18px"
-                      ml={1}
-                      px={0}
-                      color={sortColor}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onChipArrow(i);
-                      }}
-                    />
+                  {isNumericFilter && (
+                    <SortArrow state={sortState} onClick={() => onChipSortToggle(i)} />
                   )}
+                  <TagLabel fontFamily="mono" fontSize="xs">{chipLabel(t)}</TagLabel>
                   <TagCloseButton
                     onClick={(e) => {
                       e.stopPropagation();

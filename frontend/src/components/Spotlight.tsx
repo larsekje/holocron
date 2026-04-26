@@ -5,61 +5,30 @@ import { useSpotlightStore } from '@/state/spotlightStore';
 import type { SpotlightResult, SpotlightDetail, SpotlightEntityType } from '@/state/spotlightStore';
 import { searchIndex, getDetail, browseIndex, parseQuery, tokenEntityTypes } from '@/data/spotlightIndex';
 import { extractCompletedTokens } from '@/data/spotlightQuery';
-import { applySuggestion, getSuggestions } from '@/data/spotlightSuggest';
-import type { SuggestResult } from '@/data/spotlightSuggest';
 
-// A chip is a committed token plus its current sort role. Only one chip may
-// have a non-null sort across the array — that chip drives the result order.
-export type Chip = { raw: string; sort: 'asc' | 'desc' | null };
-
-function defaultSortDirection(raw: string): 'asc' | 'desc' {
-  const tok = parseQuery(raw).tokens[0];
-  if (!tok) return 'desc';
-  if (tok.order === 'asc') return 'asc';   // :low
-  if (tok.order === 'desc') return 'desc'; // :high
-  if (tok.fieldDef.kind === 'numeric') {
-    if (tok.op === '<' || tok.op === '<=') return 'asc';
-    if (tok.op === '>' || tok.op === '>=') return 'desc';
-  }
+// Pick the natural sort direction for a numeric filter chip. `:high` / `>=` /
+// `>` lean towards descending (highest first); `:low` / `<` / `<=` towards
+// ascending (lowest first). Used when the user activates the arrow on a chip
+// that wasn't explicitly typed with a sort direction.
+function defaultSortDirectionFor(rawChip: string): 'asc' | 'desc' | null {
+  const t = parseQuery(rawChip).tokens[0];
+  if (!t || t.fieldDef.kind !== 'numeric') return null;
+  const v = t.value.toLowerCase();
+  if (v === 'high') return 'desc';
+  if (v === 'low') return 'asc';
+  if (t.op === '>' || t.op === '>=') return 'desc';
+  if (t.op === '<' || t.op === '<=') return 'asc';
   return 'desc';
 }
 
-// When committing new chip raws to the existing chip array, auto-promote any
-// `:high` / `:low` chip to the active sort (and clear sort on the rest).
-function commitChips(prev: Chip[], incomingRaws: string[]): Chip[] {
-  let anyExplicit = false;
-  const newChips: Chip[] = incomingRaws.map((raw) => {
-    const tok = parseQuery(raw).tokens[0];
-    if (
-      tok?.order &&
-      (tok.value.toLowerCase() === 'high' || tok.value.toLowerCase() === 'low')
-    ) {
-      anyExplicit = true;
-      return { raw, sort: tok.order };
-    }
-    return { raw, sort: null };
-  });
-  const base = anyExplicit ? prev.map((c) => ({ ...c, sort: null })) : prev;
-  return [...base, ...newChips];
+// Field name (canonical) for a chip if it's a numeric filter; null otherwise.
+function numericFieldOf(rawChip: string): string | null {
+  const t = parseQuery(rawChip).tokens[0];
+  if (!t || t.fieldDef.kind !== 'numeric' || t.order) return null;
+  return t.fieldDef.name;
 }
-
-// Cycle a single chip's arrow: none → default direction → opposite → none.
-// Setting any chip to a non-null sort clears every other chip's sort.
-function cycleChipSort(chips: Chip[], index: number): Chip[] {
-  const target = chips[index];
-  if (!target) return chips;
-  const def = defaultSortDirection(target.raw);
-  const opp = def === 'asc' ? 'desc' : 'asc';
-  let next: 'asc' | 'desc' | null;
-  if (target.sort === null) next = def;
-  else if (target.sort === def) next = opp;
-  else next = null;
-  return chips.map((c, i) => {
-    if (i === index) return { ...c, sort: next };
-    if (next !== null) return { ...c, sort: null };
-    return c;
-  });
-}
+import { applySuggestion, getSuggestions } from '@/data/spotlightSuggest';
+import type { SuggestResult } from '@/data/spotlightSuggest';
 import SpotlightHeader from './spotlight/SpotlightHeader';
 import SpotlightResults from './spotlight/SpotlightResults';
 import SpotlightDetailPane from './spotlight/SpotlightDetailPane';
@@ -72,10 +41,8 @@ const RESULT_ROW_HEIGHT = 48;
 const Spotlight: React.FC = () => {
   const { isOpen, open, close } = useSpotlightStore();
   // The input value holds only freeform residual text. Committed tokens live in
-  // `chips` so the input never visually duplicates what's already a chip. Each
-  // chip carries its own optional sort role (asc / desc / null) so the user
-  // can promote any numeric filter to the active order-by via its arrow.
-  const [chips, setChips] = useState<Chip[]>([]);
+  // `chips` so the input never visually duplicates what's already a chip.
+  const [chips, setChips] = useState<string[]>([]);
   const [residual, setResidual] = useState('');
   const [results, setResults] = useState<SpotlightResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -103,6 +70,11 @@ const Spotlight: React.FC = () => {
 
   // Help overlay (`?`)
   const [helpOpen, setHelpOpen] = useState(false);
+
+  // Single active sort, anchored to a chip's field. Cleared when that chip is
+  // removed. When the user picks `:high` / `:low`, the new chip auto-claims
+  // the active sort with its natural direction.
+  const [activeSort, setActiveSort] = useState<{ field: string; direction: 'asc' | 'desc' } | null>(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -148,25 +120,19 @@ const Spotlight: React.FC = () => {
       setSuggest(null);
       setSuggestIndex(0);
       setHelpOpen(false);
+      setActiveSort(null);
     }
   }, [isOpen]);
 
-  // The full search string is just chips followed by residual freeform text.
-  const fullQuery = useMemo(
-    () => [chips.map((c) => c.raw).join(' '), residual].filter((s) => s.length > 0).join(' '),
-    [chips, residual],
-  );
-
-  // Whichever chip currently owns the sort, if any. Passed to searchIndex so
-  // results sort by that chip's field — supersedes any parsed `:high`/`:low`
-  // direction since the user can override via the arrow toggle.
-  const activeSort = useMemo(() => {
-    const c = chips.find((c) => c.sort != null);
-    if (!c) return null;
-    const tok = parseQuery(c.raw).tokens[0];
-    if (!tok) return null;
-    return { fieldName: tok.field, direction: c.sort as 'asc' | 'desc' };
-  }, [chips]);
+  // Compose the full search string. `activeSort` is appended as a synthetic
+  // `field:asc` / `field:desc` token so searchIndex sorts accordingly without
+  // chips having to encode order in their text.
+  const fullQuery = useMemo(() => {
+    const parts: string[] = [...chips];
+    if (activeSort) parts.push(`${activeSort.field}:${activeSort.direction}`);
+    if (residual) parts.push(residual);
+    return parts.join(' ');
+  }, [chips, activeSort, residual]);
 
   // Debounced search (when query present) or browse (when empty)
   useEffect(() => {
@@ -184,7 +150,7 @@ const Spotlight: React.FC = () => {
     setLoading(true);
     const handle = setTimeout(() => {
       try {
-        const data = searchIndex(q, activeSort);
+        const data = searchIndex(q);
         setResults(data);
         setSelectedIndex(0);
         // Don't load detail here; wait until after filtering to pick first visible
@@ -197,7 +163,7 @@ const Spotlight: React.FC = () => {
     }, 150);
 
     return () => clearTimeout(handle);
-  }, [fullQuery, isOpen, includedTypes, activeSort]);
+  }, [fullQuery, isOpen, includedTypes]);
 
   // Type-scope tokens (in chips OR residual) take precedence over the chip
   // filter for the duration of that search, so e.g. having an `adv:` chip
@@ -205,16 +171,12 @@ const Spotlight: React.FC = () => {
   const parsed = useMemo(() => parseQuery(fullQuery), [fullQuery]);
   const hasTypeScope = useMemo(() => tokenEntityTypes(parsed.tokens).size > 0, [parsed.tokens]);
 
-  // Parsed Token + sort info for each chip — used by the header to render
-  // chip labels and arrow toggles.
+  // Parsed Token for each chip — used purely for chip rendering.
   const chipTokens = useMemo(
     () =>
       chips
-        .map((c) => {
-          const tok = parseQuery(c.raw).tokens[0];
-          return tok ? { token: tok, sort: c.sort } : null;
-        })
-        .filter((x): x is { token: NonNullable<ReturnType<typeof parseQuery>['tokens'][0]>; sort: 'asc' | 'desc' | null } => x !== null),
+        .map((raw) => parseQuery(raw).tokens[0])
+        .filter((t): t is NonNullable<typeof t> => !!t),
     [chips],
   );
 
@@ -332,11 +294,25 @@ const Spotlight: React.FC = () => {
   // changes via a single useEffect below — the various edit handlers below
   // just update those state pieces and let the effect refresh the popup.
 
+  // When new chips commit, auto-claim the active sort if any of them is a
+  // `:high` / `:low` quartile filter — that's the user's clearest signal of
+  // sort intent. Other filter chips don't auto-sort.
+  const claimSortFromIncoming = (incoming: string[]) => {
+    for (const raw of incoming) {
+      const t = parseQuery(raw).tokens[0];
+      if (!t || t.fieldDef.kind !== 'numeric') continue;
+      const v = t.value.toLowerCase();
+      if (v === 'high') return setActiveSort({ field: t.fieldDef.name, direction: 'desc' });
+      if (v === 'low') return setActiveSort({ field: t.fieldDef.name, direction: 'asc' });
+    }
+  };
+
   const handleResidualChange = (value: string, c: number) => {
     setPendingDelete(null);
     const { committed, remaining, remainingCaret } = extractCompletedTokens(value, c);
     if (committed.length > 0) {
-      setChips((prev) => commitChips(prev, committed));
+      setChips((prev) => [...prev, ...committed]);
+      claimSortFromIncoming(committed);
       setResidual(remaining);
       setCaret(remainingCaret);
       requestAnimationFrame(() => {
@@ -350,18 +326,44 @@ const Spotlight: React.FC = () => {
   };
 
   const handleChipRemove = (index: number) => {
+    const removedField = numericFieldOf(chips[index] || '');
     setChips((prev) => prev.filter((_, i) => i !== index));
+    if (removedField && activeSort?.field === removedField) {
+      setActiveSort(null);
+    }
   };
 
-  // Click the chip body → pull the field-only form back into the input so the
-  // popup re-opens with that field's full value menu. (Direction toggling is
-  // handled separately by the chip's arrow button.)
+  // Click the arrow indicator on a numeric filter chip. Cycle: inactive →
+  // default direction → opposite → cleared. Only one chip can be sorted at a
+  // time, so activating one clears the others.
+  const handleChipSortToggle = (index: number) => {
+    const chip = chips[index];
+    if (!chip) return;
+    const field = numericFieldOf(chip);
+    if (!field) return;
+    const def = defaultSortDirectionFor(chip) ?? 'desc';
+    if (!activeSort || activeSort.field !== field) {
+      setActiveSort({ field, direction: def });
+      return;
+    }
+    if (activeSort.direction === def) {
+      setActiveSort({ field, direction: def === 'desc' ? 'asc' : 'desc' });
+      return;
+    }
+    setActiveSort(null);
+  };
+
+  // Click the chip body → strip the value half and put it back into the input
+  // so the popup opens with that field's full value menu. (The arrow indicator
+  // is its own click target; see handleChipSortToggle.)
   const handleChipClick = (index: number) => {
     const chip = chips[index];
     if (!chip) return;
+    const removedField = numericFieldOf(chip);
     setChips((prev) => prev.filter((_, i) => i !== index));
-    const colon = chip.raw.indexOf(':');
-    const fieldOnly = colon >= 0 ? chip.raw.slice(0, colon + 1) : chip.raw;
+    if (removedField && activeSort?.field === removedField) setActiveSort(null);
+    const colon = chip.indexOf(':');
+    const fieldOnly = colon >= 0 ? chip.slice(0, colon + 1) : chip;
     const newResidual = residual ? `${fieldOnly} ${residual}` : fieldOnly;
     const caretAt = fieldOnly.length;
     setResidual(newResidual);
@@ -372,12 +374,6 @@ const Spotlight: React.FC = () => {
     });
   };
 
-  // Click the chip's arrow → cycle that chip's sort role (none → default →
-  // opposite → none). Setting any chip's sort clears every other chip's sort.
-  const handleChipArrow = (index: number) => {
-    setChips((prev) => cycleChipSort(prev, index));
-  };
-
   const acceptSuggestion = () => {
     if (!suggest || suggest.items.length === 0) return;
     const item = suggest.items[suggestIndex];
@@ -385,7 +381,8 @@ const Spotlight: React.FC = () => {
     setPendingDelete(null);
     const { committed, remaining, remainingCaret } = extractCompletedTokens(next, nextCaret);
     if (committed.length > 0) {
-      setChips((prev) => commitChips(prev, committed));
+      setChips((prev) => [...prev, ...committed]);
+      claimSortFromIncoming(committed);
       setResidual(remaining);
       setCaret(remainingCaret);
       requestAnimationFrame(() => {
@@ -445,7 +442,7 @@ const Spotlight: React.FC = () => {
       if (caretAtStart && residual === '' && chips.length > 0) {
         e.preventDefault();
         const lastIdx = chips.length - 1;
-        const raw = chips[lastIdx].raw;
+        const raw = chips[lastIdx];
         setChips((prev) => prev.slice(0, -1));
         const colon = raw.indexOf(':');
         const fieldOnly = colon >= 0 ? raw.slice(0, colon + 1) : raw;
@@ -474,7 +471,7 @@ const Spotlight: React.FC = () => {
       setSuggestIndex(0);
       return;
     }
-    setSuggest(getSuggestions(residual, caret, chipTokens.map((c) => c.token)));
+    setSuggest(getSuggestions(residual, caret, chipTokens));
     setSuggestIndex(0);
   }, [residual, caret, chipTokens, isOpen]);
 
@@ -515,7 +512,8 @@ const Spotlight: React.FC = () => {
               chipTokens={chipTokens}
               onChipRemove={handleChipRemove}
               onChipClick={handleChipClick}
-              onChipArrow={handleChipArrow}
+              onChipSortToggle={handleChipSortToggle}
+              activeSort={activeSort}
               residual={residual}
               onResidualChange={handleResidualChange}
               onInputKeyDown={handleInputKeyDown}

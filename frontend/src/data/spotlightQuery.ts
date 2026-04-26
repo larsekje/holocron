@@ -201,23 +201,20 @@ export interface Token {
   value: string;            // empty for type-scope tokens
   range: [number, number];  // [start, end) into the original input string
   raw: string;              // the exact input slice that produced this token
-  // When set, this token sorts the result list. `:asc` / `:desc`.
+  // When set, this token doesn't filter — it sorts the result list. Triggered
+  // by `<numeric>:low` / `:high` / `:asc` / `:desc`.
   order?: 'asc' | 'desc';
-  // When set, this token filters the result list to the top/bottom quartile
-  // of the field's contextual distribution. `:high` / `:low`.
-  bucket?: 'high' | 'low';
 }
 
-const SORT_VALUES: Record<string, 'asc' | 'desc'> = {
+// Pure-sort shorthand: `field:asc` / `field:desc` only. `:high` and `:low`
+// remain as filter values (top / bottom quartile) — sorting is tracked
+// separately via UI activeSort state, so only one chip carries an arrow
+// indicator at a time.
+const ORDER_VALUES: Record<string, 'asc' | 'desc'> = {
   asc: 'asc',
   ascending: 'asc',
   desc: 'desc',
   descending: 'desc',
-};
-
-const BUCKET_VALUES: Record<string, 'high' | 'low'> = {
-  high: 'high',
-  low: 'low',
 };
 
 export interface ParsedQuery {
@@ -258,11 +255,10 @@ export function parseQuery(input: string): ParsedQuery {
       continue;
     }
     const after = chunk.slice(colon + 1);
-    const lower = after.toLowerCase();
 
-    // Sort shorthand on a numeric field: `:asc` / `:desc`.
-    const sortDir = SORT_VALUES[lower];
-    if (sortDir && fieldDef.kind === 'numeric') {
+    // Order shorthand: `<numeric>:low` / `:high` / `:asc` / `:desc`.
+    const orderDir = ORDER_VALUES[after.toLowerCase()];
+    if (orderDir && fieldDef.kind === 'numeric') {
       tokens.push({
         field: fieldDef.name,
         fieldDef,
@@ -270,24 +266,7 @@ export function parseQuery(input: string): ParsedQuery {
         value: after,
         range: [start, end],
         raw: chunk,
-        order: sortDir,
-      });
-      continue;
-    }
-
-    // Bucket shorthand on a numeric field: `:high` / `:low` — filters to
-    // top / bottom quartile (sort is a separate concern; pair with `:desc` /
-    // `:asc` if you also want ordering).
-    const bucket = BUCKET_VALUES[lower];
-    if (bucket && fieldDef.kind === 'numeric') {
-      tokens.push({
-        field: fieldDef.name,
-        fieldDef,
-        op: '=',
-        value: after,
-        range: [start, end],
-        raw: chunk,
-        bucket,
+        order: orderDir,
       });
       continue;
     }
@@ -350,16 +329,18 @@ function asStringArray(v: any): string[] {
   return [];
 }
 
-// Single token against a single index entry. Order/bucket tokens are not
-// evaluated here:
-//   - order tokens (`:asc`/`:desc`) only sort, they pass through.
-//   - bucket tokens (`:high`/`:low`) filter to the top/bottom quartile, but
-//     the threshold depends on the active filter context, so searchIndex
-//     applies them in a second pass with full context awareness.
+// Single token against a single index entry. `:high` / `:low` filter values on
+// numeric fields are not filtered here — searchIndex applies them in pass 2
+// with context-aware quartile thresholds (so e.g. "high wounds" among
+// nemeses uses the nemesis distribution).
 export function evaluateToken(entry: any, t: Token): boolean {
-  if (t.order || t.bucket) return true;
+  if (t.order) return true;
   const def = t.fieldDef;
   const detail = entry?.detail ?? {};
+  if (def.kind === 'numeric') {
+    const lv = t.value.toLowerCase();
+    if (lv === 'high' || lv === 'low') return true;
+  }
 
   // Type-scope: filter strictly by entity type.
   if (def.kind === 'type-scope') {
@@ -426,11 +407,6 @@ export function orderTokens(tokens: Token[]): Token[] {
   return tokens.filter((t) => !!t.order);
 }
 
-// Pull just the bucket tokens — used by searchIndex to apply quartile filters.
-export function bucketTokens(tokens: Token[]): Token[] {
-  return tokens.filter((t) => !!t.bucket);
-}
-
 // ---------------------------------------------------------------------------
 // Per-field numeric stats (min, max, 25th/50th/75th percentile). Used to
 // decide what `:high` / `:low` mean for a given field. Stats are *contextual*:
@@ -459,19 +435,17 @@ const _percentile = (sorted: number[], q: number): number => {
 };
 
 // Compute stats for a numeric field across whichever subset of the index
-// matches the supplied filter tokens. Order/bucket tokens are ignored because
-// they're applied in a second pass; including them here would create a
-// chicken-and-egg between thresholds and the filter that depends on them.
+// matches the supplied filter tokens. Order tokens are ignored because they
+// don't filter; the `:high`/`:low` quartile filter is applied at searchIndex
+// level, not here.
 export function computeNumericStats(
   fieldName: string,
   filterTokens: Token[] = [],
 ): NumericStats | undefined {
   const def = FIELD_BY_NAME.get(fieldName);
   if (!def || def.kind !== 'numeric' || !def.detailPath) return undefined;
-  // Don't let the field's own tokens influence its own thresholds.
-  const others = filterTokens.filter(
-    (t) => !t.order && !t.bucket && t.field !== def.name,
-  );
+  // Don't let the field's own filter tokens influence its own thresholds.
+  const others = filterTokens.filter((t) => !t.order && t.field !== def.name);
   const values: number[] = [];
   for (const e of _allIndexEntries) {
     if (def.appliesTo && !def.appliesTo.includes(e.type as SpotlightEntityType)) continue;
