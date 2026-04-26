@@ -916,7 +916,7 @@
     "traits": [
       "Politician"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Lasan Honour Guard",
@@ -14955,7 +14955,7 @@
       "Force User",
       "Ace Pilot"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Savage Opress",
@@ -30543,7 +30543,7 @@
       "Force User",
       "Ace Pilot"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Commander Jun Sato",
@@ -31917,7 +31917,7 @@
     "traits": [
       "Politician"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "DTS-Series Dismantler droid",
@@ -46094,7 +46094,7 @@
       "Brawler",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Irrica the Hutt",
@@ -47284,7 +47284,7 @@
       "Brawler",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Stormtrooper: Cavetrooper",
@@ -47613,7 +47613,7 @@
       "Force User",
       "Ace Pilot"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Barriss Offee (Fallen)",
@@ -47738,7 +47738,7 @@
       "Politician",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Clone Trooper (Rival)",
@@ -48064,7 +48064,7 @@
       "Politician",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Jango Fett",
@@ -48292,7 +48292,7 @@
       "Politician",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Qui-Gon Jinn",
@@ -48499,7 +48499,7 @@
       "Brawler",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Sebulba",
@@ -49054,7 +49054,7 @@
       "Force User",
       "Ace Pilot"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Brother Viscus",
@@ -49631,7 +49631,7 @@
       "Force User",
       "Ace Pilot"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Barriss Offee",
@@ -51626,7 +51626,7 @@
       "Politician",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Oppo Rancisis",
@@ -56414,7 +56414,7 @@
       "Persistent Pest",
       "Politician"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Naboo Queen",
@@ -57276,7 +57276,7 @@
     "traits": [
       "Sniper"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Onderon Rebel Veteran",
@@ -59984,7 +59984,7 @@
     "traits": [
       "Politician"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Bric",
@@ -60547,7 +60547,7 @@
       "Sniper",
       "Brawler"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Clone Commander",
@@ -63093,7 +63093,7 @@
     "traits": [
       "Politician"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Senate Guard Captain",
@@ -63491,7 +63491,7 @@
       "Persistent Pest",
       "Brawler"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "C-21 Highsinger",
@@ -63772,7 +63772,7 @@
       "Sniper",
       "Brawler"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Derrown",
@@ -64166,7 +64166,7 @@
       "Persistent Pest",
       "Politician"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Ziro the Hutt",
@@ -64910,7 +64910,7 @@
       "Persistent Pest",
       "Brawler"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "Sugi",
@@ -65253,7 +65253,7 @@
       "Politician",
       "Force User"
     ],
-    "named": false
+    "named": true
   },
   {
     "name": "B1 Heavy Weapons Droid",
@@ -94970,7 +94970,7 @@
       "Droid"
     ],
     "traits": [],
-    "named": false
+    "named": true
   },
   {
     "name": "Launch Pad Guards",

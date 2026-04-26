@@ -53,7 +53,9 @@ async function main() {
 
   for (const adv of adversaries) {
     if (!adv?.name) continue;
-    const lookup = labelMap.get(adv.name);
+    // Source names also occasionally carry the " (Variant)" suffix
+    // (e.g. "Ahsoka Tano (Fulcrum)"), so try the bare form too.
+    const lookup = labelMap.get(adv.name) ?? labelMap.get(stripSuffix(adv.name));
     if (!lookup) {
       unmatched++;
       continue;

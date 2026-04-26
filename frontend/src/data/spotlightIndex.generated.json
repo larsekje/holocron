@@ -945,7 +945,7 @@
       "type": "adversary",
       "name": "Lando Calrissian (Allies and Adversaries)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 3,
@@ -1015,7 +1015,7 @@
       "gambler",
       "character:Lando"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_lasan-honour-guard",
@@ -16801,7 +16801,7 @@
       "type": "adversary",
       "name": "Maul (CotR)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 4,
         "Agility": 5,
@@ -16922,7 +16922,7 @@
       "book:cotr",
       "shadow collective"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_savage-opress",
@@ -34360,7 +34360,7 @@
       "name": "Ahsoka Tano (Fulcrum)",
       "description": "Ahsoka Tano is one of the rarest individuals in the galaxy: a nearly fully trained Jedi who escaped Order 66 and years of pursuit by Imperial Inquisitors and agents. The one-time Padawan of Anakin Skywalker left the Jedi Order when she lost faith in its actions after she was wrongfully suspected of a terrorist act. After Order 66, she tried to hide herself in the Outer Rim and no longer considered herself a Jedi. Her desire to help eventually re-emerged, drawing the attention of both the Empire and Bail Organa. Though she followed her own path, she also became Organa’s agent, codenamed Fulcrum. She was instrumental in growing the rebellion, until she discovered Darth Vader’s true identity. Their confrontation on Malachor, though, may have possibly been her final battle.",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 4,
@@ -34461,7 +34461,7 @@
       "species:Togruta",
       "character:Ahsoka"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_commander-jun-sato",
@@ -35910,7 +35910,7 @@
       "type": "adversary",
       "name": "Lando Calrissian (Dawn of Rebellion)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 3,
@@ -35978,7 +35978,7 @@
       "gambler",
       "character:Lando"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_dts-series-dismantler-droid",
@@ -52135,7 +52135,7 @@
       "name": "Jerserra (Early)",
       "description": "It’s been many years since she left Dathomir, but Jerserra never forgot the legends of the Nardithi. Through her recent Force visions from the shard she possesses, she feels sure that finally she has found a link that will reveal the resting place of the lost cluster.",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 4,
         "Agility": 3,
@@ -52233,7 +52233,7 @@
       "force sensitive",
       "darkside"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_irrica-the-hutt",
@@ -53471,7 +53471,7 @@
       "type": "adversary",
       "name": "Jerserra (Late)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 4,
         "Agility": 3,
@@ -53574,7 +53574,7 @@
       "force sensitive",
       "darkside"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_stormtrooper-cavetrooper",
@@ -53874,7 +53874,7 @@
       "type": "adversary",
       "name": "Anakin Skywalker (Child)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 1,
         "Agility": 2,
@@ -53948,7 +53948,7 @@
       "location:Tatooine",
       "character:Anakin"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_barriss-offee-fallen",
@@ -53959,7 +53959,7 @@
       "type": "adversary",
       "name": "Barriss Offee (Fallen)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 4,
@@ -54082,7 +54082,7 @@
       "species:Mirialan",
       "character:Barriss Offee"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_clone-trooper-rival",
@@ -54335,7 +54335,7 @@
       "type": "adversary",
       "name": "Dooku (Jedi Master)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -54435,7 +54435,7 @@
       "jedi",
       "character:Dooku"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_jango-fett",
@@ -54588,7 +54588,7 @@
       "type": "adversary",
       "name": "Obi-Wan Kenobi (Padawan)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -54681,7 +54681,7 @@
       "jedi",
       "character:Obi-Wan"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_qui-gon-jinn",
@@ -54813,7 +54813,7 @@
       "type": "adversary",
       "name": "Savage Opress (Natural)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -54906,7 +54906,7 @@
       "species:Zabrak",
       "character:Savage Opress"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_sebulba",
@@ -55376,7 +55376,7 @@
       "type": "adversary",
       "name": "Maul (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 4,
         "Agility": 5,
@@ -55515,7 +55515,7 @@
       "species:Cyborg",
       "character:Maul"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_brother-viscus",
@@ -56029,7 +56029,7 @@
       "type": "adversary",
       "name": "Anakin Skywalker (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 4,
         "Agility": 4,
@@ -56146,7 +56146,7 @@
       "force sensitive",
       "character:Anakin"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_barriss-offee",
@@ -58208,7 +58208,7 @@
       "type": "adversary",
       "name": "Obi-Wan Kenobi (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -58312,7 +58312,7 @@
       "force sensitive",
       "character:Obi-Wan"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_oppo-rancisis",
@@ -63527,7 +63527,7 @@
       "type": "adversary",
       "name": "Darth Bane (Apparition)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 4,
         "Agility": 4,
@@ -63613,7 +63613,7 @@
       "source:Heroes on Both Sides",
       "location:Moraband"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_naboo-queen",
@@ -64459,7 +64459,7 @@
       "type": "adversary",
       "name": "Saw Gerrera (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -64565,7 +64565,7 @@
       "rebel alliance",
       "character:Saw"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_onderon-rebel-veteran",
@@ -67514,7 +67514,7 @@
       "type": "adversary",
       "name": "Bail Organa (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 2,
@@ -67588,7 +67588,7 @@
       "senator",
       "character:Bail Organa"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_bric",
@@ -68123,7 +68123,7 @@
       "type": "adversary",
       "name": "Wrecker (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 5,
         "Agility": 3,
@@ -68205,7 +68205,7 @@
       "clone trooper",
       "bad batch"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_clone-commander",
@@ -70995,7 +70995,7 @@
       "type": "adversary",
       "name": "Mon Mothma (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 3,
@@ -71066,7 +71066,7 @@
       "senator",
       "character:Mon Mothma"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_senate-guard-captain",
@@ -71417,7 +71417,7 @@
       "type": "adversary",
       "name": "Boba Fett (Child)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 3,
@@ -71509,7 +71509,7 @@
       "bounty hunter",
       "character:Boba Fett"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_c-21-highsinger",
@@ -71718,7 +71718,7 @@
       "type": "adversary",
       "name": "Dengar (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -71817,7 +71817,7 @@
       "bounty hunter",
       "character:Dengar"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_derrown",
@@ -72150,7 +72150,7 @@
       "type": "adversary",
       "name": "Hondo Ohnaka (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 2,
         "Agility": 3,
@@ -72247,7 +72247,7 @@
       "species:Weequay",
       "pirate"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_ziro-the-hutt",
@@ -72980,7 +72980,7 @@
       "type": "adversary",
       "name": "Seripas (Armoured)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 5,
         "Agility": 2,
@@ -73072,7 +73072,7 @@
       "bounty hunter",
       "character:Seripas"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_sugi",
@@ -73332,7 +73332,7 @@
       "type": "adversary",
       "name": "Count Dooku (HoBS)",
       "adversaryType": "Nemesis",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -73451,7 +73451,7 @@
       "sith",
       "character:Dooku"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_b1-heavy-weapons-droid",
@@ -107413,7 +107413,7 @@
       "type": "adversary",
       "name": "BX-2R (“Toor”)",
       "adversaryType": "Rival",
-      "named": false,
+      "named": true,
       "characteristics": {
         "Brawn": 3,
         "Agility": 3,
@@ -107463,7 +107463,7 @@
       "species:Droid",
       "location:Whisper Base"
     ],
-    "named": false
+    "named": true
   },
   {
     "id": "adversary_launch-pad-guards",
