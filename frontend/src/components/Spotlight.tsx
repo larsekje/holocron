@@ -309,11 +309,13 @@ const Spotlight: React.FC = () => {
       return;
     }
     setChips((prev) => prev.filter((_, i) => i !== index));
-    // Insert the chip text into residual at the start so it's clearly the
-    // active edit target. (Skip re-adding the trailing whitespace.)
-    const newResidual = residual ? `${chip} ${residual}` : chip;
+    // Strip the value half so the popup re-opens with the full set of options
+    // for that field (otherwise the existing value acts as a prefix filter and
+    // hides every alternative). The user picks a new value from the menu.
     const colon = chip.indexOf(':');
-    const caretAt = colon >= 0 ? colon + 1 : chip.length;
+    const fieldOnly = colon >= 0 ? chip.slice(0, colon + 1) : chip;
+    const newResidual = residual ? `${fieldOnly} ${residual}` : fieldOnly;
+    const caretAt = fieldOnly.length;
     setResidual(newResidual);
     setSuggest(getSuggestions(newResidual, caretAt));
     setSuggestIndex(0);

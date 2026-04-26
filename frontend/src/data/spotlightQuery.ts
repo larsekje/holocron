@@ -422,6 +422,7 @@ export interface NumericStats {
   min: number;
   max: number;
   p25: number;
+  p50: number;
   p75: number;
 }
 
@@ -454,6 +455,7 @@ const _allIndexEntries: Array<{ type: string; detail?: any }> = [
       min: values[0],
       max: values[values.length - 1],
       p25: percentile(values, 0.25),
+      p50: percentile(values, 0.5),
       p75: percentile(values, 0.75),
     });
   }
