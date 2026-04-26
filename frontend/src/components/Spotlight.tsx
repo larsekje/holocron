@@ -4,6 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useSpotlightStore } from '@/state/spotlightStore';
 import type { SpotlightResult, SpotlightDetail, SpotlightEntityType } from '@/state/spotlightStore';
 import { searchIndex, getDetail, browseIndex, parseQuery, tokenEntityTypes } from '@/data/spotlightIndex';
+import { extractCompletedTokens } from '@/data/spotlightQuery';
 import { applySuggestion, getSuggestions } from '@/data/spotlightSuggest';
 import type { SuggestResult } from '@/data/spotlightSuggest';
 import SpotlightHeader from './spotlight/SpotlightHeader';
@@ -17,7 +18,10 @@ const RESULT_ROW_HEIGHT = 48;
 
 const Spotlight: React.FC = () => {
   const { isOpen, open, close } = useSpotlightStore();
-  const [query, setQuery] = useState('');
+  // The input value holds only freeform residual text. Committed tokens live in
+  // `chips` so the input never visually duplicates what's already a chip.
+  const [chips, setChips] = useState<string[]>([]);
+  const [residual, setResidual] = useState('');
   const [results, setResults] = useState<SpotlightResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -78,7 +82,8 @@ const Spotlight: React.FC = () => {
       setIncludedTypes(new Set(allTypes));
     } else {
       // Reset state when closing
-      setQuery('');
+      setChips([]);
+      setResidual('');
       setResults([]);
       setSelectedIndex(0);
       setDetail(null);
@@ -90,11 +95,17 @@ const Spotlight: React.FC = () => {
     }
   }, [isOpen]);
 
+  // The full search string is just chips followed by residual freeform text.
+  const fullQuery = useMemo(
+    () => [chips.join(' '), residual].filter((s) => s.length > 0).join(' '),
+    [chips, residual],
+  );
+
   // Debounced search (when query present) or browse (when empty)
   useEffect(() => {
     if (!isOpen) return;
 
-    const q = query.trim();
+    const q = fullQuery.trim();
     if (!q) {
       // Browse first 100 items based on current filters
       const initial = browseIndex(100, Array.from(includedTypes));
@@ -119,13 +130,22 @@ const Spotlight: React.FC = () => {
     }, 150);
 
     return () => clearTimeout(handle);
-  }, [query, isOpen, includedTypes]);
+  }, [fullQuery, isOpen, includedTypes]);
 
-  // Type-scope tokens in the query string take precedence over the chip filter
-  // for the duration of that search, so e.g. typing `t:` shows talents even when
-  // the Talents chip is off. Persisted prefs are unchanged.
-  const parsed = useMemo(() => parseQuery(query), [query]);
+  // Type-scope tokens (in chips OR residual) take precedence over the chip
+  // filter for the duration of that search, so e.g. having an `adv:` chip
+  // shows adversaries even when the Adversaries chip is off.
+  const parsed = useMemo(() => parseQuery(fullQuery), [fullQuery]);
   const hasTypeScope = useMemo(() => tokenEntityTypes(parsed.tokens).size > 0, [parsed.tokens]);
+
+  // Parsed Token for each chip — used purely for chip rendering.
+  const chipTokens = useMemo(
+    () =>
+      chips
+        .map((raw) => parseQuery(raw).tokens[0])
+        .filter((t): t is NonNullable<typeof t> => !!t),
+    [chips],
+  );
 
   // Displayed results after applying type filters and the named-adversary toggle
   const displayedResults = useMemo(() => {
@@ -221,23 +241,47 @@ const Spotlight: React.FC = () => {
     [isOpen, popupOpen, suggest, displayedResults, selectedIndex]
   );
 
-  // Handle the input value/caret in one place so suggestion recomputation stays
-  // in sync with whatever the user typed or where they clicked.
-  const handleInputChange = (value: string, caret: number) => {
-    setQuery(value);
+  // Whenever the residual changes, see if any complete tokens (i.e. followed
+  // by whitespace) can be extracted and committed as chips. Then update suggest.
+  const handleResidualChange = (value: string, caret: number) => {
+    const { committed, remaining, remainingCaret } = extractCompletedTokens(value, caret);
+    if (committed.length > 0) {
+      setChips((prev) => [...prev, ...committed]);
+      setResidual(remaining);
+      setSuggest(getSuggestions(remaining, remainingCaret));
+      setSuggestIndex(0);
+      requestAnimationFrame(() => {
+        inputRef.current?.setSelectionRange(remainingCaret, remainingCaret);
+        inputRef.current?.focus();
+      });
+      return;
+    }
+    setResidual(value);
     setSuggest(getSuggestions(value, caret));
     setSuggestIndex(0);
   };
 
-  // Programmatic rewrite (chip removal, suggestion accept). Caret moves to end
-  // of new value; suggestions recompute against that caret.
-  const handleQueryReplace = (value: string) => {
-    setQuery(value);
-    setSuggest(getSuggestions(value, value.length));
+  // Removing a chip = deleting it from `chips`. Index is the position in the array.
+  const handleChipRemove = (index: number) => {
+    setChips((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Click the chip body → bring the chip's text back into the input as residual,
+  // place the caret right after `field:` so the value popup opens for editing.
+  const handleChipClick = (index: number) => {
+    const chip = chips[index];
+    if (!chip) return;
+    setChips((prev) => prev.filter((_, i) => i !== index));
+    // Insert the chip text into residual at the start so it's clearly the
+    // active edit target. (Skip re-adding the trailing whitespace.)
+    const newResidual = residual ? `${chip} ${residual}` : chip;
+    const colon = chip.indexOf(':');
+    const caretAt = colon >= 0 ? colon + 1 : chip.length;
+    setResidual(newResidual);
+    setSuggest(getSuggestions(newResidual, caretAt));
     setSuggestIndex(0);
-    // Restore caret after React commits the new value.
     requestAnimationFrame(() => {
-      inputRef.current?.setSelectionRange(value.length, value.length);
+      inputRef.current?.setSelectionRange(caretAt, caretAt);
       inputRef.current?.focus();
     });
   };
@@ -245,8 +289,22 @@ const Spotlight: React.FC = () => {
   const acceptSuggestion = () => {
     if (!suggest || suggest.items.length === 0) return;
     const item = suggest.items[suggestIndex];
-    const { next, caret } = applySuggestion(query, suggest, item);
-    setQuery(next);
+    const { next, caret } = applySuggestion(residual, suggest, item);
+    // The suggestion may have completed a token (`field:value `). Run the
+    // extractor in case it produced something that should immediately commit.
+    const { committed, remaining, remainingCaret } = extractCompletedTokens(next, caret);
+    if (committed.length > 0) {
+      setChips((prev) => [...prev, ...committed]);
+      setResidual(remaining);
+      setSuggest(getSuggestions(remaining, remainingCaret));
+      setSuggestIndex(0);
+      requestAnimationFrame(() => {
+        inputRef.current?.setSelectionRange(remainingCaret, remainingCaret);
+        inputRef.current?.focus();
+      });
+      return;
+    }
+    setResidual(next);
     setSuggest(getSuggestions(next, caret));
     setSuggestIndex(0);
     requestAnimationFrame(() => {
@@ -312,9 +370,11 @@ const Spotlight: React.FC = () => {
         <ModalBody p={0}>
           <VStack align="stretch" spacing={0}>
             <SpotlightHeader
-              query={query}
-              onInputChange={handleInputChange}
-              onQueryReplace={handleQueryReplace}
+              chipTokens={chipTokens}
+              onChipRemove={handleChipRemove}
+              onChipClick={handleChipClick}
+              residual={residual}
+              onResidualChange={handleResidualChange}
               onInputKeyDown={handleInputKeyDown}
               inputRef={inputRef}
               includedTypes={includedTypes}
@@ -330,7 +390,6 @@ const Spotlight: React.FC = () => {
               onSetNone={() => setIncludedTypes(new Set())}
               hideNamedAdversaries={hideNamedAdversaries}
               onToggleHideNamed={() => setHideNamedAdversaries((v) => !v)}
-              tokens={parsed.tokens}
             />
 
             <Box position="relative">
@@ -340,14 +399,8 @@ const Spotlight: React.FC = () => {
                   selectedIndex={suggestIndex}
                   onHover={setSuggestIndex}
                   onClick={(item) => {
-                    const { next, caret } = applySuggestion(query, suggest, item);
-                    setQuery(next);
-                    setSuggest(getSuggestions(next, caret));
-                    setSuggestIndex(0);
-                    requestAnimationFrame(() => {
-                      inputRef.current?.setSelectionRange(caret, caret);
-                      inputRef.current?.focus();
-                    });
+                    setSuggestIndex(suggest.items.indexOf(item));
+                    acceptSuggestion();
                   }}
                 />
               )}

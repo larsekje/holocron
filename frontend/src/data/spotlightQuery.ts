@@ -185,7 +185,20 @@ export interface Token {
   value: string;            // empty for type-scope tokens
   range: [number, number];  // [start, end) into the original input string
   raw: string;              // the exact input slice that produced this token
+  // When set, this token doesn't filter — it sorts the result list. Triggered
+  // by `<numeric>:low` / `:high` / `:asc` / `:desc`.
+  order?: 'asc' | 'desc';
 }
+
+// `:low` / `:high` are friendly mode shorthands for `:asc` / `:desc`.
+const ORDER_VALUES: Record<string, 'asc' | 'desc'> = {
+  low: 'asc',
+  asc: 'asc',
+  ascending: 'asc',
+  high: 'desc',
+  desc: 'desc',
+  descending: 'desc',
+};
 
 export interface ParsedQuery {
   tokens: Token[];
@@ -225,6 +238,22 @@ export function parseQuery(input: string): ParsedQuery {
       continue;
     }
     const after = chunk.slice(colon + 1);
+
+    // Order shorthand: `<numeric>:low` / `:high` / `:asc` / `:desc`.
+    const orderDir = ORDER_VALUES[after.toLowerCase()];
+    if (orderDir && fieldDef.kind === 'numeric') {
+      tokens.push({
+        field: fieldDef.name,
+        fieldDef,
+        op: '=',
+        value: after,
+        range: [start, end],
+        raw: chunk,
+        order: orderDir,
+      });
+      continue;
+    }
+
     let op: Op = '=';
     let value = after;
     const opMatch = OP_REGEX.exec(after);
@@ -283,8 +312,10 @@ function asStringArray(v: any): string[] {
   return [];
 }
 
-// Single token against a single index entry.
+// Single token against a single index entry. Order tokens are not filters —
+// they always pass.
 export function evaluateToken(entry: any, t: Token): boolean {
+  if (t.order) return true;
   const def = t.fieldDef;
   const detail = entry?.detail ?? {};
 
@@ -348,6 +379,27 @@ export function evaluate(entry: any, tokens: Token[]): boolean {
   return true;
 }
 
+// Pull just the order tokens — used by searchIndex to sort filtered results.
+export function orderTokens(tokens: Token[]): Token[] {
+  return tokens.filter((t) => !!t.order);
+}
+
+// Compare two index entries for a single order token. Returns -1/0/+1 with
+// the sign reversed for descending order. Missing values sort to the bottom.
+export function compareEntries(a: any, b: any, t: Token): number {
+  const path = t.fieldDef.detailPath || [];
+  const av = getPath(a?.detail ?? {}, path);
+  const bv = getPath(b?.detail ?? {}, path);
+  const an = asNumber(av);
+  const bn = asNumber(bv);
+  // Missing → push to the bottom regardless of direction.
+  if (an == null && bn == null) return 0;
+  if (an == null) return 1;
+  if (bn == null) return -1;
+  if (an === bn) return 0;
+  return t.order === 'desc' ? bn - an : an - bn;
+}
+
 // Convenience: return the set of entity types the type-scope tokens cover.
 // Empty set ⇒ no type-scope tokens were typed.
 export function tokenEntityTypes(tokens: Token[]): Set<SpotlightEntityType> {
@@ -368,4 +420,51 @@ export function removeTokenSlice(input: string, range: [number, number]): string
   while (trailingEnd < input.length && /\s/.test(input[trailingEnd])) trailingEnd++;
   const next = input.slice(0, start) + input.slice(trailingEnd);
   return next.replace(/\s+/g, ' ').trim();
+}
+
+// Pull complete tokens out of `input`, returning the raw token strings to commit
+// as chips and the remaining residual + caret. A token is "complete" when it's
+// followed by whitespace (or another token), AND the caret isn't sitting inside
+// it (so users can keep editing a token they're still composing).
+export function extractCompletedTokens(
+  input: string,
+  caret: number,
+): { committed: string[]; remaining: string; remainingCaret: number } {
+  const parsed = parseQuery(input);
+  if (parsed.tokens.length === 0) {
+    return { committed: [], remaining: input, remainingCaret: caret };
+  }
+  const committed: string[] = [];
+  let remaining = '';
+  let pos = 0;
+  let caretAdjusted = caret;
+  for (let idx = 0; idx < parsed.tokens.length; idx++) {
+    const t = parsed.tokens[idx];
+    const caretInside = caret >= t.range[0] && caret <= t.range[1];
+    const isLast = idx === parsed.tokens.length - 1;
+    const followedByWs = t.range[1] < input.length && /\s/.test(input[t.range[1]]);
+    if (!caretInside && (followedByWs || !isLast)) {
+      // Append everything between pos and token start to remaining.
+      const interlude = input.slice(pos, t.range[0]);
+      remaining += interlude;
+      // Push token raw to chips.
+      committed.push(input.slice(t.range[0], t.range[1]));
+      // Advance pos past the token + one whitespace if present.
+      pos = t.range[1];
+      if (pos < input.length && /\s/.test(input[pos])) pos++;
+      // If caret was after the extracted region, shift it left by the token length
+      // (plus the eaten whitespace). Approximate but close enough for typing.
+      if (caret > t.range[1]) {
+        caretAdjusted -= t.range[1] - t.range[0];
+        if (input[t.range[1]] && /\s/.test(input[t.range[1]])) caretAdjusted -= 1;
+      }
+    }
+  }
+  remaining += input.slice(pos);
+  // Normalise whitespace inside what's left.
+  const cleaned = remaining.replace(/\s+/g, ' ').replace(/^\s/, '');
+  // If we collapsed whitespace, recompute caret to "end of what was before the gap".
+  // For simplicity: clamp to bounds.
+  const remainingCaret = Math.max(0, Math.min(caretAdjusted, cleaned.length));
+  return { committed, remaining: cleaned, remainingCaret };
 }

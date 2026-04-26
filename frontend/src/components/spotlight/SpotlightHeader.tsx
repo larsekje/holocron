@@ -3,15 +3,15 @@ import { HStack, Icon, Input, Kbd, Wrap, WrapItem, Tag, TagCloseButton, TagLabel
 import { FiSearch } from 'react-icons/fi';
 import type { SpotlightEntityType } from '@/state/spotlightStore';
 import type { Token } from '@/data/spotlightQuery';
-import { removeTokenSlice } from '@/data/spotlightQuery';
 
 interface SpotlightHeaderProps {
-  query: string;
-  /** Called whenever the input value or caret moves. */
-  onInputChange: (value: string, caret: number) => void;
-  /** Called from chip-removal etc. to programmatically rewrite the input. */
-  onQueryReplace: (value: string) => void;
-  /** Forwarded to the input's onKeyDown so the parent can intercept Tab/Enter etc. */
+  /** Committed token chips (parsed from `chips` state in the parent). */
+  chipTokens: Token[];
+  onChipRemove: (index: number) => void;
+  onChipClick: (index: number) => void;
+  /** Freeform residual text — what the user is currently typing. */
+  residual: string;
+  onResidualChange: (value: string, caret: number) => void;
   onInputKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   inputRef: React.RefObject<HTMLInputElement>;
   includedTypes: Set<SpotlightEntityType>;
@@ -20,7 +20,6 @@ interface SpotlightHeaderProps {
   onSetNone: () => void;
   hideNamedAdversaries: boolean;
   onToggleHideNamed: () => void;
-  tokens: Token[];
 }
 
 const typeOrder: SpotlightEntityType[] = [
@@ -39,17 +38,21 @@ const labelFor: Partial<Record<SpotlightEntityType, string>> = {
   quality: 'Qualities',
 };
 
-// How a token should read inside its chip — value half is hidden for type-scope.
+// How a token should read inside its chip — value half is hidden for type-scope,
+// order tokens show with an arrow.
 function chipLabel(t: Token): string {
+  if (t.order) return `${t.order === 'desc' ? '↓' : '↑'} ${t.field}`;
   if (t.fieldDef.kind === 'type-scope') return `${t.field}:`;
   const op = t.op === '=' ? '' : t.op;
   return `${t.field}:${op}${t.value}`;
 }
 
 const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
-  query,
-  onInputChange,
-  onQueryReplace,
+  chipTokens,
+  onChipRemove,
+  onChipClick,
+  residual,
+  onResidualChange,
   onInputKeyDown,
   inputRef,
   includedTypes,
@@ -58,7 +61,6 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
   onSetNone,
   hideNamedAdversaries,
   onToggleHideNamed,
-  tokens,
 }) => {
   const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform || '');
   const headerBg = '#1f2226';
@@ -68,13 +70,24 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
     <Box borderBottom="1px solid" borderColor={borderCol} bg={headerBg}>
       <HStack px={4} height="50px" spacing={3}>
         <Icon as={FiSearch} color="gray.300" boxSize={5} />
-        {tokens.length > 0 && (
+        {chipTokens.length > 0 && (
           <HStack spacing={1.5} flexShrink={0}>
-            {tokens.map((t) => (
-              <Tag key={`${t.range[0]}-${t.range[1]}`} size="sm" colorScheme="purple" variant="subtle" borderRadius="md">
+            {chipTokens.map((t, i) => (
+              <Tag
+                key={`${i}-${t.field}-${t.value}`}
+                size="sm"
+                colorScheme="purple"
+                variant="subtle"
+                borderRadius="md"
+                cursor="pointer"
+                onClick={() => onChipClick(i)}
+              >
                 <TagLabel fontFamily="mono" fontSize="xs">{chipLabel(t)}</TagLabel>
                 <TagCloseButton
-                  onClick={() => onQueryReplace(removeTokenSlice(query, t.range))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChipRemove(i);
+                  }}
                   aria-label={`Remove ${t.field} filter`}
                 />
               </Tag>
@@ -84,15 +97,15 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
         <Input
           ref={inputRef as any}
           variant="unstyled"
-          placeholder="Search… try `adv: type:minion soak:>=5` or `t: grit`"
-          value={query}
+          placeholder={chipTokens.length === 0 ? 'Search… try `adv:` then `type:minion soak:high`' : ''}
+          value={residual}
           onChange={(e) => {
             const c = e.target.selectionStart ?? e.target.value.length;
-            onInputChange(e.target.value, c);
+            onResidualChange(e.target.value, c);
           }}
           onSelect={(e) => {
             const t = e.currentTarget;
-            onInputChange(t.value, t.selectionStart ?? t.value.length);
+            onResidualChange(t.value, t.selectionStart ?? t.value.length);
           }}
           onKeyDown={onInputKeyDown}
           color="gray.100"

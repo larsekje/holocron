@@ -4,7 +4,7 @@ import type {
   SpotlightEntityType,
   SpotlightResult,
 } from '@/state/spotlightStore';
-import { evaluate, parseQuery } from './spotlightQuery';
+import { compareEntries, evaluate, orderTokens, parseQuery } from './spotlightQuery';
 
 // The generator writes an array of entries of shape:
 // { id, type, name, subtitle?, tags?, detail: SpotlightDetail }
@@ -184,9 +184,24 @@ export function searchIndex(q: string): SpotlightResult[] {
   const filtered: Augmented[] =
     tokens.length > 0 ? augmentedIndex.filter((e) => evaluate(e, tokens)) : augmentedIndex;
 
+  const orderTok = orderTokens(tokens);
+  const applyOrder = (arr: Augmented[]): Augmented[] => {
+    if (orderTok.length === 0) return arr;
+    return arr.slice().sort((a, b) => {
+      for (const t of orderTok) {
+        const cmp = compareEntries(a, b, t);
+        if (cmp !== 0) return cmp;
+      }
+      return a.name.localeCompare(b.name);
+    });
+  };
+
   if (!residual) {
-    // Token-only query: alphabetical by type, then name. Lets `type:nemesis`
-    // act like a guided browse.
+    // Token-only query: order tokens win when present; otherwise alphabetical
+    // by type, then name. Lets `type:nemesis` act like a guided browse.
+    if (orderTok.length > 0) {
+      return applyOrder(filtered).slice(0, 200).map((e) => toResult(e));
+    }
     return filtered
       .slice()
       .sort((a, b) =>
@@ -210,11 +225,23 @@ export function searchIndex(q: string): SpotlightResult[] {
     },
   });
 
-  return fzResults.map((r: any) => {
+  // If order tokens are present, override fuzzysort ranking with explicit sort
+  // (preserving match indexes for highlighting).
+  const mapped = fzResults.map((r: any) => {
     const e = r.obj as Augmented;
     const nameMatch = r[0]?.indexes ? Array.from(r[0].indexes as ArrayLike<number>) : undefined;
-    return toResult(e, nameMatch);
+    return { e, nameMatch };
   });
+  if (orderTok.length > 0) {
+    mapped.sort((a, b) => {
+      for (const t of orderTok) {
+        const cmp = compareEntries(a.e, b.e, t);
+        if (cmp !== 0) return cmp;
+      }
+      return a.e.name.localeCompare(b.e.name);
+    });
+  }
+  return mapped.map(({ e, nameMatch }) => toResult(e, nameMatch));
 }
 
 // Re-export so consumers that want the parsed shape (e.g. for chip rendering)
