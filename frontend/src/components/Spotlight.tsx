@@ -11,6 +11,7 @@ import SpotlightResults from './spotlight/SpotlightResults';
 import SpotlightDetailPane from './spotlight/SpotlightDetailPane';
 import SpotlightStatusBar from './spotlight/SpotlightStatusBar';
 import SpotlightSuggestPopup from './spotlight/SpotlightSuggestPopup';
+import SpotlightHelpOverlay from './spotlight/SpotlightHelpOverlay';
 
 const RESULT_ROW_HEIGHT = 48;
 
@@ -39,6 +40,9 @@ const Spotlight: React.FC = () => {
   const [suggest, setSuggest] = useState<SuggestResult | null>(null);
   const [suggestIndex, setSuggestIndex] = useState(0);
   const popupOpen = suggest !== null && suggest.items.length > 0;
+
+  // Help overlay (`?`)
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -82,6 +86,7 @@ const Spotlight: React.FC = () => {
       setDetailLoading(false);
       setSuggest(null);
       setSuggestIndex(0);
+      setHelpOpen(false);
     }
   }, [isOpen]);
 
@@ -251,7 +256,7 @@ const Spotlight: React.FC = () => {
   };
 
   // Tab/Enter accept the highlighted suggestion when popup is open. Esc closes
-  // the popup first; only when no popup is open does Esc close the modal.
+  // the popup first, then the help overlay, and only finally lets the modal close.
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (popupOpen) {
       if (e.key === 'Tab' || e.key === 'Enter') {
@@ -266,7 +271,25 @@ const Spotlight: React.FC = () => {
         return;
       }
     }
+    if (helpOpen && e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      setHelpOpen(false);
+    }
   };
+
+  // ⌘/ (or Ctrl+/) toggles the help overlay. Avoiding `?` so users can still
+  // type a literal question mark inside descriptions.
+  useHotkeys(
+    'meta+/,ctrl+/',
+    (e) => {
+      if (!isOpen) return;
+      e.preventDefault();
+      setHelpOpen((v) => !v);
+    },
+    { enableOnFormTags: true },
+    [isOpen]
+  );
 
   // Consistent dark styling
   const cardBg = '#26292d';
@@ -357,6 +380,7 @@ const Spotlight: React.FC = () => {
 
             <SpotlightStatusBar />
           </VStack>
+          {helpOpen && <SpotlightHelpOverlay onClose={() => setHelpOpen(false)} />}
         </ModalBody>
       </ModalContent>
     </Modal>
