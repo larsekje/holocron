@@ -414,7 +414,7 @@ const Spotlight: React.FC = () => {
                 selectedIndex={selectedIndex}
                 onHoverIndex={(i) => setSelectedIndex(i)}
                 onClickResult={(r) => loadDetail(r)}
-                query={query}
+                query={fullQuery}
               />
 
               <Box w="55%" display="flex" flexDir="column">
