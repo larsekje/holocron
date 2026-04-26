@@ -116,13 +116,23 @@ const FIELD_ICON: Record<string, IconType> = {
   crit: FiAlertTriangle,
 };
 
-// Adversary tier badge — coloured by tier so Minion / Rival / Nemesis pop visually.
+// Adversary tier badge — coloured by tier so Minion / Rival / Nemesis pop
+// visually. Fixed width so it lines up vertically with type badges from
+// other entity rows.
+const TYPE_BADGE_WIDTH = '72px';
 const TierBadge: React.FC<{ tier?: string }> = ({ tier }) => {
   if (!tier) return null;
   const color =
     tier === 'Minion' ? 'gray' : tier === 'Rival' ? 'blue' : tier === 'Nemesis' ? 'red' : 'purple';
   return (
-    <Badge colorScheme={color} variant="solid" fontSize="0.65rem" textTransform="uppercase">
+    <Badge
+      colorScheme={color}
+      variant="solid"
+      fontSize="0.65rem"
+      textTransform="uppercase"
+      minW={TYPE_BADGE_WIDTH}
+      textAlign="center"
+    >
       {tier}
     </Badge>
   );
@@ -206,7 +216,6 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     const extras = extraPills(detail, hl, ['soak', 'wounds', 'strain']);
     trailing = (
       <HStack spacing={1.5} align="center">
-        <TierBadge tier={tier} />
         {archetypeLabel && (
           <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase">
             {archetypeLabel}
@@ -216,17 +225,25 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
         {extras.map((e) => (
           <StatPill key={e.key} icon={e.icon} value={e.value} highlighted title={e.key} />
         ))}
+        <TierBadge tier={tier} />
       </HStack>
     );
   } else if (r.type === 'weapon') {
     trailing = (
       <HStack spacing={1.5} align="center">
-        <Badge colorScheme="purple" variant="outline" fontSize="0.65rem" textTransform="uppercase">
-          weapon
-        </Badge>
         <StatPill icon={FiTarget} value={detail?.damage} highlighted={hl.has('damage')} title="Damage" />
         <StatPill icon={FiAlertTriangle} value={detail?.crit} highlighted={hl.has('crit')} title="Crit" />
         <StatPill icon={FiCompass} value={detail?.range} title="Range" />
+        <Badge
+          colorScheme="purple"
+          variant="outline"
+          fontSize="0.65rem"
+          textTransform="uppercase"
+          minW={TYPE_BADGE_WIDTH}
+          textAlign="center"
+        >
+          weapon
+        </Badge>
       </HStack>
     );
     if (r.subtitle) {
@@ -238,7 +255,14 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     }
   } else {
     trailing = (
-      <Badge colorScheme="purple" variant="outline" fontSize="0.65rem" textTransform="uppercase">
+      <Badge
+        colorScheme="purple"
+        variant="outline"
+        fontSize="0.65rem"
+        textTransform="uppercase"
+        minW={TYPE_BADGE_WIDTH}
+        textAlign="center"
+      >
         {r.type}
       </Badge>
     );
