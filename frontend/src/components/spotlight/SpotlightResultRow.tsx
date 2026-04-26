@@ -178,23 +178,41 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
   if (r.type === 'adversary') {
     const derived = (detail as any)?.derived || {};
     const tier = (detail as any)?.adversaryType ?? r.subtitle;
+    // Default rows show "tier · archetype" — gives the GM a quick read of
+    // role + tier without numeric noise. When the user has any numeric
+    // filter/sort active, those specific stats appear after the badges so the
+    // relevant value stays visible. Pure characteristics/skills (brawn, brawl)
+    // still stack on as extras when the user has filtered on them.
+    const archetypes: string[] = Array.isArray((detail as any)?.archetypes)
+      ? (detail as any).archetypes
+      : [];
+    const archetypeLabel = archetypes[0];
+    const numericPills: React.ReactNode[] = [];
+    if (hl.has('soak') && derived.soak != null) {
+      numericPills.push(
+        <StatPill key="soak" icon={FiShield} value={derived.soak} highlighted title="Soak" />,
+      );
+    }
+    if ((hl.has('wounds') || hl.has('hp') || hl.has('wt')) && derived.wounds != null) {
+      numericPills.push(
+        <StatPill key="wounds" icon={FiHeart} value={derived.wounds} highlighted title="Wound threshold" />,
+      );
+    }
+    if ((hl.has('strain') || hl.has('st')) && derived.strain != null) {
+      numericPills.push(
+        <StatPill key="strain" icon={FiActivity} value={derived.strain} highlighted title="Strain threshold" />,
+      );
+    }
     const extras = extraPills(detail, hl, ['soak', 'wounds', 'strain']);
     trailing = (
       <HStack spacing={1.5} align="center">
         <TierBadge tier={tier} />
-        <StatPill icon={FiShield} value={derived.soak} highlighted={hl.has('soak')} title="Soak" />
-        <StatPill
-          icon={FiHeart}
-          value={derived.wounds}
-          highlighted={hl.has('wounds') || hl.has('hp') || hl.has('wt')}
-          title="Wound threshold"
-        />
-        <StatPill
-          icon={FiActivity}
-          value={derived.strain}
-          highlighted={hl.has('strain') || hl.has('st')}
-          title="Strain threshold"
-        />
+        {archetypeLabel && (
+          <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase">
+            {archetypeLabel}
+          </Badge>
+        )}
+        {numericPills}
         {extras.map((e) => (
           <StatPill key={e.key} icon={e.icon} value={e.value} highlighted title={e.key} />
         ))}
