@@ -147,6 +147,17 @@ const Spotlight: React.FC = () => {
     [chips],
   );
 
+  // Field names referenced by the active query (filter or sort tokens). Result
+  // rows use this to pop the relevant stat (e.g., highlight soak when the user
+  // is filtering or sorting by it).
+  const highlightedFields = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of parsed.tokens) {
+      if (t.fieldDef.kind === 'numeric') set.add(t.field);
+    }
+    return set;
+  }, [parsed.tokens]);
+
   // Displayed results after applying type filters and the named-adversary toggle
   const displayedResults = useMemo(() => {
     return results.filter((r) => {
@@ -424,6 +435,7 @@ const Spotlight: React.FC = () => {
                 onHoverIndex={(i) => setSelectedIndex(i)}
                 onClickResult={(r) => loadDetail(r)}
                 query={fullQuery}
+                highlightedFields={highlightedFields}
               />
 
               <Box w="55%" display="flex" flexDir="column">

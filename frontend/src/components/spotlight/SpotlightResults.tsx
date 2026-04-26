@@ -13,6 +13,7 @@ type SpotlightResultsProps = {
   onHoverIndex: (index: number) => void;
   onClickResult: (r: SpotlightResult) => void;
   query: string;
+  highlightedFields?: Set<string>;
 };
 
 const RESULT_ROW_HEIGHT = 48;
@@ -27,6 +28,7 @@ const SpotlightResults: React.FC<SpotlightResultsProps> = ({
   onHoverIndex,
   onClickResult,
   query,
+  highlightedFields,
 }) => {
   const grouped = React.useMemo(() => {
     const map = new Map<string, SpotlightResult[]>();
@@ -85,6 +87,7 @@ const SpotlightResults: React.FC<SpotlightResultsProps> = ({
                     onHoverIndex={onHoverIndex}
                     onClickResult={onClickResult}
                     rowHeight={RESULT_ROW_HEIGHT}
+                    highlightedFields={highlightedFields}
                   />
                 );
               })}
