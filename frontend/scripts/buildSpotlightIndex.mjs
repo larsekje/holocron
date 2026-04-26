@@ -37,16 +37,34 @@ async function safeRead(filePath) {
   }
 }
 
-async function listXmlFiles(dirPath) {
+async function listJsonFiles(dirPath) {
   try {
     const names = await fs.readdir(dirPath, { withFileTypes: true });
     return names
-      .filter((e) => e.isFile() && e.name.toLowerCase().endsWith('.xml'))
+      .filter((e) => e.isFile() && e.name.toLowerCase().endsWith('.json'))
       .map((e) => path.join(dirPath, e.name));
   } catch {
     return [];
   }
 }
+
+const BOOK_NAMES = {
+  eote: 'Edge of the Empire',
+  aor: 'Age of Rebellion',
+  fad: 'Force and Destiny',
+  crb: 'Core Rulebook',
+};
+
+const prettifySource = (s) => {
+  if (!s) return undefined;
+  const key = String(s).toLowerCase().replace(/\.json$/, '');
+  if (BOOK_NAMES[key]) return BOOK_NAMES[key];
+  const minor = new Set(['of', 'the', 'and', 'in', 'a', 'on', 'to']);
+  return key
+    .split(/[-_\s]+/)
+    .map((w, i) => (i > 0 && minor.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(' ');
+};
 
 function asArray(x) {
   if (!x) return [];
@@ -429,6 +447,59 @@ async function buildIndex() {
         tags: ['Attachment', ...mods.slice(0, 3)],
         description: cleanText(desc),
         extra: { hp, price, rarity, restricted: restricted || undefined, baseMods: baseModsArr.length ? baseModsArr : undefined, addedMods: addedModsArr.length ? addedModsArr : undefined, mods: mods.length ? mods : undefined, source, category: att.Type },
+      })
+    );
+  }
+
+  // Adversaries (Stoogoff JSON)
+  const adversariesDir = path.resolve(projectRoot, 'backend', 'data', 'stoogoff', 'adversaries');
+  const advFiles = await listJsonFiles(adversariesDir);
+  const advRaw = [];
+  for (const file of advFiles) {
+    let data;
+    try {
+      const raw = (await fs.readFile(file, 'utf-8')).replace(/^﻿/, '');
+      data = JSON.parse(raw);
+    } catch (e) {
+      console.warn(`[spotlight] Failed to parse ${path.relative(projectRoot, file)}: ${e.message}`);
+      continue;
+    }
+    if (!Array.isArray(data)) continue;
+    const fileSource = prettifySource(path.basename(file, '.json'));
+    for (const adv of data) {
+      if (!adv?.name) continue;
+      const bookTag = (Array.isArray(adv.tags) ? adv.tags : []).find((t) => /^book:/i.test(String(t)));
+      const bookCode = bookTag ? String(bookTag).replace(/^book:/i, '').toLowerCase() : null;
+      const source = bookCode ? prettifySource(bookCode) : fileSource;
+      advRaw.push({ adv, source });
+    }
+  }
+  // Count names so duplicates get a source-suffixed display name
+  const advNameCounts = new Map();
+  for (const { adv } of advRaw) {
+    advNameCounts.set(adv.name, (advNameCounts.get(adv.name) || 0) + 1);
+  }
+  for (const { adv, source } of advRaw) {
+    const isDup = (advNameCounts.get(adv.name) || 0) > 1;
+    const displayName = isDup && source ? `${adv.name} (${source})` : adv.name;
+    const advType = adv.type || undefined; // Minion / Rival / Nemesis
+    push(
+      results,
+      entry('adversary', displayName, {
+        subtitle: advType || undefined,
+        tags: Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : undefined,
+        description: cleanText(adv.description),
+        extra: {
+          adversaryType: advType,
+          characteristics: adv.characteristics,
+          derived: adv.derived,
+          skills: adv.skills,
+          talents: adv.talents,
+          abilities: adv.abilities,
+          weapons: adv.weapons,
+          gear: adv.gear,
+          source,
+        },
       })
     );
   }

@@ -3,75 +3,49 @@
     "id": "rule_personal-scale",
     "type": "rule",
     "name": "Personal Scale",
-    "subtitle": "Rules Reference",
-    "tags": ["Rules", "Combat", "Personal"],
     "detail": {
-      "id": "rule_personal-scale",
       "type": "rule",
       "name": "Personal Scale",
-      "markdown": "[B]Personal Scale[b]\n[P]Most characters, gear, and weapons operate on the personal scale. Attacks, movement, and ranges use the standard rules unless otherwise noted.",
+      "markdown": "Most characters, gear, and weapons operate on the personal scale. Attacks, movement, and ranges use the standard rules unless otherwise noted.",
       "category": "Rules",
-      "source": "SRD"
+      "source": "CRB"
+    }
+  },
+  {
+    "id": "rule_personal-scale",
+    "type": "rule",
+    "name": "Incapacitated",
+    "detail": {
+      "type": "rule",
+      "name": "Incapacitated",
+      "markdown": "A character is Incapacitated once they have suffered more Wounds than their Wound Threshold or more Strain than their Strain Threshold. Incapacitation means that a character is unconscious and no longer able to act until the number of Wounds/Strain they are suffering are decreased below their Wound/Strain Threshold.\n\nSince exceeding a character's Wound Threshold triggers a Critical Injury check, it is possible for an already Incapacitated character to suffer further Critical Injuries.",
+      "category": "Rules",
+      "source": "CRB"
     }
   },
   {
     "id": "rule_critical-injuries",
     "type": "rule",
     "name": "Critical Injuries",
-    "subtitle": "Rules Reference",
-    "tags": ["Rules", "Combat"],
     "detail": {
-      "id": "rule_critical-injuries",
       "type": "rule",
       "name": "Critical Injuries",
-      "markdown": "[B]Critical Injuries[b]\n[P]When a character suffers a Critical Injury, roll d100 on the Critical Injury table, adding modifiers as appropriate.",
+      "markdown": "When a character suffers a Critical Injury, roll d100 on the Critical Injury table, adding modifiers as appropriate.",
       "category": "Rules",
-      "source": "SRD"
+      "source": "CRB"
     }
   },
   {
     "id": "rule_encumbrance",
     "type": "rule",
     "name": "Encumbrance",
-    "subtitle": "Rules Reference",
-    "tags": ["Rules", "Equipment"],
     "detail": {
       "id": "rule_encumbrance",
       "type": "rule",
       "name": "Encumbrance",
-      "markdown": "[B]Encumbrance[b]\n[P]Encumbrance measures how much gear a character can comfortably carry before suffering penalties.",
+      "markdown": "Encumbrance measures how much gear a character can comfortably carry before suffering penalties.",
       "category": "Rules",
-      "source": "SRD"
-    }
-  },
-  {
-    "id": "adversary_stormtrooper",
-    "type": "adversary",
-    "name": "Stormtrooper",
-    "subtitle": "Imperial Minion",
-    "tags": ["Imperial", "Minion", "Soldier"],
-    "detail": {
-      "id": "adversary_stormtrooper",
-      "type": "adversary",
-      "name": "Stormtrooper",
-      "description": "Elite soldiers of the Galactic Empire, equipped with blaster rifles and standard armor.",
-      "category": "Minion",
-      "source": "SRD"
-    }
-  },
-  {
-    "id": "adversary_tie-fighter-pilot",
-    "type": "adversary",
-    "name": "TIE Fighter Pilot",
-    "subtitle": "Imperial Rival",
-    "tags": ["Imperial", "Pilot", "Rival"],
-    "detail": {
-      "id": "adversary_tie-fighter-pilot",
-      "type": "adversary",
-      "name": "TIE Fighter Pilot",
-      "description": "Imperial starfighter pilots trained for ruthless efficiency in dogfights.",
-      "category": "Rival",
-      "source": "SRD"
+      "source": "CRB"
     }
   },
 
