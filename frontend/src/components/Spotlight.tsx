@@ -4,10 +4,13 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useSpotlightStore } from '@/state/spotlightStore';
 import type { SpotlightResult, SpotlightDetail, SpotlightEntityType } from '@/state/spotlightStore';
 import { searchIndex, getDetail, browseIndex, parseQuery, tokenEntityTypes } from '@/data/spotlightIndex';
+import { applySuggestion, getSuggestions } from '@/data/spotlightSuggest';
+import type { SuggestResult } from '@/data/spotlightSuggest';
 import SpotlightHeader from './spotlight/SpotlightHeader';
 import SpotlightResults from './spotlight/SpotlightResults';
 import SpotlightDetailPane from './spotlight/SpotlightDetailPane';
 import SpotlightStatusBar from './spotlight/SpotlightStatusBar';
+import SpotlightSuggestPopup from './spotlight/SpotlightSuggestPopup';
 
 const RESULT_ROW_HEIGHT = 48;
 
@@ -31,6 +34,11 @@ const Spotlight: React.FC = () => {
   ];
   const [includedTypes, setIncludedTypes] = useState<Set<SpotlightEntityType>>(new Set(allTypes));
   const [hideNamedAdversaries, setHideNamedAdversaries] = useState<boolean>(true);
+
+  // Autocomplete popup
+  const [suggest, setSuggest] = useState<SuggestResult | null>(null);
+  const [suggestIndex, setSuggestIndex] = useState(0);
+  const popupOpen = suggest !== null && suggest.items.length > 0;
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -72,6 +80,8 @@ const Spotlight: React.FC = () => {
       setDetail(null);
       setLoading(false);
       setDetailLoading(false);
+      setSuggest(null);
+      setSuggestIndex(0);
     }
   }, [isOpen]);
 
@@ -109,8 +119,8 @@ const Spotlight: React.FC = () => {
   // Type-scope tokens in the query string take precedence over the chip filter
   // for the duration of that search, so e.g. typing `t:` shows talents even when
   // the Talents chip is off. Persisted prefs are unchanged.
-  const parsedTypeScope = useMemo(() => tokenEntityTypes(parseQuery(query).tokens), [query]);
-  const hasTypeScope = parsedTypeScope.size > 0;
+  const parsed = useMemo(() => parseQuery(query), [query]);
+  const hasTypeScope = useMemo(() => tokenEntityTypes(parsed.tokens).size > 0, [parsed.tokens]);
 
   // Displayed results after applying type filters and the named-adversary toggle
   const displayedResults = useMemo(() => {
@@ -170,18 +180,23 @@ const Spotlight: React.FC = () => {
   };
 
   // Keyboard navigation inside modal — fire even while the search input has focus,
-  // so the user never has to mouse over to the result list.
+  // so the user never has to mouse over to the result list. Up/Down route to the
+  // suggestion popup when it's open, otherwise to the result list.
   useHotkeys(
     'up',
     (e) => {
       if (!isOpen) return;
       e.preventDefault();
+      if (popupOpen) {
+        setSuggestIndex((i) => (i - 1 + suggest!.items.length) % suggest!.items.length);
+        return;
+      }
       if (displayedResults.length === 0) return;
       const next = (selectedIndex - 1 + displayedResults.length) % displayedResults.length;
       selectByIndex(next);
     },
     { enableOnFormTags: true },
-    [isOpen, displayedResults, selectedIndex]
+    [isOpen, popupOpen, suggest, displayedResults, selectedIndex]
   );
 
   useHotkeys(
@@ -189,13 +204,69 @@ const Spotlight: React.FC = () => {
     (e) => {
       if (!isOpen) return;
       e.preventDefault();
+      if (popupOpen) {
+        setSuggestIndex((i) => (i + 1) % suggest!.items.length);
+        return;
+      }
       if (displayedResults.length === 0) return;
       const next = (selectedIndex + 1) % displayedResults.length;
       selectByIndex(next);
     },
     { enableOnFormTags: true },
-    [isOpen, displayedResults, selectedIndex]
+    [isOpen, popupOpen, suggest, displayedResults, selectedIndex]
   );
+
+  // Handle the input value/caret in one place so suggestion recomputation stays
+  // in sync with whatever the user typed or where they clicked.
+  const handleInputChange = (value: string, caret: number) => {
+    setQuery(value);
+    setSuggest(getSuggestions(value, caret));
+    setSuggestIndex(0);
+  };
+
+  // Programmatic rewrite (chip removal, suggestion accept). Caret moves to end
+  // of new value; suggestions recompute against that caret.
+  const handleQueryReplace = (value: string) => {
+    setQuery(value);
+    setSuggest(getSuggestions(value, value.length));
+    setSuggestIndex(0);
+    // Restore caret after React commits the new value.
+    requestAnimationFrame(() => {
+      inputRef.current?.setSelectionRange(value.length, value.length);
+      inputRef.current?.focus();
+    });
+  };
+
+  const acceptSuggestion = () => {
+    if (!suggest || suggest.items.length === 0) return;
+    const item = suggest.items[suggestIndex];
+    const { next, caret } = applySuggestion(query, suggest, item);
+    setQuery(next);
+    setSuggest(getSuggestions(next, caret));
+    setSuggestIndex(0);
+    requestAnimationFrame(() => {
+      inputRef.current?.setSelectionRange(caret, caret);
+      inputRef.current?.focus();
+    });
+  };
+
+  // Tab/Enter accept the highlighted suggestion when popup is open. Esc closes
+  // the popup first; only when no popup is open does Esc close the modal.
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (popupOpen) {
+      if (e.key === 'Tab' || e.key === 'Enter') {
+        e.preventDefault();
+        acceptSuggestion();
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        setSuggest(null);
+        return;
+      }
+    }
+  };
 
   // Consistent dark styling
   const cardBg = '#26292d';
@@ -219,7 +290,9 @@ const Spotlight: React.FC = () => {
           <VStack align="stretch" spacing={0}>
             <SpotlightHeader
               query={query}
-              setQuery={setQuery}
+              onInputChange={handleInputChange}
+              onQueryReplace={handleQueryReplace}
+              onInputKeyDown={handleInputKeyDown}
               inputRef={inputRef}
               includedTypes={includedTypes}
               onToggleType={(t) => {
@@ -234,7 +307,28 @@ const Spotlight: React.FC = () => {
               onSetNone={() => setIncludedTypes(new Set())}
               hideNamedAdversaries={hideNamedAdversaries}
               onToggleHideNamed={() => setHideNamedAdversaries((v) => !v)}
+              tokens={parsed.tokens}
             />
+
+            <Box position="relative">
+              {popupOpen && suggest && (
+                <SpotlightSuggestPopup
+                  result={suggest}
+                  selectedIndex={suggestIndex}
+                  onHover={setSuggestIndex}
+                  onClick={(item) => {
+                    const { next, caret } = applySuggestion(query, suggest, item);
+                    setQuery(next);
+                    setSuggest(getSuggestions(next, caret));
+                    setSuggestIndex(0);
+                    requestAnimationFrame(() => {
+                      inputRef.current?.setSelectionRange(caret, caret);
+                      inputRef.current?.focus();
+                    });
+                  }}
+                />
+              )}
+            </Box>
 
             <Flex h="70vh">
               <SpotlightResults
