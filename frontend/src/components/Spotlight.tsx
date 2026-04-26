@@ -266,11 +266,20 @@ const Spotlight: React.FC = () => {
     setChips((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Click the chip body → bring the chip's text back into the input as residual,
-  // place the caret right after `field:` so the value popup opens for editing.
+  // Click the chip body. For sort chips (order tokens), a click is overloaded
+  // as a direction toggle — click `↓ soak` to flip to `↑ soak` and vice versa.
+  // For filter chips, the click pulls the token back into the input so the
+  // user can edit its value (popup opens with the field's value suggestions).
   const handleChipClick = (index: number) => {
     const chip = chips[index];
     if (!chip) return;
+    const parsedChip = parseQuery(chip).tokens[0];
+    if (parsedChip?.order) {
+      const flipped = parsedChip.order === 'desc' ? 'low' : 'high';
+      const next = `${parsedChip.field}:${flipped}`;
+      setChips((prev) => prev.map((c, i) => (i === index ? next : c)));
+      return;
+    }
     setChips((prev) => prev.filter((_, i) => i !== index));
     // Insert the chip text into residual at the start so it's clearly the
     // active edit target. (Skip re-adding the trailing whitespace.)

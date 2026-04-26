@@ -86,6 +86,36 @@ for (const e of indexEntries) {
 // Canonical SWRPG skills (from spotlightQuery) supplement anything we found.
 for (const s of SKILL_FIELDS) skillNamesAll.add(s.full);
 
+// Per-field numeric range (min / max observed across the index). Used to
+// preview what `high` / `low` actually mean for a given field.
+const NUMERIC_STATS = new Map<string, { min: number; max: number }>();
+const getPath = (obj: any, path: string[]): any => {
+  let cur = obj;
+  for (const k of path) {
+    if (cur == null) return undefined;
+    cur = cur[k];
+  }
+  return cur;
+};
+for (const f of FIELDS) {
+  if (f.kind !== 'numeric') continue;
+  const path = f.detailPath || [];
+  let min = Infinity;
+  let max = -Infinity;
+  for (const e of indexEntries) {
+    if (f.appliesTo && !f.appliesTo.includes(e.type as any)) continue;
+    const v = getPath(e.detail, path);
+    const n = typeof v === 'number' ? v : typeof v === 'string' ? parseFloat(v) : NaN;
+    if (Number.isFinite(n)) {
+      if (n < min) min = n;
+      if (n > max) max = n;
+    }
+  }
+  if (Number.isFinite(min) && Number.isFinite(max)) {
+    NUMERIC_STATS.set(f.name, { min, max });
+  }
+}
+
 // Sort suggestions by frequency descending, then alphabetically.
 function rank(m: Map<string, number>): Array<{ name: string; count: number }> {
   return Array.from(m.entries())
@@ -215,14 +245,17 @@ function valueSuggestions(field: FieldDef, valuePrefix: string): Suggestion[] {
     case 'numeric': {
       // Operator stubs + order shorthands. Caller already strips any typed
       // operator before we get here, so this is the bare/empty-value case.
+      const stats = NUMERIC_STATS.get(field.name);
+      const highHint = stats ? `sort descending — top is ${stats.max}` : 'sort descending';
+      const lowHint = stats ? `sort ascending — bottom is ${stats.min}` : 'sort ascending';
       const stubs: Suggestion[] = [
         { display: '>=3', insert: '>=3' },
         { display: '>=4', insert: '>=4' },
         { display: '>=5', insert: '>=5' },
         { display: '<3', insert: '<3' },
         { display: '<5', insert: '<5' },
-        { display: 'high', insert: 'high', hint: 'sort descending', complete: true },
-        { display: 'low', insert: 'low', hint: 'sort ascending', complete: true },
+        { display: 'high', insert: 'high', hint: highHint, complete: true },
+        { display: 'low', insert: 'low', hint: lowHint, complete: true },
       ];
       return stubs.filter((s) => !lower || s.display.startsWith(lower));
     }

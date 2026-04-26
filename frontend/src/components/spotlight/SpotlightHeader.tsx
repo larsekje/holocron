@@ -76,11 +76,12 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
               <Tag
                 key={`${i}-${t.field}-${t.value}`}
                 size="sm"
-                colorScheme="purple"
+                colorScheme={t.order ? 'orange' : 'purple'}
                 variant="subtle"
                 borderRadius="md"
                 cursor="pointer"
                 onClick={() => onChipClick(i)}
+                title={t.order ? 'Click to toggle ascending / descending' : 'Click to edit'}
               >
                 <TagLabel fontFamily="mono" fontSize="xs">{chipLabel(t)}</TagLabel>
                 <TagCloseButton
