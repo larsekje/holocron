@@ -258,19 +258,48 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
     case 'numeric': {
       // Human-named buckets, anchored on the field's actual distribution
       // (contextually scoped so `wounds:` under `type:nemesis` uses nemesis
-      // stats, not the union). The display label reads naturally; the hint
-      // shows the operator/value behind the label so the user can verify
-      // what each bucket maps to numerically.
+      // stats, not the union). For small-distinct fields like clout (1–5),
+      // we list every individual value plus the natural "≥N" ranges instead
+      // of percentile buckets, since percentiles don't make sense there.
       const stats = computeNumericStats(field.name, contextTokens) ?? getNumericStats(field.name);
       const items: Suggestion[] = [];
-      // Always offer "Sort only" — adds a sortable chip with no filtering.
       items.push({
         display: 'Sort only',
         insert: '',
         hint: 'Add a sort arrow without filtering',
         complete: true,
       });
-      if (stats) {
+      if (stats?.uniqueValues && stats.uniqueValues.length > 1 && stats.uniqueValues.length <= 7) {
+        const u = stats.uniqueValues;
+        // Each discrete value as an equality pick, highest first (most
+        // commonly wanted for threat fields like clout).
+        for (let i = u.length - 1; i >= 0; i--) {
+          const v = u[i];
+          items.push({
+            display: `${field.name} = ${v}`,
+            insert: `${v}`,
+          });
+        }
+        // Range presets, e.g. `≥4`, `≥3`, `≤2`.
+        for (let i = u.length - 1; i >= 1; i--) {
+          const v = u[i];
+          const includes = u.slice(i);
+          items.push({
+            display: `${field.name} ≥ ${v}`,
+            insert: `>=${v}`,
+            hint: includes.join(', '),
+          });
+        }
+        for (let i = 0; i < u.length - 1; i++) {
+          const v = u[i];
+          const includes = u.slice(0, i + 1);
+          items.push({
+            display: `${field.name} ≤ ${v}`,
+            insert: `<=${v}`,
+            hint: includes.join(', '),
+          });
+        }
+      } else if (stats) {
         const { p25, p50, p75, min, max } = stats;
         items.push({
           display: 'Low',

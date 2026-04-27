@@ -104,6 +104,9 @@ export const FIELDS: FieldDef[] = [
     enumValues: ['Minion', 'Rival', 'Nemesis'],
     description: 'Adversary tier.',
     examples: ['type:minion', 'type:rival', 'type:nemesis'], group: 'Adversary' },
+  { name: 'clout', kind: 'numeric', detailPath: ['clout'], appliesTo: ['adversary'],
+    description: 'Adversary clout (1–5 threat summary: characteristic level, common dice pool, common difficulty against).',
+    examples: ['clout:5', 'clout:>=4', 'clout:high'], group: 'Adversary' },
 
   // Tags (work across entity types)
   { name: 'tag', kind: 'tag',
@@ -370,8 +373,20 @@ export function evaluateToken(entry: any, t: Token): boolean {
     }
     case 'numeric': {
       const target = asNumber(getPath(detail, def.detailPath || []));
+      if (target == null) return false;
+      // Comma-separated set match: `clout:3,4,5` accepts any of those values.
+      // Only meaningful with the default equality op.
+      if (t.value.includes(',') && (t.op === '=' || t.op === '!=')) {
+        const parts = t.value
+          .split(',')
+          .map((s) => asNumber(s.trim()))
+          .filter((n): n is number => n != null);
+        if (parts.length === 0) return false;
+        const hit = parts.includes(target);
+        return t.op === '!=' ? !hit : hit;
+      }
       const wanted = asNumber(t.value);
-      if (target == null || wanted == null) return false;
+      if (wanted == null) return false;
       return compareNumeric(target, t.op, wanted);
     }
     case 'tag': {
@@ -422,6 +437,10 @@ export interface NumericStats {
   p50: number;
   p75: number;
   count: number;
+  // When the field has a small distinct value set (e.g. clout, 1–5), the
+  // sorted unique values so the popup can offer them as discrete picks.
+  // Undefined when there are too many to enumerate.
+  uniqueValues?: number[];
 }
 
 const _allIndexEntries: Array<{ type: string; detail?: any }> = [
@@ -458,6 +477,8 @@ export function computeNumericStats(
   }
   if (values.length === 0) return undefined;
   values.sort((a, b) => a - b);
+  const uniqueSet = new Set(values);
+  const uniqueValues = uniqueSet.size <= 10 ? Array.from(uniqueSet).sort((a, b) => a - b) : undefined;
   return {
     min: values[0],
     max: values[values.length - 1],
@@ -465,6 +486,7 @@ export function computeNumericStats(
     p50: _percentile(values, 0.5),
     p75: _percentile(values, 0.75),
     count: values.length,
+    uniqueValues,
   };
 }
 
