@@ -385,6 +385,16 @@ export function evaluateToken(entry: any, t: Token): boolean {
         const hit = parts.includes(target);
         return t.op === '!=' ? !hit : hit;
       }
+      // Dash range: `clout:2-4` accepts values from 2 to 4 inclusive.
+      const rangeMatch = /^(\d+)\s*-\s*(\d+)$/.exec(t.value);
+      if (rangeMatch && (t.op === '=' || t.op === '!=')) {
+        const a = Number(rangeMatch[1]);
+        const b = Number(rangeMatch[2]);
+        const lo = Math.min(a, b);
+        const hi = Math.max(a, b);
+        const hit = target >= lo && target <= hi;
+        return t.op === '!=' ? !hit : hit;
+      }
       const wanted = asNumber(t.value);
       if (wanted == null) return false;
       return compareNumeric(target, t.op, wanted);

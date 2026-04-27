@@ -280,7 +280,7 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
             insert: `${v}`,
           });
         }
-        // Range presets, e.g. `≥4`, `≥3`, `≤2`.
+        // ≥ presets (e.g. `≥4`, `≥3`).
         for (let i = u.length - 1; i >= 1; i--) {
           const v = u[i];
           const includes = u.slice(i);
@@ -290,6 +290,7 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
             hint: includes.join(', '),
           });
         }
+        // ≤ presets.
         for (let i = 0; i < u.length - 1; i++) {
           const v = u[i];
           const includes = u.slice(0, i + 1);
@@ -298,6 +299,22 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
             insert: `<=${v}`,
             hint: includes.join(', '),
           });
+        }
+        // Contiguous range presets — only "interior" ranges (those that don't
+        // touch min or max) since those edges are already covered by ≥/≤.
+        for (let i = 0; i < u.length; i++) {
+          for (let j = i + 1; j < u.length; j++) {
+            if (u[i] === u[0] && u[j] === u[u.length - 1]) continue; // full span
+            if (u[i] === u[0] || u[j] === u[u.length - 1]) continue; // covered by ≥/≤
+            const lo = u[i];
+            const hi = u[j];
+            const includes = u.slice(i, j + 1);
+            items.push({
+              display: `${field.name} ${lo}–${hi}`,
+              insert: `${lo}-${hi}`,
+              hint: includes.join(', '),
+            });
+          }
         }
       } else if (stats) {
         const { p25, p50, p75, min, max } = stats;
