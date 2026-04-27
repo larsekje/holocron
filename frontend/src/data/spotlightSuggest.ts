@@ -4,8 +4,17 @@
 
 import generatedIndex from './spotlightIndex.generated.json';
 import extras from './spotlightExtras.json';
-import { computeNumericStats, FIELDS, getNumericStats, lookupField, SKILL_FIELDS } from './spotlightQuery';
+import { computeNumericStats, evaluate, FIELDS, getNumericStats, lookupField, SKILL_FIELDS } from './spotlightQuery';
 import type { FieldDef, Token } from './spotlightQuery';
+
+const getPath = (obj: any, path: string[]): any => {
+  let cur = obj;
+  for (const k of path) {
+    if (cur == null) return undefined;
+    cur = cur[k];
+  }
+  return cur;
+};
 
 export type SuggestionKind = 'field' | 'value';
 
@@ -55,8 +64,11 @@ const talentNames = new Map<string, number>(); // name → entries containing it
 const weaponNames = new Map<string, number>();
 const abilityNames = new Map<string, number>();
 const gearNames = new Map<string, number>();
+// Counts the v4.2 `coreArchetype` per adversary so `archetype:` autocompletes
+// against the 30 archetype names.
 const archetypeCounts = new Map<string, number>();
-const coreArchetypeCounts = new Map<string, number>();
+// Counts OggDude broad role tags (Shooter, Bruiser, Scout, ...) for `role:`.
+const roleCounts = new Map<string, number>();
 const factionCounts = new Map<string, number>();
 const traitCounts = new Map<string, number>();
 const skillNamesAll = new Set<string>();
@@ -86,8 +98,8 @@ for (const e of indexEntries) {
     if (d.skills && typeof d.skills === 'object') {
       for (const k of Object.keys(d.skills)) skillNamesAll.add(k);
     }
-    for (const a of (d.archetypes || []) as string[]) bumpMap(archetypeCounts, String(a));
-    if (typeof d.coreArchetype === 'string' && d.coreArchetype) bumpMap(coreArchetypeCounts, d.coreArchetype);
+    if (typeof d.coreArchetype === 'string' && d.coreArchetype) bumpMap(archetypeCounts, d.coreArchetype);
+    for (const r of (d.archetypes || []) as string[]) bumpMap(roleCounts, String(r));
     for (const f of (d.factions || []) as string[]) bumpMap(factionCounts, String(f));
     for (const t of (d.traits || []) as string[]) bumpMap(traitCounts, String(t));
   }
@@ -115,7 +127,7 @@ const RANKED_WEAPONS = rank(weaponNames);
 const RANKED_ABILITIES = rank(abilityNames);
 const RANKED_GEAR = rank(gearNames);
 const RANKED_ARCHETYPES = rank(archetypeCounts);
-const RANKED_CORE_ARCHETYPES = rank(coreArchetypeCounts);
+const RANKED_ROLES = rank(roleCounts);
 const RANKED_FACTIONS = rank(factionCounts);
 const RANKED_TRAITS = rank(traitCounts);
 const RANKED_SKILLS = Array.from(skillNamesAll).sort();
@@ -133,7 +145,7 @@ function currentWord(input: string, caret: number): { start: number; end: number
   return { start, end, text: input.slice(start, end) };
 }
 
-function fieldSuggestions(prefix: string): Suggestion[] {
+function fieldSuggestions(prefix: string, contextTokens: Token[] = []): Suggestion[] {
   const lower = prefix.toLowerCase();
   const items: Suggestion[] = [];
   const seen = new Set<string>();
@@ -189,22 +201,15 @@ function fieldSuggestions(prefix: string): Suggestion[] {
         });
       }
     } else if (f.kind === 'lookup-name' && f.arrayPath) {
-      const path = f.arrayPath.join('.');
-      const list =
-        path === 'archetypes'
-          ? RANKED_ARCHETYPES
-          : path === 'coreArchetype'
-          ? RANKED_CORE_ARCHETYPES
-          : path === 'factions'
-          ? RANKED_FACTIONS
-          : path === 'traits'
-          ? RANKED_TRAITS
-          : [];
+      // Smart suggestions use the same context-aware counts as the value
+      // popup, so typing `imp` while `archetype:soldier` is active surfaces
+      // `faction:Imperial · 23 entries` rather than the global tally.
+      const list = contextualCounts(f, contextTokens);
       for (const v of list) {
         const lv = v.name.toLowerCase();
         const key = `v:${f.name}:${lv}`;
         if (seen.has(key)) continue;
-        if (lower && !lv.includes(lower)) continue; // substring (so "creature" matches "Beast/Creature")
+        if (lower && !lv.includes(lower)) continue;
         seen.add(key);
         items.push({
           display: `${f.name}:${v.name}`,
@@ -225,6 +230,46 @@ function filterByPrefix<T extends { name: string }>(list: T[], prefix: string): 
   return list.filter((x) => x.name.toLowerCase().includes(lower));
 }
 
+// Walk the index filtered by the active context (chip tokens minus any token
+// on the field being completed) and count how many entries each candidate
+// value of `field` appears in. Lets the popup show "Imperial · 23" instead
+// of "Imperial · 148" when the user has already restricted to e.g.
+// `archetype:soldier`. Sorted by count descending.
+function contextualCounts(field: FieldDef, contextTokens: Token[]): Array<{ name: string; count: number }> {
+  const others = contextTokens.filter((t) => !t.order && t.field !== field.name);
+  const counts = new Map<string, number>();
+  const bump = (k: string | undefined | null) => {
+    if (!k) return;
+    counts.set(k, (counts.get(k) || 0) + 1);
+  };
+  for (const e of indexEntries) {
+    if (field.appliesTo && !field.appliesTo.includes(e.type as any)) continue;
+    if (others.length > 0 && !evaluate(e, others)) continue;
+    if (field.kind === 'lookup-name' && field.arrayPath) {
+      const v = getPath(e.detail, field.arrayPath);
+      if (Array.isArray(v)) {
+        for (const x of v) bump(typeof x === 'string' ? x : x?.name);
+      } else if (typeof v === 'string' && v) {
+        bump(v);
+      }
+    } else if (field.kind === 'tag') {
+      for (const t of e.tags || []) bump(String(t));
+      const detailTags = (e.detail as any)?.tags;
+      if (Array.isArray(detailTags)) for (const t of detailTags) bump(String(t));
+    } else if (field.kind === 'enum' && field.detailPath) {
+      const v = getPath(e.detail, field.detailPath);
+      if (v != null) bump(String(v));
+    } else if (field.kind === 'bool' && field.detailPath) {
+      const v = getPath(e.detail, field.detailPath);
+      if (v === true) bump('true');
+      else if (v === false) bump('false');
+    }
+  }
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
 function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: Token[] = []): Suggestion[] {
   const lower = valuePrefix.toLowerCase();
   switch (field.kind) {
@@ -239,32 +284,18 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
         .filter((v) => v.toLowerCase().startsWith(lower))
         .map((v) => ({ display: v, insert: v.toLowerCase() }));
     case 'tag':
-      return filterByPrefix(RANKED_TAGS, valuePrefix)
-        .slice(0, 30)
-        .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}` }));
     case 'lookup-name': {
-      const arrayPath = (field.arrayPath || []).join('.');
-      const list =
-        arrayPath === 'talents'
-          ? RANKED_TALENTS
-          : arrayPath === 'abilities'
-          ? RANKED_ABILITIES
-          : arrayPath === 'gear'
-          ? RANKED_GEAR
-          : arrayPath === 'weapons'
-          ? RANKED_WEAPONS
-          : arrayPath === 'archetypes'
-          ? RANKED_ARCHETYPES
-          : arrayPath === 'coreArchetype'
-          ? RANKED_CORE_ARCHETYPES
-          : arrayPath === 'factions'
-          ? RANKED_FACTIONS
-          : arrayPath === 'traits'
-          ? RANKED_TRAITS
-          : [];
+      // Counts are recomputed against whatever filters are already active
+      // (e.g. with `archetype:soldier` chipped, `faction:` shows how many
+      // soldiers are in each faction rather than the global numbers).
+      const list = contextualCounts(field, contextTokens);
       return filterByPrefix(list, valuePrefix)
         .slice(0, 30)
-        .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}` }));
+        .map((t) => ({
+          display: t.name,
+          insert: t.name,
+          hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}`,
+        }));
     }
     case 'numeric': {
       // Human-named buckets, anchored on the field's actual distribution
@@ -345,7 +376,7 @@ export function getSuggestions(
   const colon = word.text.indexOf(':');
   if (colon === -1) {
     // Completing the field name.
-    const items = fieldSuggestions(word.text);
+    const items = fieldSuggestions(word.text, contextTokens);
     if (items.length === 0) return null;
     return { replaceRange: [word.start, word.end], kind: 'field', items };
   }
