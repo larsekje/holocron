@@ -295,8 +295,8 @@ const Spotlight: React.FC = () => {
   // just update those state pieces and let the effect refresh the popup.
 
   // When new chips commit, auto-claim the active sort if any of them is a
-  // `:high` / `:low` quartile filter — that's the user's clearest signal of
-  // sort intent. Other filter chips don't auto-sort.
+  // sort-bearing chip — `:high` / `:low` quartile filters or a "sort only"
+  // empty-value chip. Other filter chips don't auto-sort.
   const claimSortFromIncoming = (incoming: string[]) => {
     for (const raw of incoming) {
       const t = parseQuery(raw).tokens[0];
@@ -304,6 +304,7 @@ const Spotlight: React.FC = () => {
       const v = t.value.toLowerCase();
       if (v === 'high') return setActiveSort({ field: t.fieldDef.name, direction: 'desc' });
       if (v === 'low') return setActiveSort({ field: t.fieldDef.name, direction: 'asc' });
+      if (v === '') return setActiveSort({ field: t.fieldDef.name, direction: 'desc' });
     }
   };
 

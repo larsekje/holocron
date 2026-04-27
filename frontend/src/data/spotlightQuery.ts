@@ -339,7 +339,9 @@ export function evaluateToken(entry: any, t: Token): boolean {
   const detail = entry?.detail ?? {};
   if (def.kind === 'numeric') {
     const lv = t.value.toLowerCase();
-    if (lv === 'high' || lv === 'low') return true;
+    // High/low quartile filtering is applied at searchIndex level. An empty
+    // value means "no filter, just a sort handle for this field".
+    if (lv === 'high' || lv === 'low' || lv === '') return true;
   }
 
   // Type-scope: filter strictly by entity type.

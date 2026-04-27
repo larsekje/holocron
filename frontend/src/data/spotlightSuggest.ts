@@ -256,15 +256,20 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
         .map((t) => ({ display: t.name, insert: t.name, hint: `${t.count} ${t.count === 1 ? 'entry' : 'entries'}` }));
     }
     case 'numeric': {
-      // Two independent groups; user can pick from either or both:
-      //   1. Filter buckets — Low / Below avg / Above avg / High — anchored
-      //      on the field's actual contextual distribution.
-      //   2. Sort-only directions — `↑ asc` / `↓ desc` — sorts the whole list
-      //      without filtering.
-      // Filter and sort are separate chips; combine them by accepting one
-      // and then re-opening the popup on the same field for the other.
+      // Human-named buckets, anchored on the field's actual distribution
+      // (contextually scoped so `wounds:` under `type:nemesis` uses nemesis
+      // stats, not the union). The display label reads naturally; the hint
+      // shows the operator/value behind the label so the user can verify
+      // what each bucket maps to numerically.
       const stats = computeNumericStats(field.name, contextTokens) ?? getNumericStats(field.name);
       const items: Suggestion[] = [];
+      // Always offer "Sort only" — adds a sortable chip with no filtering.
+      items.push({
+        display: 'Sort only',
+        insert: '',
+        hint: 'Add a sort arrow without filtering',
+        complete: true,
+      });
       if (stats) {
         const { p25, p50, p75, min, max } = stats;
         items.push({
@@ -293,19 +298,10 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
           hint: `${field.name} ≥ ${p75} (top 25%, max ${max})`,
           complete: true,
         });
+      } else {
+        items.push({ display: 'Low', insert: 'low', hint: 'sort ascending', complete: true });
+        items.push({ display: 'High', insert: 'high', hint: 'sort descending', complete: true });
       }
-      items.push({
-        display: '↑ Sort ascending',
-        insert: 'asc',
-        hint: `lowest ${field.name} first`,
-        complete: true,
-      });
-      items.push({
-        display: '↓ Sort descending',
-        insert: 'desc',
-        hint: `highest ${field.name} first`,
-        complete: true,
-      });
       return items;
     }
     case 'text':

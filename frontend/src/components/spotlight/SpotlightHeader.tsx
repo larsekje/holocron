@@ -43,9 +43,11 @@ const labelFor: Partial<Record<SpotlightEntityType, string>> = {
 };
 
 // How a token should read inside its chip — value half is hidden for
-// type-scope tokens.
+// type-scope tokens; numeric chips with no value render as just the field
+// name (they're sort handles, not filters).
 function chipLabel(t: Token): string {
   if (t.fieldDef.kind === 'type-scope') return `${t.field}:`;
+  if (t.fieldDef.kind === 'numeric' && t.value.trim() === '') return t.field;
   const op = t.op === '=' ? '' : t.op;
   return `${t.field}:${op}${t.value}`;
 }
