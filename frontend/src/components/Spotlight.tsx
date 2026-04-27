@@ -76,6 +76,10 @@ const Spotlight: React.FC = () => {
   // the active sort with its natural direction.
   const [activeSort, setActiveSort] = useState<{ field: string; direction: 'asc' | 'desc' } | null>(null);
 
+  // Multi-select picks accumulating in the popup (e.g. clicking "clout = 1"
+  // and "clout = 3"). Tab/Enter commits all of them as a single chip.
+  const [multiSelected, setMultiSelected] = useState<string[]>([]);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -121,6 +125,7 @@ const Spotlight: React.FC = () => {
       setSuggestIndex(0);
       setHelpOpen(false);
       setActiveSort(null);
+      setMultiSelected([]);
     }
   }, [isOpen]);
 
@@ -375,11 +380,29 @@ const Spotlight: React.FC = () => {
     });
   };
 
-  const acceptSuggestion = () => {
-    if (!suggest || suggest.items.length === 0) return;
-    const item = suggest.items[suggestIndex];
-    const { next, caret: nextCaret } = applySuggestion(residual, suggest, item);
+  // Build the insert text from a multi-select set: collapse contiguous runs
+  // of integers to dash form (1,2,3 → "1-3"), otherwise comma-list. Falls
+  // back to plain join for non-numeric inserts.
+  const composeMultiInsert = (raws: string[]): string => {
+    const nums = raws
+      .map((s) => Number(s))
+      .filter((n) => Number.isFinite(n));
+    if (nums.length === raws.length && nums.length >= 2) {
+      const sorted = [...nums].sort((a, b) => a - b);
+      const isContiguous = sorted.every((n, i) => i === 0 || n === sorted[i - 1] + 1);
+      if (isContiguous) return `${sorted[0]}-${sorted[sorted.length - 1]}`;
+      return sorted.join(',');
+    }
+    return [...raws].sort().join(',');
+  };
+
+  // Apply an explicit suggestion item against the current residual. Used by
+  // both keyboard accept and click accept so the active code path is
+  // unambiguous about which item is committing.
+  const applyItem = (item: Suggestion) => {
+    if (!suggest) return;
     setPendingDelete(null);
+    const { next, caret: nextCaret } = applySuggestion(residual, suggest, item);
     const { committed, remaining, remainingCaret } = extractCompletedTokens(next, nextCaret);
     if (committed.length > 0) {
       setChips((prev) => [...prev, ...committed]);
@@ -400,6 +423,34 @@ const Spotlight: React.FC = () => {
     });
   };
 
+  // Tab/Enter accepts: multi-select set if non-empty, otherwise the
+  // highlighted item.
+  const acceptSuggestion = () => {
+    if (!suggest || suggest.items.length === 0) return;
+    if (multiSelected.length > 0) {
+      const composed = composeMultiInsert(multiSelected);
+      applyItem({ display: composed, insert: composed, complete: true });
+      return;
+    }
+    applyItem(suggest.items[suggestIndex]);
+  };
+
+  // Click handler for popup items. multiSelectable items toggle into the
+  // selection set without closing the popup; everything else commits
+  // immediately.
+  const handleSuggestClick = (item: Suggestion) => {
+    if (!suggest) return;
+    if (item.multiSelectable) {
+      setMultiSelected((prev) =>
+        prev.includes(item.insert) ? prev.filter((v) => v !== item.insert) : [...prev, item.insert],
+      );
+      const idx = suggest.items.indexOf(item);
+      if (idx >= 0) setSuggestIndex(idx);
+      return;
+    }
+    applyItem(item);
+  };
+
   // Tab/Enter accept the highlighted suggestion when popup is open. Esc closes
   // the popup first, then the help overlay, and only finally lets the modal close.
   // Backspace at start of empty input is two-stage: first press pulls the last
@@ -407,6 +458,19 @@ const Spotlight: React.FC = () => {
   // immediate next backspace clears it entirely.
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (popupOpen) {
+      // Space toggles the highlighted item into the multi-select set when it's
+      // a multiSelectable option (clout values etc.). Don't fall through to
+      // the input adding a literal space.
+      const highlighted = suggest!.items[suggestIndex];
+      if (e.key === ' ' && highlighted?.multiSelectable) {
+        e.preventDefault();
+        setMultiSelected((prev) =>
+          prev.includes(highlighted.insert)
+            ? prev.filter((v) => v !== highlighted.insert)
+            : [...prev, highlighted.insert],
+        );
+        return;
+      }
       if (e.key === 'Tab' || e.key === 'Enter') {
         e.preventDefault();
         acceptSuggestion();
@@ -470,10 +534,14 @@ const Spotlight: React.FC = () => {
     if (!isOpen) {
       setSuggest(null);
       setSuggestIndex(0);
+      setMultiSelected([]);
       return;
     }
     setSuggest(getSuggestions(residual, caret, chipTokens));
     setSuggestIndex(0);
+    // Multi-select accumulates only inside one popup session — any change
+    // that recomputes suggestions resets it.
+    setMultiSelected([]);
   }, [residual, caret, chipTokens, isOpen]);
 
   // ⌘/ (or Ctrl+/) toggles the help overlay. Avoiding `?` so users can still
@@ -539,11 +607,9 @@ const Spotlight: React.FC = () => {
                 <SpotlightSuggestPopup
                   result={suggest}
                   selectedIndex={suggestIndex}
+                  multiSelected={multiSelected}
                   onHover={setSuggestIndex}
-                  onClick={(item) => {
-                    setSuggestIndex(suggest.items.indexOf(item));
-                    acceptSuggestion();
-                  }}
+                  onClick={handleSuggestClick}
                 />
               )}
             </Box>

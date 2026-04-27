@@ -17,6 +17,10 @@ export interface Suggestion {
    *  trailing space, which the parent extractor turns into a chip). Used for
    *  smart suggestions like `type:minion` from a bare `mini` prefix. */
   complete?: boolean;
+  /** When true, clicking this item toggles it into a multi-select set instead
+   *  of immediately committing. Tab/Enter commits the accumulated set as a
+   *  single chip (comma-list, collapsing to dash-range when contiguous). */
+  multiSelectable?: boolean;
 }
 
 export interface SuggestResult {
@@ -52,6 +56,7 @@ const weaponNames = new Map<string, number>();
 const abilityNames = new Map<string, number>();
 const gearNames = new Map<string, number>();
 const archetypeCounts = new Map<string, number>();
+const coreArchetypeCounts = new Map<string, number>();
 const factionCounts = new Map<string, number>();
 const traitCounts = new Map<string, number>();
 const skillNamesAll = new Set<string>();
@@ -82,6 +87,7 @@ for (const e of indexEntries) {
       for (const k of Object.keys(d.skills)) skillNamesAll.add(k);
     }
     for (const a of (d.archetypes || []) as string[]) bumpMap(archetypeCounts, String(a));
+    if (typeof d.coreArchetype === 'string' && d.coreArchetype) bumpMap(coreArchetypeCounts, d.coreArchetype);
     for (const f of (d.factions || []) as string[]) bumpMap(factionCounts, String(f));
     for (const t of (d.traits || []) as string[]) bumpMap(traitCounts, String(t));
   }
@@ -109,6 +115,7 @@ const RANKED_WEAPONS = rank(weaponNames);
 const RANKED_ABILITIES = rank(abilityNames);
 const RANKED_GEAR = rank(gearNames);
 const RANKED_ARCHETYPES = rank(archetypeCounts);
+const RANKED_CORE_ARCHETYPES = rank(coreArchetypeCounts);
 const RANKED_FACTIONS = rank(factionCounts);
 const RANKED_TRAITS = rank(traitCounts);
 const RANKED_SKILLS = Array.from(skillNamesAll).sort();
@@ -186,6 +193,8 @@ function fieldSuggestions(prefix: string): Suggestion[] {
       const list =
         path === 'archetypes'
           ? RANKED_ARCHETYPES
+          : path === 'coreArchetype'
+          ? RANKED_CORE_ARCHETYPES
           : path === 'factions'
           ? RANKED_FACTIONS
           : path === 'traits'
@@ -246,6 +255,8 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
           ? RANKED_WEAPONS
           : arrayPath === 'archetypes'
           ? RANKED_ARCHETYPES
+          : arrayPath === 'coreArchetype'
+          ? RANKED_CORE_ARCHETYPES
           : arrayPath === 'factions'
           ? RANKED_FACTIONS
           : arrayPath === 'traits'
@@ -271,50 +282,18 @@ function valueSuggestions(field: FieldDef, valuePrefix: string, contextTokens: T
       });
       if (stats?.uniqueValues && stats.uniqueValues.length > 1 && stats.uniqueValues.length <= 7) {
         const u = stats.uniqueValues;
-        // Each discrete value as an equality pick, highest first (most
-        // commonly wanted for threat fields like clout).
+        // Each discrete value as a multi-selectable pick, highest first.
+        // Click to toggle multiple values; Tab/Enter commits the accumulated
+        // set as a single chip (comma-list, collapsed to dash-range when
+        // contiguous). Ranges (≥/≤/A–B) are reachable by selecting multiple
+        // values rather than as separate options.
         for (let i = u.length - 1; i >= 0; i--) {
           const v = u[i];
           items.push({
             display: `${field.name} = ${v}`,
             insert: `${v}`,
+            multiSelectable: true,
           });
-        }
-        // ≥ presets (e.g. `≥4`, `≥3`).
-        for (let i = u.length - 1; i >= 1; i--) {
-          const v = u[i];
-          const includes = u.slice(i);
-          items.push({
-            display: `${field.name} ≥ ${v}`,
-            insert: `>=${v}`,
-            hint: includes.join(', '),
-          });
-        }
-        // ≤ presets.
-        for (let i = 0; i < u.length - 1; i++) {
-          const v = u[i];
-          const includes = u.slice(0, i + 1);
-          items.push({
-            display: `${field.name} ≤ ${v}`,
-            insert: `<=${v}`,
-            hint: includes.join(', '),
-          });
-        }
-        // Contiguous range presets — only "interior" ranges (those that don't
-        // touch min or max) since those edges are already covered by ≥/≤.
-        for (let i = 0; i < u.length; i++) {
-          for (let j = i + 1; j < u.length; j++) {
-            if (u[i] === u[0] && u[j] === u[u.length - 1]) continue; // full span
-            if (u[i] === u[0] || u[j] === u[u.length - 1]) continue; // covered by ≥/≤
-            const lo = u[i];
-            const hi = u[j];
-            const includes = u.slice(i, j + 1);
-            items.push({
-              display: `${field.name} ${lo}–${hi}`,
-              insert: `${lo}-${hi}`,
-              hint: includes.join(', '),
-            });
-          }
         }
       } else if (stats) {
         const { p25, p50, p75, min, max } = stats;

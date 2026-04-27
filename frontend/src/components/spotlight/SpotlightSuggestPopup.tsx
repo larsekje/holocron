@@ -1,16 +1,26 @@
 import React from 'react';
-import { Box, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, HStack, Icon, Text, VStack } from '@chakra-ui/react';
+import { FiCheck, FiSquare } from 'react-icons/fi';
 import type { Suggestion, SuggestResult } from '@/data/spotlightSuggest';
 
 type Props = {
   result: SuggestResult;
   selectedIndex: number;
+  /** Insert values currently toggled into the multi-select set. */
+  multiSelected: string[];
   onHover: (idx: number) => void;
   onClick: (item: Suggestion) => void;
 };
 
-const SpotlightSuggestPopup: React.FC<Props> = ({ result, selectedIndex, onHover, onClick }) => {
+const SpotlightSuggestPopup: React.FC<Props> = ({
+  result,
+  selectedIndex,
+  multiSelected,
+  onHover,
+  onClick,
+}) => {
   const items = result.items;
+  const hasMulti = items.some((i) => i.multiSelectable);
   return (
     <Box
       position="absolute"
@@ -33,7 +43,8 @@ const SpotlightSuggestPopup: React.FC<Props> = ({ result, selectedIndex, onHover
     >
       <VStack align="stretch" spacing={0}>
         {items.map((it, i) => {
-          const isSelected = i === selectedIndex;
+          const isHighlighted = i === selectedIndex;
+          const isToggled = it.multiSelectable && multiSelected.includes(it.insert);
           return (
             <HStack
               key={it.insert + ':' + i}
@@ -41,7 +52,7 @@ const SpotlightSuggestPopup: React.FC<Props> = ({ result, selectedIndex, onHover
               py={1.5}
               spacing={3}
               cursor="pointer"
-              bg={isSelected ? 'gray.700' : 'transparent'}
+              bg={isHighlighted ? 'gray.700' : 'transparent'}
               _hover={{ bg: 'gray.600' }}
               onMouseEnter={() => onHover(i)}
               onMouseDown={(e) => {
@@ -50,6 +61,14 @@ const SpotlightSuggestPopup: React.FC<Props> = ({ result, selectedIndex, onHover
               }}
               onClick={() => onClick(it)}
             >
+              {it.multiSelectable && (
+                <Icon
+                  as={isToggled ? FiCheck : FiSquare}
+                  boxSize={3.5}
+                  color={isToggled ? 'orange.300' : 'gray.500'}
+                  flexShrink={0}
+                />
+              )}
               <Text fontFamily="mono" fontSize="sm" color="gray.100" flexShrink={0}>
                 {it.display}
               </Text>
@@ -61,6 +80,15 @@ const SpotlightSuggestPopup: React.FC<Props> = ({ result, selectedIndex, onHover
             </HStack>
           );
         })}
+        {hasMulti && (
+          <Box px={3} py={1} borderTop="1px solid" borderColor="gray.700" mt={1}>
+            <Text fontSize="xs" color="gray.500">
+              {multiSelected.length > 0
+                ? `${multiSelected.length} selected · ⏎ to apply`
+                : 'Click multiple to combine · space toggles current'}
+            </Text>
+          </Box>
+        )}
       </VStack>
     </Box>
   );
