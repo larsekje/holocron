@@ -1,18 +1,19 @@
 /**
- * activeVehicleStore — instance-level state for vehicles currently equipped on
- * one or more participants. The Spotlight index (immutable library) is the
- * source of vehicle specs; equipping a vehicle creates an instance here that
- * tracks per-encounter mutable state (hull, system strain, crits).
+ * activeVehicleStore — instance-level state for vehicles currently in the
+ * encounter. The Spotlight index (immutable library) is the source of vehicle
+ * specs; `add()` creates an instance here that tracks per-encounter mutable
+ * state (hull, system strain, crits). Vehicles are first-class encounter
+ * entities and render in their own "Ships and vehicles" target subsection.
  *
  * Multi-crew is a first-class case: multiple Participants can share the same
  * ActiveVehicle.id (Han + Chewie + passengers on the Falcon). Damage applied
- * to one routes to the shared instance — every occupant sees it.
+ * to the ship routes to the shared instance — every occupant sees it.
  *
- * The "hat" framing: Participants are still the actors (skills, dice pouch,
- * talents unchanged). The vehicle replaces their *derived* combat surface —
- * HP becomes hull, soak becomes armor, weapons become the vehicle's. When the
- * hat comes off (`removeOccupant` clears `equippedVehicleId`), the participant
- * reverts.
+ * Crew linkage: a Participant can `enter` a vehicle (their `equippedVehicleId`
+ * + `vehicleRole` get set) and `removeOccupant`/leave to clear it. Entering
+ * does not transform the participant's combat surface — the *ship* is the
+ * one that takes hits in starship combat; the participant remains a
+ * participant.
  */
 import { create } from 'zustand';
 import { nanoid } from 'nanoid';
@@ -30,11 +31,11 @@ export interface VehicleWeapon {
 
 export interface ActiveVehicle {
   id: string;
-  /** Stable id from the spotlight entry — lets us re-render detail/equip
+  /** Stable id from the spotlight entry — lets us re-render detail
    * state if the same vehicle is referenced again. */
   vehicleId: string;
   name: string;
-  // Immutable spec — copied off the spotlight entry on equip
+  // Immutable spec — copied off the spotlight entry on add
   silhouette: number;
   speed: number;
   handling: string;
@@ -63,15 +64,16 @@ export interface Occupant {
 
 interface ActiveVehicleStore {
   vehicles: Record<string, ActiveVehicle>;
-  /** Create a new instance and link the given occupants. Returns the
-   * instance id so the caller can reference it. */
-  equip: (spec: VehicleSpec, occupants: Occupant[]) => string;
-  /** Tear down an instance and clear `equippedVehicleId`/`vehicleRole` on
-   * every linked participant. Called on the "End vehicle" / scuttle path. */
-  unequip: (vehicleId: string) => void;
+  /** Add a new vehicle to the encounter, optionally with starting occupants.
+   * An empty `occupants` is valid — the ship sits in the encounter unmanned
+   * until someone enters it. Returns the instance id. */
+  add: (spec: VehicleSpec, occupants?: Occupant[]) => string;
+  /** Remove the vehicle from the encounter and clear
+   * `equippedVehicleId`/`vehicleRole` on every linked participant. */
+  remove: (vehicleId: string) => void;
   addOccupant: (vehicleId: string, participantId: string, role: VehicleRole) => void;
-  /** Remove a single occupant. If they were the last one, the instance is
-   * auto-purged (no orphans). */
+  /** Detach a participant from the vehicle. The vehicle stays in the
+   * encounter even if it becomes unmanned. */
   removeOccupant: (vehicleId: string, participantId: string) => void;
   addHull: (vehicleId: string, n: number) => void;
   removeHull: (vehicleId: string, n: number) => void;
@@ -123,7 +125,7 @@ function setParticipantVehicle(
 const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
   vehicles: {},
 
-  equip: (spec, occupants) => {
+  add: (spec, occupants = []) => {
     const id = nanoid();
     const vehicle: ActiveVehicle = {
       ...spec,
@@ -139,7 +141,7 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
     return id;
   },
 
-  unequip: (vehicleId) => {
+  remove: (vehicleId) => {
     const vehicle = get().vehicles[vehicleId];
     if (!vehicle) return;
     // Find every linked participant and clear their vehicle fields.
@@ -161,19 +163,9 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
     setParticipantVehicle(participantId, vehicleId, role);
   },
 
-  removeOccupant: (vehicleId, participantId) => {
+  removeOccupant: (_vehicleId, participantId) => {
     setParticipantVehicle(participantId, undefined, undefined);
-    // Auto-purge the instance if there are no occupants left.
-    const stillLinked = useParticipantStore
-      .getState()
-      .participants.some((p) => p.equippedVehicleId === vehicleId);
-    if (!stillLinked) {
-      set((state) => {
-        const next = { ...state.vehicles };
-        delete next[vehicleId];
-        return { vehicles: next };
-      });
-    }
+    // No auto-purge: empty ships remain in the encounter as targets.
   },
 
   addHull: (vehicleId, n) =>

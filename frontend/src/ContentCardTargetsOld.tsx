@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
 import {HStack, IconButton, Tooltip, useToast} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
-import {FaUsers} from "react-icons/fa";
+import {FaSpaceShuttle, FaUsers} from "react-icons/fa";
 import ContentCardOld from "@/ContentCardOld";
 import TargetListOld from "@components/TargetListOld";
 import AdversarySelector from "@components/adversaries/AdversarySelector";
 import AddPCModal from "@components/adversaries/AddPCModal";
 import adversaryService from "@/services/adversaryService";
 import useParticipantStore from "@/state/participantsStore";
+import {useSpotlightStore} from "@/state/spotlightStore";
 import {ReactComponent as AbilitySvg} from "@/assets/dice/ability.svg";
 import {ReactComponent as SetbackSvg} from "@/assets/dice/setback.svg";
 import {ReactComponent as DifficultySvg} from "@/assets/dice/difficulty.svg";
@@ -17,6 +18,7 @@ type AdversaryType = 'Minion' | 'Rival' | 'Nemesis' | undefined;
 
 const ContentCardTargetsOld = () => {
   const addParticipant = useParticipantStore((state) => state.addParticipant);
+  const openSpotlight = useSpotlightStore((s) => s.open);
   const [isSelectorOpen, setSelectorOpen] = useState(false);
   const [isPcOpen, setPcOpen] = useState(false);
   const [loadingType, setLoadingType] = useState<AdversaryType | 'any' | null>(null);
@@ -104,6 +106,15 @@ const ContentCardTargetsOld = () => {
           variant="ghost"
           onClick={() => setSelectorOpen(true)}
           isDisabled={loadingType !== null}
+        />
+      </Tooltip>
+      <Tooltip label="Add starship">
+        <IconButton
+          aria-label="Add starship"
+          icon={<FaSpaceShuttle/>}
+          size="sm"
+          variant="ghost"
+          onClick={() => openSpotlight(['vehicle'])}
         />
       </Tooltip>
     </HStack>

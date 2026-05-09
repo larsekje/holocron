@@ -40,6 +40,7 @@ const RESULT_ROW_HEIGHT = 48;
 
 const Spotlight: React.FC = () => {
   const { isOpen, open, close } = useSpotlightStore();
+  const initialTypes = useSpotlightStore((s) => s.initialTypes);
   // The input value holds only freeform residual text. Committed tokens live in
   // `chips` so the input never visually duplicates what's already a chip.
   const [chips, setChips] = useState<string[]>([]);
@@ -111,8 +112,11 @@ const Spotlight: React.FC = () => {
         inputRef.current?.focus();
         inputRef.current?.select();
       }, 0);
-      // Ensure filters default to All on every open
-      setIncludedTypes(new Set(allTypes));
+      // Ensure filters default to All on every open, unless the caller
+      // pre-scoped via `open([...])` (e.g. "Add starship" → only `vehicle`).
+      setIncludedTypes(
+        new Set(initialTypes && initialTypes.length > 0 ? initialTypes : allTypes),
+      );
     } else {
       // Reset state when closing
       setChips([]);

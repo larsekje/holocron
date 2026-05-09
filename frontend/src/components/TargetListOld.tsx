@@ -1,7 +1,9 @@
 import React from 'react';
 import {Box, Flex, Text, VStack} from "@chakra-ui/react";
 import TargetCardOld from "@components/target/TargetCardOld";
+import VehicleTargetCardOld from "@components/target/VehicleTargetCardOld";
 import useParticipantStore, {Participant} from "@/state/participantsStore";
+import useActiveVehicleStore from "@/state/activeVehicleStore";
 import useGameplayStore from "@/state/newGameplayStore";
 
 function isParticipantDead(p: Participant): boolean {
@@ -20,6 +22,9 @@ const TargetListOld = () => {
   const selectedParticipantId = useParticipantStore((state) => state.selectedParticipantId);
   const selectParticipant = useParticipantStore((state) => state.selectParticipant);
 
+  const vehicles = useActiveVehicleStore((s) => s.vehicles);
+  const vehicleList = Object.values(vehicles);
+
   const activeParticipantId = useGameplayStore((state) => state.context.activeParticipantId);
   const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
   const currentTurnIndex = useGameplayStore((state) => state.context.currentTurnIndex);
@@ -37,7 +42,7 @@ const TargetListOld = () => {
   const eligibleFor = (isPC: boolean) =>
     isStructured && currentSlotTeam !== undefined && (isPC ? currentSlotTeam === "PC" : currentSlotTeam === "NPC");
 
-  if (participants.length === 0) {
+  if (participants.length === 0 && vehicleList.length === 0) {
     return <Text color="gray.400">No targets — add adversaries from the header.</Text>;
   }
 
@@ -131,6 +136,17 @@ const TargetListOld = () => {
           {sectionHeader('Adversaries', liveNPCs.length)}
           <VStack align="stretch" spacing="6px">
             {liveNPCs.map(renderRow)}
+          </VStack>
+        </Box>
+      )}
+
+      {vehicleList.length > 0 && (
+        <Box mt={livePCs.length > 0 || liveNPCs.length > 0 ? 3 : 0}>
+          {sectionHeader('Ships and vehicles', vehicleList.length)}
+          <VStack align="stretch" spacing="6px">
+            {vehicleList.map((v) => (
+              <VehicleTargetCardOld key={v.id} vehicle={v}/>
+            ))}
           </VStack>
         </Box>
       )}

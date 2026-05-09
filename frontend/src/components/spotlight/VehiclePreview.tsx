@@ -13,7 +13,7 @@ import {
 import { AddIcon } from '@chakra-ui/icons';
 import { useSpotlightStore } from '@/state/spotlightStore';
 import { VehicleWeaponsTable } from '@components/participantStatus/VehicleWeaponsTable';
-import { EquipVehicleModal } from './EquipVehicleModal';
+import { AddVehicleModal } from './AddVehicleModal';
 
 interface Props {
   detail: any;
@@ -49,8 +49,9 @@ function formatHyperdrive(hd: any): string | null {
 
 /**
  * Vehicle Spotlight detail. Stat strip + sub-blocks (crew, hyperdrive, sensors,
- * manufacturer) + weapons table. The "Equip on…" button opens the equip modal,
- * which assigns the vehicle to one or more participants in the encounter.
+ * manufacturer) + weapons table. The "Add to encounter" button opens
+ * AddVehicleModal, which creates a fresh ActiveVehicle and optionally links
+ * one or more participants as crew.
  *
  * The detail data is already Genesys-converted at build time
  * (`buildSpotlightIndex.mjs` → `convertVehicleToGenesys`), so all numbers
@@ -59,7 +60,7 @@ function formatHyperdrive(hd: any): string | null {
 export const VehiclePreview: React.FC<Props> = ({ detail }) => {
   const closeSpotlight = useSpotlightStore((s) => s.close);
   const toast = useToast();
-  const equipModal = useDisclosure();
+  const addModal = useDisclosure();
 
   const characteristics = detail.characteristics ?? {};
   const derived = detail.derived ?? {};
@@ -76,11 +77,11 @@ export const VehiclePreview: React.FC<Props> = ({ detail }) => {
 
   const hyperdriveText = formatHyperdrive(info.hyperdrive);
 
-  const handleEquipped = (vehicleId: string) => {
+  const handleAdded = (vehicleId: string) => {
     closeSpotlight();
     toast({
-      title: 'Vehicle equipped',
-      description: `${detail.fullName ?? detail.name} is now active.`,
+      title: 'Added to encounter',
+      description: `${detail.fullName ?? detail.name} is now in the encounter.`,
       status: 'success',
       duration: 2000,
       isClosable: true,
@@ -99,9 +100,9 @@ export const VehiclePreview: React.FC<Props> = ({ detail }) => {
         letterSpacing="0.04em"
         _hover={{ bg: 'yellow.400' }}
         alignSelf="flex-start"
-        onClick={equipModal.onOpen}
+        onClick={addModal.onOpen}
       >
-        Equip on…
+        Add to encounter
       </Button>
 
       {/* Stat strip — same shape as armor/gear/weapon detail rendering. */}
@@ -223,11 +224,11 @@ export const VehiclePreview: React.FC<Props> = ({ detail }) => {
         </Box>
       )}
 
-      <EquipVehicleModal
-        isOpen={equipModal.isOpen}
-        onClose={equipModal.onClose}
+      <AddVehicleModal
+        isOpen={addModal.isOpen}
+        onClose={addModal.onClose}
         vehicleDetail={detail}
-        onEquipped={handleEquipped}
+        onAdded={handleAdded}
       />
     </VStack>
   );

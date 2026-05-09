@@ -40,12 +40,16 @@ export interface SpotlightDetail {
 
 interface SpotlightState {
   isOpen: boolean;
-  open: () => void;
+  /** When set, the next open should pre-scope the type filter to these
+   * entries (e.g. "Add starship" → only `vehicle`). Cleared on close. */
+  initialTypes?: SpotlightEntityType[];
+  open: (initialTypes?: SpotlightEntityType[]) => void;
   close: () => void;
 }
 
 export const useSpotlightStore = create<SpotlightState>((set) => ({
   isOpen: false,
-  open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
+  initialTypes: undefined,
+  open: (initialTypes) => set({ isOpen: true, initialTypes }),
+  close: () => set({ isOpen: false, initialTypes: undefined }),
 }));

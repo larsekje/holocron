@@ -25,13 +25,13 @@ import type { VehicleRole } from '@/state/participantsStore';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  /** The spotlight detail entry for the vehicle being equipped — contains
+  /** The spotlight detail entry for the vehicle being added — contains
    * characteristics, derived, weapons, info needed to build a fresh active
    * vehicle instance. */
   vehicleDetail: any | null;
-  /** Optional callback after a successful equip (used by Spotlight to close
-   * itself and toast). */
-  onEquipped?: (vehicleId: string) => void;
+  /** Optional callback after the vehicle is added to the encounter (used by
+   * Spotlight to close itself and toast). */
+  onAdded?: (vehicleId: string) => void;
 }
 
 const ROLES: VehicleRole[] = ['pilot', 'gunner', 'passenger'];
@@ -43,14 +43,15 @@ function defaultRoleForIndex(i: number): VehicleRole {
 }
 
 /**
- * Multi-select participant + role picker for equipping a vehicle. Supports
- * multi-crew: multiple participants can be aboard the same instance, sharing
- * its hull pool. The selected role is a free-form display label only — the
- * mechanics don't enforce who can fire what.
+ * Multi-select participant + role picker for adding a vehicle to the
+ * encounter. Occupants are optional — a ship can sit in the encounter empty
+ * and be entered later. Multi-crew is supported: multiple participants can
+ * share one ship instance, all referencing the shared hull pool. Roles are
+ * free-form display labels and don't gate mechanics.
  */
-export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetail, onEquipped }) => {
+export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetail, onAdded }) => {
   const participants = useParticipantStore((s) => s.participants);
-  const equip = useActiveVehicleStore((s) => s.equip);
+  const addVehicle = useActiveVehicleStore((s) => s.add);
 
   const [selected, setSelected] = useState<Record<string, VehicleRole>>({});
 
@@ -60,7 +61,7 @@ export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDet
   }, [isOpen, vehicleDetail?.id]);
 
   const selectedIds = Object.keys(selected);
-  const canEquip = selectedIds.length > 0 && !!vehicleDetail;
+  const canAdd = !!vehicleDetail;
 
   const toggle = (participantId: string) => {
     setSelected((prev) => {
@@ -78,15 +79,15 @@ export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDet
     setSelected((prev) => ({ ...prev, [participantId]: role }));
   };
 
-  const handleEquip = () => {
+  const handleAdd = () => {
     if (!vehicleDetail) return;
     const spec = buildVehicleSpecFromSpotlight(vehicleDetail);
     const occupants: Occupant[] = selectedIds.map((id) => ({
       participantId: id,
       role: selected[id],
     }));
-    const id = equip(spec, occupants);
-    onEquipped?.(id);
+    const id = addVehicle(spec, occupants);
+    onAdded?.(id);
     onClose();
   };
 
@@ -98,7 +99,7 @@ export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDet
       <ModalContent bg="gray.900" color="gray.100">
         <ModalHeader>
           <HStack spacing={2}>
-            <Text>Equip</Text>
+            <Text>Add to encounter</Text>
             <Text color="gray.400">{vehicleName}</Text>
           </HStack>
         </ModalHeader>
@@ -106,20 +107,24 @@ export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDet
         <ModalBody>
           {participants.length === 0 ? (
             <Text fontSize="sm" color="gray.400">
-              No participants in the encounter. Add at least one PC or NPC before equipping a
-              vehicle on them.
+              The ship will be added to the encounter empty. Add PCs/NPCs first if you want to
+              place crew aboard now.
             </Text>
           ) : (
             <VStack align="stretch" spacing={1}>
-              <Text
-                fontSize="xs"
-                color="gray.400"
-                mb={1}
-                textTransform="uppercase"
-                letterSpacing="0.06em"
-              >
-                Pick occupants
-              </Text>
+              <HStack justify="space-between" mb={1}>
+                <Text
+                  fontSize="xs"
+                  color="gray.400"
+                  textTransform="uppercase"
+                  letterSpacing="0.06em"
+                >
+                  Pick occupants
+                </Text>
+                <Text fontSize="xs" color="gray.500" fontStyle="italic">
+                  optional
+                </Text>
+              </HStack>
               {participants.map((p) => {
                 const isSelected = !!selected[p.id];
                 const alreadyAboard = !!p.equippedVehicleId;
@@ -200,8 +205,8 @@ export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDet
           <Button variant="ghost" mr={2} onClick={onClose} color="gray.300">
             Cancel
           </Button>
-          <Button colorScheme="orange" onClick={handleEquip} isDisabled={!canEquip}>
-            Equip
+          <Button colorScheme="orange" onClick={handleAdd} isDisabled={!canAdd}>
+            {selectedIds.length > 0 ? 'Add with crew' : 'Add empty'}
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -209,4 +214,4 @@ export const EquipVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDet
   );
 };
 
-export default EquipVehicleModal;
+export default AddVehicleModal;

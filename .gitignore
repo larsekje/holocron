@@ -73,6 +73,9 @@ docs/_build/
 
 # PyBuilder
 target/
+# …but the frontend has a UI dir literally called target/ — track it.
+!frontend/src/components/target/
+!frontend/src/components/target/**
 
 # Jupyter Notebook
 .ipynb_checkpoints
