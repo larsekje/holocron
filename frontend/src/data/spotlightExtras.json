@@ -96,5 +96,10 @@
   { "id": "quality_sunder", "type": "quality", "name": "Sunder",
     "detail": { "id": "quality_sunder", "type": "quality", "name": "Sunder", "markdown": "May spend [AD] to damage an opponent's item or weapon.", "category": "Active", "ranked": false, "source": "SRD" } },
   { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo",
-    "detail": { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo", "markdown": "Weapon has restricted shots; [TH] may deplete remaining ammo at the GM's discretion.", "category": "Passive", "ranked": true, "source": "SRD" } }
+    "detail": { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo", "markdown": "Weapon has restricted shots; [TH] may deplete remaining ammo at the GM's discretion.", "category": "Passive", "ranked": true, "source": "SRD" } },
+
+  { "id": "rule_range-bands", "type": "rule", "name": "Range Bands",
+    "detail": { "id": "rule_range-bands", "type": "rule", "name": "Range Bands",
+      "markdown": "Distance is abstracted into five bands — a shared mental ruler, not metres on a map.[P][B]Engaged[b] — touching, hand-to-hand. Melee/Brawl/Lightsaber range. Ranged (Light) adds [DI], Ranged (Heavy) adds [DI][DI], Gunnery cannot fire. 1 maneuver to disengage.[P][B]Short[b] — same room, normal conversation. Difficulty [DI]. 1 maneuver to Engaged or Medium.[P][B]Medium[b] — across the street, raised voice. Difficulty [DI][DI]. 1 maneuver to Short, 2 to Long.[P][B]Long[b] — across a courtyard, ~100 m. Difficulty [DI][DI][DI]. 2 maneuvers to Medium or Extreme.[P][B]Extreme[b] — edge of perception, ~500 m. Difficulty [DI][DI][DI][DI]. 2 maneuvers to Long.",
+      "category": "Range Bands", "source": "CRB" } }
 ]

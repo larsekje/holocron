@@ -5,6 +5,7 @@ import useSessionLogStore, {
   LogEntry,
   Reminder,
 } from "@/state/sessionLogStore";
+import { renderSwrpgText } from "@/utils/swrpgText";
 
 const toneBorder: Record<NonNullable<LogEntry["tone"]>, string> = {
   info: "whiteAlpha.300",
@@ -19,13 +20,25 @@ function formatTime(at: number): string {
 }
 
 // ── Section building ───────────────────────────────────────────────────────
-// Walk the timeline forward, opening an "encounter" section at every
-// encounter-start and closing it at the matching encounter-end. Anything
-// outside an open encounter goes into a transient "interim" section.
+// Walk the timeline forward, opening an "encounter" or "skillChallenge"
+// section on the matching start kind and closing it on the matching end.
+// Anything outside an open section goes into a transient "interim" section.
+// Skill challenges and encounters are mutually exclusive in the toolbar so we
+// don't expect overlap; a defensive new-start-while-other-open closes the
+// previous and starts fresh.
 type EncounterSectionT = {
   kind: "encounter";
   id: string;
   encounterNumber: number;
+  entries: LogEntry[];
+  ended: boolean;
+};
+type SkillChallengeSectionT = {
+  kind: "skillChallenge";
+  id: string;
+  name: string;
+  /** 'won' | 'lost' | 'abandoned' once ended; undefined while active. */
+  outcome?: string;
   entries: LogEntry[];
   ended: boolean;
 };
@@ -34,7 +47,7 @@ type InterimSectionT = {
   id: string;
   entries: LogEntry[];
 };
-type Section = EncounterSectionT | InterimSectionT;
+type Section = EncounterSectionT | SkillChallengeSectionT | InterimSectionT;
 
 function buildSections(timeline: LogEntry[]): Section[] {
   const sections: Section[] = [];
@@ -62,6 +75,23 @@ function buildSections(timeline: LogEntry[]): Section[] {
       }
       // A stray encounter-end with no open section shouldn't happen but
       // would be safely ignored — drop it.
+    } else if (entry.kind === "skill-challenge-start") {
+      if (current) sections.push(current);
+      current = {
+        kind: "skillChallenge",
+        id: entry.id,
+        name: (entry.meta?.name as string | undefined) ?? "Skill Challenge",
+        entries: [entry],
+        ended: false,
+      };
+    } else if (entry.kind === "skill-challenge-end") {
+      if (current && current.kind === "skillChallenge") {
+        current.entries.push(entry);
+        current.ended = true;
+        current.outcome = entry.meta?.outcome as string | undefined;
+        sections.push(current);
+        current = null;
+      }
     } else {
       if (!current) {
         current = { kind: "interim", id: entry.id, entries: [entry] };
@@ -146,7 +176,35 @@ const TimelineRow: React.FC<{ entry: LogEntry }> = ({ entry }) => {
       <Text color="whiteAlpha.400" minW="62px" fontFamily="mono" fontSize="10px" pt="1px">
         {formatTime(entry.at)}
       </Text>
-      <Text noOfLines={3}>{entry.summary}</Text>
+      <Box
+        noOfLines={3}
+        sx={{
+          // Inherit whatever the surrounding row's text color is so icons
+          // read against the dark Sidebar bg without their default near-black
+          // glyph fill (which disappears on the dark theme).
+          //
+          // The base .icon style adds `top: 2px` (a nudge that suits the
+          // larger contexts where the icon font is normally used). Inline
+          // with body text it pushes the glyph below the baseline — override
+          // back to 0 and align via inline-flex so the glyph centers on the
+          // line height instead of the font's text baseline.
+          '& .icon': {
+            color: 'currentColor',
+            fontSize: '13px',
+            top: 0,
+            display: 'inline-flex',
+            alignItems: 'center',
+            verticalAlign: '-0.18em',
+            lineHeight: 1,
+            marginX: '1px',
+          },
+          '& .icon::before, & .icon::after': {
+            color: 'currentColor',
+          },
+        }}
+      >
+        {renderSwrpgText(entry.summary)}
+      </Box>
     </HStack>
   );
 };
@@ -215,6 +273,98 @@ const EncounterSection: React.FC<{
   );
 };
 
+const SkillChallengeSection: React.FC<{
+  section: SkillChallengeSectionT;
+  isActive: boolean;
+}> = ({ section, isActive }) => {
+  const [expanded, setExpanded] = useState(isActive);
+  const entriesNewestFirst = useMemo(
+    () => [...section.entries].reverse(),
+    [section.entries],
+  );
+
+  // Status colour: active = orange (skill challenge accent), won = green,
+  // lost = red, abandoned = dim.
+  const outcome = section.outcome;
+  const accent = isActive
+    ? "#d39939"
+    : outcome === "won"
+      ? "#3a7e57"
+      : outcome === "lost"
+        ? "#b03030"
+        : "whiteAlpha.150";
+  const statusLabel = isActive ? "Active" : outcome ?? "Ended";
+
+  return (
+    <Box
+      borderWidth="1px"
+      borderColor={accent}
+      borderRadius="md"
+      overflow="hidden"
+      bg="rgba(255,255,255,0.02)"
+    >
+      <HStack
+        as="button"
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        w="100%"
+        px={2}
+        py={1.5}
+        bg={isActive ? "rgba(211,153,57,0.10)" : "rgba(255,255,255,0.03)"}
+        _hover={{ bg: "whiteAlpha.100" }}
+        justify="space-between"
+      >
+        <HStack spacing={2} minW={0}>
+          {expanded ? (
+            <ChevronDownIcon boxSize={3} color="whiteAlpha.700" />
+          ) : (
+            <ChevronRightIcon boxSize={3} color="whiteAlpha.700" />
+          )}
+          <Text
+            fontSize="9px"
+            color={accent}
+            letterSpacing="0.1em"
+            textTransform="uppercase"
+            fontWeight="bold"
+            flexShrink={0}
+          >
+            Skill Challenge
+          </Text>
+          <Text
+            fontSize="xs"
+            fontWeight="bold"
+            color="white"
+            noOfLines={1}
+            minW={0}
+          >
+            {section.name}
+          </Text>
+          <Text
+            fontSize="9px"
+            color={accent}
+            letterSpacing="0.1em"
+            textTransform="uppercase"
+            flexShrink={0}
+          >
+            {statusLabel}
+          </Text>
+        </HStack>
+        <Text fontSize="9px" color="whiteAlpha.400" flexShrink={0}>
+          {section.entries.length}
+          {section.entries.length === 1 ? " event" : " events"}
+        </Text>
+      </HStack>
+      {expanded && (
+        <VStack align="stretch" spacing={0.5} p={1}>
+          {entriesNewestFirst.map((e) => (
+            <TimelineRow key={e.id} entry={e} />
+          ))}
+        </VStack>
+      )}
+    </Box>
+  );
+};
+
 const InterimSection: React.FC<{ section: InterimSectionT }> = ({ section }) => {
   const entriesNewestFirst = useMemo(
     () => [...section.entries].reverse(),
@@ -238,12 +388,16 @@ const Sidebar: React.FC = () => {
   const sections = useMemo(() => buildSections(timeline), [timeline]);
   const sectionsNewestFirst = useMemo(() => [...sections].reverse(), [sections]);
 
-  // The active encounter is the most recent encounter section without an
-  // encounter-end entry. Identifying it lets us auto-expand its card.
-  const activeEncounterId = useMemo(() => {
+  // The active section (encounter or skill challenge) is the most recent
+  // open one — used for accent colour + auto-expand. Skill challenges and
+  // encounters are mutually exclusive in the toolbar so at most one of
+  // either kind should be open at a time.
+  const activeSectionId = useMemo(() => {
     for (let i = sections.length - 1; i >= 0; i--) {
       const s = sections[i];
-      if (s.kind === "encounter" && !s.ended) return s.id;
+      if ((s.kind === "encounter" || s.kind === "skillChallenge") && !s.ended) {
+        return s.id;
+      }
     }
     return undefined;
   }, [sections]);
@@ -309,17 +463,27 @@ const Sidebar: React.FC = () => {
           </Text>
         ) : (
           <VStack align="stretch" spacing={2}>
-            {sectionsNewestFirst.map((section) =>
-              section.kind === "encounter" ? (
-                <EncounterSection
-                  key={section.id}
-                  section={section}
-                  isActive={section.id === activeEncounterId}
-                />
-              ) : (
-                <InterimSection key={section.id} section={section} />
-              ),
-            )}
+            {sectionsNewestFirst.map((section) => {
+              if (section.kind === "encounter") {
+                return (
+                  <EncounterSection
+                    key={section.id}
+                    section={section}
+                    isActive={section.id === activeSectionId}
+                  />
+                );
+              }
+              if (section.kind === "skillChallenge") {
+                return (
+                  <SkillChallengeSection
+                    key={section.id}
+                    section={section}
+                    isActive={section.id === activeSectionId}
+                  />
+                );
+              }
+              return <InterimSection key={section.id} section={section} />;
+            })}
           </VStack>
         )}
       </Box>

@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import {HStack, IconButton, Tooltip, useToast} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
-import {FaSkull, FaUserAstronaut, FaUserNinja, FaUsers, FaUserTie} from "react-icons/fa";
+import {FaUsers} from "react-icons/fa";
 import ContentCardOld from "@/ContentCardOld";
 import TargetListOld from "@components/TargetListOld";
 import AdversarySelector from "@components/adversaries/AdversarySelector";
 import AddPCModal from "@components/adversaries/AddPCModal";
 import adversaryService from "@/services/adversaryService";
 import useParticipantStore from "@/state/participantsStore";
+import {ReactComponent as AbilitySvg} from "@/assets/dice/ability.svg";
+import {ReactComponent as SetbackSvg} from "@/assets/dice/setback.svg";
+import {ReactComponent as DifficultySvg} from "@/assets/dice/difficulty.svg";
+import {ReactComponent as ChallengeSvg} from "@/assets/dice/challenge.svg";
 
 type AdversaryType = 'Minion' | 'Rival' | 'Nemesis' | undefined;
 
@@ -55,9 +59,8 @@ const ContentCardTargetsOld = () => {
       <Tooltip label="Add Player Character">
         <IconButton
           aria-label="Add player character"
-          icon={<FaUserAstronaut/>}
+          icon={<AbilitySvg width={20}/>}
           size="sm"
-          colorScheme="cyan"
           variant="ghost"
           onClick={() => setPcOpen(true)}
         />
@@ -65,9 +68,8 @@ const ContentCardTargetsOld = () => {
       <Tooltip label="Add Minion">
         <IconButton
           aria-label="Add Minion adversary"
-          icon={<FaSkull/>}
+          icon={<SetbackSvg width={18}/>}
           size="sm"
-          colorScheme="green"
           variant="ghost"
           isLoading={loadingType === 'Minion'}
           onClick={() => handleAddRandomAdversary('Minion')}
@@ -76,9 +78,8 @@ const ContentCardTargetsOld = () => {
       <Tooltip label="Add Rival">
         <IconButton
           aria-label="Add Rival adversary"
-          icon={<FaUserNinja/>}
+          icon={<DifficultySvg width={20}/>}
           size="sm"
-          colorScheme="orange"
           variant="ghost"
           isLoading={loadingType === 'Rival'}
           onClick={() => handleAddRandomAdversary('Rival')}
@@ -87,9 +88,8 @@ const ContentCardTargetsOld = () => {
       <Tooltip label="Add Nemesis">
         <IconButton
           aria-label="Add Nemesis adversary"
-          icon={<FaUserTie/>}
+          icon={<ChallengeSvg width={20}/>}
           size="sm"
-          colorScheme="red"
           variant="ghost"
           isLoading={loadingType === 'Nemesis'}
           onClick={() => handleAddRandomAdversary('Nemesis')}

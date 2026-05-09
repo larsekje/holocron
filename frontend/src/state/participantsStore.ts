@@ -2,7 +2,11 @@ import { create } from "zustand";
 import EventBus from "@/utils/events";
 import { nanoid } from "nanoid";
 
-// DicePouch interface for handling dice modifications
+// DicePouch interface for handling dice modifications. Holds both narrative
+// dice (boost/setback/force) and skill-side dice (ability/proficiency/
+// difficulty/challenge) so an entire prepared pool can be passed to another
+// participant via the Pass-to flow. Symbol counts (success/failure/etc.) are
+// folded into the next roll as bonus symbols.
 export interface DicePouch {
     boost: number;
     setback: number;
@@ -13,6 +17,10 @@ export interface DicePouch {
     triumph: number;
     despair: number;
     force: number;
+    ability?: number;
+    proficiency?: number;
+    difficulty?: number;
+    challenge?: number;
 }
 
 import { CritInjury } from "@/data/critTable";
@@ -54,6 +62,10 @@ export interface Participant {
         adversaryId?: string; // ID reference to the adversary data source
     };
     dicePouch?: DicePouch; // Dice modifications
+    /** Per-token provenance — parallel to dicePouch counts. Each entry's
+     * array length matches the count for that kind. Lets the receiver's
+     * pouch UI explain "1 Setback (from Aqualish Thug — …)". */
+    dicePouchSources?: Partial<Record<keyof DicePouch, string[]>>;
     criticalInjuries?: CritInjury[];
 }
 
@@ -82,7 +94,7 @@ interface ParticipantStore {
     setStat: (id: string, key: string, value: number) => void;
 
     // Dice pouch management
-    addDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
+    addDice: (id: string, diceType: keyof DicePouch, amount: number, source?: string) => void;
     removeDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
     clearDicePouch: (id: string) => void;
 }
@@ -230,39 +242,51 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
     },
 
     // Dice Pouch Management
-    addDice: (id, diceType, amount) => {
+    addDice: (id, diceType, amount, source) => {
         set((state) => ({
             participants: state.participants.map(participant => {
                 if (participant.id === id) {
-                    // Create dice pouch if it doesn't exist
                     const currentDicePouch = participant.dicePouch || {
                         boost: 0, setback: 0, advantage: 0, threat: 0,
                         success: 0, failure: 0, triumph: 0, despair: 0, force: 0
                     };
-                    
+                    const currentSources = participant.dicePouchSources ?? {};
+                    const existing = currentSources[diceType] ?? [];
+                    const sourceLabel = source ?? 'Unknown';
                     return {
                         ...participant,
                         dicePouch: {
                             ...currentDicePouch,
                             [diceType]: (currentDicePouch[diceType] || 0) + amount
-                        }
+                        },
+                        dicePouchSources: {
+                            ...currentSources,
+                            [diceType]: [...existing, ...Array(amount).fill(sourceLabel)],
+                        },
                     };
                 }
                 return participant;
             })
         }));
     },
-    
+
     removeDice: (id, diceType, amount) => {
         set((state) => ({
             participants: state.participants.map(participant => {
                 if (participant.id === id && participant.dicePouch) {
+                    const sources = participant.dicePouchSources ?? {};
+                    const existing = sources[diceType] ?? [];
+                    const trimmed = existing.slice(0, Math.max(0, existing.length - amount));
+                    const nextSources = { ...sources };
+                    if (trimmed.length === 0) delete nextSources[diceType];
+                    else nextSources[diceType] = trimmed;
                     return {
                         ...participant,
                         dicePouch: {
                             ...participant.dicePouch,
                             [diceType]: Math.max(0, (participant.dicePouch[diceType] || 0) - amount)
-                        }
+                        },
+                        dicePouchSources: nextSources,
                     };
                 }
                 return participant;

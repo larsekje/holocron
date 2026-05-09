@@ -22,6 +22,7 @@ import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
 import CritRollerModal from "@components/crit/CritRollerModal";
+import SkillChallengeStartButton from "@components/skillChallenge/SkillChallengeStartButton";
 
 interface Props { }
 
@@ -108,31 +109,37 @@ const ToolBarNonStructured = ({ }: Props) => {
 
     return (
       <>
-          {/* Left Area */}
-          <HStack paddingLeft={4}>
+          {/* Left Area — round / turn status, then encounter / skill
+            * challenge starters. Grouped so the parent Flex's
+            * `justify="space-between"` pushes the whole left cluster against
+            * the left edge instead of centring the starters. */}
+          <HStack paddingLeft={4} spacing={3}>
             {state === 'inProgress' && (
                 <Box>
                     <Text fontSize="sm" fontWeight="bold">Round: {context.round}</Text>
-                    
+
                     {/* Current Turn Phase */}
                     {turnState && (
                         <Text fontSize="sm">
-                            {turnState === 'turn_start' ? 'Select active participant' : 
-                             turnState === 'turn_active' ? 'Taking actions' : 
+                            {turnState === 'turn_start' ? 'Select active participant' :
+                             turnState === 'turn_active' ? 'Taking actions' :
                              'Ending turn'}
                         </Text>
                     )}
                 </Box>
             )}
+            {/* Encounter / Skill Challenge starters — siblings since the two
+              * modes of structured play are mutually exclusive. */}
+            <HStack spacing={2}>
+                <Button
+                    colorScheme="purple"
+                    onClick={handleRollInitiative}
+                    isDisabled={participantCount === 0 || state === 'inProgress'}
+                > Roll Initiative
+                </Button>
+                <SkillChallengeStartButton/>
+            </HStack>
           </HStack>
-
-          {/* Button to Roll Initiative */}
-          <Button
-              colorScheme="purple"
-              onClick={handleRollInitiative}
-              isDisabled={participantCount === 0 || state === 'inProgress'}
-          > Roll Initiative
-          </Button>
 
           {/* Turn management buttons */}
           {state === 'inProgress' && (

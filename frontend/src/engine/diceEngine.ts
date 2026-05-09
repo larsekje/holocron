@@ -82,9 +82,15 @@ export function rollDie(die: DieType, rng: RNG = Math.random): DieRoll {
 
 /**
  * Roll a full dice pool and return raw symbol totals plus the net result.
- * Entry point for the roller UI.
+ * Entry point for the roller UI. `extras` adds raw symbols on top of the
+ * rolled totals — used for pre-roll bonuses (a passed Triumph from an ally,
+ * a GM-granted Advantage from prep, etc.) that have no die to roll.
  */
-export function rollPool(pool: DicePool, rng: RNG = Math.random): RollResult {
+export function rollPool(
+  pool: DicePool,
+  rng: RNG = Math.random,
+  extras: Partial<SymbolTotals> = {},
+): RollResult {
   const rolls: DieRoll[] = [];
 
   for (const [die, count] of Object.entries(pool) as [DieType, number][]) {
@@ -93,7 +99,17 @@ export function rollPool(pool: DicePool, rng: RNG = Math.random): RollResult {
     }
   }
 
-  const raw = sumSymbols(rolls.map(r => r.symbols));
+  const rolledRaw = sumSymbols(rolls.map(r => r.symbols));
+  const raw: SymbolTotals = {
+    success:   rolledRaw.success   + (extras.success   ?? 0),
+    failure:   rolledRaw.failure   + (extras.failure   ?? 0),
+    advantage: rolledRaw.advantage + (extras.advantage ?? 0),
+    threat:    rolledRaw.threat    + (extras.threat    ?? 0),
+    triumph:   rolledRaw.triumph   + (extras.triumph   ?? 0),
+    despair:   rolledRaw.despair   + (extras.despair   ?? 0),
+    light:     rolledRaw.light     + (extras.light     ?? 0),
+    dark:      rolledRaw.dark      + (extras.dark      ?? 0),
+  };
   const net = resolveNet(raw);
   return { pool, rolls, raw, net };
 }

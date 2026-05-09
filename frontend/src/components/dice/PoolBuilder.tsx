@@ -1,7 +1,35 @@
 import React from 'react';
-import { Badge, Box, HStack, Text, Tooltip, VStack, Wrap, WrapItem } from '@chakra-ui/react';
-import type { DicePool, DieRoll, DieType, RollResult, SymbolTotals } from '@/engine/diceEngine';
+import {
+  Box,
+  Grid,
+  GridItem,
+  HStack,
+  IconButton,
+  Text,
+  Tooltip,
+  VStack,
+  Wrap,
+  WrapItem,
+  keyframes,
+} from '@chakra-ui/react';
+import type {
+  DicePool,
+  DieRoll,
+  DieType,
+  RollResult,
+  SymbolTotals,
+} from '@/engine/diceEngine';
 import type { SymbolKind } from './DiceChip';
+import { ReactComponent as AbilitySvg } from '@/assets/dice/ability.svg';
+import { ReactComponent as ProficiencySvg } from '@/assets/dice/proficiency.svg';
+import { ReactComponent as DifficultySvg } from '@/assets/dice/difficulty.svg';
+import { ReactComponent as ChallengeSvg } from '@/assets/dice/challenge.svg';
+import { ReactComponent as BoostSvg } from '@/assets/dice/boost.svg';
+import { ReactComponent as SetbackSvg } from '@/assets/dice/setback.svg';
+import { ReactComponent as ForceSvg } from '@/assets/dice/force.svg';
+import useDiceRollerStore, { type BonusSymbolKind } from '@/state/diceRollerStore';
+import useParticipantStore, { type DicePouch } from '@/state/participantsStore';
+import { DifficultyRangeList } from './DifficultyRangeList';
 
 interface PoolBuilderProps {
   pool: DicePool;
@@ -28,15 +56,41 @@ const DIE_LABEL: Record<DieType, string> = {
   force: 'Force',
 };
 
-const DIE_COLORS: Record<DieType, { border: string; bg: string }> = {
-  ability:     { border: 'green.400',       bg: 'green.900' },
-  proficiency: { border: 'yellow.300',      bg: 'yellow.800' },
-  difficulty:  { border: 'purple.400',      bg: 'purple.900' },
-  challenge:   { border: 'red.400',         bg: 'red.900' },
-  boost:       { border: 'blue.300',        bg: 'blue.900' },
-  setback:     { border: 'gray.400',        bg: 'blackAlpha.700' },
-  force:       { border: 'whiteAlpha.800',  bg: 'gray.700' },
+const DIE_SVG: Record<DieType, React.ComponentType<{ width?: number | string }>> = {
+  ability: AbilitySvg,
+  proficiency: ProficiencySvg,
+  difficulty: DifficultySvg,
+  challenge: ChallengeSvg,
+  boost: BoostSvg,
+  setback: SetbackSvg,
+  force: ForceSvg,
 };
+
+// Raw symbols the user can inject without rolling — left-to-right ordered so
+// "good for me" symbols come first, then "bad for me", then Force pips.
+const BONUS_SYMBOL_ORDER: { kind: SymbolKind; storeKey: 'success' | 'advantage' | 'triumph' | 'failure' | 'threat' | 'despair' | 'light' | 'dark'; label: string }[] = [
+  { kind: 'success',   storeKey: 'success',   label: 'Success' },
+  { kind: 'advantage', storeKey: 'advantage', label: 'Advantage' },
+  { kind: 'triumph',   storeKey: 'triumph',   label: 'Triumph' },
+  { kind: 'failure',   storeKey: 'failure',   label: 'Failure' },
+  { kind: 'threat',    storeKey: 'threat',    label: 'Threat' },
+  { kind: 'despair',   storeKey: 'despair',   label: 'Despair' },
+  { kind: 'lightside', storeKey: 'light',     label: 'Light pip' },
+  { kind: 'darkside',  storeKey: 'dark',      label: 'Dark pip' },
+];
+
+// Tumble + bounce while rolling. Three full rotations with two arcing bounces,
+// finishing settled at the original orientation. Pairs with hiding the symbol
+// overlay until rolling=false so the face only "appears" once the die settles.
+const rollAnim = keyframes`
+  0%   { transform: translateY(0)     rotate(0)      scale(1);    }
+  18%  { transform: translateY(-14px) rotate(220deg) scale(1.06); }
+  36%  { transform: translateY(0)     rotate(440deg) scale(1);    }
+  55%  { transform: translateY(-9px)  rotate(660deg) scale(1.04); }
+  75%  { transform: translateY(0)     rotate(880deg) scale(1);    }
+  90%  { transform: translateY(-2px)  rotate(1050deg) scale(1);   }
+  100% { transform: translateY(0)     rotate(1080deg) scale(1);   }
+`;
 
 function symbolsList(face: SymbolTotals): { kind: SymbolKind; n: number }[] {
   const out: { kind: SymbolKind; n: number }[] = [];
@@ -51,73 +105,96 @@ function symbolsList(face: SymbolTotals): { kind: SymbolKind; n: number }[] {
   return out;
 }
 
-const PoolDie: React.FC<{ die: DieType; roll?: DieRoll }> = ({ die, roll }) => {
-  const colors = DIE_COLORS[die];
+const PoolDie: React.FC<{ die: DieType; roll?: DieRoll; rolling: boolean; source?: string }> = ({
+  die,
+  roll,
+  rolling,
+  source,
+}) => {
+  const Svg = DIE_SVG[die];
+  const removeDie = useDiceRollerStore((s) => s.removeDie);
   const isRolled = !!roll;
   const symbols = isRolled ? symbolsList(roll.symbols) : [];
   const isBlank = isRolled && symbols.length === 0;
+  const totalSymbols = symbols.reduce((n, s) => n + s.n, 0);
+  const symbolFont = totalSymbols >= 3 ? '11px' : totalSymbols === 2 ? '14px' : '20px';
+  const isDarkDie = die === 'force' || die === 'challenge' || die === 'setback';
 
-  const tip = isRolled
-    ? `${DIE_LABEL[die]} → ${isBlank ? 'blank' : symbols.map((s) => `${s.n} ${s.kind}`).join(', ')}\nclick: remove · shift: upgrade · ctrl: downgrade`
-    : `${DIE_LABEL[die]}\nclick: remove · shift: upgrade · ctrl: downgrade`;
+  // Tooltip shows only the source — the rolled face is already visible on
+  // the die itself, so a "→ 2 advantage" suffix is just noise.
+  const tip = source ?? DIE_LABEL[die];
 
   return (
-    <Tooltip label={tip} placement="top" hasArrow openDelay={400} whiteSpace="pre-line">
+    <Tooltip label={tip} placement="top" hasArrow openDelay={400}>
       <Box
-        as="button"
-        type="button"
-        onClick={() => undefined}
-        bg={colors.bg}
-        borderColor={colors.border}
-        borderWidth="2px"
-        borderRadius="md"
-        minW="44px"
-        minH="44px"
-        px={2}
-        py={1}
+        position="relative"
+        w="56px"
+        h="56px"
         display="flex"
         alignItems="center"
         justifyContent="center"
-        _hover={{ borderColor: 'whiteAlpha.900', filter: 'brightness(1.15)' }}
+        animation={rolling ? `${rollAnim} 700ms cubic-bezier(0.2, 0.6, 0.3, 1)` : undefined}
+        cursor={isRolled ? 'default' : 'pointer'}
+        onClick={() => {
+          if (!isRolled) removeDie(die);
+        }}
       >
-        {!isRolled && <Box className={`icon ${die}`} fontSize="22px" />}
-        {isRolled && isBlank && <Box className={`icon ${die}`} fontSize="22px" opacity={0.25} />}
-        {isRolled && !isBlank && (
-          <HStack spacing={0}>
+        <Box position="absolute" inset={0} display="flex" alignItems="center" justifyContent="center">
+          <Svg width={52} />
+        </Box>
+        {isRolled && !isBlank && !rolling && (
+          <VStack
+            spacing="-1px"
+            position="relative"
+            sx={{
+              '& .icon, & .icon::before, & .icon::after': {
+                color: isDarkDie ? 'whiteAlpha.900' : 'blackAlpha.800',
+                fontSize: symbolFont,
+                lineHeight: 1,
+                top: 0,
+              },
+            }}
+          >
             {symbols.flatMap((s, i) =>
               Array.from({ length: s.n }).map((_, j) => (
-                <Box key={`${i}-${j}`} className={`icon ${s.kind}`} fontSize="20px" />
+                <Box
+                  key={`${i}-${j}`}
+                  className={`icon ${s.kind}`}
+                  fontSize={symbolFont}
+                  lineHeight={1}
+                  display="block"
+                />
               )),
             )}
-          </HStack>
+          </VStack>
         )}
       </Box>
     </Tooltip>
   );
 };
 
-const AddDieButton: React.FC<{ die: DieType }> = ({ die }) => (
-  <Tooltip label={`Add ${DIE_LABEL[die]}`} placement="top" hasArrow openDelay={300}>
-    <Box
-      as="button"
-      type="button"
-      onClick={() => undefined}
-      bg="gray.900"
-      borderColor={DIE_COLORS[die].border}
-      borderWidth="1px"
-      borderRadius="md"
-      px={2}
-      py={1}
-      cursor="pointer"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      _hover={{ bg: DIE_COLORS[die].bg, borderWidth: '2px', px: '7px', py: '3px' }}
-    >
-      <Box className={`icon ${die}`} fontSize="20px" />
-    </Box>
-  </Tooltip>
-);
+// Palette die — click adds a die to the pool, right-click removes one.
+const PaletteDie: React.FC<{ die: DieType }> = ({ die }) => {
+  const Svg = DIE_SVG[die];
+  const addDie = useDiceRollerStore((s) => s.addDie);
+  const removeDie = useDiceRollerStore((s) => s.removeDie);
+  return (
+    <IconButton
+      aria-label={`Add ${DIE_LABEL[die]}`}
+      icon={<Svg width={36} />}
+      variant="ghost"
+      boxSize="48px"
+      minW="48px"
+      _hover={{ bg: 'whiteAlpha.100', transform: 'translateY(-1px)' }}
+      transition="transform 80ms ease-out, background 120ms ease-out"
+      onClick={() => addDie(die, 'Manual')}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        removeDie(die);
+      }}
+    />
+  );
+};
 
 function expandPool(pool: DicePool): DieType[] {
   const out: DieType[] = [];
@@ -128,11 +205,19 @@ function expandPool(pool: DicePool): DieType[] {
   return out;
 }
 
-/**
- * Group rolls by die type so we can pair each visible pool die with its rolled face.
- * Pool dice are rendered in DIE_ORDER (not engine insertion order), so we can't index
- * straight into result.rolls.
- */
+function expandSources(
+  pool: DicePool,
+  sources: Partial<Record<DieType, string[]>> | undefined,
+): (string | undefined)[] {
+  const out: (string | undefined)[] = [];
+  for (const die of DIE_ORDER) {
+    const n = pool[die] ?? 0;
+    const arr = sources?.[die] ?? [];
+    for (let i = 0; i < n; i++) out.push(arr[i]);
+  }
+  return out;
+}
+
 function pairRolls(dice: DieType[], rolls: DieRoll[]): (DieRoll | undefined)[] {
   const byType = new Map<DieType, DieRoll[]>();
   for (const r of rolls) {
@@ -147,95 +232,460 @@ function pairRolls(dice: DieType[], rolls: DieRoll[]): (DieRoll | undefined)[] {
   });
 }
 
-export const PoolBuilder: React.FC<PoolBuilderProps> = ({ pool, result }) => {
-  const dice = expandPool(pool);
-  const totalDice = dice.length;
-  const pairedRolls = result ? pairRolls(dice, result.rolls) : [];
-  const net = result?.net;
-  const succeeded = net?.succeeded ?? false;
+// Always rendered so the modal doesn't grow when a roll lands. Pre-roll
+// shows a muted placeholder of the same vertical footprint; post-roll
+// shows the real Succeeded/Failed + symbol counts.
+const ResultStrip: React.FC<{ result: RollResult | null }> = ({ result }) => {
+  if (!result) {
+    return (
+      <HStack spacing={4} align="baseline" wrap="wrap" minH="28px" opacity={0.4}>
+        <Text fontSize="lg" fontWeight="bold" color="gray.500" letterSpacing="0.04em">
+          Pending
+        </Text>
+        <Text fontSize="sm" color="gray.500">Roll to resolve</Text>
+      </HStack>
+    );
+  }
+
+  const { net } = result;
+  const succeeded = net.succeeded;
+
+  const counts: { kind: SymbolKind; n: number; label: string }[] = [];
+  if (net.netSuccess > 0)   counts.push({ kind: 'success',   n: net.netSuccess,    label: net.netSuccess === 1 ? 'Success' : 'Successes' });
+  if (net.netSuccess < 0)   counts.push({ kind: 'failure',   n: -net.netSuccess,   label: -net.netSuccess === 1 ? 'Failure' : 'Failures' });
+  if (net.netAdvantage > 0) counts.push({ kind: 'advantage', n: net.netAdvantage,  label: net.netAdvantage === 1 ? 'Advantage' : 'Advantages' });
+  if (net.netAdvantage < 0) counts.push({ kind: 'threat',    n: -net.netAdvantage, label: -net.netAdvantage === 1 ? 'Threat' : 'Threats' });
+  if (net.triumph > 0)      counts.push({ kind: 'triumph',   n: net.triumph,       label: net.triumph === 1 ? 'Triumph' : 'Triumphs' });
+  if (net.despair > 0)      counts.push({ kind: 'despair',   n: net.despair,       label: net.despair === 1 ? 'Despair' : 'Despairs' });
+  if (net.light > 0)        counts.push({ kind: 'lightside', n: net.light,         label: net.light === 1 ? 'Light' : 'Light' });
+  if (net.dark > 0)         counts.push({ kind: 'darkside',  n: net.dark,          label: net.dark === 1 ? 'Dark' : 'Dark' });
 
   return (
-    <VStack align="stretch" spacing={2}>
-      {/* Add-dice row */}
-      <HStack spacing={3} align="center">
-        <Text fontSize="xs" color="gray.500" minW="36px">ADD</Text>
-        <Wrap spacing={1.5}>
-          {DIE_ORDER.map((die) => (
-            <WrapItem key={die}>
-              <AddDieButton die={die} />
-            </WrapItem>
+    <HStack spacing={4} align="baseline" wrap="wrap" minH="28px">
+      <Text
+        fontSize="lg"
+        fontWeight="bold"
+        color={succeeded ? 'green.300' : 'red.300'}
+        letterSpacing="0.04em"
+      >
+        {succeeded ? 'Succeeded' : 'Failed'}
+      </Text>
+      {counts.length === 0 ? (
+        <Text fontSize="sm" color="gray.500">No symbols</Text>
+      ) : (
+        <HStack spacing={3} wrap="wrap">
+          {counts.map((s, i) => (
+            <HStack key={i} spacing={1} align="baseline">
+              <Text fontSize="md" color="gray.100" fontWeight="semibold">{s.n}</Text>
+              <Box className={`icon ${s.kind}`} fontSize="16px" />
+              <Text fontSize="sm" color="gray.400">{s.label}</Text>
+            </HStack>
           ))}
-        </Wrap>
-      </HStack>
+        </HStack>
+      )}
+    </HStack>
+  );
+};
 
-      {/* Pool / Result panel */}
+// Tokens that the receiver can fold straight into their pool as un-rolled
+// dice. Skill-side dice (ability/proficiency/difficulty/challenge) land here
+// when an entire pool was passed via Pass-to.
+const POUCH_DIE_KINDS: (keyof DicePouch & DieType)[] = [
+  'ability', 'proficiency', 'difficulty', 'challenge', 'boost', 'setback', 'force',
+];
+
+const POUCH_RAW_KINDS: (keyof DicePouch)[] = [
+  'advantage',
+  'threat',
+  'triumph',
+  'despair',
+  'success',
+  'failure',
+];
+
+const RAW_TO_ICON: Record<string, SymbolKind> = {
+  advantage: 'advantage',
+  threat: 'threat',
+  triumph: 'triumph',
+  despair: 'despair',
+  success: 'success',
+  failure: 'failure',
+};
+
+function summariseSources(sources: string[] | undefined): string {
+  if (!sources || sources.length === 0) return '';
+  // Group identical sources so "from Aqualish Thug" appears once with a count
+  // when multiple identical tokens were deposited.
+  const counts = new Map<string, number>();
+  for (const s of sources) counts.set(s, (counts.get(s) ?? 0) + 1);
+  return Array.from(counts.entries())
+    .map(([s, n]) => (n > 1 ? `${s} ×${n}` : s))
+    .join('\n');
+}
+
+const PouchDieEntry: React.FC<{
+  kind: keyof DicePouch & DieType;
+  count: number;
+  participantId: string;
+  sources?: string[];
+}> = ({ kind, count, participantId, sources }) => {
+  const Svg = DIE_SVG[kind];
+  const addDie = useDiceRollerStore((s) => s.addDie);
+  const removeDice = useParticipantStore((s) => s.removeDice);
+  const ownerName = useParticipantStore(
+    (s) => s.participants.find((p) => p.id === participantId)?.name ?? 'pouch',
+  );
+  const sourceLines = summariseSources(sources);
+  const tipLabel = sourceLines
+    ? `${count} ${DIE_LABEL[kind]} from:\n${sourceLines}\n\nClick to use one`
+    : `${count} ${DIE_LABEL[kind]} from pouch — click to use one`;
+  return (
+    <Tooltip
+      label={<span style={{ whiteSpace: 'pre-line' }}>{tipLabel}</span>}
+      placement="top"
+      hasArrow
+      openDelay={300}
+    >
+      <Box
+        as="button"
+        position="relative"
+        boxSize="40px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius="md"
+        _hover={{ bg: 'whiteAlpha.100', transform: 'translateY(-1px)' }}
+        transition="transform 80ms ease-out, background 120ms ease-out"
+        onClick={() => {
+          addDie(kind, `Pouch (${ownerName})`);
+          removeDice(participantId, kind, 1);
+        }}
+      >
+        <Svg width={32} />
+        <Box
+          position="absolute"
+          top="-4px"
+          right="-4px"
+          minW="16px"
+          h="16px"
+          px="4px"
+          bg="orange.500"
+          color="white"
+          fontSize="10px"
+          fontWeight="bold"
+          borderRadius="full"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          pointerEvents="none"
+        >
+          {count}
+        </Box>
+      </Box>
+    </Tooltip>
+  );
+};
+
+// Map a pouch raw-symbol key to the engine's bonusSymbols key. They line up
+// 1:1 — pouch and SymbolTotals share these field names.
+const POUCH_TO_BONUS: Record<string, BonusSymbolKind> = {
+  advantage: 'advantage',
+  threat: 'threat',
+  triumph: 'triumph',
+  despair: 'despair',
+  success: 'success',
+  failure: 'failure',
+};
+
+const PouchSymbolEntry: React.FC<{
+  kind: keyof DicePouch;
+  count: number;
+  participantId: string;
+  sources?: string[];
+}> = ({ kind, count, participantId, sources }) => {
+  const iconClass = RAW_TO_ICON[kind] ?? kind;
+  const addBonusSymbol = useDiceRollerStore((s) => s.addBonusSymbol);
+  const removeDice = useParticipantStore((s) => s.removeDice);
+  const bonusKind = POUCH_TO_BONUS[kind as string];
+  const sourceLines = summariseSources(sources);
+  const action = bonusKind
+    ? 'Click to fold one into next roll'
+    : 'Spend manually';
+  const tipLabel = sourceLines
+    ? `${count} ${kind} from:\n${sourceLines}\n\n${action}`
+    : `${count} ${kind} from pouch — ${action.toLowerCase()}`;
+  return (
+    <Tooltip
+      label={<span style={{ whiteSpace: 'pre-line' }}>{tipLabel}</span>}
+      placement="top"
+      hasArrow
+      openDelay={300}
+    >
+      <HStack
+        as="button"
+        spacing={1}
+        px={2}
+        py={1}
+        bg="gray.700"
+        borderRadius="md"
+        _hover={{ bg: 'gray.600' }}
+        cursor={bonusKind ? 'pointer' : 'default'}
+        onClick={() => {
+          if (!bonusKind) return;
+          addBonusSymbol(bonusKind, 1);
+          removeDice(participantId, kind, 1);
+        }}
+      >
+        <Text fontSize="xs" color="gray.100" fontWeight="semibold">{count}</Text>
+        <Box className={`icon ${iconClass}`} fontSize="14px" />
+      </HStack>
+    </Tooltip>
+  );
+};
+
+const PouchStrip: React.FC<{ participantId: string }> = ({ participantId }) => {
+  const participant = useParticipantStore((s) =>
+    s.participants.find((p) => p.id === participantId),
+  );
+  const pouch = participant?.dicePouch;
+  const sourcesByKind = participant?.dicePouchSources;
+  if (!pouch) return null;
+
+  const dieEntries = POUCH_DIE_KINDS
+    .map((k) => [k, pouch[k] ?? 0] as const)
+    .filter(([, n]) => n > 0);
+  const symbolEntries = POUCH_RAW_KINDS
+    .map((k) => [k, pouch[k] ?? 0] as const)
+    .filter(([, n]) => n > 0);
+
+  if (dieEntries.length === 0 && symbolEntries.length === 0) return null;
+
+  return (
+    <VStack align="start" spacing={1}>
+      <Text
+        fontSize="9px"
+        color="gray.400"
+        letterSpacing="0.16em"
+        textTransform="uppercase"
+        fontWeight="bold"
+      >
+        Pouch
+      </Text>
+      <HStack spacing={1} wrap="wrap">
+        {dieEntries.map(([kind, n]) => (
+          <PouchDieEntry
+            key={kind}
+            kind={kind as keyof DicePouch & DieType}
+            count={n}
+            participantId={participantId}
+            sources={sourcesByKind?.[kind]}
+          />
+        ))}
+        {symbolEntries.map(([kind, n]) => (
+          <PouchSymbolEntry
+            key={kind}
+            kind={kind}
+            count={n}
+            participantId={participantId}
+            sources={sourcesByKind?.[kind]}
+          />
+        ))}
+      </HStack>
+    </VStack>
+  );
+};
+
+// Compact symbol +button used in the bonus-symbol palette. Click adds 1,
+// right-click removes 1. The icon font draws in `#111` by default which
+// disappears on the modal's dark background, so we force the glyph (and its
+// outline pseudo-elements) to a light color here.
+const BonusSymbolButton: React.FC<{
+  kind: SymbolKind;
+  storeKey: BonusSymbolKind;
+  label: string;
+}> = ({ kind, storeKey, label }) => {
+  const addBonusSymbol = useDiceRollerStore((s) => s.addBonusSymbol);
+  const removeBonusSymbol = useDiceRollerStore((s) => s.removeBonusSymbol);
+  return (
+    <Tooltip
+      label={`Add ${label} (right-click to remove)`}
+      placement="top"
+      hasArrow
+      openDelay={300}
+    >
+      <IconButton
+        aria-label={`Add ${label}`}
+        size="xs"
+        variant="ghost"
+        boxSize="28px"
+        minW="28px"
+        icon={
+          <Box
+            className={`icon ${kind}`}
+            fontSize="18px"
+            sx={{
+              '&, &::before, &::after': { color: 'whiteAlpha.800' },
+            }}
+          />
+        }
+        _hover={{ bg: 'whiteAlpha.100' }}
+        onClick={() => addBonusSymbol(storeKey, 1)}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          removeBonusSymbol(storeKey, 1);
+        }}
+      />
+    </Tooltip>
+  );
+};
+
+// Pre-roll bonus symbol rendered at the same size as a PoolDie so it sits
+// inline with the rolled/un-rolled dice. Click removes one.
+const BonusSymbolPip: React.FC<{ kind: SymbolKind; storeKey: BonusSymbolKind; label: string }> = ({
+  kind,
+  storeKey,
+  label,
+}) => {
+  const removeBonusSymbol = useDiceRollerStore((s) => s.removeBonusSymbol);
+  return (
+    <Tooltip label={`${label} (pre-roll) — click to remove`} placement="top" hasArrow openDelay={300}>
+      <Box
+        as="button"
+        position="relative"
+        w="56px"
+        h="56px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius="md"
+        _hover={{ bg: 'whiteAlpha.50' }}
+        transition="background 120ms ease-out"
+        onClick={() => removeBonusSymbol(storeKey, 1)}
+      >
+        <Box
+          className={`icon ${kind}`}
+          fontSize="34px"
+          sx={{
+            '&, &::before, &::after': { color: 'whiteAlpha.900' },
+          }}
+        />
+      </Box>
+    </Tooltip>
+  );
+};
+
+function expandBonusPips(bonus: Partial<SymbolTotals>): { kind: SymbolKind; storeKey: BonusSymbolKind; label: string }[] {
+  const out: { kind: SymbolKind; storeKey: BonusSymbolKind; label: string }[] = [];
+  for (const b of BONUS_SYMBOL_ORDER) {
+    const n = bonus[b.storeKey] ?? 0;
+    for (let i = 0; i < n; i++) {
+      out.push({ kind: b.kind, storeKey: b.storeKey, label: b.label });
+    }
+  }
+  return out;
+}
+
+interface PoolBuilderPropsExt extends PoolBuilderProps {
+  mode: import('./mockSnapshots').DiceRollMode;
+  appliedPresetIds: string[];
+  weaponRange?: import('./mockSnapshots').SnapshotWeapon['range'];
+}
+
+export const PoolBuilder: React.FC<PoolBuilderPropsExt> = ({
+  pool,
+  result,
+  mode,
+  appliedPresetIds,
+  weaponRange,
+}) => {
+  const rolling = useDiceRollerStore((s) => s.rolling);
+  const attackerId = useDiceRollerStore((s) => s.snapshot?.attackerParticipantId);
+  const bonusSymbols = useDiceRollerStore((s) => s.snapshot?.bonusSymbols ?? {});
+  const poolSources = useDiceRollerStore((s) => s.snapshot?.poolSources);
+  const dice = expandPool(pool);
+  const sources = expandSources(pool, poolSources);
+  const totalDice = dice.length;
+  const pairedRolls = result ? pairRolls(dice, result.rolls) : [];
+
+  // Fixed-column grid so the palette doesn't slide left/right when the pouch
+  // empties or the difficulty list changes mode. Empty columns reserve their
+  // width so the rest of the UI stays put.
+  const showDifficultyList = mode !== 'opposed' && mode !== 'skillChallenge';
+  return (
+    <VStack align="stretch" spacing={5}>
+      <Grid
+        templateColumns="160px 1px 1fr 1px 160px"
+        gap={3}
+        alignItems="start"
+      >
+        <GridItem>
+          {attackerId ? <PouchStrip participantId={attackerId} /> : null}
+        </GridItem>
+        <GridItem bg="gray.700" minH="100px" alignSelf="stretch" />
+        <GridItem>
+          <VStack align="stretch" spacing={1}>
+            <HStack spacing={1} justify="center" wrap="wrap">
+              {DIE_ORDER.map((die) => (
+                <PaletteDie key={die} die={die} />
+              ))}
+            </HStack>
+            <HStack spacing={0.5} justify="center" wrap="wrap">
+              {BONUS_SYMBOL_ORDER.map((b) => (
+                <BonusSymbolButton key={b.storeKey} kind={b.kind} storeKey={b.storeKey} label={b.label} />
+              ))}
+            </HStack>
+          </VStack>
+        </GridItem>
+        <GridItem bg="gray.700" minH="100px" alignSelf="stretch" />
+        <GridItem>
+          {showDifficultyList && (
+            <DifficultyRangeList
+              mode={mode}
+              appliedPresetIds={appliedPresetIds}
+              weaponRange={weaponRange}
+            />
+          )}
+        </GridItem>
+      </Grid>
+
       <Box
         bg="gray.800"
         borderRadius="md"
-        borderWidth="1px"
-        borderColor={result ? (succeeded ? 'green.700' : 'red.700') : 'gray.700'}
-        p={3}
-        minH="80px"
+        px={5}
+        py={5}
+        minH="96px"
+        display="flex"
+        flexDirection="column"
+        alignItems="stretch"
+        justifyContent={totalDice === 0 ? 'center' : 'flex-start'}
       >
-        <HStack justify="space-between" mb={2} align="center" minH="22px">
-          <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em">
-            {result ? 'Result' : `Pool · ${totalDice} ${totalDice === 1 ? 'die' : 'dice'}`}
-          </Text>
-          {net && (
-            <HStack spacing={3}>
-              <HStack spacing={2} fontSize="md" color="gray.100">
-                {net.netSuccess > 0 && (
-                  <HStack spacing={0.5}><Text>{net.netSuccess}</Text><Box className="icon success" fontSize="16px" /></HStack>
-                )}
-                {net.netSuccess < 0 && (
-                  <HStack spacing={0.5}><Text>{-net.netSuccess}</Text><Box className="icon failure" fontSize="16px" /></HStack>
-                )}
-                {net.netAdvantage > 0 && (
-                  <HStack spacing={0.5}><Text>{net.netAdvantage}</Text><Box className="icon advantage" fontSize="16px" /></HStack>
-                )}
-                {net.netAdvantage < 0 && (
-                  <HStack spacing={0.5}><Text>{-net.netAdvantage}</Text><Box className="icon threat" fontSize="16px" /></HStack>
-                )}
-                {net.triumph > 0 && (
-                  <HStack spacing={0.5}><Text>{net.triumph}</Text><Box className="icon triumph" fontSize="16px" /></HStack>
-                )}
-                {net.despair > 0 && (
-                  <HStack spacing={0.5}><Text>{net.despair}</Text><Box className="icon despair" fontSize="16px" /></HStack>
-                )}
-                {net.light > 0 && (
-                  <HStack spacing={0.5}><Text>{net.light}</Text><Box className="icon lightside" fontSize="16px" /></HStack>
-                )}
-                {net.dark > 0 && (
-                  <HStack spacing={0.5}><Text>{net.dark}</Text><Box className="icon darkside" fontSize="16px" /></HStack>
-                )}
-              </HStack>
-              <Badge
-                colorScheme={succeeded ? 'green' : 'red'}
-                variant="solid"
-                fontSize="xs"
-                px={2}
-                py={0.5}
-              >
-                {succeeded ? 'Succeeded' : 'Failed'}
-              </Badge>
-            </HStack>
-          )}
-        </HStack>
-
-        {totalDice === 0 ? (
-          <Text fontSize="sm" color="gray.500" textAlign="center" py={4}>
-            Empty pool — click a die above to add.
-          </Text>
-        ) : (
-          <Wrap spacing={1.5}>
-            {dice.map((die, i) => (
-              <WrapItem key={i}>
-                <PoolDie die={die} roll={pairedRolls[i]} />
-              </WrapItem>
-            ))}
-          </Wrap>
-        )}
+        {(() => {
+          const bonusPips = expandBonusPips(bonusSymbols);
+          if (totalDice === 0 && bonusPips.length === 0) {
+            return (
+              <Text fontSize="sm" color="gray.500" textAlign="center">
+                Click a die or symbol above to add to the pool.
+              </Text>
+            );
+          }
+          return (
+            <Wrap spacing={3}>
+              {dice.map((die, i) => (
+                <WrapItem key={`d-${i}`}>
+                  <PoolDie die={die} roll={pairedRolls[i]} rolling={rolling} source={sources[i]} />
+                </WrapItem>
+              ))}
+              {bonusPips.map((b, i) => (
+                <WrapItem key={`b-${i}`}>
+                  <BonusSymbolPip kind={b.kind} storeKey={b.storeKey} label={b.label} />
+                </WrapItem>
+              ))}
+            </Wrap>
+          );
+        })()}
       </Box>
+
+      <ResultStrip result={result} />
     </VStack>
   );
 };

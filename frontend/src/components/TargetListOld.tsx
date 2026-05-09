@@ -41,29 +41,48 @@ const TargetListOld = () => {
     return <Text color="gray.400">No targets — add adversaries from the header.</Text>;
   }
 
-  const live: Participant[] = [];
+  const livePCs: Participant[] = [];
+  const liveNPCs: Participant[] = [];
   const dead: Participant[] = [];
   for (const p of participants) {
-    (isParticipantDead(p) ? dead : live).push(p);
+    if (isParticipantDead(p)) dead.push(p);
+    else if (p.isPC) livePCs.push(p);
+    else liveNPCs.push(p);
   }
 
   const inSelectingMode = isStructured && currentSlotTeam !== undefined;
+  const activeParticipant = participants.find((p) => p.id === activeParticipantId);
+  const activeIsPC = activeParticipant?.isPC;
+  const isPickingActiveForSlot = inSelectingMode && !activeParticipantId;
+  const isPickingTarget = isStructured && !!activeParticipantId;
 
   const renderRow = (participant: Participant) => {
     const hasActed = actedParticipants.includes(participant.id);
     const eligible = eligibleFor(participant.isPC);
     const isActive = participant.id === activeParticipantId;
-    // In structured mode any row click changes the active participant.
-    // Out of structured mode, click just selects so the Targeted card updates.
+    // A row click does ONE of two things:
+    //  - structured mode + no active yet → claim the active slot (no target
+    //    change; the active participant isn't their own target)
+    //  - otherwise → retarget (set the participant as the Targeted one)
     const handleClick = () => {
-      selectParticipant(participant.id);
-      if (isStructured && !isActive) {
+      if (isStructured && !activeParticipantId) {
         setActiveParticipantId(participant.id);
+      } else {
+        selectParticipant(participant.id);
       }
     };
-    // Dim ineligible rows during structured mode so the GM sees at a glance who can take
-    // the current slot. Active and eligible rows stay at full opacity.
-    const dimmedForSelection = inSelectingMode && !eligible && !isActive;
+    // Highlighting/dimming flips with phase:
+    //  - picking-active (slot unclaimed) → dim ineligible (wrong team for slot)
+    //  - picking-target (active claimed) → dim allies of the active so the
+    //    GM's eye lands on the opposing side
+    const dimmedForSelection = !isActive && (
+      (isPickingActiveForSlot && !eligible) ||
+      (isPickingTarget && participant.isPC === activeIsPC)
+    );
+    // While picking a target, opposing-team rows are valid candidates even
+    // if they already acted this round. Suppress the "has acted" opacity dim
+    // for them so they don't fade out.
+    const suppressActedDim = isPickingTarget && participant.isPC !== activeIsPC;
     return (
       <TargetCardOld
         key={participant.id}
@@ -73,18 +92,48 @@ const TargetListOld = () => {
         hasActed={hasActed}
         isEligible={eligible}
         dimmedForSelection={dimmedForSelection}
+        suppressActedDim={suppressActedDim}
         initiative={initiativeByName[participant.name]}
         onClick={handleClick}
       />
     );
   };
 
+  const sectionHeader = (label: string, count: number) => (
+    <Flex align="center" gap={2} mb={1}>
+      <Text
+        as="b"
+        fontSize="9px"
+        letterSpacing="0.18em"
+        textTransform="uppercase"
+        color="whiteAlpha.500"
+      >
+        {label} ({count})
+      </Text>
+      <Box flex="1" h="1px" bg="whiteAlpha.100"/>
+    </Flex>
+  );
+
   return (
     // Use the card body's full height so the graveyard can be pushed to the bottom.
     <Flex direction="column" h="100%" minH={0} gap="6px">
-      <VStack align="stretch" spacing="6px">
-        {live.map(renderRow)}
-      </VStack>
+      {livePCs.length > 0 && (
+        <Box>
+          {sectionHeader('Player Characters', livePCs.length)}
+          <VStack align="stretch" spacing="6px">
+            {livePCs.map(renderRow)}
+          </VStack>
+        </Box>
+      )}
+
+      {liveNPCs.length > 0 && (
+        <Box mt={livePCs.length > 0 ? 3 : 0}>
+          {sectionHeader('Adversaries', liveNPCs.length)}
+          <VStack align="stretch" spacing="6px">
+            {liveNPCs.map(renderRow)}
+          </VStack>
+        </Box>
+      )}
 
       {dead.length > 0 && (
         // mt="auto" pins this section to the bottom of the available column space.

@@ -1,37 +1,38 @@
 import React from 'react';
 import {
-  Box,
+  Heading,
   HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Tag,
   Text,
   VStack,
 } from '@chakra-ui/react';
-import type { DiceRollMode, ModalSnapshot } from './mockSnapshots';
+import type { ModalSnapshot } from './mockSnapshots';
 import { PoolBuilder } from './PoolBuilder';
-import { PresetBar } from './PresetBar';
 import { RollButton } from './RollButton';
 import { SpendPanel } from './SpendPanel';
 import { CombatPanel } from './CombatPanel';
+import { CombatDamagePanel } from './CombatDamagePanel';
 import { OpposedPanel } from './OpposedPanel';
 import { SkillChallengePlaceholder } from './SkillChallengePlaceholder';
+import { ModifiersPopover } from './ModifiersPopover';
 
 interface DiceRollerModalProps {
   snapshot: ModalSnapshot | null;
   onClose: () => void;
 }
 
-const MODES: { mode: DiceRollMode; label: string }[] = [
-  { mode: 'basic',          label: 'Skill Check' },
-  { mode: 'opposed',        label: 'Opposed' },
-  { mode: 'combat',         label: 'Combat' },
-  { mode: 'skillChallenge', label: 'Skill Challenge' },
-];
+const MODE_LABEL: Record<string, string> = {
+  basic:          'Skill Check',
+  opposed:        'Opposed',
+  combat:         'Combat',
+  skillChallenge: 'Skill Challenge',
+};
 
 function formatSkill(skill?: string): string {
   if (!skill) return '';
@@ -46,93 +47,72 @@ function formatChar(c?: string): string {
 export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onClose }) => {
   const isOpen = snapshot !== null;
   const mode = snapshot?.mode ?? 'basic';
-  const hasContext = !!(snapshot?.attacker || snapshot?.skill || snapshot?.difficultyLabel);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
-      <ModalOverlay backdropFilter="blur(4px)" bg="rgba(0,0,0,0.6)" />
-      <ModalContent bg="#1f2125" color="gray.100" borderColor="gray.700" borderWidth="1px">
-        {/* Tabs as header */}
-        <ModalHeader p={0} borderBottomWidth="1px" borderColor="gray.700">
-          <HStack spacing={0} px={4}>
-            {MODES.map((m) => {
-              const isActive = m.mode === mode;
-              return (
-                <Box
-                  key={m.mode}
-                  as="button"
-                  type="button"
-                  onClick={() => undefined}
-                  py={3}
-                  px={4}
-                  fontSize="sm"
-                  fontWeight={isActive ? 'semibold' : 'normal'}
-                  color={isActive ? 'purple.200' : 'gray.500'}
-                  borderBottomWidth="2px"
-                  borderBottomColor={isActive ? 'purple.300' : 'transparent'}
-                  mb="-1px"
-                  cursor="pointer"
-                  _hover={{ color: 'gray.100' }}
-                >
-                  {m.label}
-                </Box>
-              );
-            })}
+      <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.700" />
+      <ModalContent bg="gray.900" color="gray.100" maxH="85vh">
+        <ModalHeader bg="gray.800" borderBottomWidth="1px" borderColor="gray.700" py={3}>
+          <HStack spacing={3} align="baseline">
+            <Tag colorScheme="orange" variant="subtle" size="sm" textTransform="uppercase" letterSpacing="0.1em">
+              {MODE_LABEL[mode] ?? 'Roll'}
+            </Tag>
+            {snapshot?.attacker && (
+              <Heading as="h3" size="sm" color="gray.50">
+                {snapshot.attacker.name}
+              </Heading>
+            )}
+            {snapshot?.skill && (
+              <Text fontSize="sm" color="gray.400">
+                {formatSkill(snapshot.skill)}
+                {snapshot.characteristic && (
+                  <Text as="span" color="gray.500">{` · ${formatChar(snapshot.characteristic)}`}</Text>
+                )}
+              </Text>
+            )}
+            {snapshot?.difficultyLabel && (
+              <Tag colorScheme="purple" variant="outline" size="sm">
+                {snapshot.difficultyLabel}
+              </Tag>
+            )}
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
 
-        <ModalBody pt={4} pb={4}>
+        <ModalBody p={4}>
           {snapshot && (
             <VStack align="stretch" spacing={3}>
-              {hasContext && (
-                <HStack spacing={2} fontSize="sm" wrap="wrap">
-                  {snapshot.attacker && (
-                    <Text color="gray.100" fontWeight="semibold">{snapshot.attacker.name}</Text>
-                  )}
-                  {snapshot.skill && (
-                    <Text color="gray.400">
-                      · {formatSkill(snapshot.skill)}
-                      {snapshot.characteristic && ` (${formatChar(snapshot.characteristic)})`}
-                    </Text>
-                  )}
-                  {snapshot.difficultyLabel && (
-                    <Text color="gray.500">· {snapshot.difficultyLabel}</Text>
-                  )}
-                </HStack>
-              )}
-
               {mode === 'skillChallenge' ? (
                 <SkillChallengePlaceholder />
               ) : (
                 <>
-                  <PresetBar mode={mode} appliedPresetIds={snapshot.appliedPresets} />
-                  <PoolBuilder pool={snapshot.pool} result={snapshot.result} />
-
-                  {mode === 'combat'  && <CombatPanel  snapshot={snapshot} />}
+                  {mode === 'combat' && <CombatPanel snapshot={snapshot} />}
                   {mode === 'opposed' && <OpposedPanel snapshot={snapshot} />}
 
-                  {snapshot.result && (
-                    <SpendPanel
-                      result={snapshot.result}
-                      mode={mode}
-                      spent={snapshot.spent}
-                      weapon={snapshot.weapon}
-                    />
-                  )}
+                  <ModifiersPopover mode={mode} appliedModifierIds={snapshot.appliedModifiers} />
+                  <PoolBuilder
+                    pool={snapshot.pool}
+                    result={snapshot.result}
+                    mode={mode}
+                    appliedPresetIds={snapshot.appliedPresets}
+                    weaponRange={snapshot.weapon?.range}
+                  />
+
+                  <RollButton pool={snapshot.pool} hasResult={snapshot.result !== null} />
+
+                  {mode === 'combat' && <CombatDamagePanel snapshot={snapshot} />}
+
+                  <SpendPanel
+                    result={snapshot.result}
+                    mode={mode}
+                    spent={snapshot.spent}
+                    weapon={snapshot.weapon}
+                  />
                 </>
               )}
             </VStack>
           )}
         </ModalBody>
-
-        <ModalFooter borderTopWidth="1px" borderColor="gray.700">
-          <Box width="100%">
-            {snapshot && mode !== 'skillChallenge' && (
-              <RollButton pool={snapshot.pool} hasResult={snapshot.result !== null} />
-            )}
-          </Box>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

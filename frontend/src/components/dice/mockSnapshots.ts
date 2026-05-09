@@ -23,6 +23,10 @@ export interface SnapshotWeapon {
   damage: number;
   crit: number;
   range: 'engaged' | 'short' | 'medium' | 'long' | 'extreme';
+  /** The weapon's natural maximum reach. Stable across shot-range changes —
+   * `range` mutates as the GM picks a target band, but `baseRange` stays put
+   * so the range list can dim tiers beyond the weapon's reach. */
+  baseRange?: 'engaged' | 'short' | 'medium' | 'long' | 'extreme';
   qualities: { name: string; rank?: number }[];
 }
 
@@ -40,15 +44,30 @@ export interface ModalSnapshot {
   mode: DiceRollMode;
   difficultyLabel?: string;
   attacker?: SnapshotAttacker;
+  /** Stable id of the attacker participant — used by spend callbacks
+   * (recover strain, suffer strain, etc.) to mutate the right entry in
+   * participantsStore. Optional for freestanding rolls with no character. */
+  attackerParticipantId?: string;
   target?: SnapshotTarget;
+  /** Stable id of the target participant. Optional for non-combat rolls. */
+  targetParticipantId?: string;
   defender?: SnapshotDefender;
   weapon?: SnapshotWeapon;
   skill?: string;
   characteristic?: string;
   pool: DicePool;
+  /** Per-die source labels for tooltip provenance ("Skill (Streetwise)",
+   * "Range: Medium", "Aim", "Pouch from Pash"). Each array's length is
+   * expected to match pool[die] — i-th die of type X comes from i-th source. */
+  poolSources?: Partial<Record<DieType, string[]>>;
+  /** Raw symbols added to the roll without rolling a die — gifts from allies,
+   * GM-granted bonuses, etc. Folded into the result on roll(). */
+  bonusSymbols?: Partial<SymbolTotals>;
   appliedPresets: string[];
+  /** IDs of toggled-on entries from the Modifiers popover (table 2-7 / 2-8). */
+  appliedModifiers: string[];
   result: RollResult | null;
-  spent: { optionId: string }[];
+  spent: { optionId: string; recipientId?: string }[];
 }
 
 const EMPTY: SymbolTotals = {
@@ -111,6 +130,7 @@ const HEAVY_BLASTER_PISTOL: SnapshotWeapon = {
   damage: 7,
   crit: 3,
   range: 'medium',
+  baseRange: 'medium',
   qualities: [{ name: 'Stun Setting' }],
 };
 
@@ -138,6 +158,7 @@ const basicUnrolled: ModalSnapshot = {
   characteristic: 'cunning',
   pool: basicPool,
   appliedPresets: ['difficulty-average'],
+  appliedModifiers: [],
   result: null,
   spent: [],
 };
@@ -179,6 +200,7 @@ const basicFreestanding: ModalSnapshot = {
   difficultyLabel: 'Average',
   pool: { ability: 2, difficulty: 2 },
   appliedPresets: ['difficulty-average'],
+  appliedModifiers: [],
   result: null,
   spent: [],
 };
@@ -189,6 +211,7 @@ const basicEmpty: ModalSnapshot = {
   mode: 'basic',
   pool: {},
   appliedPresets: [],
+  appliedModifiers: [],
   result: null,
   spent: [],
 };
@@ -212,6 +235,7 @@ const opposedUnrolled: ModalSnapshot = {
   defender: SERGEANT_DEFENDER,
   pool: opposedPool,
   appliedPresets: [],
+  appliedModifiers: [],
   result: null,
   spent: [],
 };
@@ -245,6 +269,7 @@ const combatUnrolled: ModalSnapshot = {
   difficultyLabel: 'Average',
   pool: combatPool,
   appliedPresets: ['difficulty-average', 'range-medium'],
+  appliedModifiers: [],
   result: null,
   spent: [],
 };
@@ -288,6 +313,7 @@ const skillChallengePlaceholder: ModalSnapshot = {
   attacker: PASH,
   pool: {},
   appliedPresets: [],
+  appliedModifiers: [],
   result: null,
   spent: [],
 };

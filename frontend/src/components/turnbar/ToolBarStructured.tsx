@@ -10,7 +10,6 @@ import useGameplayStore from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
 import TurnActionsHint from "@components/turnbar/TurnActionsHint";
-import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
 
 interface Props { }
 
@@ -49,14 +48,21 @@ const ToolBarStructured = ({ }: Props) => {
                 />
             </HStack>
 
-            {/* Center — absolutely centered so left/right widths can't shift it */}
+            {/* Center — pinned to the viewport's horizontal center, not the
+              * toolbar's. The toolbar only spans the first three grid columns
+              * (the log column on the right is excluded), so an "absolute,
+              * left:50%" inside the toolbar sits left-of-screen-center.
+              * Using position:fixed with left:50vw locks the cluster to the
+              * actual screen center; the y-offset matches the toolbar's row
+              * (50px header + 5px grid padding + 30px to the row centerline). */}
             {state === 'inProgress' && (
                 <HStack
-                    position="absolute"
-                    left="50%"
-                    top="50%"
+                    position="fixed"
+                    left="50vw"
+                    top="85px"
                     transform="translate(-50%, -50%)"
                     spacing={2}
+                    zIndex={2}
                 >
                     <Button
                         size="sm"
@@ -89,7 +95,6 @@ const ToolBarStructured = ({ }: Props) => {
 
             {/* Right */}
             <HStack spacing={4}>
-                <DestinyPoolInline/>
                 <RoundNumberDisplay roundNumber={round}/>
             </HStack>
         </Flex>

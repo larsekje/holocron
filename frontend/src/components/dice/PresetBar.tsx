@@ -1,14 +1,21 @@
 import React from 'react';
-import { Button, HStack, Text } from '@chakra-ui/react';
+import { Button, ButtonGroup, HStack, Tooltip } from '@chakra-ui/react';
 import type { DiceRollMode } from './mockSnapshots';
+import useDiceRollerStore from '@/state/diceRollerStore';
 
-const DIFFICULTY_TIERS = [
-  { id: 'difficulty-simple',     label: 'Simple' },
-  { id: 'difficulty-easy',       label: 'Easy' },
-  { id: 'difficulty-average',    label: 'Average' },
-  { id: 'difficulty-hard',       label: 'Hard' },
-  { id: 'difficulty-daunting',   label: 'Daunting' },
-  { id: 'difficulty-formidable', label: 'Formidable' },
+interface DiffTier {
+  id: string;
+  label: string;
+  pips: number;
+}
+
+const DIFFICULTY_TIERS: DiffTier[] = [
+  { id: 'difficulty-simple',     label: 'Simple',     pips: 0 },
+  { id: 'difficulty-easy',       label: 'Easy',       pips: 1 },
+  { id: 'difficulty-average',    label: 'Average',    pips: 2 },
+  { id: 'difficulty-hard',       label: 'Hard',       pips: 3 },
+  { id: 'difficulty-daunting',   label: 'Daunting',   pips: 4 },
+  { id: 'difficulty-formidable', label: 'Formidable', pips: 5 },
 ];
 
 interface PresetBarProps {
@@ -16,33 +23,35 @@ interface PresetBarProps {
   appliedPresetIds: string[];
 }
 
-/**
- * Just a difficulty-tier picker. Other situational modifiers (cover, lighting,
- * range, etc.) were dropped from the preset bar — too cumbersome to enumerate per
- * check, easier to add their dice manually via the "Add" row.
- */
 export const PresetBar: React.FC<PresetBarProps> = ({ mode, appliedPresetIds }) => {
-  // Opposed mode derives difficulty from the defender; skill challenge is its own flow.
+  const setDifficulty = useDiceRollerStore((s) => s.setDifficulty);
   if (mode === 'opposed' || mode === 'skillChallenge') return null;
   const applied = new Set(appliedPresetIds);
 
   return (
-    <HStack spacing={1.5} align="center" wrap="wrap">
-      <Text fontSize="xs" color="gray.500" minW="36px">DIFF</Text>
-      {DIFFICULTY_TIERS.map((tier) => {
-        const isActive = applied.has(tier.id);
-        return (
-          <Button
-            key={tier.id}
-            size="xs"
-            variant={isActive ? 'solid' : 'outline'}
-            colorScheme={isActive ? 'purple' : 'gray'}
-            onClick={() => undefined}
-          >
-            {tier.label}
-          </Button>
-        );
-      })}
+    <HStack justify="center">
+      <ButtonGroup size="xs" isAttached variant="outline">
+        {DIFFICULTY_TIERS.map((tier) => {
+          const isActive = applied.has(tier.id);
+          return (
+            <Tooltip
+              key={tier.id}
+              label={`${tier.pips} difficulty ${tier.pips === 1 ? 'die' : 'dice'}`}
+              placement="top"
+              hasArrow
+              openDelay={300}
+            >
+              <Button
+                colorScheme={isActive ? 'purple' : 'gray'}
+                variant={isActive ? 'solid' : 'outline'}
+                onClick={() => setDifficulty(tier.id, tier.pips)}
+              >
+                {tier.label}
+              </Button>
+            </Tooltip>
+          );
+        })}
+      </ButtonGroup>
     </HStack>
   );
 };

@@ -264,12 +264,11 @@ export function createEncounterFSM(): FSM {
         };
     };
 
-    const isSlotValidForParticipant = (currentInitiativeSlot: InitiativeSlot, activeParticipant: Participant): boolean =>
-    {
-        const isPcOnPcTurn = currentInitiativeSlot.team === "PC" && activeParticipant.isPC;
-        const isNpcOnNpcTurn = currentInitiativeSlot.team === "NPC" && !activeParticipant.isPC;
-        return isPcOnPcTurn || isNpcOnNpcTurn;
-    }
+    // Team is informational, not a hard gate — the GM can claim any unclaimed
+    // slot with any participant (e.g. let a PC take an NPC slot if the
+    // narrative warrants it). The slot itself only enforces "still has someone
+    // to act"; whether team and participant align is a soft hint in the UI.
+    const isSlotValidForParticipant = (_currentInitiativeSlot: InitiativeSlot, _activeParticipant: Participant): boolean => true;
 
     /**
      * A slot is "fillable" if there's at least one living participant whose

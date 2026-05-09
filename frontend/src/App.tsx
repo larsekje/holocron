@@ -1,4 +1,4 @@
-import {Box, Button, Grid, GridItem, HStack, Heading, Kbd} from "@chakra-ui/react";
+import {Box, Button, Grid, GridItem, HStack, Heading, IconButton, Kbd, Tooltip} from "@chakra-ui/react";
 import {SearchIcon} from "@chakra-ui/icons";
 import React from "react";
 
@@ -13,13 +13,17 @@ import Sidebar from "@components/Sidebar";
 import useDiceRollerStore from "@/state/diceRollerStore";
 import "@/state/sessionLogStore";
 import {useSpotlightStore} from "@/state/spotlightStore";
+import {buildFreestandingSnapshot} from "@/utils/diceSnapshots";
+import {ReactComponent as ProficiencySvg} from "@/assets/dice/proficiency.svg";
+import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
 
 function App() {
   const snapshot = useDiceRollerStore((s) => s.snapshot);
   const closeSnapshot = useDiceRollerStore((s) => s.close);
+  const openDiceRoller = useDiceRollerStore((s) => s.open);
   const openSpotlight = useSpotlightStore((s) => s.open);
 
-  const templateAreas = `"turn   turn    turn     turn"
+  const templateAreas = `"turn   turn    turn     log"
                          "active targets targeted log"`
 
   return (
@@ -27,19 +31,33 @@ function App() {
       <Box display='flex' alignItems='center' h='50' bg='#2F3136' px={4}>
         <HStack width="100%" justifyContent="space-between">
           <Heading size="md" color="whiteAlpha.900">GM Holocron</Heading>
-          <Button
-            size="sm"
-            variant="outline"
-            colorScheme="whiteAlpha"
-            color="whiteAlpha.900"
-            leftIcon={<SearchIcon/>}
-            onClick={openSpotlight}
-          >
-            <HStack spacing={2}>
-              <Box>Search</Box>
-              <Kbd bg="gray.700" color="gray.200" borderColor="gray.500">⌘K</Kbd>
-            </HStack>
-          </Button>
+          <HStack spacing={4}>
+            <DestinyPoolInline/>
+            <Box w="1px" h="24px" bg="whiteAlpha.300"/>
+            <Button
+              size="sm"
+              variant="outline"
+              colorScheme="whiteAlpha"
+              color="whiteAlpha.900"
+              leftIcon={<SearchIcon/>}
+              onClick={openSpotlight}
+            >
+              <HStack spacing={2}>
+                <Box>Search</Box>
+                <Kbd bg="gray.700" color="gray.200" borderColor="gray.500">⌘K</Kbd>
+              </HStack>
+            </Button>
+            <Tooltip label="Open a freestanding dice roller" placement="bottom" hasArrow openDelay={300}>
+              <IconButton
+                size="sm"
+                variant="ghost"
+                aria-label="Open dice roller"
+                icon={<ProficiencySvg width={22}/>}
+                onClick={() => openDiceRoller(buildFreestandingSnapshot())}
+                _hover={{ bg: 'whiteAlpha.200' }}
+              />
+            </Tooltip>
+          </HStack>
         </HStack>
       </Box>
       <Grid
@@ -66,7 +84,7 @@ function App() {
           <ContentCardTargetedOld/>
         </GridItem>
 
-        <GridItem area='log' overflow="hidden" minH={0}>
+        <GridItem area='log' overflow="hidden" minH={0} rowSpan={2}>
           <Sidebar/>
         </GridItem>
       </Grid>

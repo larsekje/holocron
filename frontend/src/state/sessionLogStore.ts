@@ -29,7 +29,9 @@ export type LogKind =
   | "effect-removed"
   | "crit-applied"
   | "damage"
-  | "reminder-resolved";
+  | "reminder-resolved"
+  | "skill-challenge-start"
+  | "skill-challenge-end";
 
 export interface LogEntry {
   id: string;
@@ -66,6 +68,10 @@ export interface Reminder {
 interface SessionLogStore {
   reminders: Reminder[];
   timeline: LogEntry[];
+  /** When set, the next observed wound delta for this participant id is
+   * dropped — used by combat Apply to fold the auto-emitted "Dave: +4
+   * wounds" into the combined attacker→target log entry. */
+  suppressedWoundFor: string | null;
 
   log: (entry: Omit<LogEntry, "id" | "at"> & Partial<Pick<LogEntry, "at">>) => void;
 
@@ -77,6 +83,14 @@ interface SessionLogStore {
     delta: number,
     total: number,
   ) => void;
+
+  /** Replace the summary of the most recent damage entry that carries the
+   * given rollId in meta. Used by combat Apply to upgrade an existing roll
+   * log into a fuller "X shot Y for N" line. */
+  rewriteLastDamageForRoll: (rollId: string, summary: string) => void;
+
+  /** One-shot: drop the next wound delta auto-log for this participant. */
+  suppressNextWoundLog: (participantId: string) => void;
 
   addReminder: (
     r: Omit<Reminder, "id" | "at"> & Partial<Pick<Reminder, "at">>,
@@ -90,6 +104,23 @@ interface SessionLogStore {
 const useSessionLogStore = create<SessionLogStore>((set, get) => ({
   reminders: [],
   timeline: [],
+  suppressedWoundFor: null,
+
+  rewriteLastDamageForRoll: (rollId, summary) =>
+    set((state) => {
+      for (let i = state.timeline.length - 1; i >= 0; i--) {
+        const e = state.timeline[i];
+        if (e.kind === "damage" && (e.meta?.rollId as string | undefined) === rollId) {
+          const updated: LogEntry = { ...e, summary, at: Date.now() };
+          const next = state.timeline.slice();
+          next[i] = updated;
+          return { timeline: next };
+        }
+      }
+      return state;
+    }),
+
+  suppressNextWoundLog: (participantId) => set({ suppressedWoundFor: participantId }),
 
   log: (entry) =>
     set((state) => ({
@@ -310,9 +341,14 @@ useParticipantStore.subscribe((state) => {
       // Wound / strain deltas — fold-on-write so rapid +/- clicks collapse
       // into a single entry as long as nothing else is logged in between.
       if (wounds !== prev.wounds) {
-        useSessionLogStore
-          .getState()
-          .logStatDelta(p.id, p.name, "wounds", wounds - prev.wounds, wounds);
+        const store = useSessionLogStore.getState();
+        // Combat Apply asks us to drop this delta because it's already
+        // reflected in the combined "X shot Y for N wounds" line.
+        if (store.suppressedWoundFor === p.id) {
+          useSessionLogStore.setState({ suppressedWoundFor: null });
+        } else {
+          store.logStatDelta(p.id, p.name, "wounds", wounds - prev.wounds, wounds);
+        }
       }
       if (strain !== prev.strain) {
         useSessionLogStore
