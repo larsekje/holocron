@@ -25,6 +25,8 @@ export interface GameplayStore {
     // Manage participants
     setActiveParticipantId: (participantId: string | null) => void; // Set the active participant's ID
     addActedParticipant: (participantId: string) => void;
+    removeActedParticipant: (participantId: string) => void;
+    toggleActedParticipant: (participantId: string) => void;
     clearActedParticipants: () => void;
 
     // Shortcuts
@@ -129,11 +131,24 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
 
         addActedParticipant: (id: string) => {
             const actedParticipants = encounterFSM.context.actedParticipants;
-            encounterFSM.context.actedParticipants = [...actedParticipants, id];
+            if (!actedParticipants.includes(id)) {
+                encounterFSM.context.actedParticipants = [...actedParticipants, id];
+                set({context: {...encounterFSM.context}});
+            }
+        },
 
-            set({
-                context: {...encounterFSM.context},
-            })
+        removeActedParticipant: (id: string) => {
+            encounterFSM.context.actedParticipants =
+                encounterFSM.context.actedParticipants.filter((x) => x !== id);
+            set({context: {...encounterFSM.context}});
+        },
+
+        toggleActedParticipant: (id: string) => {
+            const acted = encounterFSM.context.actedParticipants;
+            encounterFSM.context.actedParticipants = acted.includes(id)
+                ? acted.filter((x) => x !== id)
+                : [...acted, id];
+            set({context: {...encounterFSM.context}});
         },
 
         clearActedParticipants: () => {

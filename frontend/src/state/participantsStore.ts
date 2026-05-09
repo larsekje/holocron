@@ -41,6 +41,8 @@ export interface Participant {
 // Zustand Store
 interface ParticipantStore {
     participants: Participant[];
+    selectedParticipantId: string | null;
+    selectParticipant: (id: string | null) => void;
     addParticipant: (participant: Participant) => void;
     removeParticipant: (id: string) => void;
     updateParticipants: (updatedParticipants: Participant[]) => void;
@@ -52,6 +54,13 @@ interface ParticipantStore {
     // Wound and strain
     addWounds: (id: string, wounds: number) => void;
     removeWounds: (id: string, wounds: number) => void;
+    addStrain: (id: string, strain: number) => void;
+    removeStrain: (id: string, strain: number) => void;
+
+    // Direct setters used by the stat-edit popovers.
+    setMinionCount: (id: string, count: number) => void;
+    // Generic stat setter for thresholds, soak, defense, characteristics, etc.
+    setStat: (id: string, key: string, value: number) => void;
 
     // Dice pouch management
     addDice: (id: string, diceType: keyof DicePouch, amount: number) => void;
@@ -61,6 +70,8 @@ interface ParticipantStore {
 
 const useParticipantStore = create<ParticipantStore>((set) => ({
     participants: [],
+    selectedParticipantId: null,
+    selectParticipant: (id) => set({selectedParticipantId: id}),
     addParticipant: (participant) => {
         // Make sure stats object exists
         if (!participant.stats) {
@@ -115,6 +126,8 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
     removeParticipant: (id) =>
         set((state) => ({
             participants: state.participants.filter((p) => p.id !== id),
+            selectedParticipantId:
+                state.selectedParticipantId === id ? null : state.selectedParticipantId,
         })),
     updateParticipants: (updatedParticipants) =>
         set(() => ({ participants: updatedParticipants })),
@@ -152,7 +165,51 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
             })
         }));
     },
-    
+
+    addStrain: (id, strain) => {
+        set((state) => ({
+            participants: state.participants.map(participant => {
+                if (participant.id !== id) return participant;
+                const cur = (participant.stats as any)?.strain ?? 0;
+                return {
+                    ...participant,
+                    stats: {...participant.stats, strain: cur + strain}
+                };
+            })
+        }));
+    },
+
+    removeStrain: (id, strain) => {
+        set((state) => ({
+            participants: state.participants.map(participant => {
+                if (participant.id !== id) return participant;
+                const cur = (participant.stats as any)?.strain ?? 0;
+                return {
+                    ...participant,
+                    stats: {...participant.stats, strain: Math.max(0, cur - strain)}
+                };
+            })
+        }));
+    },
+
+    setMinionCount: (id, count) => {
+        const safe = Math.max(0, Math.floor(count));
+        set((state) => ({
+            participants: state.participants.map(p =>
+                p.id === id ? {...p, stats: {...p.stats, minions: safe}} : p
+            )
+        }));
+    },
+
+    setStat: (id, key, value) => {
+        const safe = Math.max(0, Math.floor(value));
+        set((state) => ({
+            participants: state.participants.map(p =>
+                p.id === id ? {...p, stats: {...p.stats, [key]: safe}} : p
+            )
+        }));
+    },
+
     // Dice Pouch Management
     addDice: (id, diceType, amount) => {
         set((state) => ({

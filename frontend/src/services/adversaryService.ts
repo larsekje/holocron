@@ -93,7 +93,11 @@ class AdversaryService {
         skills: adversary.skills || {},
         weapons: adversary.weapons || [],
         talents: adversary.talents || [],
-        abilities: adversary.abilities || []
+        abilities: adversary.abilities || [],
+        // Provenance + flavour
+        tags: adversary.tags || [],
+        gear: adversary.gear || [],
+        description: adversary.description || ""
       },
       // Initialize dice pouch with default values
       dicePouch: {
@@ -129,28 +133,20 @@ class AdversaryService {
   }
 
   /**
-   * Get a random adversary
+   * Get a random adversary. Named (unique) adversaries are skipped — the random-add
+   * buttons in the UI are intended for generic profiles only.
    * @param type Optional type to filter by
    */
   async getRandomAdversary(type?: 'Minion' | 'Rival' | 'Nemesis'): Promise<Adversary | undefined> {
     const adversaries = await this.getAdversaries();
-    
-    if (adversaries.length === 0) {
-      return undefined;
-    }
-    
-    // Filter by type if provided
-    const filteredAdversaries = type 
-      ? adversaries.filter(adv => adv.type === type)
-      : adversaries;
-    
-    // Return a random adversary from the filtered list
-    if (filteredAdversaries.length === 0) {
-      return undefined;
-    }
-    
-    const randomIndex = Math.floor(Math.random() * filteredAdversaries.length);
-    return filteredAdversaries[randomIndex];
+    if (adversaries.length === 0) return undefined;
+
+    const filtered = adversaries
+      .filter((adv) => !adv.named)
+      .filter((adv) => (type ? adv.type === type : true));
+
+    if (filtered.length === 0) return undefined;
+    return filtered[Math.floor(Math.random() * filtered.length)];
   }
 }
 

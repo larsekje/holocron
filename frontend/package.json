@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build:clout": "node ./scripts/compute_clout.mjs",
+    "prebuild:spotlight": "npm run build:clout",
     "build:spotlight": "node ./scripts/buildSpotlightIndex.mjs",
     "predev": "npm run build:spotlight",
     "prebuild": "npm run build:spotlight",

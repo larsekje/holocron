@@ -99,10 +99,12 @@ const DestinyPointsManager: React.FC = () => {
 
     return (
         <Box
-            p={4}
-            bg="gray.50"
-            borderRadius="lg"
-            boxShadow="md"
+            p={3}
+            bg="#1c1e21"
+            borderWidth="1px"
+            borderColor="whiteAlpha.150"
+            borderRadius="md"
+            boxShadow="0 4px 12px rgba(0,0,0,0.35)"
             mt={2}
             w="100%"
             mx="auto"
@@ -118,13 +120,14 @@ const DestinyPointsManager: React.FC = () => {
             <IconButton
                 icon={<EditIcon />}
                 aria-label="Edit Pool"
-                size="sm"
-                colorScheme="teal"
+                size="xs"
                 position="absolute"
                 top="4px"
                 right="4px"
                 borderRadius="full"
                 variant="ghost"
+                color="whiteAlpha.700"
+                _hover={{bg: "whiteAlpha.100", color: "white"}}
                 onClick={handleOpen}
             />
 

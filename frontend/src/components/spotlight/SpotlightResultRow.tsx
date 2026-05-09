@@ -9,6 +9,7 @@ import {
   FiShield,
   FiTarget,
 } from 'react-icons/fi';
+import { ReactComponent as SetbackDie } from '@/assets/dice/setback.svg';
 import type { SpotlightResult } from '@/state/spotlightStore';
 import { getDetail } from '@/data/spotlightIndex';
 import { lookupField } from '@/data/spotlightQuery';
@@ -121,6 +122,41 @@ const ARCHETYPE_DESCRIPTOR: Record<string, string> = {
 const archetypeKey = (s: string) =>
   s.toLowerCase().replace(/[‐-―]/g, '-').trim();
 
+// One-line descriptors for the v4.2 `coreArchetype` taxonomy (single canonical
+// archetype per adversary). Mirrors `references/archetypes.md`.
+const CORE_ARCHETYPE_DESCRIPTOR: Record<string, string> = {
+  gunslinger: 'agile blaster duelist',
+  marksman: 'precision long-range shooter',
+  'heavy hitter': 'brute force / heavy weapons',
+  'melee bruiser': 'non-Force close-combat specialist',
+  'ace pilot': 'starship / vehicle specialist',
+  soldier: 'front-line battlefield trooper',
+  enforcer: 'armed civil/local-law muscle',
+  grunt: 'low-tier humanoid rabble',
+  'guns for hire': 'paid mercenary / freelance bounty hunter',
+  'persistent pest': 'numerous low-threat creatures (swarms)',
+  critter: 'solo or small-group ambient creature',
+  'nasty beast': 'apex predator or strong pack creature',
+  'mount / beast of burden': 'trained working / riding beast',
+  technician: 'engineer, mechanic, slicer, medic, utility',
+  commander: 'battlefield leader, coordinates troops',
+  'shadow operative': 'stealth, infiltration, assassin',
+  'force duelist': 'lightsaber / Force-melee combatant',
+  'force savant': 'non-melee Force combatant (control / ranged)',
+  'force adept': 'support Force user (heal / foresee / buff)',
+  sycophant: 'obedient yes-man / attendant',
+  'smooth talker': 'charm, persuasion, con artist',
+  bureaucrat: 'paperwork authority, official functionary',
+  fixer: 'middleman, broker, info trader',
+  schemer: 'covert manipulator',
+  'power broker': 'open authority over resources / networks',
+  kingpin: 'underworld leader / crime boss',
+  socialite: 'high-status charmer with elite connections',
+  mentor: 'trainer / advisor (Force or non-Force)',
+  mystic: 'devotional / cultic figure (Force or non-Force)',
+  civilian: 'non-combat humanoid / droid bystander',
+};
+
 // Map of canonical field name → icon, used for "extra" highlighted stats
 // (characteristics or skills the user has filtered on that aren't in the
 // default per-type stat columns).
@@ -204,6 +240,13 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
   const detail = React.useMemo(() => getDetail(r.type, r.id), [r.type, r.id]);
   const hl = highlightedFields ?? new Set<string>();
 
+  // Clout sits in a leading slot (before the name) on every adversary row, so
+  // we hoist it out of the per-type branch below.
+  const clout =
+    r.type === 'adversary' && typeof (detail as any)?.clout === 'number'
+      ? ((detail as any).clout as number)
+      : null;
+
   let trailing: React.ReactNode = null;
   let subtitleLine: React.ReactNode = null;
 
@@ -224,17 +267,34 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     const traits: string[] = Array.isArray((detail as any)?.traits)
       ? (detail as any).traits
       : [];
-    const archetypeLabel = archetypes[0];
+    const coreArchetype: string | undefined =
+      typeof (detail as any)?.coreArchetype === 'string' && (detail as any).coreArchetype
+        ? (detail as any).coreArchetype
+        : undefined;
+    // The badge displays the v4.2 coreArchetype (single canonical role) when
+    // present; falls back to the source archetype list's first entry. The
+    // tooltip lists both so the GM can compare role vs source classification.
+    const archetypeLabel = coreArchetype ?? archetypes[0];
+    const coreDesc = coreArchetype
+      ? CORE_ARCHETYPE_DESCRIPTOR[archetypeKey(coreArchetype)]
+      : undefined;
     const archetypeTooltip = (
       <Box>
+        {coreArchetype && (
+          <Text fontSize="xs" mb={(archetypes.length > 0 || factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
+            <Text as="span" fontWeight="bold" color="cyan.200">{coreArchetype}</Text>
+            {coreDesc && <Text as="span" color="gray.400"> — {coreDesc}</Text>}
+          </Text>
+        )}
         {archetypes.length > 0 && (
           <Box mb={(factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
+            <Text fontSize="xs" color="gray.500" mb={0.5}>Source archetypes</Text>
             {archetypes.map((a) => {
               const desc = ARCHETYPE_DESCRIPTOR[archetypeKey(a)];
               return (
                 <Text key={a} fontSize="xs">
-                  <Text as="span" fontWeight="bold" color="cyan.200">{a}</Text>
-                  {desc && <Text as="span" color="gray.400"> — {desc}</Text>}
+                  <Text as="span" color="gray.300">{a}</Text>
+                  {desc && <Text as="span" color="gray.500"> — {desc}</Text>}
                 </Text>
               );
             })}
@@ -270,16 +330,13 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
         <StatPill key="strain" icon={FiActivity} value={derived.strain} highlighted title="Strain threshold" />,
       );
     }
-    const extras = extraPills(detail, hl, ['soak', 'wounds', 'strain']);
+    const extras = extraPills(detail, hl, ['soak', 'wounds', 'strain', 'clout']);
     trailing = (
       <HStack spacing={1.5} align="center">
         {archetypeLabel && (
           <Tooltip label={archetypeTooltip} placement="top" hasArrow openDelay={200} bg="gray.900" color="gray.100">
             <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase">
               {archetypeLabel}
-              {archetypes.length > 1 && (
-                <Text as="span" color="cyan.300" ml={1}>+{archetypes.length - 1}</Text>
-              )}
             </Badge>
           </Tooltip>
         )}
@@ -358,6 +415,34 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
       borderLeftColor={isSelected ? 'purple.400' : 'transparent'}
       transition="background 120ms ease, border-color 120ms ease"
     >
+      {clout != null ? (
+        <Box
+          position="relative"
+          w="24px"
+          h="24px"
+          flexShrink={0}
+          opacity={0.85}
+          title={`Clout ${clout}`}
+          aria-label={`Clout ${clout}`}
+        >
+          <Icon as={SetbackDie} boxSize="24px" display="block" aria-hidden />
+          <Text
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -55%)"
+            color="white"
+            fontWeight="semibold"
+            fontSize="0.7rem"
+            lineHeight="1"
+            userSelect="none"
+          >
+            {clout}
+          </Text>
+        </Box>
+      ) : r.type === 'adversary' ? (
+        <Box w="24px" h="24px" flexShrink={0} />
+      ) : null}
       <Box flex="1" minW={0}>
         <Text fontWeight="semibold" color="gray.100" noOfLines={1}>
           {renderHighlighted(r.name, r.matches)}
@@ -369,4 +454,5 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
   );
 };
 
-export default SpotlightResultRow;
+// Memoized: when only one row's `isSelected` flips, the other ~200 rows should not re-render.
+export default React.memo(SpotlightResultRow);

@@ -1,23 +1,16 @@
 import React, {useState} from 'react'
 import {
-    AccordionButton,
     Box,
     Button,
-    Center,
     Flex,
     HStack,
-    Menu, MenuButton,
-    MenuItem,
-    Spacer,
-    Text,
-    VStack
 } from "@chakra-ui/react";
 import InitiativeOrder from "@components/turnbar/InitiativeOrder";
 import useGameplayStore from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
-import PocketedResults from "@components/turnbar/PocketedResults";
-import CritRollerModal from "@components/crit/CritRollerModal";
+import TurnActionsHint from "@components/turnbar/TurnActionsHint";
+import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
 
 interface Props { }
 
@@ -29,26 +22,26 @@ const ToolBarStructured = ({ }: Props) => {
     const state = useGameplayStore((state) => state.state);
 
     const [isModalOpen, setModalOpen] = useState(false);
-    const [isCritOpen, setCritOpen] = useState(false);
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
     return (
-        <>
-            {/* Left Area */}
-            <HStack paddingLeft={4}>
-                {/* End Encounter Button */}
+        <Flex position="relative" align="center" justify="space-between" h="100%" w="100%" px={4}>
+            {/* Left */}
+            <HStack>
                 <Button
-                    colorScheme="red"
                     size="sm"
+                    bg="#3a1c1c"
+                    color="#ffd2d2"
+                    borderWidth="1px"
+                    borderColor="#7a3535"
+                    _hover={{bg: "#5a2a2a", color: "white"}}
                     onClick={openModal}
-                    isDisabled={state !== 'inProgress'} // Only enabled during 'inProgress'
+                    isDisabled={state !== 'inProgress'}
                 >
                     End Encounter
                 </Button>
-
-                {/* End Encounter Modal */}
                 <EndEncounterModal
                     isOpen={isModalOpen}
                     onClose={closeModal}
@@ -56,42 +49,51 @@ const ToolBarStructured = ({ }: Props) => {
                 />
             </HStack>
 
+            {/* Center — absolutely centered so left/right widths can't shift it */}
+            {state === 'inProgress' && (
+                <HStack
+                    position="absolute"
+                    left="50%"
+                    top="50%"
+                    transform="translate(-50%, -50%)"
+                    spacing={2}
+                >
+                    <Button
+                        size="sm"
+                        bg="#26292d"
+                        color="whiteAlpha.800"
+                        borderWidth="1px"
+                        borderColor="whiteAlpha.150"
+                        _hover={{bg: "#33363c", color: "white"}}
+                        onClick={() => transition('PREV_TURN')}
+                        isDisabled={!canTransition('PREV_TURN')}
+                    >
+                        Previous
+                    </Button>
+                    <InitiativeOrder/>
+                    <Button
+                        size="sm"
+                        bg="#d39939"
+                        color="#1a1d24"
+                        fontWeight="bold"
+                        letterSpacing="0.04em"
+                        _hover={{bg: "yellow.400"}}
+                        onClick={() => transition('NEXT_TURN')}
+                        isDisabled={!canTransition('NEXT_TURN')}
+                    >
+                        Next
+                    </Button>
+                    <TurnActionsHint/>
+                </HStack>
+            )}
 
-        {/* Center Area */}
-        {state === 'inProgress' &&
-        (
-            <HStack textAlign="center">
-                {/* Decrease Button */}
-                <Button
-            colorScheme="teal"
-            size="sm"
-            onClick={() => transition('PREV_TURN')}
-            isDisabled={!canTransition('PREV_TURN')}>
-            Previous
-            </Button>
-
-            {/* InitiativeOrder */}
-            <InitiativeOrder/>
-
-            {/* Increase Button */}
-            <Button colorScheme="teal" size="sm" onClick={() => transition('NEXT_TURN')} isDisabled={!canTransition('NEXT_TURN')}>
-            Next
-            </Button>
+            {/* Right */}
+            <HStack spacing={4}>
+                <DestinyPoolInline/>
+                <RoundNumberDisplay roundNumber={round}/>
             </HStack>
-        )}
-
-        {/* Right Area */}
-        <Flex gap={4} align="center" pr={4}>
-            <RoundNumberDisplay roundNumber={round}/>
-            <Button size="sm" colorScheme="purple" onClick={() => setCritOpen(true)}>
-                Crit Roller
-            </Button>
         </Flex>
-
-        {/* Crit Roller Modal */}
-        <CritRollerModal isOpen={isCritOpen} onClose={() => setCritOpen(false)} />
-    </>
-);
+    );
 }
 
 export default ToolBarStructured

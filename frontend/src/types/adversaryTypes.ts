@@ -5,6 +5,9 @@
 export interface Adversary {
   name: string;
   type: 'Minion' | 'Rival' | 'Nemesis';
+  // True for unique/named characters (Mace Windu, Han Solo). The random-add buttons
+  // skip these and only surface generic profiles.
+  named?: boolean;
   description?: string;
   notes?: string;
   characteristics: {

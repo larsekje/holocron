@@ -13,7 +13,9 @@ const __dirname = path.dirname(__filename);
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 const dataDir = path.resolve(projectRoot, 'frontend', 'public', 'assets', 'data');
-const outFile = path.resolve(projectRoot, 'frontend', 'src', 'data', 'spotlightIndex.generated.json');
+const generatedDir = path.resolve(projectRoot, 'frontend', 'src', 'data');
+const outFile = path.resolve(generatedDir, 'spotlightIndex.generated.json');
+const cloutFile = path.resolve(generatedDir, 'adversaryClout.generated.json');
 
 function slugify(s) {
   return String(s || '')
@@ -21,6 +23,7 @@ function slugify(s) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
 
 async function readJson(filename) {
   const filePath = path.join(dataDir, filename);
@@ -33,7 +36,7 @@ async function readJson(filename) {
   }
 }
 
-function entry(type, name, { subtitle, tags = [], description, extra = {}, named } = {}) {
+function entry(type, name, { subtitle, tags = [], description, extra = {}, named, clout } = {}) {
   const id = `${type}_${slugify(name)}`;
   const result = {
     id,
@@ -44,6 +47,7 @@ function entry(type, name, { subtitle, tags = [], description, extra = {}, named
   if (subtitle) result.subtitle = subtitle;
   if (tags && tags.length) result.tags = tags;
   if (typeof named === 'boolean') result.named = named;
+  if (typeof clout === 'number') result.clout = clout;
   return result;
 }
 
@@ -53,7 +57,7 @@ function pushUnique(results, e) {
 
 const ADVERSARY_TYPES = new Set(['Minion', 'Rival', 'Nemesis']);
 
-function buildAdversaries(rawList) {
+function buildAdversaries(rawList, cloutMap) {
   const results = [];
   if (!Array.isArray(rawList)) return results;
   let skipped = 0;
@@ -71,6 +75,7 @@ function buildAdversaries(rawList) {
       typeof adv.description === 'string' && adv.description.length > 0
         ? adv.description
         : undefined;
+    const clout = typeof cloutMap?.[adv.name] === 'number' ? cloutMap[adv.name] : undefined;
     pushUnique(
       results,
       entry('adversary', adv.name, {
@@ -78,9 +83,11 @@ function buildAdversaries(rawList) {
         tags: Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : undefined,
         description,
         named: adv.named === true,
+        clout,
         extra: {
           adversaryType: adv.type,
           named: adv.named === true,
+          clout,
           characteristics: adv.characteristics,
           derived: adv.derived,
           skills: adv.skills,
@@ -90,6 +97,7 @@ function buildAdversaries(rawList) {
           gear: adv.gear,
           factions: adv.factions,
           archetypes: adv.archetypes,
+          coreArchetype: adv.coreArchetype,
           traits: adv.traits,
         },
       }),
@@ -172,22 +180,31 @@ async function main() {
     return;
   }
 
-  const [adversariesRaw, talentsRaw, weaponsRaw] = await Promise.all([
+  const [adversariesRaw, talentsRaw, weaponsRaw, cloutMap] = await Promise.all([
     readJson('adversaries.json'),
     readJson('talents.json'),
     readJson('weapons.json'),
+    fs
+      .readFile(cloutFile, 'utf-8')
+      .then((raw) => JSON.parse(raw.replace(/^﻿/, '')))
+      .catch((e) => {
+        console.warn(`[spotlight] No clout map at ${path.relative(projectRoot, cloutFile)}: ${e.message}`);
+        return null;
+      }),
   ]);
 
   const results = [
-    ...buildAdversaries(adversariesRaw),
+    ...buildAdversaries(adversariesRaw, cloutMap),
     ...buildTalents(talentsRaw),
     ...buildWeapons(weaponsRaw),
   ];
 
   await fs.mkdir(path.dirname(outFile), { recursive: true });
   await fs.writeFile(outFile, JSON.stringify(results, null, 2), 'utf-8');
+  const adversaryCount = results.filter((r) => r.type === 'adversary').length;
+  const cloutCount = results.filter((r) => r.type === 'adversary' && typeof r.clout === 'number').length;
   console.log(
-    `[spotlight] Wrote ${results.length} entries (${results.filter((r) => r.type === 'adversary').length} adversaries, ${results.filter((r) => r.type === 'talent').length} talents, ${results.filter((r) => r.type === 'weapon').length} weapons) to ${path.relative(projectRoot, outFile)}.`,
+    `[spotlight] Wrote ${results.length} entries (${adversaryCount} adversaries [${cloutCount} with clout], ${results.filter((r) => r.type === 'talent').length} talents, ${results.filter((r) => r.type === 'weapon').length} weapons) to ${path.relative(projectRoot, outFile)}.`,
   );
 }
 

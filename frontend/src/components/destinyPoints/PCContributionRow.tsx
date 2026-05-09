@@ -1,5 +1,5 @@
 import React from "react";
-import { HStack, Box, Text, Button, ButtonGroup } from "@chakra-ui/react";
+import {Box, Button, ButtonGroup, HStack, Text} from "@chakra-ui/react";
 
 // Define Types for Props
 interface PC {
@@ -18,49 +18,48 @@ const PCContributionRow: React.FC<PCContributionRowProps> = ({
                                                                  selectedContribution,
                                                                  handleSelection,
                                                              }) => {
+    const tokenButton = (
+        value: string,
+        label: string,
+        side: "light" | "dark",
+    ) => {
+        const selected = selectedContribution === value;
+        const baseBg = side === "light" ? "#f0f4ff" : "#3a1c1c";
+        const baseColor = side === "light" ? "#1a1d24" : "#ffd2d2";
+        const baseBorder = side === "light" ? "#c5d0e8" : "#7a3535";
+        return (
+            <Button
+                size="sm"
+                onClick={() => handleSelection(pc.id, value)}
+                bg={selected ? baseBg : "#0f1114"}
+                color={selected ? baseColor : "whiteAlpha.700"}
+                borderWidth="1px"
+                borderColor={selected ? baseBorder : "whiteAlpha.200"}
+                fontWeight="black"
+                _hover={{
+                    bg: selected ? baseBg : "#1c1e21",
+                    color: selected ? baseColor : "white",
+                    borderColor: selected ? baseBorder : "whiteAlpha.400",
+                }}
+            >
+                {label}
+            </Button>
+        );
+    };
+
     return (
         <HStack spacing={4} justify="space-between" align="center">
-            {/* Render the PC's name */}
             <Box flex="1">
-                <Text fontSize="sm" fontWeight="medium">
+                <Text fontSize="sm" fontWeight="semibold" color="whiteAlpha.900">
                     {pc.name}
                 </Text>
             </Box>
 
-            {/* Button Group for Contributions */}
             <ButtonGroup isAttached>
-                <Button
-                    size="sm"
-                    colorScheme="red"
-                    variant={selectedContribution === "dark2" ? "solid" : "outline"}
-                    onClick={() => handleSelection(pc.id, "dark2")}
-                >
-                    DD
-                </Button>
-                <Button
-                    size="sm"
-                    colorScheme="red"
-                    variant={selectedContribution === "dark1" ? "solid" : "outline"}
-                    onClick={() => handleSelection(pc.id, "dark1")}
-                >
-                    D
-                </Button>
-                <Button
-                    size="sm"
-                    colorScheme="blue"
-                    variant={selectedContribution === "light1" ? "solid" : "outline"}
-                    onClick={() => handleSelection(pc.id, "light1")}
-                >
-                    L
-                </Button>
-                <Button
-                    size="sm"
-                    colorScheme="blue"
-                    variant={selectedContribution === "light2" ? "solid" : "outline"}
-                    onClick={() => handleSelection(pc.id, "light2")}
-                >
-                    LL
-                </Button>
+                {tokenButton("dark2", "DD", "dark")}
+                {tokenButton("dark1", "D", "dark")}
+                {tokenButton("light1", "L", "light")}
+                {tokenButton("light2", "LL", "light")}
             </ButtonGroup>
         </HStack>
     );

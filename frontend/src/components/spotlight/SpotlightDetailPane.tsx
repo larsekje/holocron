@@ -2,19 +2,27 @@ import React from 'react';
 import {
   Badge,
   Box,
+  Button,
   HStack,
   Skeleton,
   SkeletonText,
   Tag,
   Text,
+  useToast,
   VStack,
   Wrap,
   WrapItem,
 } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 import type { SpotlightDetail } from '@/state/spotlightStore';
 import { Interweave } from 'interweave';
 import { oggToHtml, oggInlineToHtml } from '@/utils/oggMarkup';
 import DetailStat from './DetailStat';
+import AdversaryBookSheet from './AdversaryBookSheet';
+import useParticipantStore from '@/state/participantsStore';
+import adversaryService from '@/services/adversaryService';
+import { useSpotlightStore } from '@/state/spotlightStore';
+import type { Adversary } from '@/types/adversaryTypes';
 
 interface SpotlightDetailPaneProps {
   detail: SpotlightDetail | null;
@@ -201,142 +209,7 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
           )}
 
           {(((detail as any).__kind ?? detail.type) === 'adversary') && (
-            <VStack align="stretch" spacing={3}>
-              {(detail as any).adversaryType && (
-                <HStack spacing={2}>
-                  <Tag colorScheme="red" variant="subtle" size="sm">
-                    {String((detail as any).adversaryType)}
-                  </Tag>
-                  {(detail as any).source && (
-                    <Text fontSize="xs" color="gray.500">{String((detail as any).source)}</Text>
-                  )}
-                </HStack>
-              )}
-              {(detail as any).characteristics && (
-                <HStack spacing={4} wrap="wrap">
-                  {([
-                    ['BR', 'Brawn'],
-                    ['AG', 'Agility'],
-                    ['INT', 'Intellect'],
-                    ['CUN', 'Cunning'],
-                    ['WIL', 'Willpower'],
-                    ['PR', 'Presence'],
-                  ] as const).map(([abbr, full]) => {
-                    const v = (detail as any).characteristics?.[full];
-                    if (v == null) return null;
-                    return (
-                      <HStack key={abbr} spacing={1}>
-                        <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em">{abbr}</Text>
-                        <Text fontSize="sm" color="gray.200" fontWeight="semibold">{String(v)}</Text>
-                      </HStack>
-                    );
-                  })}
-                </HStack>
-              )}
-              {(detail as any).derived && (() => {
-                const d = (detail as any).derived;
-                const items: Array<[string, string]> = [];
-                if (d.soak != null) items.push(['Soak', String(d.soak)]);
-                if (d.wounds != null) items.push(['Wounds', String(d.wounds)]);
-                if (d.strain != null) items.push(['Strain', String(d.strain)]);
-                const def = d.defence ?? d.defense;
-                if (Array.isArray(def)) items.push(['Defense', `${def[0] ?? 0} / ${def[1] ?? 0}`]);
-                if (items.length === 0) return null;
-                return (
-                  <HStack spacing={4} wrap="wrap">
-                    {items.map(([label, value]) => (
-                      <HStack key={label} spacing={1}>
-                        <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em">{label}</Text>
-                        <Text fontSize="sm" color="gray.200" fontWeight="semibold">{value}</Text>
-                      </HStack>
-                    ))}
-                  </HStack>
-                );
-              })()}
-              {(detail as any).skills && (() => {
-                const s = (detail as any).skills;
-                const items: string[] = [];
-                if (Array.isArray(s)) {
-                  for (const k of s) if (k != null) items.push(String(k));
-                } else if (s && typeof s === 'object') {
-                  for (const [k, v] of Object.entries(s)) items.push(`${k} ${v}`);
-                }
-                if (items.length === 0) return null;
-                return (
-                  <Box>
-                    <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" mb={1}>Skills</Text>
-                    <Wrap spacing={2} shouldWrapChildren>
-                      {items.map((label) => (
-                        <Tag key={`sk-${label}`} colorScheme="gray" variant="outline" size="sm">{label}</Tag>
-                      ))}
-                    </Wrap>
-                  </Box>
-                );
-              })()}
-              {Array.isArray((detail as any).talents) && (detail as any).talents.length > 0 && (
-                <Box>
-                  <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" mb={1}>Talents</Text>
-                  <Wrap spacing={2} shouldWrapChildren>
-                    {(detail as any).talents.map((t: any, i: number) => (
-                      <Tag key={`tal-${i}`} colorScheme="purple" variant="outline" size="sm">{String(t)}</Tag>
-                    ))}
-                  </Wrap>
-                </Box>
-              )}
-              {Array.isArray((detail as any).abilities) && (detail as any).abilities.length > 0 && (
-                <Box>
-                  <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" mb={1}>Abilities</Text>
-                  <Wrap spacing={2} shouldWrapChildren>
-                    {(detail as any).abilities.map((a: any, i: number) => (
-                      <Tag key={`ab-${i}`} colorScheme="blue" variant="outline" size="sm">{String(a)}</Tag>
-                    ))}
-                  </Wrap>
-                </Box>
-              )}
-              {Array.isArray((detail as any).weapons) && (detail as any).weapons.length > 0 && (
-                <Box>
-                  <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" mb={1}>Weapons</Text>
-                  <VStack align="stretch" spacing={1}>
-                    {(detail as any).weapons.map((w: any, i: number) => {
-                      if (typeof w === 'string') {
-                        return <Text key={`w-${i}`} fontSize="sm" color="gray.200">{w}</Text>;
-                      }
-                      const stats: string[] = [];
-                      if (w?.skill) stats.push(String(w.skill));
-                      if (w?.damage != null) stats.push(`Dmg ${w.damage}`);
-                      if (w?.critical != null) stats.push(`Crit ${w.critical}`);
-                      if (w?.range) stats.push(String(w.range));
-                      const quals = Array.isArray(w?.qualities) ? w.qualities.map(String) : [];
-                      return (
-                        <HStack key={`w-${i}`} spacing={2} align="baseline" wrap="wrap">
-                          <Text fontSize="sm" color="gray.200" fontWeight="semibold">{w?.name ?? '—'}</Text>
-                          {stats.length > 0 && (
-                            <Text fontSize="xs" color="gray.400">{stats.join(' · ')}</Text>
-                          )}
-                          {quals.length > 0 && (
-                            <Wrap spacing={1} shouldWrapChildren>
-                              {quals.map((q: string, qi: number) => (
-                                <Tag key={`wq-${i}-${qi}`} colorScheme="gray" variant="outline" size="sm">{q}</Tag>
-                              ))}
-                            </Wrap>
-                          )}
-                        </HStack>
-                      );
-                    })}
-                  </VStack>
-                </Box>
-              )}
-              {Array.isArray((detail as any).gear) && (detail as any).gear.length > 0 && (
-                <Box>
-                  <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.06em" mb={1}>Gear</Text>
-                  <Wrap spacing={2} shouldWrapChildren>
-                    {(detail as any).gear.map((g: any, i: number) => (
-                      <Tag key={`g-${i}`} colorScheme="gray" variant="outline" size="sm">{String(g)}</Tag>
-                    ))}
-                  </Wrap>
-                </Box>
-              )}
-            </VStack>
+            <AdversaryPreview detail={detail}/>
           )}
 
             {(['armor', 'gear', 'weapon', 'attachment'] as const).includes(((detail as any).__kind ?? detail.type) as any) && (
@@ -538,3 +411,52 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
 };
 
 export default SpotlightDetailPane;
+
+const AdversaryPreview: React.FC<{detail: SpotlightDetail}> = ({detail}) => {
+  const addParticipant = useParticipantStore((s) => s.addParticipant);
+  const closeSpotlight = useSpotlightStore((s) => s.close);
+  const toast = useToast();
+
+  const handleAdd = () => {
+    const participant = adversaryService.convertToParticipant({
+      name: (detail as any).name,
+      type: (detail as any).adversaryType ?? 'Rival',
+      characteristics: (detail as any).characteristics ?? {},
+      derived: (detail as any).derived ?? {soak: 2, wounds: 8},
+      skills: (detail as any).skills ?? {},
+      talents: (detail as any).talents,
+      abilities: (detail as any).abilities,
+      weapons: (detail as any).weapons,
+      gear: (detail as any).gear,
+      tags: (detail as any).tags,
+    } as Adversary);
+    addParticipant(participant);
+    closeSpotlight();
+    toast({
+      title: 'Added to encounter',
+      description: `${participant.name} (${participant.stats?.type ?? 'NPC'})`,
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    });
+  };
+
+  return (
+    <VStack align="stretch" spacing={3}>
+      <Button
+        size="sm"
+        leftIcon={<AddIcon/>}
+        bg="#d39939"
+        color="#1a1d24"
+        fontWeight="bold"
+        letterSpacing="0.04em"
+        _hover={{bg: "yellow.400"}}
+        alignSelf="flex-start"
+        onClick={handleAdd}
+      >
+        Add to encounter
+      </Button>
+      <AdversaryBookSheet detail={detail}/>
+    </VStack>
+  );
+};

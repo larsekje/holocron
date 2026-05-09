@@ -277,9 +277,21 @@ export function searchIndex(q: string): SpotlightResult[] {
 export { parseQuery, tokenEntityTypes } from './spotlightQuery';
 export type { Token } from './spotlightQuery';
 
+// Indexed lookup for getDetail — O(1) instead of O(N) per call. Used heavily by SpotlightResultRow
+// (one call per visible row), the StatSheet (talent + adversary lookups), and WeaponCard (quality
+// lookups). Linear scans across the merged index were a notable hot spot when rendering long
+// result lists.
+const detailByKey: Map<string, SpotlightDetail> = (() => {
+  const m = new Map<string, SpotlightDetail>();
+  for (const e of index) {
+    if (!e || !e.detail) continue;
+    m.set(`${e.type}:${e.id}`, e.detail);
+  }
+  return m;
+})();
+
 export function getDetail(type: SpotlightEntityType, id: string): SpotlightDetail | null {
-  const found = index.find((e) => e.type === type && e.id === id);
-  return found?.detail ?? null;
+  return detailByKey.get(`${type}:${id}`) ?? null;
 }
 
 // Browse raw index entries (no search), optionally filtered by types, limited to N

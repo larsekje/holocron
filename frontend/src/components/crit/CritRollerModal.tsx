@@ -32,6 +32,9 @@ import useGameplayStore from "@/state/newGameplayStore";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  // When provided, the modal applies the rolled crit to this participant directly and the
+  // internal target selector is hidden. Otherwise it falls back to picking a participant.
+  participantId?: string;
 };
 
 const severityColor: Record<CritSeverity, string> = {
@@ -256,8 +259,12 @@ const ApplyButton: React.FC<{
   return (
     <Button
       size="sm"
-      colorScheme="cyan"
-      variant="solid"
+      bg="#d39939"
+      color="#1a1d24"
+      fontWeight="bold"
+      letterSpacing="0.04em"
+      _hover={{bg: "yellow.400"}}
+      _disabled={{bg: "whiteAlpha.200", color: "whiteAlpha.500", cursor: "not-allowed"}}
       onClick={handleApply}
       isDisabled={!canApply}
     >
@@ -329,36 +336,45 @@ const MiniStepper: React.FC<{
   </HStack>
 );
 
-const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  // Dark palette harmonized with InitiativeModal
-  const modalBg = "gray.800";
-  const headerDivider = "gray.600";
-  const rowBg = "gray.700";
-  const altRowBg = "gray.650"; // Chakra will fallback toward gray.600
+const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) => {
+  // Dark palette aligned with the SWRPG popover/dialog look (#16181c shell, amber accents).
+  const modalBg = "#16181c";
+  const headerDivider = "#0a0b0d";
+  const rowBg = "#1d2025";
+  const altRowBg = "#16181c";
   const textMain = "whiteAlpha.900";
   const textDim = "whiteAlpha.700";
-  const accentColor = "cyan.300";
+  const accentColor = "#d39939";
 
   // Personal vs. Vehicle table toggle
   const [isVehicle, setIsVehicle] = useState(false);
   const table = isVehicle ? vehicleCritTable : critTable;
 
-  // Shared participant selection
+  // Shared participant selection. When the caller passes a participantId, that participant
+  // is the target and the in-modal selector is hidden. Otherwise we fall back to the active
+  // participant or the first in the store.
   const { participants } = useParticipantStore();
-  const [selectedParticipantId, setSelectedParticipantId] = useState<string>(participants[0]?.id || "");
-  // Fallback to first participant if none selected and list changes
-  useEffect(() => {
-    if (!selectedParticipantId && participants[0]) setSelectedParticipantId(participants[0].id);
-  }, [participants.length]);
+  const [selectedParticipantId, setSelectedParticipantId] = useState<string>(
+    participantId ?? participants[0]?.id ?? "",
+  );
 
-  // Default to Active participant on modal open (if available)
+  useEffect(() => {
+    if (participantId) setSelectedParticipantId(participantId);
+  }, [participantId]);
+
+  useEffect(() => {
+    if (participantId) return;
+    if (!selectedParticipantId && participants[0]) setSelectedParticipantId(participants[0].id);
+  }, [participants.length, participantId]);
+
+  // Default to Active participant on modal open (only when no explicit prop).
   const activeParticipantId = useGameplayStore((state) => state.context.activeParticipantId);
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || participantId) return;
     if (activeParticipantId && participants.some(p => p.id === activeParticipantId)) {
       setSelectedParticipantId(activeParticipantId);
     }
-  }, [isOpen, activeParticipantId, participants]);
+  }, [isOpen, activeParticipantId, participants, participantId]);
 
   // Titles of critical injuries the selected participant already has (Personal mode only)
   const ownedTitles = useMemo(() => {
@@ -413,14 +429,30 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="4xl">
-      <ModalOverlay backdropFilter="blur(10px)" />
-      <ModalContent bg={modalBg} color={textMain} borderRadius="lg" boxShadow="dark-lg" maxH="85vh" overflow="hidden">
-        <ModalHeader borderBottomWidth="1px" borderColor={headerDivider} py={2} px={3}>
+      <ModalOverlay backdropFilter="blur(4px)" bg="rgba(0,0,0,0.6)"/>
+      <ModalContent bg={modalBg} color={textMain} borderColor="#0a0b0d" borderWidth="1px" boxShadow="dark-lg" maxH="85vh" overflow="hidden">
+        <Box h="3px" w="100%" bgGradient="linear(to-r, #7c3a2c, #d39939)"/>
+        <ModalHeader bg="#0f1114" borderBottomWidth="1px" borderColor={headerDivider} py={2} px={3}>
           <HStack justify="space-between" align="center" width="100%">
-            <Text fontWeight="bold">Critical Injury Table</Text>
+            <HStack spacing={2} align="baseline">
+              <Text
+                as="b"
+                fontSize="xs"
+                letterSpacing="0.16em"
+                textTransform="uppercase"
+                color={accentColor}
+              >
+                Critical Injury
+              </Text>
+              {participantId && (
+                <Text fontSize="sm" color={textMain} fontWeight="semibold">
+                  {participants.find(p => p.id === participantId)?.name ?? "—"}
+                </Text>
+              )}
+            </HStack>
             <HStack spacing={3} align="center">
-              {/* Target (participant) selector - only for Personal mode */}
-              {!isVehicle && (
+              {/* Target (participant) selector - only when no explicit participantId prop */}
+              {!isVehicle && !participantId && (
                 <HStack spacing={2} align="center">
                   <Text fontSize="sm" color={textMain}>Target</Text>
                   <Select
@@ -451,11 +483,10 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <Switch
                   isChecked={isVehicle}
                   onChange={(e) => setIsVehicle(e.target.checked)}
-                  colorScheme="cyan"
                   size="sm"
                   sx={{
                     "& .chakra-switch__track": {
-                      bg: isVehicle ? "cyan.400" : "purple.400",
+                      bg: isVehicle ? "#7c3a2c" : "#d39939",
                     },
                   }}
                 />
@@ -471,14 +502,22 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <Box
             p={3}
             borderWidth="1px"
-            borderColor="gray.700"
+            borderColor="#0a0b0d"
             borderRadius="md"
-            bg="gray.900"
+            bg="#0f1114"
           >
             <HStack spacing={3} flexWrap="wrap" align="center">
 
 
-              <Button size="sm" colorScheme="purple" onClick={doRoll}>
+              <Button
+                size="sm"
+                bg="#d39939"
+                color="#1a1d24"
+                fontWeight="bold"
+                letterSpacing="0.04em"
+                _hover={{bg: "yellow.400"}}
+                onClick={doRoll}
+              >
                 Roll d100
               </Button>
               <Text>
@@ -549,7 +588,7 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
           {/* Table container (fills remaining space and scrolls) */}
           <Box
             borderWidth="1px"
-            borderColor="gray.700"
+            borderColor="#0a0b0d"
             borderRadius="md"
             flex="1"
             mt={3}
@@ -557,20 +596,48 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
             maxH="60vh"
             overflowY="auto"
             ref={scrollBoxRef}
+            bg={modalBg}
           >
             <HStack
               px={4}
               py={2}
-              bg="gray.900"
+              bg="#0f1114"
               borderBottomWidth="1px"
-              borderColor="gray.700"
+              borderColor="#0a0b0d"
               position="sticky"
               top={0}
               zIndex={1}
             >
-              <Text flex="0 0 90px" fontSize="sm" color={textDim} letterSpacing="wider">d100</Text>
-              <Text flex="0 0 140px" fontSize="sm" color={textDim} letterSpacing="wider">Severity</Text>
-              <Text flex="1" fontSize="sm" color={textDim} letterSpacing="wider">Result</Text>
+              <Text
+                flex="0 0 90px"
+                fontSize="9px"
+                letterSpacing="0.16em"
+                textTransform="uppercase"
+                color={accentColor}
+                fontWeight="bold"
+              >
+                d100
+              </Text>
+              <Text
+                flex="0 0 140px"
+                fontSize="9px"
+                letterSpacing="0.16em"
+                textTransform="uppercase"
+                color={accentColor}
+                fontWeight="bold"
+              >
+                Severity
+              </Text>
+              <Text
+                flex="1"
+                fontSize="9px"
+                letterSpacing="0.16em"
+                textTransform="uppercase"
+                color={accentColor}
+                fontWeight="bold"
+              >
+                Result
+              </Text>
             </HStack>
 
             {table.map((row, idx) => {
@@ -583,18 +650,19 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     if (el) rowsRef.current[idx] = el;
                   }}
                   position="relative"
-                  bg={isSelected ? "gray.500" : idx % 2 === 0 ? rowBg : "gray.600"}
+                  bg={isSelected ? "#33363c" : idx % 2 === 0 ? rowBg : altRowBg}
                   borderBottomWidth="1px"
-                  borderColor="gray.650"
+                  borderColor="#0a0b0d"
                   boxShadow={
                     isSelected && hasPrevious
-                      ? `inset 4px 0 0 0 ${accentColor}, inset -3px 0 0 0 #9F7AEA, 0 0 0 1px rgba(255,255,255,0.06)`
+                      ? `inset 4px 0 0 0 ${accentColor}, inset -3px 0 0 0 #7c3a2c`
                       : isSelected
-                      ? `inset 4px 0 0 0 ${accentColor}, 0 0 0 1px rgba(255,255,255,0.06)`
+                      ? `inset 4px 0 0 0 ${accentColor}`
                       : hasPrevious
-                      ? `inset -3px 0 0 0 #9F7AEA`
+                      ? `inset -3px 0 0 0 #7c3a2c`
                       : undefined
                   }
+                  _hover={{bg: isSelected ? "#33363c" : "#26292d"}}
                   onClick={() => setSelectedIndex(idx)}
                   cursor="pointer"
                   transition="background-color 120ms ease, box-shadow 120ms ease"
@@ -632,7 +700,7 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     {/* Indicator for existing injuries */}
                     <HStack flex="0 0 80px" justify="flex-end" spacing={2}>
                       {hasPrevious && (
-                        <Tag size="sm" variant="subtle" colorScheme="gray">
+                        <Tag size="sm" variant="subtle" bg="#7c3a2c" color="#fce7c8">
                           Sustained
                         </Tag>
                       )}
@@ -644,13 +712,13 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
           </Box>
         </ModalBody>
-        <ModalFooter py={2}>
+        <ModalFooter py={2} bg="#0f1114" borderTopWidth="1px" borderColor="#0a0b0d">
           <Button
             variant="ghost"
             onClick={onClose}
-            _hover={{ bg: "whiteAlpha.100" }}
-            color="#d4af37"
-            size="sm"
+            _hover={{bg: "whiteAlpha.100", color: "white"}}
+            color="whiteAlpha.700"
+            size="xs"
           >
             Close
           </Button>

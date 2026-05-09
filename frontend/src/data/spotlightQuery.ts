@@ -149,9 +149,14 @@ export const FIELDS: FieldDef[] = [
   ...skillNumericFields,
 
   // Lookups across adversary lists
-  { name: 'archetype', kind: 'lookup-name', arrayPath: ['archetypes'], appliesTo: ['adversary'], smart: true,
-    description: 'Adversary archetype (Shooter, Bruiser, Scout, Beast/Creature, Droid, ...).',
-    examples: ['archetype:droid', 'archetype:scout'], group: 'Adversary groupings' },
+  { name: 'archetype', kind: 'lookup-name', arrayPath: ['coreArchetype'], appliesTo: ['adversary'], smart: true,
+    description: 'Adversary archetype (v4.2: Soldier, Nasty Beast, Force Duelist, Kingpin, Schemer, ...).',
+    examples: ['archetype:soldier', 'archetype:nasty', 'archetype:kingpin', 'archetype:force'],
+    group: 'Adversary groupings' },
+  { name: 'role', kind: 'lookup-name', arrayPath: ['archetypes'], appliesTo: ['adversary'], smart: true,
+    description: 'Broad role tags from source data (OggDude): Shooter, Bruiser, Scout, Operative, Pilot, Tech, Force-User, Social, Leader, Beast/Creature, Droid, Security, Medic. Multi-valued — most adversaries have 2–4.',
+    examples: ['role:bruiser', 'role:force', 'role:medic', 'role:scout'],
+    group: 'Adversary groupings' },
   { name: 'faction', kind: 'lookup-name', arrayPath: ['factions'], appliesTo: ['adversary'], smart: true,
     description: 'Adversary faction (Imperial, Rebel, Underworld, Creature, Droid, ...).',
     examples: ['faction:imperial', 'faction:rebel', 'faction:creature'], group: 'Adversary groupings' },
@@ -329,6 +334,7 @@ function asStringArray(v: any): string[] {
       .map((x) => (typeof x === 'string' ? x : x?.name ?? ''))
       .filter((s) => typeof s === 'string' && s.length > 0);
   }
+  if (typeof v === 'string' && v.length > 0) return [v];
   return [];
 }
 

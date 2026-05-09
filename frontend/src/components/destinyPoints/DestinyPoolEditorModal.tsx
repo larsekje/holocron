@@ -1,19 +1,17 @@
 import React from "react";
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    VStack,
-    HStack,
     Box,
-    Text,
     Button,
-    ButtonGroup,
+    HStack,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     Spacer,
+    VStack,
 } from "@chakra-ui/react";
 import PCContributionRow from "@components/destinyPoints/PCContributionRow";
 
@@ -43,16 +41,32 @@ const DestinyEditorModal: React.FC<DestinyEditorModalProps> = ({
                                                                    onConfirm,
                                                                }) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="sm">
-            <ModalOverlay />
-            <ModalContent>
-                {/* Modal Header */}
-                <ModalHeader>Edit Destiny Pool</ModalHeader>
-                <ModalCloseButton />
+        <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
+            <ModalOverlay backdropFilter="blur(4px)" bg="rgba(0,0,0,0.6)"/>
+            <ModalContent
+                bg="#16181c"
+                color="gray.100"
+                borderColor="#0a0b0d"
+                borderWidth="1px"
+                overflow="hidden"
+            >
+                <Box h="3px" w="100%" bgGradient="linear(to-r, #7c3a2c, #d39939)"/>
+                <ModalHeader
+                    bg="#0f1114"
+                    borderBottomWidth="1px"
+                    borderColor="#0a0b0d"
+                    fontSize="xs"
+                    letterSpacing="0.16em"
+                    textTransform="uppercase"
+                    color="#d39939"
+                    py={2}
+                >
+                    Edit Destiny Pool
+                </ModalHeader>
+                <ModalCloseButton color="whiteAlpha.700" _hover={{color: "white"}}/>
 
-                {/* Modal Body */}
-                <ModalBody pb={4}>
-                    <VStack spacing={4} align="stretch">
+                <ModalBody bg="#1d2025" pb={4} pt={4}>
+                    <VStack spacing={3} align="stretch">
                         {pcs.map((pc) => (
                             <PCContributionRow
                                 key={pc.id}
@@ -64,20 +78,37 @@ const DestinyEditorModal: React.FC<DestinyEditorModalProps> = ({
                     </VStack>
                 </ModalBody>
 
-                {/* Modal Footer */}
-                <ModalFooter>
+                <ModalFooter bg="#0f1114" borderTopWidth="1px" borderColor="#0a0b0d" py={2}>
                     <HStack width="100%" spacing={2}>
-                        {/* Reset button */}
-                        <Button size="sm" variant="outline" onClick={onReset}>
+                        <Button
+                            size="xs"
+                            variant="ghost"
+                            color="whiteAlpha.700"
+                            _hover={{bg: "whiteAlpha.100", color: "white"}}
+                            onClick={onReset}
+                        >
                             Reset
                         </Button>
-                        <Spacer />
-                        {/* Confirm and Cancel buttons */}
-                        <Button colorScheme="teal" size="sm" onClick={onConfirm}>
-                            Confirm
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={onClose}>
+                        <Spacer/>
+                        <Button
+                            size="xs"
+                            variant="ghost"
+                            color="whiteAlpha.700"
+                            _hover={{bg: "whiteAlpha.100", color: "white"}}
+                            onClick={onClose}
+                        >
                             Cancel
+                        </Button>
+                        <Button
+                            size="xs"
+                            bg="#d39939"
+                            color="#1a1d24"
+                            fontWeight="bold"
+                            letterSpacing="0.04em"
+                            _hover={{bg: "yellow.400"}}
+                            onClick={onConfirm}
+                        >
+                            Confirm
                         </Button>
                     </HStack>
                 </ModalFooter>
