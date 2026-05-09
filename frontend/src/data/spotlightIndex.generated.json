@@ -119594,5 +119594,3292 @@
       "Pierce 1",
       "Stun Setting"
     ]
+  },
+  {
+    "id": "vehicle_cloakshape-fighter",
+    "type": "vehicle",
+    "name": "Cloakshape Fighter",
+    "detail": {
+      "id": "vehicle_cloakshape-fighter",
+      "type": "vehicle",
+      "name": "Cloakshape Fighter",
+      "book": "eote",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/Cloakshape",
+        "manufacturer": "Kuat Systems Engineering",
+        "hyperdrive": null,
+        "navicomputer": null,
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 12,
+        "passengers": 0,
+        "consumables": "One day",
+        "price": 38000,
+        "rarity": 4,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 13,
+        "system": 8,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launchers",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Breach 2",
+            "Blast 2",
+            "Guided 4",
+            "Linked 1",
+            "Limited Ammo 6",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 38000,
+      "rarity": 4
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/Cloakshape",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_firespray-sysem-patrol-craft",
+    "type": "vehicle",
+    "name": "Firespray Sysem Patrol Craft",
+    "detail": {
+      "id": "vehicle_firespray-sysem-patrol-craft",
+      "type": "vehicle",
+      "name": "Firespray Sysem Patrol Craft",
+      "book": "eote",
+      "fullName": "Firespray Sysem Patrol Craft",
+      "group": "Patrol Boats",
+      "info": {
+        "type": "Patrol Boat/Firespray",
+        "manufacturer": "Kuat Systems Engineering",
+        "hyperdrive": {
+          "primary": 3,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, two guards",
+        "encumbrance": 40,
+        "passengers": "6 (prisoners)",
+        "consumables": "One month",
+        "price": 80000,
+        "rarity": 4,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 4,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 19,
+        "system": 12,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Auto-blasters",
+          "arc": "Forward",
+          "damage": 1,
+          "critical": 5,
+          "range": "Close",
+          "qualities": [
+            "Auto-Fire"
+          ]
+        },
+        {
+          "name": "Light tractor beam projector",
+          "arc": "Forward",
+          "damage": null,
+          "critical": null,
+          "range": "Close",
+          "qualities": [
+            "Tractor 2"
+          ]
+        }
+      ],
+      "price": 80000,
+      "rarity": 4
+    },
+    "subtitle": "Patrol Boats",
+    "tags": [
+      "Patrol Boats",
+      "Patrol Boat/Firespray",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_jm-5000-jumpmaster-long-range-scout",
+    "type": "vehicle",
+    "name": "JM-5000 Jumpmaster Long Range Scout",
+    "detail": {
+      "id": "vehicle_jm-5000-jumpmaster-long-range-scout",
+      "type": "vehicle",
+      "name": "JM-5000 Jumpmaster Long Range Scout",
+      "book": "eote",
+      "fullName": "JM-5000 Jumpmaster Long Range Scout",
+      "group": "Patrol Boats",
+      "info": {
+        "type": "Patrol Boat/JumpMaster",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 3,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Extreme",
+        "complement": "One pilot",
+        "encumbrance": 30,
+        "passengers": 1,
+        "consumables": "Two months",
+        "price": 55000,
+        "rarity": 5,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 18,
+        "system": 8,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Light laser cannon",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close"
+        }
+      ],
+      "price": 55000,
+      "rarity": 5
+    },
+    "subtitle": "Patrol Boats",
+    "tags": [
+      "Patrol Boats",
+      "Patrol Boat/JumpMaster",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_z-95-af4-headhunter",
+    "type": "vehicle",
+    "name": "Z-95-AF4 Headhunter",
+    "detail": {
+      "id": "vehicle_z-95-af4-headhunter",
+      "type": "vehicle",
+      "name": "Z-95-AF4 Headhunter",
+      "book": "eote",
+      "fullName": "Z-95-AF4 Headhunter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/Headhunter",
+        "manufacturer": "Incom/Subpro",
+        "hyperdrive": null,
+        "navicomputer": null,
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 8,
+        "passengers": 0,
+        "consumables": "One day",
+        "price": 55000,
+        "rarity": 4,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 12,
+        "system": 8,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launchers",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Breach 2",
+            "Blast 2",
+            "Guided 4",
+            "Linked 1",
+            "Limited Ammo 6",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 55000,
+      "rarity": 4
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/Headhunter",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_gat-12h-skipray-blastboat",
+    "type": "vehicle",
+    "name": "GAT-12H Skipray Blastboat",
+    "detail": {
+      "id": "vehicle_gat-12h-skipray-blastboat",
+      "type": "vehicle",
+      "name": "GAT-12H Skipray Blastboat",
+      "book": "eote",
+      "fullName": "GAT-12H Skipray Blastboat",
+      "group": "Patrol Boats",
+      "info": {
+        "type": "Patrol Boat/Skipray",
+        "manufacturer": "Sienar Fleet Systems",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot, one comms/sensor operator, two gunners",
+        "encumbrance": 20,
+        "passengers": 0,
+        "consumables": "One month",
+        "price": 150000,
+        "rarity": 6,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 4,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 24,
+        "system": 15,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Triple light ion cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Ion",
+            "Linked 2"
+          ]
+        },
+        {
+          "name": "Dorsal turret-mounted twin medium laser cannon",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Proton torpedo launcher",
+          "arc": "Forward",
+          "damage": 6,
+          "critical": 2,
+          "range": "Short",
+          "qualities": [
+            "Blast 4",
+            "Breach 4",
+            "Guided 3",
+            "Limited Ammo 5",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launcher",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Breach 2",
+            "Blast 2",
+            "Guided 4",
+            "Limited Ammo 8",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 150000,
+      "rarity": 6
+    },
+    "subtitle": "Patrol Boats",
+    "tags": [
+      "Patrol Boats",
+      "Patrol Boat/Skipray",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_mobquet-flare-s-swoop",
+    "type": "vehicle",
+    "name": "Mobquet Flare-S Swoop",
+    "detail": {
+      "id": "vehicle_mobquet-flare-s-swoop",
+      "type": "vehicle",
+      "name": "Mobquet Flare-S Swoop",
+      "book": "eote",
+      "fullName": "Mobquet Flare-S Swoop",
+      "group": "Landspeeders",
+      "info": {
+        "type": "Swoop/Flare-S",
+        "manufacturer": "Mobquet Swoops and Speeders",
+        "altitude": "350 metres",
+        "sensors": "None",
+        "complement": "One pilot",
+        "encumbrance": 4,
+        "passengers": 1,
+        "price": 6000,
+        "rarity": 3,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 3,
+        "Handling": "+2"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 4,
+        "system": 3,
+        "defense": 0
+      },
+      "price": 6000,
+      "rarity": 3
+    },
+    "subtitle": "Landspeeders",
+    "tags": [
+      "Landspeeders",
+      "Swoop/Flare-S",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_trast-a-a5-heavy-speeder-truck",
+    "type": "vehicle",
+    "name": "Trast A-A5 Heavy Speeder Truck",
+    "detail": {
+      "id": "vehicle_trast-a-a5-heavy-speeder-truck",
+      "type": "vehicle",
+      "name": "Trast A-A5 Heavy Speeder Truck",
+      "book": "eote",
+      "fullName": "Trast A-A5 Heavy Speeder Truck",
+      "group": "Landspeeders",
+      "info": {
+        "type": "Speeder Truck/A-A5",
+        "manufacturer": "Trast Heavy Transports",
+        "altitude": "3 metres",
+        "sensors": "None",
+        "complement": "One pilot, two co-pilots",
+        "encumbrance": 220,
+        "passengers": 25,
+        "price": 10000,
+        "rarity": 2,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 1,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 13,
+        "system": 8,
+        "defense": 0
+      },
+      "price": 10000,
+      "rarity": 2
+    },
+    "subtitle": "Landspeeders",
+    "tags": [
+      "Landspeeders",
+      "Speeder Truck/A-A5",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_x-34-landspeeder",
+    "type": "vehicle",
+    "name": "X-34 Landspeeder",
+    "detail": {
+      "id": "vehicle_x-34-landspeeder",
+      "type": "vehicle",
+      "name": "X-34 Landspeeder",
+      "book": "eote",
+      "fullName": "X-34 Landspeeder",
+      "group": "Landspeeders",
+      "info": {
+        "type": "Landspeeder/X-34",
+        "manufacturer": "SoroSuub",
+        "altitude": "1 metre",
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 15,
+        "passengers": 1,
+        "price": 4500,
+        "rarity": 2,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 2,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 6,
+        "system": 5,
+        "defense": 0
+      },
+      "price": 4500,
+      "rarity": 2
+    },
+    "subtitle": "Landspeeders",
+    "tags": [
+      "Landspeeders",
+      "Landspeeder/X-34",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_all-terrain-personal-transport",
+    "type": "vehicle",
+    "name": "All Terrain Personal Transport",
+    "detail": {
+      "id": "vehicle_all-terrain-personal-transport",
+      "type": "vehicle",
+      "name": "All Terrain Personal Transport",
+      "book": "eote",
+      "fullName": "All Terrain Personal Transport",
+      "group": "Walkers",
+      "info": {
+        "type": "Walker/AT-PT",
+        "manufacturer": "Rothana Heavy Industries",
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 15,
+        "passengers": 1,
+        "price": 30000,
+        "rarity": 7,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 2,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 8,
+        "system": 5,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Twin light blaster cannons",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Concussion grenade launcher",
+          "arc": "Forward",
+          "damage": 8,
+          "critical": 4,
+          "range": "Extreme",
+          "qualities": [
+            "Blast 6",
+            "Limited Ammo 20"
+          ],
+          "notes": "This weapon’s profile uses personal scale, not planetary scale."
+        }
+      ],
+      "price": 30000,
+      "rarity": 7
+    },
+    "subtitle": "Walkers",
+    "tags": [
+      "Walkers",
+      "Walker/AT-PT",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_exploration-and-survey-walker",
+    "type": "vehicle",
+    "name": "Exploration and Survey Walker",
+    "detail": {
+      "id": "vehicle_exploration-and-survey-walker",
+      "type": "vehicle",
+      "name": "Exploration and Survey Walker",
+      "book": "eote",
+      "fullName": "Exploration and Survey Walker",
+      "group": "Walkers",
+      "info": {
+        "type": "Walker/AT-EST",
+        "manufacturer": "Rothana Heavy Engineering",
+        "sensors": "Long",
+        "complement": "One pilot, one co-pilot, one sensor/comms operator",
+        "encumbrance": 50,
+        "passengers": 8,
+        "consumables": "One month",
+        "price": 12000,
+        "rarity": 5,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 1,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 24,
+        "system": 12,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Light blaster cannon",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close"
+        }
+      ],
+      "price": 12000,
+      "rarity": 5
+    },
+    "subtitle": "Walkers",
+    "tags": [
+      "Walkers",
+      "Walker/AT-EST",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_civilian-airspeeder",
+    "type": "vehicle",
+    "name": "Civilian Airspeeder",
+    "detail": {
+      "id": "vehicle_civilian-airspeeder",
+      "type": "vehicle",
+      "name": "Civilian Airspeeder",
+      "book": "eote",
+      "group": "Airspeeders",
+      "info": {
+        "type": "Airspeeder/Civilian",
+        "manufacturer": "Various manufacturers",
+        "altitude": "300 kilometres",
+        "sensors": "Short",
+        "complement": "One pilot",
+        "encumbrance": "10-30",
+        "passengers": "1-6",
+        "price": 10000,
+        "rarity": 3,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 3,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 7,
+        "system": 5,
+        "defense": 0
+      },
+      "price": 10000,
+      "rarity": 3
+    },
+    "subtitle": "Airspeeders",
+    "tags": [
+      "Airspeeders",
+      "Airspeeder/Civilian",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_incom-t-16-skyhopper",
+    "type": "vehicle",
+    "name": "Incom T-16 Skyhopper",
+    "detail": {
+      "id": "vehicle_incom-t-16-skyhopper",
+      "type": "vehicle",
+      "name": "Incom T-16 Skyhopper",
+      "book": "eote",
+      "fullName": "Incom T-16 Skyhopper",
+      "group": "Airspeeders",
+      "info": {
+        "type": "Airspeeder/T-16 Skyhopper",
+        "manufacturer": "Incom Corporation",
+        "altitude": "300 kilometres",
+        "sensors": "Short",
+        "complement": "One pilot",
+        "encumbrance": 12,
+        "passengers": 1,
+        "price": 7500,
+        "rarity": 2,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 4,
+        "Handling": "+3"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 6,
+        "system": 6,
+        "defense": 0
+      },
+      "price": 7500,
+      "rarity": 2
+    },
+    "subtitle": "Airspeeders",
+    "tags": [
+      "Airspeeders",
+      "Airspeeder/T-16 Skyhopper",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_incom-t-47-airspeeder",
+    "type": "vehicle",
+    "name": "Incom T-47 Airspeeder",
+    "detail": {
+      "id": "vehicle_incom-t-47-airspeeder",
+      "type": "vehicle",
+      "name": "Incom T-47 Airspeeder",
+      "book": "eote",
+      "fullName": "Incom T-47 Airspeeder",
+      "group": "Airspeeders",
+      "info": {
+        "type": "Airspeeder/T-47",
+        "manufacturer": "Incom Corporation",
+        "altitude": "175 metres",
+        "sensors": "Close",
+        "complement": "One pilot, one co-pilot/cargo handler",
+        "encumbrance": 6,
+        "passengers": 0,
+        "price": 18000,
+        "rarity": 3,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 4,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 6,
+        "system": 6,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Turret-mounted electromagnetic harpoon",
+          "arc": "Aft",
+          "damage": null,
+          "critical": null,
+          "range": "Close",
+          "qualities": [
+            "Ensnare 5",
+            "Knockdown",
+            "Limited Ammo 1"
+          ]
+        }
+      ],
+      "price": 18000,
+      "rarity": 3
+    },
+    "subtitle": "Airspeeders",
+    "tags": [
+      "Airspeeders",
+      "Airspeeder/T-47",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_action-v1-bulk-transport",
+    "type": "vehicle",
+    "name": "Action V1 Bulk Transport",
+    "detail": {
+      "id": "vehicle_action-v1-bulk-transport",
+      "type": "vehicle",
+      "name": "Action V1 Bulk Transport",
+      "book": "eote",
+      "fullName": "Action V1 Bulk Transport",
+      "group": "Freighters",
+      "info": {
+        "type": "Transport/Action VI",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 3,
+          "backup": 20
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "Twenty crew",
+        "encumbrance": 10000,
+        "passengers": 5,
+        "consumables": "Three months",
+        "price": 200000,
+        "rarity": 5,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 2,
+        "Handling": "-3"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 45,
+        "system": 20,
+        "defense": 1
+      },
+      "price": 200000,
+      "rarity": 5
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Transport/Action VI",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_ilh-kk-citadel-class-light-freighter",
+    "type": "vehicle",
+    "name": "ILH-KK Citadel-Class Light Freighter",
+    "detail": {
+      "id": "vehicle_ilh-kk-citadel-class-light-freighter",
+      "type": "vehicle",
+      "name": "ILH-KK Citadel-Class Light Freighter",
+      "book": "eote",
+      "fullName": "ILH-KK Citadel-Class Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/Citadel",
+        "manufacturer": "Koensayr Manufacturing",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot, one engineer",
+        "encumbrance": 95,
+        "passengers": 14,
+        "consumables": "Six months",
+        "price": 200000,
+        "rarity": 6,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": "-1"
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 34,
+        "system": 16,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Port and starboard turret-mounted light ion cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Ion",
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launcher",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Breach 2",
+            "Blast 2",
+            "Guided 4",
+            "Limited Ammo 6",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Medium tractor beam projector",
+          "arc": "Forward",
+          "damage": null,
+          "critical": null,
+          "range": "Short",
+          "qualities": [
+            "Tractor 4"
+          ]
+        }
+      ],
+      "price": 200000,
+      "rarity": 6
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/Citadel",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_gr-75-medium-transport",
+    "type": "vehicle",
+    "name": "GR-75 Medium Transport",
+    "detail": {
+      "id": "vehicle_gr-75-medium-transport",
+      "type": "vehicle",
+      "name": "GR-75 Medium Transport",
+      "book": "eote",
+      "group": "Freighters",
+      "info": {
+        "type": "Transport/GR-75",
+        "manufacturer": "Gallofree Uards, Inc",
+        "hyperdrive": {
+          "primary": 4,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot, one engineer, one cargo master, three mates/crew",
+        "encumbrance": 1000,
+        "passengers": "100 or more with pods",
+        "consumables": "Six monts",
+        "price": 180000,
+        "rarity": 4,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 3,
+        "Handling": -3
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 25,
+        "system": 18,
+        "defense": 1
+      },
+      "price": 180000,
+      "rarity": 4
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Transport/GR-75",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_sorosuub-luxury-3000-space-yacht",
+    "type": "vehicle",
+    "name": "SoroSuub Luxury 3000 Space Yacht",
+    "detail": {
+      "id": "vehicle_sorosuub-luxury-3000-space-yacht",
+      "type": "vehicle",
+      "name": "SoroSuub Luxury 3000 Space Yacht",
+      "book": "eote",
+      "fullName": "SoroSuub Luxury 3000 Space Yacht",
+      "group": "Freighters",
+      "info": {
+        "type": "Yacht/Luxury 3000",
+        "manufacturer": "SoroSuub Corporation",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 14
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot/engineer",
+        "encumbrance": 100,
+        "passengers": 10,
+        "consumables": "One month",
+        "price": 120000,
+        "rarity": 6,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 34,
+        "system": 12,
+        "defense": 1
+      },
+      "price": 120000,
+      "rarity": 6
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Yacht/Luxury 3000",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_space-master-medium-transport",
+    "type": "vehicle",
+    "name": "Space Master Medium Transport",
+    "detail": {
+      "id": "vehicle_space-master-medium-transport",
+      "type": "vehicle",
+      "name": "Space Master Medium Transport",
+      "book": "eote",
+      "fullName": "Space Master Medium Transport",
+      "group": "Freighters",
+      "info": {
+        "type": "Transport/Space Master",
+        "manufacturer": "Kuat Drive Yards",
+        "hyperdrive": {
+          "primary": 4,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One captain, one pilot, one co-pilot, two engineers, one cargo master, three mates/crew",
+        "encumbrance": 800,
+        "passengers": 0,
+        "consumables": "Three months",
+        "price": 150000,
+        "rarity": 4,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 2,
+        "Handling": -4
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 30,
+        "system": 25,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal and ventral turret-mounted light laser cannons",
+          "arc": "All",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 150000,
+      "rarity": 4
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Transport/Space Master",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_starwind-pleasure-yacht",
+    "type": "vehicle",
+    "name": "Starwind Pleasure Yacht",
+    "detail": {
+      "id": "vehicle_starwind-pleasure-yacht",
+      "type": "vehicle",
+      "name": "Starwind Pleasure Yacht",
+      "book": "eote",
+      "fullName": "Starwind Pleasure Yacht",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/Starwind",
+        "manufacturer": "Kuat Drive Yards",
+        "hyperdrive": {
+          "primary": 1,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot, one engineer, two gunners",
+        "encumbrance": 85,
+        "passengers": 10,
+        "consumables": "Four months",
+        "price": 210000,
+        "rarity": 6,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 3,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 30,
+        "system": 20,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal and ventral turret-mounted medium laser cannon",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close"
+        }
+      ],
+      "price": 210000,
+      "rarity": 6
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/Starwind",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_wayfarer-class-medium-freighter",
+    "type": "vehicle",
+    "name": "Wayfarer-Class Medium Freighter",
+    "detail": {
+      "id": "vehicle_wayfarer-class-medium-freighter",
+      "type": "vehicle",
+      "name": "Wayfarer-Class Medium Freighter",
+      "book": "eote",
+      "fullName": "Wayfarer-Class Medium Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/Wayfarer",
+        "manufacturer": "Kuat Systems Engineering",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 14
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot, one engineer, one cargo master, six crew",
+        "encumbrance": 850,
+        "passengers": 6,
+        "consumables": "Three months",
+        "price": 120000,
+        "rarity": 5,
+        "hardpoints": 5
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 3,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 30,
+        "system": 20,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal quad laser cannon",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Accurate",
+            "Linked 3"
+          ]
+        }
+      ],
+      "price": 120000,
+      "rarity": 5
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/Wayfarer",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_yt-1300-light-freighter",
+    "type": "vehicle",
+    "name": "YT-1300 Light Freighter",
+    "detail": {
+      "id": "vehicle_yt-1300-light-freighter",
+      "type": "vehicle",
+      "name": "YT-1300 Light Freighter",
+      "book": "eote",
+      "fullName": "YT-1300 Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/YT-1300",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 12
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot/engineer",
+        "encumbrance": 165,
+        "passengers": 6,
+        "consumables": "Two months",
+        "price": 100000,
+        "rarity": 4,
+        "hardpoints": 6
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 26,
+        "system": 15,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal and ventral turret-mounted medium laser cannon",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close"
+        }
+      ],
+      "price": 100000,
+      "rarity": 4
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/YT-1300",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_yt-2400-light-freighter",
+    "type": "vehicle",
+    "name": "YT-2400 Light Freighter",
+    "detail": {
+      "id": "vehicle_yt-2400-light-freighter",
+      "type": "vehicle",
+      "name": "YT-2400 Light Freighter",
+      "book": "eote",
+      "fullName": "YT-2400 Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/YT-2400",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 12
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot/engineer",
+        "encumbrance": 140,
+        "passengers": 6,
+        "consumables": "Two months",
+        "price": 130000,
+        "rarity": 5,
+        "hardpoints": 5
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 29,
+        "system": 18,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal and ventral turret-mounted twin medium laser cannon",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 130000,
+      "rarity": 5
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/YT-2400",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_star-galleon-armed-transport",
+    "type": "vehicle",
+    "name": "Star Galleon Armed Transport",
+    "detail": {
+      "id": "vehicle_star-galleon-armed-transport",
+      "type": "vehicle",
+      "name": "Star Galleon Armed Transport",
+      "book": "eote",
+      "fullName": "Star Galleon Armed Transport",
+      "group": "Freighters",
+      "info": {
+        "type": "Transport/Star Galleon",
+        "manufacturer": "Kuat Drive Yards",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One-hundred and fifty officers and enlisted crew",
+        "encumbrance": "10,000 or more depending on configuration",
+        "passengers": 300,
+        "consumables": "Six months",
+        "price": 150000,
+        "rarity": 7,
+        "restricted": true,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 6,
+        "Speed": 1,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 4,
+        "hull": 91,
+        "system": 18,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Five port and starboard medium turbolasers",
+          "arc": "Port or Starboard",
+          "damage": 7,
+          "critical": 3,
+          "range": "Long",
+          "qualities": [
+            "Breach 2",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launcher",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Breach 2",
+            "Blast 2",
+            "Guided 4",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 150000,
+      "rarity": 7
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Transport/Star Galleon",
+      "Sil 6"
+    ]
+  },
+  {
+    "id": "vehicle_rz-1-a-wing-light-interceptor",
+    "type": "vehicle",
+    "name": "RZ-1 “A-Wing” Light Interceptor",
+    "detail": {
+      "id": "vehicle_rz-1-a-wing-light-interceptor",
+      "type": "vehicle",
+      "name": "RZ-1 “A-Wing” Light Interceptor",
+      "book": "aor",
+      "fullName": "RZ-1 “A-Wing” Light Interceptor",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/RZ-1 “A-wing”",
+        "manufacturer": "Incom/Alliance Underground Engineering",
+        "hyperdrive": 1,
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot",
+        "encumbrance": 4,
+        "passengers": 0,
+        "consumables": "One week",
+        "price": 150000,
+        "rarity": 6,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 5,
+        "Handling": "+3"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 9,
+        "system": 6,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 150000,
+      "rarity": 6
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/RZ-1 “A-wing”",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_t-65b-x-wing-starfighter",
+    "type": "vehicle",
+    "name": "T-65B “X-Wing” Starfighter",
+    "detail": {
+      "id": "vehicle_t-65b-x-wing-starfighter",
+      "type": "vehicle",
+      "name": "T-65B “X-Wing” Starfighter",
+      "book": "aor",
+      "fullName": "T-65B “X-Wing” Starfighter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/T-65B X-wing",
+        "manufacturer": "Incom Corporation",
+        "hyperdrive": 1,
+        "navicomputer": "None-astromech droid socket",
+        "sensors": "Close",
+        "complement": "One pilot, one astromech droid",
+        "encumbrance": 10,
+        "passengers": 0,
+        "consumables": "One week",
+        "price": 120000,
+        "rarity": 5,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 5,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 13,
+        "system": 10,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 3"
+          ]
+        },
+        {
+          "name": "Proton torpedo launchers",
+          "arc": "Forward",
+          "damage": 6,
+          "critical": 2,
+          "range": "Short",
+          "qualities": [
+            "Blast 4",
+            "Breach 4",
+            "Guided 3",
+            "Limited Ammo 6",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 120000,
+      "rarity": 5
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/T-65B X-wing",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_btl-a4-btl-s3-y-wing-attack-starfighter",
+    "type": "vehicle",
+    "name": "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
+    "detail": {
+      "id": "vehicle_btl-a4-btl-s3-y-wing-attack-starfighter",
+      "type": "vehicle",
+      "name": "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
+      "book": "aor",
+      "fullName": "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/BTL Y-wing",
+        "manufacturer": "Koensayr Manufacturing",
+        "hyperdrive": 1,
+        "navicomputer": "None-astromech droid socket",
+        "sensors": "Close",
+        "complement": "One pilot (one gunner in BTL-S3)",
+        "encumbrance": 10,
+        "passengers": 0,
+        "consumables": "One week",
+        "price": 80000,
+        "rarity": 4,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 15,
+        "system": 10,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Twin-light ion cannons",
+          "arc": "Forward (All for S3)",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Ion",
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Proton torpedo launchers",
+          "arc": "Forward",
+          "damage": 6,
+          "critical": 2,
+          "range": "Short",
+          "qualities": [
+            "Blast 4",
+            "Breach 4",
+            "Guided 3",
+            "Limited Ammo 8",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 80000,
+      "rarity": 4
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/BTL Y-wing",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_a-sf-01-b-wing-heavy-fast-attack-starfighter",
+    "type": "vehicle",
+    "name": "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
+    "detail": {
+      "id": "vehicle_a-sf-01-b-wing-heavy-fast-attack-starfighter",
+      "type": "vehicle",
+      "name": "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
+      "book": "aor",
+      "fullName": "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/A/SF-01 B-wing",
+        "manufacturer": "Slayn & Korpil",
+        "hyperdrive": 2,
+        "navicomputer": "Yes",
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 15,
+        "passengers": 0,
+        "consumables": "One week",
+        "price": 150000,
+        "rarity": 6,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 18,
+        "system": 6,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Light ion cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Ion",
+            "Linked 2"
+          ],
+          "notes": "Hardpoint mounted."
+        },
+        {
+          "name": "Heavy laser cannon",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "notes": "Hardpoint mounted."
+        },
+        {
+          "name": "Proton torpedo launchers",
+          "arc": "Forward",
+          "damage": 6,
+          "critical": 2,
+          "range": "Short",
+          "qualities": [
+            "Blast 4",
+            "Breach 4",
+            "Guided 3",
+            "Limited Ammo 8",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Cockpit mounted autoblasters",
+          "arc": "Forward",
+          "damage": 1,
+          "critical": 5,
+          "range": "Close",
+          "qualities": [
+            "Auto-Fire"
+          ],
+          "notes": "Hardpoint mounted."
+        }
+      ],
+      "price": 150000,
+      "rarity": 6
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/A/SF-01 B-wing",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_tie-ln-starfighter",
+    "type": "vehicle",
+    "name": "TIE/LN Starfighter",
+    "detail": {
+      "id": "vehicle_tie-ln-starfighter",
+      "type": "vehicle",
+      "name": "TIE/LN Starfighter",
+      "book": "aor",
+      "fullName": "TIE/LN Starfighter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/TIE Series",
+        "manufacturer": "Sienar Fleet Systems",
+        "hyperdrive": null,
+        "navicomputer": null,
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 4,
+        "passengers": 0,
+        "consumables": "Two days",
+        "price": 50000,
+        "rarity": 4,
+        "restricted": true,
+        "hardpoints": 0
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 5,
+        "Handling": "+3"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 9,
+        "system": 8,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 50000,
+      "rarity": 4
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/TIE Series",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_tie-in-interceptor",
+    "type": "vehicle",
+    "name": "TIE/IN Interceptor",
+    "detail": {
+      "id": "vehicle_tie-in-interceptor",
+      "type": "vehicle",
+      "name": "TIE/IN Interceptor",
+      "book": "aor",
+      "fullName": "TIE/IN Interceptor",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/TIE Series",
+        "manufacturer": "Sienar Fleet Systems",
+        "hyperdrive": null,
+        "navicomputer": null,
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 4,
+        "passengers": 0,
+        "consumables": "Two days",
+        "price": 75000,
+        "rarity": 5,
+        "restricted": true,
+        "hardpoints": 0
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 5,
+        "Handling": "+3"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 9,
+        "system": 10,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 3"
+          ]
+        }
+      ],
+      "price": 75000,
+      "rarity": 5
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/TIE Series",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_tie-d-defender-multi-role-starfighter",
+    "type": "vehicle",
+    "name": "TIE/D “Defender” Multi-Role Starfighter",
+    "detail": {
+      "id": "vehicle_tie-d-defender-multi-role-starfighter",
+      "type": "vehicle",
+      "name": "TIE/D “Defender” Multi-Role Starfighter",
+      "book": "aor",
+      "fullName": "TIE/D “Defender” Multi-Role Starfighter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/TIE Series",
+        "manufacturer": "Sienar Fleet Systems",
+        "hyperdrive": 2,
+        "navicomputer": "Yes",
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 5,
+        "passengers": 0,
+        "consumables": "One week",
+        "price": 300000,
+        "rarity": 8,
+        "restricted": true,
+        "hardpoints": 0
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+2"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 13,
+        "system": 10,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 3"
+          ]
+        },
+        {
+          "name": "Twin light ion cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Ion",
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launchers",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Blast 2",
+            "Breach 2",
+            "Guided 4",
+            "Limited Ammo 6",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 300000,
+      "rarity": 8
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/TIE Series",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_tie-sa-tactical-bomber",
+    "type": "vehicle",
+    "name": "TIE/SA Tactical Bomber",
+    "detail": {
+      "id": "vehicle_tie-sa-tactical-bomber",
+      "type": "vehicle",
+      "name": "TIE/SA Tactical Bomber",
+      "book": "aor",
+      "fullName": "TIE/SA Tactical Bomber",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/TIE Series",
+        "manufacturer": "Sienar Fleet Systems",
+        "hyperdrive": null,
+        "navicomputer": null,
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 10,
+        "passengers": 0,
+        "consumables": "Two days",
+        "price": 110000,
+        "rarity": 5,
+        "restricted": true,
+        "hardpoints": 0
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 12,
+        "system": 8,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Concussion missile launchers",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Blast 2",
+            "Breach 2",
+            "Guided 4",
+            "Limited Ammo 12",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Proton torpedo launchers",
+          "arc": "Forward",
+          "damage": 6,
+          "critical": 2,
+          "range": "Short",
+          "qualities": [
+            "Blast 4",
+            "Breach 4",
+            "Guided 3",
+            "Limited Ammo 12",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Ventral-mounted proton bomb",
+          "arc": "Down",
+          "damage": 5,
+          "critical": 2,
+          "range": "Close",
+          "qualities": [
+            "Blast 5",
+            "Breach 6",
+            "Limited Ammo 16"
+          ]
+        }
+      ],
+      "price": 110000,
+      "rarity": 5
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/TIE Series",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_lambda-class-t-4a-long-range-shuttle",
+    "type": "vehicle",
+    "name": "Lambda-Class T-4A Long Range Shuttle",
+    "detail": {
+      "id": "vehicle_lambda-class-t-4a-long-range-shuttle",
+      "type": "vehicle",
+      "name": "Lambda-Class T-4A Long Range Shuttle",
+      "book": "aor",
+      "fullName": "Lambda-Class T-4A Long Range Shuttle",
+      "group": "Patrol Boats",
+      "info": {
+        "type": "Shuttle/Lambda",
+        "manufacturer": "Sienar Fleet Systems and Cygnus Spaceworks",
+        "hyperdrive": {
+          "primary": 1,
+          "backup": 10
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot, one navigator, one gunner, one comms operator, and one engineer",
+        "encumbrance": "200 (without passengers)",
+        "passengers": 20,
+        "consumables": "Two months",
+        "price": 140000,
+        "rarity": 6,
+        "restricted": true,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 29,
+        "system": 15,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Twin light blaster cannons",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Twin light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Retractable light blaster cannons",
+          "arc": "Aft",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 140000,
+      "rarity": 6
+    },
+    "subtitle": "Patrol Boats",
+    "tags": [
+      "Patrol Boats",
+      "Shuttle/Lambda",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_sentinel-class-landing-craft",
+    "type": "vehicle",
+    "name": "Sentinel-Class Landing Craft",
+    "detail": {
+      "id": "vehicle_sentinel-class-landing-craft",
+      "type": "vehicle",
+      "name": "Sentinel-Class Landing Craft",
+      "book": "aor",
+      "fullName": "Sentinel-Class Landing Craft",
+      "group": "Patrol Boats",
+      "info": {
+        "type": "Shuttle/Sentinel",
+        "manufacturer": "Sienar Fleet Systems and Cygnus Spaceworks",
+        "hyperdrive": {
+          "primary": 1,
+          "backup": 10
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot, one navigator, one gunner, one comms operator, and one engineer",
+        "encumbrance": "200 (without passengers)",
+        "passengers": 20,
+        "consumables": "Two months",
+        "price": 140000,
+        "rarity": 6,
+        "restricted": true,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 4,
+        "hull": 29,
+        "system": 15,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Twin light blaster cannons",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Twin light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Retractable light blaster cannons",
+          "arc": "Aft",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 140000,
+      "rarity": 6
+    },
+    "subtitle": "Patrol Boats",
+    "tags": [
+      "Patrol Boats",
+      "Shuttle/Sentinel",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_vigil-class-corvette",
+    "type": "vehicle",
+    "name": "Vigil-Class Corvette",
+    "detail": {
+      "id": "vehicle_vigil-class-corvette",
+      "type": "vehicle",
+      "name": "Vigil-Class Corvette",
+      "book": "aor",
+      "fullName": "Vigil-Class Corvette",
+      "group": "Gunships",
+      "info": {
+        "type": "Corvette/Vigil",
+        "manufacturer": "Kuat Drive Yards",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 10
+        },
+        "navicomputer": "Yes",
+        "sensors": "Long",
+        "complement": "200 officers, enlisted, and troops",
+        "encumbrance": 1800,
+        "passengers": 200,
+        "consumables": "One year",
+        "price": 3500000,
+        "rarity": 4,
+        "restricted": true,
+        "hardpoints": 0
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 3,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 4,
+        "hull": 60,
+        "system": 35,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Three dorsal turret-mounted light turbolasers",
+          "arc": "All",
+          "damage": 7,
+          "critical": 3,
+          "range": "Medium",
+          "qualities": [
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Three dorsal turret-mounted heavy laser cannons",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Medium tractor beam emitter",
+          "arc": "Forward",
+          "damage": null,
+          "critical": null,
+          "range": "Close",
+          "qualities": [
+            "Tractor 4"
+          ]
+        }
+      ],
+      "price": 3500000,
+      "rarity": 4
+    },
+    "subtitle": "Gunships",
+    "tags": [
+      "Gunships",
+      "Corvette/Vigil",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_cr90-corvette",
+    "type": "vehicle",
+    "name": "CR90 Corvette",
+    "detail": {
+      "id": "vehicle_cr90-corvette",
+      "type": "vehicle",
+      "name": "CR90 Corvette",
+      "book": "aor",
+      "group": "Gunships",
+      "info": {
+        "type": "Corvette/CR90",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 2
+        },
+        "navicomputer": "Yes",
+        "sensors": "Long",
+        "complement": "30-165 depending no configuration",
+        "encumbrance": "Up to 2500 depending on configuration",
+        "passengers": "Up to 600 depending on configuration",
+        "consumables": "One year",
+        "price": 1200000,
+        "rarity": 5,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 3,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 4,
+        "hull": 55,
+        "system": 25,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "One dorsal and one ventral turret-mounted medium turbolaser battery",
+          "arc": "All",
+          "damage": 8,
+          "critical": 3,
+          "range": "Long",
+          "qualities": [
+            "Breach 1",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        },
+        {
+          "name": "Two port and starboard turret-mounted light turbolasers",
+          "arc": "Port and Starboard",
+          "damage": 7,
+          "critical": 3,
+          "range": "Medium",
+          "qualities": [
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 1200000,
+      "rarity": 5
+    },
+    "subtitle": "Gunships",
+    "tags": [
+      "Gunships",
+      "Corvette/CR90",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_yv-929-armed-transport",
+    "type": "vehicle",
+    "name": "YV-929 Armed Transport",
+    "detail": {
+      "id": "vehicle_yv-929-armed-transport",
+      "type": "vehicle",
+      "name": "YV-929 Armed Transport",
+      "book": "aor",
+      "group": "Gunships",
+      "info": {
+        "type": "Armed Transport/YV-929",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 12
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot, two gunners",
+        "encumbrance": 80,
+        "passengers": 6,
+        "consumables": "Six months",
+        "price": 380000,
+        "rarity": 6,
+        "hardpoints": 1
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 27,
+        "system": 15,
+        "defense": 2
+      },
+      "weapons": [
+        {
+          "name": "Two light blaster cannons",
+          "arc": "Forward and Port, or Forward and Starboard",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 2"
+          ]
+        },
+        {
+          "name": "Turret-mounted twin light ion cannon",
+          "arc": "Forward, Port and Starboard",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Ion",
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Two forward and one rear-mounted concussion missile launchers",
+          "arc": "Forward or Rear",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Blast 2",
+            "Breach 2",
+            "Guided 4",
+            "Limited Ammo 10",
+            "Linked 1",
+            "Slow-Firing 1"
+          ]
+        }
+      ],
+      "price": 380000,
+      "rarity": 6
+    },
+    "subtitle": "Gunships",
+    "tags": [
+      "Gunships",
+      "Armed Transport/YV-929",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_storm-iv-cloud-car",
+    "type": "vehicle",
+    "name": "Storm IV Cloud Car",
+    "detail": {
+      "id": "vehicle_storm-iv-cloud-car",
+      "type": "vehicle",
+      "name": "Storm IV Cloud Car",
+      "book": "aor",
+      "fullName": "Storm IV Cloud Car",
+      "group": "Airspeeders",
+      "info": {
+        "type": "Cloud Car/Storm IV",
+        "manufacturer": "Bespin Motors",
+        "altitude": "100 kilometres",
+        "sensors": "Short",
+        "complement": "One pilot, one gunner",
+        "encumbrance": 8,
+        "passengers": 0,
+        "price": 30000,
+        "rarity": 5,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 7,
+        "system": 7,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Light blaster cannons",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 30000,
+      "rarity": 5
+    },
+    "subtitle": "Airspeeders",
+    "tags": [
+      "Airspeeders",
+      "Cloud Car/Storm IV",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_alliance-t-47-airspeeder",
+    "type": "vehicle",
+    "name": "Alliance T-47 Airspeeder",
+    "detail": {
+      "id": "vehicle_alliance-t-47-airspeeder",
+      "type": "vehicle",
+      "name": "Alliance T-47 Airspeeder",
+      "book": "aor",
+      "fullName": "Alliance T-47 Airspeeder",
+      "group": "Airspeeders",
+      "info": {
+        "type": "Airspeeder/T-47",
+        "manufacturer": "Incom Corporation",
+        "altitude": "175 kilometres",
+        "sensors": "Close",
+        "complement": "One pilot, one co-pilot/rear gunner",
+        "encumbrance": 6,
+        "passengers": 0,
+        "price": 18000,
+        "rarity": 3,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 4,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 6,
+        "system": 6,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Twin heavy blaster cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Aft turret-mounted electromagnetic harpoon",
+          "arc": "Rear",
+          "damage": null,
+          "critical": null,
+          "range": "Close",
+          "qualities": [
+            "Tractor 3",
+            "Knockdown",
+            "Limited Ammo 1"
+          ]
+        }
+      ],
+      "price": 18000,
+      "rarity": 3
+    },
+    "subtitle": "Airspeeders",
+    "tags": [
+      "Airspeeders",
+      "Airspeeder/T-47",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_74-z-speeder-bike",
+    "type": "vehicle",
+    "name": "74-Z Speeder Bike",
+    "detail": {
+      "id": "vehicle_74-z-speeder-bike",
+      "type": "vehicle",
+      "name": "74-Z Speeder Bike",
+      "book": "aor",
+      "fullName": "74-Z Speeder Bike",
+      "group": "Landspeeders",
+      "info": {
+        "type": "Speeder Bike/74-Z",
+        "manufacturer": "Aratech Repulsor Company",
+        "altitude": "25 metres",
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 5,
+        "passengers": 1,
+        "price": 3000,
+        "rarity": 4,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 2,
+        "Speed": 3,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 4,
+        "system": 4,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Forward-mounted light repeating blaster",
+          "arc": "Forward",
+          "damage": 9,
+          "critical": 3,
+          "range": "Extreme",
+          "qualities": [
+            "Auto-Fire",
+            "Pierce 1"
+          ],
+          "notes": "This weapon’s profile uses personal scale, not planetary scale."
+        }
+      ],
+      "price": 3000,
+      "rarity": 4
+    },
+    "subtitle": "Landspeeders",
+    "tags": [
+      "Landspeeders",
+      "Speeder Bike/74-Z",
+      "Sil 2"
+    ]
+  },
+  {
+    "id": "vehicle_all-terrain-armoured-transport",
+    "type": "vehicle",
+    "name": "All Terrain Armoured Transport",
+    "detail": {
+      "id": "vehicle_all-terrain-armoured-transport",
+      "type": "vehicle",
+      "name": "All Terrain Armoured Transport",
+      "book": "aor",
+      "fullName": "All Terrain Armoured Transport",
+      "group": "Walkers",
+      "info": {
+        "type": "Heavy Assault Walker/AT-AT",
+        "manufacturer": "Kuat Drive Yards",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot/gunner, one vehicle commander, one engineer, one loadmaster",
+        "encumbrance": 100,
+        "passengers": "40 troops with full combat gear",
+        "price": 150000,
+        "rarity": 5,
+        "restricted": true,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 1,
+        "Handling": -3
+      },
+      "derived": {
+        "armour": 4,
+        "hull": 44,
+        "system": 35,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Forward-mounted twin heavy laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Short",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Forward-mounted twin heavy blaster cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 150000,
+      "rarity": 5
+    },
+    "subtitle": "Walkers",
+    "tags": [
+      "Walkers",
+      "Heavy Assault Walker/AT-AT",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_all-terrain-scout-transport",
+    "type": "vehicle",
+    "name": "All Terrain Scout Transport",
+    "detail": {
+      "id": "vehicle_all-terrain-scout-transport",
+      "type": "vehicle",
+      "name": "All Terrain Scout Transport",
+      "book": "aor",
+      "fullName": "All Terrain Scout Transport",
+      "group": "Walkers",
+      "info": {
+        "type": "Reconnaissance Walker/AT-ST",
+        "manufacturer": "Kuat Drive Yards",
+        "sensors": "Short",
+        "complement": "One pilot, one gunner",
+        "encumbrance": 18,
+        "passengers": 0,
+        "price": 75000,
+        "rarity": 5,
+        "restricted": true,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 2,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 18,
+        "system": 12,
+        "defense": 0
+      },
+      "weapons": [
+        {
+          "name": "Port-mounted light blaster cannon",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close"
+        },
+        {
+          "name": "Chin-mounted twin heavy blaster cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 4,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        },
+        {
+          "name": "Starboard-mounted concussion grenade launcher",
+          "arc": "Forward",
+          "damage": 8,
+          "critical": 4,
+          "range": "Extreme",
+          "qualities": [
+            "Blast 6",
+            "Limited Ammo 15"
+          ],
+          "notes": "This weapon’s profile uses personal scale, not planetary scale."
+        }
+      ],
+      "price": 75000,
+      "rarity": 5
+    },
+    "subtitle": "Walkers",
+    "tags": [
+      "Walkers",
+      "Reconnaissance Walker/AT-ST",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_delta-6-system-defence-starfighter",
+    "type": "vehicle",
+    "name": "Delta-6 System Defence Starfighter",
+    "detail": {
+      "id": "vehicle_delta-6-system-defence-starfighter",
+      "type": "vehicle",
+      "name": "Delta-6 System Defence Starfighter",
+      "book": "fad",
+      "fullName": "Delta-6 System Defence Starfighter",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/Delta-6",
+        "manufacturer": "Kuat Systems Engineering",
+        "hyperdrive": null,
+        "navicomputer": null,
+        "sensors": "Close",
+        "complement": "One pilot",
+        "encumbrance": 8,
+        "passengers": 0,
+        "consumables": "One day",
+        "price": 30000,
+        "rarity": 4,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 9,
+        "system": 5,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Twin light laser cannons",
+          "arc": "Forward",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 30000,
+      "rarity": 4
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/Delta-6",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_delta-7-aethersprite-interceptor",
+    "type": "vehicle",
+    "name": "Delta-7 Aethersprite Interceptor",
+    "detail": {
+      "id": "vehicle_delta-7-aethersprite-interceptor",
+      "type": "vehicle",
+      "name": "Delta-7 Aethersprite Interceptor",
+      "book": "fad",
+      "fullName": "Delta-7 Aethersprite Interceptor",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/Delta-7",
+        "manufacturer": "Kuat Systems Engineering",
+        "hyperdrive": null,
+        "navicomputer": "None—astromech droid socket",
+        "sensors": "Close",
+        "complement": "One pilot, one astromech droid",
+        "encumbrance": 4,
+        "passengers": 0,
+        "consumables": "Five days",
+        "price": 78000,
+        "rarity": 6,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 5,
+        "Handling": "+2"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 10,
+        "system": 7,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Twin medium laser cannons",
+          "arc": "Forward",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 78000,
+      "rarity": 6
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/Delta-7",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_delta-12-skysprite",
+    "type": "vehicle",
+    "name": "Delta-12 Skysprite",
+    "detail": {
+      "id": "vehicle_delta-12-skysprite",
+      "type": "vehicle",
+      "name": "Delta-12 Skysprite",
+      "book": "fad",
+      "fullName": "Delta-12 Skysprite",
+      "group": "Starfighters",
+      "info": {
+        "type": "Starfighter/Delta-12",
+        "manufacturer": "Kuat Systems Engineering",
+        "hyperdrive": null,
+        "navicomputer": "None—astromech droid socket",
+        "sensors": "Short",
+        "complement": "One pilot",
+        "encumbrance": 8,
+        "passengers": 1,
+        "consumables": "Two weeks",
+        "price": 85000,
+        "rarity": 8,
+        "hardpoints": 3
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 13,
+        "system": 8,
+        "defense": 1
+      },
+      "price": 85000,
+      "rarity": 8
+    },
+    "subtitle": "Starfighters",
+    "tags": [
+      "Starfighters",
+      "Starfighter/Delta-12",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_pathfinder-scout-ship",
+    "type": "vehicle",
+    "name": "Pathfinder Scout Ship",
+    "detail": {
+      "id": "vehicle_pathfinder-scout-ship",
+      "type": "vehicle",
+      "name": "Pathfinder Scout Ship",
+      "book": "fad",
+      "fullName": "Pathfinder Scout Ship",
+      "group": "Patrol Boats",
+      "info": {
+        "type": "Scout Ship/Pathfinder",
+        "manufacturer": "Vangaard Industries",
+        "hyperdrive": {
+          "primary": 3,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Extreme",
+        "complement": "One pilot, one co-pilot",
+        "encumbrance": 45,
+        "passengers": 2,
+        "consumables": "Three months",
+        "price": 45000,
+        "rarity": 6,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 20,
+        "system": 10,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal turret-mounted light laser cannon",
+          "arc": "All",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close"
+        }
+      ],
+      "price": 45000,
+      "rarity": 6
+    },
+    "subtitle": "Patrol Boats",
+    "tags": [
+      "Patrol Boats",
+      "Scout Ship/Pathfinder",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_heavy-civilian-transport",
+    "type": "vehicle",
+    "name": "Heavy Civilian Transport",
+    "detail": {
+      "id": "vehicle_heavy-civilian-transport",
+      "type": "vehicle",
+      "name": "Heavy Civilian Transport",
+      "book": "fad",
+      "fullName": "Heavy Civilian Transport",
+      "group": "Walkers",
+      "info": {
+        "type": "Walker/AT-HCT",
+        "manufacturer": "Rothana Heavy Engineering",
+        "sensors": "Medium",
+        "complement": "One pilot",
+        "encumbrance": 200,
+        "passengers": 6,
+        "price": 3000,
+        "rarity": 5,
+        "hardpoints": 2
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 1,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 18,
+        "system": 15,
+        "defense": 0
+      },
+      "price": 3000,
+      "rarity": 5
+    },
+    "subtitle": "Walkers",
+    "tags": [
+      "Walkers",
+      "Walker/AT-HCT",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_g9-rigger-light-freighter",
+    "type": "vehicle",
+    "name": "G9 Rigger Light Freighter",
+    "detail": {
+      "id": "vehicle_g9-rigger-light-freighter",
+      "type": "vehicle",
+      "name": "G9 Rigger Light Freighter",
+      "book": "fad",
+      "fullName": "G9 Rigger Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Light Freighter/Rigger",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": 3,
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot",
+        "encumbrance": 80,
+        "passengers": 6,
+        "consumables": "One month",
+        "price": 55000,
+        "rarity": 5,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 2,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 29,
+        "system": 15,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal autoblasters",
+          "arc": "Forward",
+          "damage": 1,
+          "critical": 5,
+          "range": "Close",
+          "qualities": [
+            "Auto-Fire"
+          ]
+        },
+        {
+          "name": "Turret-mounted light blaster cannon",
+          "arc": "Forward, Starboard, and Aft",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close"
+        },
+        {
+          "name": "Ventral light blaster cannon",
+          "arc": "Forward",
+          "damage": 2,
+          "critical": 4,
+          "range": "Close"
+        }
+      ],
+      "price": 55000,
+      "rarity": 5
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Light Freighter/Rigger",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_hwk-290-light-freighter",
+    "type": "vehicle",
+    "name": "HWK-290 Light Freighter",
+    "detail": {
+      "id": "vehicle_hwk-290-light-freighter",
+      "type": "vehicle",
+      "name": "HWK-290 Light Freighter",
+      "book": "fad",
+      "fullName": "HWK-290 Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/HWK-290",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": 2,
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot",
+        "encumbrance": 75,
+        "passengers": 2,
+        "consumables": "Three months",
+        "price": 70000,
+        "rarity": 7,
+        "hardpoints": 5
+      },
+      "characteristics": {
+        "Silhouette": 3,
+        "Speed": 4,
+        "Handling": "+1"
+      },
+      "derived": {
+        "armour": 1,
+        "hull": 21,
+        "system": 18,
+        "defense": 1
+      },
+      "price": 70000,
+      "rarity": 7
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/HWK-290",
+      "Sil 3"
+    ]
+  },
+  {
+    "id": "vehicle_ht-2200-medium-freighter",
+    "type": "vehicle",
+    "name": "HT-2200 Medium Freighter",
+    "detail": {
+      "id": "vehicle_ht-2200-medium-freighter",
+      "type": "vehicle",
+      "name": "HT-2200 Medium Freighter",
+      "book": "fad",
+      "fullName": "HT-2200 Medium Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/HT-2200",
+        "manufacturer": "Corellian Engineering Corporation",
+        "hyperdrive": {
+          "primary": 3,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Short",
+        "complement": "One pilot, one co-pilot, one engineer, one loadmaster",
+        "encumbrance": 800,
+        "passengers": 8,
+        "consumables": "Three months",
+        "price": 140000,
+        "rarity": 5,
+        "hardpoints": 5
+      },
+      "characteristics": {
+        "Silhouette": 5,
+        "Speed": 2,
+        "Handling": -2
+      },
+      "derived": {
+        "armour": 4,
+        "hull": 40,
+        "system": 14,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal and ventral turret-mounted medium laser cannon",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close"
+        }
+      ],
+      "price": 140000,
+      "rarity": 5
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/HT-2200",
+      "Sil 5"
+    ]
+  },
+  {
+    "id": "vehicle_simiyiar-light-freighter",
+    "type": "vehicle",
+    "name": "Simiyiar Light Freighter",
+    "detail": {
+      "id": "vehicle_simiyiar-light-freighter",
+      "type": "vehicle",
+      "name": "Simiyiar Light Freighter",
+      "book": "fad",
+      "fullName": "Simiyiar Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/Simiyiar",
+        "manufacturer": "Mon Calamari Shipyards",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot",
+        "encumbrance": 90,
+        "passengers": 5,
+        "consumables": "Two months",
+        "price": 165000,
+        "rarity": 6,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": "+0"
+      },
+      "derived": {
+        "armour": 3,
+        "hull": 24,
+        "system": 16,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Dorsal turret-mounted twin light laser cannons",
+          "arc": "All",
+          "damage": 3,
+          "critical": 3,
+          "range": "Close",
+          "qualities": [
+            "Linked 1"
+          ]
+        }
+      ],
+      "price": 165000,
+      "rarity": 6
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/Simiyiar",
+      "Sil 4"
+    ]
+  },
+  {
+    "id": "vehicle_zh-25-questor-light-freighter",
+    "type": "vehicle",
+    "name": "ZH-25 Questor Light Freighter",
+    "detail": {
+      "id": "vehicle_zh-25-questor-light-freighter",
+      "type": "vehicle",
+      "name": "ZH-25 Questor Light Freighter",
+      "book": "fad",
+      "fullName": "ZH-25 Questor Light Freighter",
+      "group": "Freighters",
+      "info": {
+        "type": "Freighter/Questor",
+        "manufacturer": "Starfeld Industries",
+        "hyperdrive": {
+          "primary": 2,
+          "backup": 15
+        },
+        "navicomputer": "Yes",
+        "sensors": "Medium",
+        "complement": "One pilot, one co-pilot",
+        "encumbrance": 100,
+        "passengers": 6,
+        "consumables": "Three months",
+        "price": 115000,
+        "rarity": 6,
+        "hardpoints": 4
+      },
+      "characteristics": {
+        "Silhouette": 4,
+        "Speed": 3,
+        "Handling": -1
+      },
+      "derived": {
+        "armour": 2,
+        "hull": 34,
+        "system": 20,
+        "defense": 1
+      },
+      "weapons": [
+        {
+          "name": "Ventral turret-mounted medium laser cannon",
+          "arc": "All",
+          "damage": 4,
+          "critical": 3,
+          "range": "Close"
+        }
+      ],
+      "price": 115000,
+      "rarity": 6
+    },
+    "subtitle": "Freighters",
+    "tags": [
+      "Freighters",
+      "Freighter/Questor",
+      "Sil 4"
+    ]
   }
 ]

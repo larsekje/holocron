@@ -7,6 +7,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { convertVehicleToGenesys } from './genesysConversion.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -163,6 +164,49 @@ function buildWeapons(rawList) {
   return results;
 }
 
+function buildVehicles(rawList, book) {
+  const results = [];
+  if (!Array.isArray(rawList)) return results;
+  let skipped = 0;
+  for (const v of rawList) {
+    if (!v || typeof v !== 'object' || !v.name) {
+      skipped++;
+      continue;
+    }
+    const converted = convertVehicleToGenesys(v);
+    const sil = converted.characteristics?.Silhouette;
+    const tags = [
+      converted.group,
+      converted.info?.type,
+      typeof sil === 'number' ? `Sil ${sil}` : null,
+    ].filter(Boolean);
+    const subtitle = converted.group ?? converted.info?.type ?? undefined;
+    pushUnique(
+      results,
+      entry('vehicle', converted.fullName ?? converted.name, {
+        subtitle,
+        tags,
+        // Vehicle JSONs carry stat blocks, not narrative descriptions.
+        extra: {
+          book,
+          fullName: converted.fullName,
+          group: converted.group,
+          info: converted.info,
+          characteristics: converted.characteristics,
+          derived: converted.derived,
+          weapons: converted.weapons,
+          // Hoisted so the existing top-bar block at SpotlightDetailPane.tsx
+          // picks them up automatically.
+          price: converted.info?.price,
+          rarity: converted.info?.rarity,
+        },
+      }),
+    );
+  }
+  if (skipped) console.warn(`[spotlight] Skipped ${skipped} malformed vehicle entries from ${book}.`);
+  return results;
+}
+
 async function main() {
   // Verify data dir exists
   try {
@@ -180,10 +224,13 @@ async function main() {
     return;
   }
 
-  const [adversariesRaw, talentsRaw, weaponsRaw, cloutMap] = await Promise.all([
+  const [adversariesRaw, talentsRaw, weaponsRaw, eoteVehicles, aorVehicles, fadVehicles, cloutMap] = await Promise.all([
     readJson('adversaries.json'),
     readJson('talents.json'),
     readJson('weapons.json'),
+    readJson('vehicles/eote.json'),
+    readJson('vehicles/aor.json'),
+    readJson('vehicles/fad.json'),
     fs
       .readFile(cloutFile, 'utf-8')
       .then((raw) => JSON.parse(raw.replace(/^﻿/, '')))
@@ -197,14 +244,18 @@ async function main() {
     ...buildAdversaries(adversariesRaw, cloutMap),
     ...buildTalents(talentsRaw),
     ...buildWeapons(weaponsRaw),
+    ...buildVehicles(eoteVehicles, 'eote'),
+    ...buildVehicles(aorVehicles, 'aor'),
+    ...buildVehicles(fadVehicles, 'fad'),
   ];
 
   await fs.mkdir(path.dirname(outFile), { recursive: true });
   await fs.writeFile(outFile, JSON.stringify(results, null, 2), 'utf-8');
   const adversaryCount = results.filter((r) => r.type === 'adversary').length;
   const cloutCount = results.filter((r) => r.type === 'adversary' && typeof r.clout === 'number').length;
+  const vehicleCount = results.filter((r) => r.type === 'vehicle').length;
   console.log(
-    `[spotlight] Wrote ${results.length} entries (${adversaryCount} adversaries [${cloutCount} with clout], ${results.filter((r) => r.type === 'talent').length} talents, ${results.filter((r) => r.type === 'weapon').length} weapons) to ${path.relative(projectRoot, outFile)}.`,
+    `[spotlight] Wrote ${results.length} entries (${adversaryCount} adversaries [${cloutCount} with clout], ${results.filter((r) => r.type === 'talent').length} talents, ${results.filter((r) => r.type === 'weapon').length} weapons, ${vehicleCount} vehicles) to ${path.relative(projectRoot, outFile)}.`,
   );
 }
 

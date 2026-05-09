@@ -51,11 +51,12 @@ const Spotlight: React.FC = () => {
   const [detailLoading, setDetailLoading] = useState(false);
 
   // Filter: included types. Reflects what's actually in the curated dataset
-  // (adversaries/talents/weapons from public/assets/data + rules/qualities from extras).
+  // (adversaries/talents/weapons/vehicles from public/assets/data + rules/qualities from extras).
   const allTypes: SpotlightEntityType[] = [
     'adversary',
     'talent',
     'weapon',
+    'vehicle',
     'rule',
     'quality',
   ];

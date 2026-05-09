@@ -44,14 +44,16 @@ export function isParticipantDead(p: Participant): boolean {
     return wounds >= wt;
 }
 
+export type VehicleRole = 'pilot' | 'gunner' | 'passenger';
+
 export interface Participant {
     id: string;
     name: string;
     isPC: boolean;
     initiative?: number | null; // Can be number | undefined OR number | null
-    stats?: { 
+    stats?: {
         [key: string]: any;
-        woundThreshold?: number; 
+        woundThreshold?: number;
         soak?: number;
         meleeDefense?: number;
         rangedDefense?: number;
@@ -67,6 +69,13 @@ export interface Participant {
      * pouch UI explain "1 Setback (from Aqualish Thug — …)". */
     dicePouchSources?: Partial<Record<keyof DicePouch, string[]>>;
     criticalInjuries?: CritInjury[];
+    /** When set, the participant is currently aboard the active vehicle with
+     * this id. Damage incoming routes to the vehicle's hull/system rather
+     * than the participant's wounds; weapons in the dice roller surface from
+     * the vehicle. Hat-on-hat-off model — see activeVehicleStore. */
+    equippedVehicleId?: string;
+    /** Free-form display label; not enforced. Used by stat sheet headers. */
+    vehicleRole?: VehicleRole;
 }
 
 // Zustand Store

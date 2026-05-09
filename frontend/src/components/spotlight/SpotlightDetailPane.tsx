@@ -19,6 +19,7 @@ import { Interweave } from 'interweave';
 import { oggToHtml, oggInlineToHtml } from '@/utils/oggMarkup';
 import DetailStat from './DetailStat';
 import AdversaryBookSheet from './AdversaryBookSheet';
+import VehiclePreview from './VehiclePreview';
 import useParticipantStore from '@/state/participantsStore';
 import adversaryService from '@/services/adversaryService';
 import { useSpotlightStore } from '@/state/spotlightStore';
@@ -210,6 +211,10 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
 
           {(((detail as any).__kind ?? detail.type) === 'adversary') && (
             <AdversaryPreview detail={detail}/>
+          )}
+
+          {(((detail as any).__kind ?? detail.type) === 'vehicle') && (
+            <VehiclePreview detail={detail}/>
           )}
 
             {(['armor', 'gear', 'weapon', 'attachment'] as const).includes(((detail as any).__kind ?? detail.type) as any) && (
