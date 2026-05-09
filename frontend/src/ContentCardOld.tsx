@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Box, Card, CardBody, CardHeader, Heading, HStack, Icon} from "@chakra-ui/react";
+import {Box, Card, CardBody, CardHeader, Heading, HStack} from "@chakra-ui/react";
 import {SearchIcon} from "@chakra-ui/icons";
 
 interface Props {
@@ -23,7 +23,9 @@ const ContentCardOld = ({heading, children, buttons, icon}: Props) => {
                 <CardHeader height='50px' display='flex' flexShrink={0}>
                     <HStack justifyContent='space-between' width="100%">
                         <HStack>
-                            <Icon as={() => <>{icon ?? <SearchIcon color="white"/>}</>} color="white"/>
+                            <Box color="white" display="inline-flex" alignItems="center" fontSize="lg">
+                                {icon ?? <SearchIcon/>}
+                            </Box>
                             <Heading color='white' size='md'>{heading}</Heading>
                         </HStack>
                         {buttons && <HStack>{buttons}</HStack>}

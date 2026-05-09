@@ -1,5 +1,5 @@
 import {InitiativeSlot} from "@/types/initiativeSlot";
-import useParticipantStore, {Participant} from "./participantsStore";
+import useParticipantStore, {Participant, isParticipantDead} from "./participantsStore";
 import * as eventSystem from './eventSystem';
 import { GameEvent } from './eventSystem';
 import {useEffectStore} from "@/state/effectStore";
@@ -230,23 +230,24 @@ export function createEncounterFSM(): FSM {
     const advanceTurnIndex = (context: EncounterContext): EncounterContext => {
         // Clear the active participant ID to allow selecting a new one in the next turn
         console.log("[FSM] Clearing active participant and advancing turn index");
-        
+
         // Clear acted participants when we've gone through the whole initiative order
         const nextTurnIndex = (context.currentTurnIndex + 1) % context.initiativeOrder.length;
         if (nextTurnIndex === 0) {
             console.log("[FSM] Initiative order completed, starting a new round");
-            
-            // No need to emit here as it's handled in gameplayStore
-            // eventSystem.emitGameEvent('ROUND_END');
-            
+
+            // The round-just-ending fires ROUND_END; the new round fires
+            // ROUND_START. The legacy gameplayStore had its own emits, but
+            // newGameplayStore (the active one) doesn't, so the FSM owns it.
+            eventSystem.emitGameEvent('ROUND_END', undefined, context.round);
+
             // Increase round counter
             const newRound = context.round + 1;
-            
-            // No need to emit here as it's handled in gameplayStore
-            // eventSystem.emitGameEvent('ROUND_START');
-            
+
+            eventSystem.emitGameEvent('ROUND_START', undefined, newRound);
+
             console.log(`[FSM] Starting round ${newRound}`);
-            
+
             return {
                 ...context,
                 currentTurnIndex: nextTurnIndex,
@@ -255,7 +256,7 @@ export function createEncounterFSM(): FSM {
                 round: newRound
             };
         }
-        
+
         return {
             ...context,
             currentTurnIndex: nextTurnIndex,
@@ -270,10 +271,60 @@ export function createEncounterFSM(): FSM {
         return isPcOnPcTurn || isNpcOnNpcTurn;
     }
 
+    /**
+     * A slot is "fillable" if there's at least one living participant whose
+     * team matches the slot AND who hasn't already acted this round. Dead
+     * participants are treated as having already acted, so their slot gets
+     * skipped — per house rule: "5 slots, 3 dead → 2 act per round".
+     */
+    const slotHasEligibleParticipant = (
+        context: EncounterContext,
+        participants: Participant[],
+    ): boolean => {
+        const slot = context.initiativeOrder[context.currentTurnIndex];
+        if (!slot) return false;
+        return participants.some(
+            (p) =>
+                !isParticipantDead(p) &&
+                !context.actedParticipants.includes(p.id) &&
+                isSlotValidForParticipant(slot, p),
+        );
+    };
+
+    /**
+     * After the turn advances, loop forward past any slot that has no
+     * eligible participant. Wraps rounds via advanceTurnIndex (which already
+     * clears actedParticipants on wrap). Bounded by 2× initiativeOrder length
+     * to defend against pathological cases (e.g. all participants dead).
+     */
+    const skipUnfillableSlots = (context: EncounterContext): void => {
+        const participants = useParticipantStore.getState().participants;
+        if (!participants.some((p) => !isParticipantDead(p))) {
+            console.log("[FSM] All participants dead; not auto-skipping");
+            return;
+        }
+        const maxIters = (context.initiativeOrder.length || 1) * 2 + 1;
+        let iter = 0;
+        while (!slotHasEligibleParticipant(context, participants) && iter++ < maxIters) {
+            console.log(
+                `[FSM] Auto-skipping slot ${context.currentTurnIndex} — no eligible participant`,
+            );
+            const next = advanceTurnIndex(context);
+            context.currentTurnIndex = next.currentTurnIndex;
+            if (next.round !== context.round) {
+                context.round = next.round;
+                context.actedParticipants = [];
+            }
+        }
+    };
+
     const startEncounter = (context: EncounterContext): EncounterContext => {
         console.log("Encounter started!");
-        // eventSystem.emitGameEvent('ROUND_START');
-        
+        // Encounter-start before round-start so the session log can open a
+        // new section before the first round entry lands inside it.
+        eventSystem.emitGameEvent('ENCOUNTER_START');
+        eventSystem.emitGameEvent('ROUND_START', undefined, 1);
+
         // Initialize with turn_start state rather than null
         return {
             ...context,
@@ -395,7 +446,12 @@ export function createEncounterFSM(): FSM {
                                     context.round = updatedContext.round;
                                     context.actedParticipants = [];
                                 }
-                                
+
+                                // Auto-skip past any slot whose team has no living, un-acted
+                                // participant. Dead participants are treated as already-acted,
+                                // so a round with 3 dead and 2 alive yields 2 actual turns.
+                                skipUnfillableSlots(context);
+
                                 console.log(`[FSM] Advanced from turn index ${currentTurnIndex} to ${context.currentTurnIndex}`);
                                 console.log('[FSM] Turn sequence completed, now in turn_start state for next participant');
                             }
@@ -421,7 +477,12 @@ export function createEncounterFSM(): FSM {
                     },
                     END_ENCOUNTER: {
                         target: 'completed',
-                        action: () => console.log('Encounter ended!'),
+                        action: () => {
+                            console.log('Encounter ended!');
+                            // Notify the effectStore (and any other listeners) so encounter-duration
+                            // effects can clear themselves.
+                            eventSystem.emitGameEvent('ENCOUNTER_END');
+                        },
                     },
                     PROCESS_TURN_START: {
                         target: 'inProgress',

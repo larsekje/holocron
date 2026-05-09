@@ -91,6 +91,8 @@ const ToolBarNonStructured = ({ }: Props) => {
             .map((p) => ({
                 team: p.isPC ? "PC" : "NPC", // Map to the store's type
                 initiative: p.initiative!,
+                name: p.name,
+                participantId: p.id,
             }))
             .sort((a, b) => b.initiative - a.initiative) as InitiativeSlot[]; // Sort descending
 

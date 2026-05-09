@@ -48,11 +48,17 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
     EventBus.on("participant-added", (participant) => {
         console.log("participant-added", participant);
         const initiativeSlots = encounterFSM.context.initiativeOrder;
-        const newSlot: InitiativeSlot = {team: participant.isPC ? "PC" : "NPC", initiative: 0, used: false, name: participant.name}
-        encounterFSM.context.initiativeOrder = [...initiativeSlots, newSlot]
+        const newSlot: InitiativeSlot = {
+            team: participant.isPC ? "PC" : "NPC",
+            initiative: 0,
+            used: false,
+            name: participant.name,
+            participantId: participant.id,
+        };
+        encounterFSM.context.initiativeOrder = [...initiativeSlots, newSlot];
         set({
             context: {...encounterFSM.context},
-        })
+        });
     });
 
     // Ensure the FSM always has the latest participants

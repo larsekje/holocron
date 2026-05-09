@@ -26,8 +26,9 @@ import {
 } from "@chakra-ui/react";
 import { TriangleUpIcon, TriangleDownIcon, CheckCircleIcon, TimeIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import { Participant } from "@/state/participantsStore";
-import { StatusFactories, Effect, EffectTarget } from "@/types/effectTypes";
+import { StatusFactories, EffectTarget } from "@/types/effectTypes";
 import { useEffectStore } from "@/state/effectStore";
+import { useEffectReminder } from "@/hooks/useEffectReminder";
 import { nanoid } from "nanoid";
 
 type Props = {
@@ -48,6 +49,7 @@ type EffectStatusKey =
 const ApplyEffectsModal: React.FC<Props> = ({ isOpen, onClose, participant }) => {
   const toast = useToast();
   const { effects, addEffect, removeEffect } = useEffectStore();
+  const wrapEffect = useEffectReminder();
 
   // Dark mode palette (aligned with Initiative modal)
   const modalBg = "gray.800";
@@ -100,107 +102,51 @@ const ApplyEffectsModal: React.FC<Props> = ({ isOpen, onClose, participant }) =>
       isClosable: true,
     });
 
-  const warnToast = (title: string, description: string) =>
-    toast({
-      title,
-      description,
-      status: "warning",
-      duration: 2500,
-      isClosable: true,
-    });
-
-  // Add helpers
+  // All addX helpers route through wrapEffect: actionable statuses (Burn,
+  // Bleeding Out, At the Brink) get a sidebar reminder on each trigger;
+  // passive markers (Immobilized, Prone, Disoriented, Ensnared, Staggered)
+  // pass through unwrapped — the chip is the reminder. The "X is now …"
+  // timeline entry comes from effectStore's addEffect logging hook.
   const addImmobilized = () => {
-    const eff = StatusFactories.immobilized(nanoid(), target, immDuration);
-    const effect: Effect = {
-      ...eff,
-      apply: (_p, dur = "") =>
-        warnToast("IMMOBILIZED", `Cannot perform maneuvers${dur ? ` ${dur}` : ""}`),
-    };
-    addEffect(effect, target);
+    const raw = StatusFactories.immobilized(nanoid(), target, immDuration);
+    addEffect(wrapEffect(raw, participant.name), target);
     successToast(`IMMOBILIZED (${immDuration} rounds) → ${participant.name}`);
   };
 
   const addBurn = () => {
-    const eff = StatusFactories.burn(nanoid(), target, burnRank, burnDuration);
-    const dmg = eff.overTimeDamage ?? eff.rank ?? 1;
-    const effect: Effect = {
-      ...eff,
-      apply: (p) =>
-        warnToast(
-          `BURN ${eff.rank}`,
-          `Suffers ${dmg} wounds at each round end${
-            eff.duration ? ` for ${eff.duration} rounds` : ""
-          }.`
-        ),
-    };
-    addEffect(effect, target);
+    const raw = StatusFactories.burn(nanoid(), target, burnRank, burnDuration);
+    addEffect(wrapEffect(raw, participant.name), target);
     successToast(`BURN ${burnRank} (${burnDuration} rounds) → ${participant.name}`);
   };
 
   const addProne = () => {
-    const eff = StatusFactories.prone(nanoid(), target);
-    const effect: Effect = {
-      ...eff,
-      apply: () =>
-        toast({
-          title: "PRONE",
-          description: "Stand up with a maneuver.",
-          status: "info",
-          duration: 2000,
-          isClosable: true,
-        }),
-    };
-    addEffect(effect, target);
+    const raw = StatusFactories.prone(nanoid(), target);
+    addEffect(wrapEffect(raw, participant.name), target);
     successToast(`PRONE → ${participant.name}`);
   };
 
   const addDisoriented = () => {
-    const eff = StatusFactories.disoriented(nanoid(), target, disRank, disDuration);
-    const effect: Effect = {
-      ...eff,
-      apply: (_p, dur = "") =>
-        warnToast(
-          `DISORIENTED ${eff.rank}`,
-          `Add ${eff.rank} Setback to all checks${dur ? ` ${dur}` : ""}`
-        ),
-    };
-    addEffect(effect, target);
+    const raw = StatusFactories.disoriented(nanoid(), target, disRank, disDuration);
+    addEffect(wrapEffect(raw, participant.name), target);
     successToast(`DISORIENTED ${disRank} (${disDuration}) → ${participant.name}`);
   };
 
   const addEnsnared = () => {
-    const eff = StatusFactories.ensnared(nanoid(), target, ensRank, ensDuration);
-    const displayDuration = eff.duration ?? ensRank;
-    const effect: Effect = {
-      ...eff,
-      apply: (_p, dur = "") =>
-        warnToast(`ENSNARED ${eff.rank}`, `Cannot perform maneuvers${dur ? ` ${dur}` : ""}`),
-    };
-    addEffect(effect, target);
+    const raw = StatusFactories.ensnared(nanoid(), target, ensRank, ensDuration);
+    const displayDuration = raw.duration ?? ensRank;
+    addEffect(wrapEffect(raw, participant.name), target);
     successToast(`ENSNARED ${ensRank} (${displayDuration}) → ${participant.name}`);
   };
 
   const addStaggered = () => {
-    const eff = StatusFactories.staggered(nanoid(), target, stagDuration);
-    const effect: Effect = {
-      ...eff,
-      apply: (_p, dur = "") =>
-        warnToast("STAGGERED", `Cannot perform actions${dur ? ` ${dur}` : ""}`),
-    };
-    addEffect(effect, target);
+    const raw = StatusFactories.staggered(nanoid(), target, stagDuration);
+    addEffect(wrapEffect(raw, participant.name), target);
     successToast(`STAGGERED (${stagDuration}) → ${participant.name}`);
   };
 
   const addKnockedDown = () => {
-    toast({
-      title: `KNOCKED DOWN: ${participant.name}`,
-      description: "Treat as Prone until a maneuver is spent to stand.",
-      status: "info",
-      duration: 2500,
-      isClosable: true,
-    });
     addProne();
+    successToast(`KNOCKED DOWN → ${participant.name}`);
   };
 
   // Ultra-compact up/down arrow stepper that stays within text height

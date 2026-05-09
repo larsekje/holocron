@@ -17,6 +17,25 @@ export interface DicePouch {
 
 import { CritInjury } from "@/data/critTable";
 
+/**
+ * A participant counts as "dead" (or fully incapacitated) for initiative-skip
+ * purposes when:
+ *   - their wounds reach or exceed their wound threshold (PC/Rival/Nemesis), or
+ *   - all minions in a minion group have been defeated (group wounds ≥ wt × initial).
+ *
+ * Dead participants don't get a turn — the FSM auto-advances past their slot.
+ */
+export function isParticipantDead(p: Participant): boolean {
+    const stats = p.stats ?? {};
+    const wt = stats.woundThreshold ?? (p.isPC ? 12 : 8);
+    const wounds = stats.wounds ?? 0;
+    if (stats.minions !== undefined) {
+        const alive = Math.max(stats.minions - Math.floor(wounds / Math.max(wt, 1)), 0);
+        return alive === 0;
+    }
+    return wounds >= wt;
+}
+
 export interface Participant {
     id: string;
     name: string;

@@ -25,9 +25,56 @@ import {CritEntry, CritInjury, CritSeverity, critTable, vehicleCritTable} from "
 import {CheckCircleIcon, AddIcon, MinusIcon, TriangleUpIcon, TriangleDownIcon} from "@chakra-ui/icons";
 import useParticipantStore from "@/state/participantsStore";
 import {useEffectStore} from "@/state/effectStore";
-import {EffectTarget, StatusFactories} from "@/types/effectTypes";
+import {Effect, EffectTarget, StatusFactories} from "@/types/effectTypes";
+import {useEffectReminder} from "@/hooks/useEffectReminder";
+import useSessionLogStore from "@/state/sessionLogStore";
 import {nanoid} from "nanoid";
 import useGameplayStore from "@/state/newGameplayStore";
+
+/**
+ * Map a personal-scale crit table entry to a real Effect (or null for purely
+ * narrative entries — e.g. "Sudden Jolt: drops what's held").
+ *
+ * Adding a new mapping is a one-liner once the matching StatusFactories entry
+ * exists. `target` is passed through so the produced effect targets the right
+ * participant.
+ */
+function buildCritEffect(entry: CritEntry, target: EffectTarget): Effect | null {
+  const id = nanoid();
+  const t = entry.title.toLowerCase();
+
+  // Easy
+  if (t === 'minor nick')         return null;                                  // 1 strain — apply manually
+  if (t === 'slowed down')        return StatusFactories.slowed(id, target);
+  if (t === 'sudden jolt')        return null;                                  // Drops what's held — narrative
+  if (t === 'distracted')         return StatusFactories.distracted(id, target);
+  if (t === 'off-balance')        return StatusFactories.offBalance(id, target);
+  if (t === 'discouraging wound') return null;                                  // Destiny flip — narrative
+  if (t === 'stunned')            return StatusFactories.staggered(id, target, 1);
+
+  // Average
+  if (t === 'head ringer')        return StatusFactories.headRinger(id, target);
+  if (t === 'at the brink')       return StatusFactories.atTheBrink(id, target);
+  if (t === 'hamstrung')          return StatusFactories.hamstrung(id, target);
+  if (t === 'overpowered')        return null;                                  // Free follow-up attack — narrative
+
+  // Hard
+  if (t === 'compromised')        return StatusFactories.compromised(id, target);
+  if (t === 'maimed')             return StatusFactories.maimed(id, target);
+  if (t === 'horrific injury')    return StatusFactories.horrificInjury(id, target);
+
+  // Daunting
+  if (t === 'temporarily lame')   return StatusFactories.temporarilyLame(id, target);
+  if (t === 'crippled')           return StatusFactories.crippled(id, target);
+  if (t === 'the end is nigh')    return StatusFactories.endIsNigh(id, target);
+
+  // Formidable
+  if (t === 'mortally wounded')   return StatusFactories.mortallyWounded(id, target);
+  if (t === 'bleeding out')       return StatusFactories.bleedingOut(id, target);
+  if (t === 'deadly blow')        return null;                                  // Incapacitation — narrative
+
+  return null;
+}
 
 type Props = {
   isOpen: boolean;
@@ -185,6 +232,7 @@ const ApplyButton: React.FC<{
   const toast = useToast();
   const { participants, addCriticalInjury } = useParticipantStore();
   const { addEffect } = useEffectStore();
+  const wrapEffect = useEffectReminder();
 
   const selected = participants.find(p => p.id === selectedParticipantId);
 
@@ -211,40 +259,27 @@ const ApplyButton: React.FC<{
     };
     addCriticalInjury(selected.id, injury);
 
-    // Reuse effects flow: create an effect from StatusFactories and add it
-    const target: EffectTarget = { type: "character", participantId: selected.id };
-    const titleLower = entry.title.toLowerCase();
+    // Drop a timeline entry for the Sidebar so the GM has a record of which
+    // crit landed on whom and at what roll total.
+    useSessionLogStore.getState().log({
+      kind: "crit-applied",
+      participantId: selected.id,
+      participantName: selected.name,
+      summary: `Crit ${total}: ${entry.title} (${entry.severity}) → ${selected.name}`,
+      tone: "bad",
+      meta: { title: entry.title, severity: entry.severity, rollTotal: total, isVehicle },
+    });
 
-    if (titleLower.includes("stunned")) {
-      const base = StatusFactories.staggered(nanoid(), target, 1);
-      const eff = {
-        ...base,
-        apply: () => {
-          toast({
-            title: `Staggered applied`,
-            description: `${selected.name} cannot perform actions until end of next turn.`,
-            status: "warning",
-            duration: 3000,
-            isClosable: true,
-          });
-        },
-      };
-      addEffect(eff, target);
-    } else if (titleLower.includes("head ringer") || titleLower.includes("off-balance")) {
-      const base = StatusFactories.disoriented(nanoid(), target, 1, 1);
-      const eff = {
-        ...base,
-        apply: () => {
-          toast({
-            title: `Disoriented 1 applied`,
-            description: `${selected.name} adds 1 Setback to all checks (1 round).`,
-            status: "warning",
-            duration: 3000,
-            isClosable: true,
-          });
-        },
-      };
-      addEffect(eff, target);
+    // Vehicle crit table doesn't yet map to character-targeted effects; the
+    // injury record is enough for now. Personal crits flow through the shared
+    // buildCritEffect mapping. The reminder hook attaches an Apply/Skip toast
+    // that fires on the effect's behavior trigger (turn-start / etc.).
+    if (!isVehicle) {
+      const target: EffectTarget = { type: "character", participantId: selected.id };
+      const raw = buildCritEffect(entry, target);
+      if (raw) {
+        addEffect(wrapEffect(raw, selected.name), target);
+      }
     }
 
     toast({
@@ -273,14 +308,19 @@ const ApplyButton: React.FC<{
   );
 };
 
-// Map crit entry to an auto-applied status effect (label + kind)
-// Extend as desired (only a few examples wired initially)
-function mapCritToEffect(entry?: CritEntry): { label: string; kind: 'none' | 'staggered' | 'disoriented' } {
-  if (!entry) return { label: 'None', kind: 'none' };
-  const t = entry.title.toLowerCase();
-  if (t.includes('stunned')) return { label: 'Staggered (1 round)', kind: 'staggered' };
-  if (t.includes('head ringer') || t.includes('off-balance')) return { label: 'Disoriented (1)', kind: 'disoriented' };
-  return { label: 'None', kind: 'none' };
+// Preview label for the "Will apply" line, derived from buildCritEffect so the
+// preview never drifts from what the Apply button actually does.
+function previewCritEffect(entry?: CritEntry): { label: string; willApply: boolean } {
+  if (!entry) return { label: 'None', willApply: false };
+  const eff = buildCritEffect(entry, { type: 'character', participantId: 'preview' });
+  if (!eff) return { label: 'None (narrative only)', willApply: false };
+  const dur =
+    eff.duration === 'encounter'
+      ? ' (until end of encounter)'
+      : typeof eff.duration === 'number'
+        ? ` (${eff.duration} round${eff.duration === 1 ? '' : 's'})`
+        : ' (until healed)';
+  return { label: `${eff.name}${dur}`, willApply: true };
 }
 
 // Compact vertical arrow stepper (tiny; matches the style used in effects UI)
@@ -562,7 +602,7 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) =>
                         <Text>
                           Will apply:{" "}
                           <Text as="span" fontWeight="bold" color={textMain}>
-                            {mapCritToEffect(table[selectedIndex]).label}
+                            {previewCritEffect(table[selectedIndex]).label}
                           </Text>{" "}
                           to{" "}
                           <Text as="span" fontWeight="bold" color={textMain}>

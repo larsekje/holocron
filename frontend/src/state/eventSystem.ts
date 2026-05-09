@@ -20,8 +20,25 @@ export const emitFSMEvent = (type: FSMEvent, participantId?: string) => {
 };
 
 // Event emitter for game events
-export type GameEventListener = (event: { type: GameEvent; participantId?: string }) => void;
-export type GameEvent = 'TURN_START' | 'TURN_ACTION' | 'TURN_END' | 'ROUND_START' | 'ROUND_END';
+export type GameEvent =
+    | 'TURN_START'
+    | 'TURN_ACTION'
+    | 'TURN_END'
+    | 'ROUND_START'
+    | 'ROUND_END'
+    | 'ENCOUNTER_START'
+    | 'ENCOUNTER_END';
+
+export interface GameEventPayload {
+    type: GameEvent;
+    participantId?: string;
+    /** Round number — populated for ROUND_START / ROUND_END so listeners
+     * don't have to dig into stale store snapshots. */
+    round?: number;
+}
+
+export type GameEventListener = (event: GameEventPayload) => void;
+
 const gameListeners: GameEventListener[] = [];
 
 export const addGameEventListener = (listener: GameEventListener) => {
@@ -35,7 +52,14 @@ export const removeGameEventListener = (listener: GameEventListener) => {
     }
 };
 
-export const emitGameEvent = (type: GameEvent, participantId?: string) => {
-    console.log(`[Event System] Emitting game event: ${type}`, participantId ? { participantId } : {});
-    gameListeners.forEach(listener => listener({ type, participantId }));
+export const emitGameEvent = (
+    type: GameEvent,
+    participantId?: string,
+    round?: number,
+) => {
+    console.log(
+        `[Event System] Emitting game event: ${type}`,
+        participantId || round ? { participantId, round } : {},
+    );
+    gameListeners.forEach(listener => listener({ type, participantId, round }));
 };

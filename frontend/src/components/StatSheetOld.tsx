@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {Box, Button, Collapse, Divider, Flex, Heading, HStack, Text, Tooltip, VStack, Wrap, WrapItem} from "@chakra-ui/react";
+import {Box, Button, Collapse, Divider, Flex, Heading, HStack, Text, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
-import CharacteristicsOld from "@components/statblock/CharacteristicsOld";
+import type {CharacteristicSet} from "@components/statblock/CharacteristicsOld";
 import SkillListOld from "@components/statblock/SkillListOld";
 import WeaponListOld from "@components/statblock/WeaponListOld";
 import StatusCardOld from "@components/statuscard/StatusCardOld";
@@ -10,7 +10,6 @@ import SourcesOld from "@components/statblock/SourcesOld";
 import {isSourceTag} from "@/utils/statify";
 import useParticipantStore from "@/state/participantsStore";
 import {Participant} from "@/state/participantsStore";
-import {useEffectStore} from "@/state/effectStore";
 import {statify} from "@/utils/statify";
 import {getDetail} from "@/data/spotlightIndex";
 import {describeArchetype, describeCoreArchetype, describeFaction} from "@/data/archetypeDescriptions";
@@ -58,18 +57,13 @@ const StatSheetOld = ({participant}: Props) => {
   const [currentCharacteristic, setCurrentCharacteristic] = useState("");
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const setStat = useParticipantStore((s) => s.setStat);
-  const allEffects = useEffectStore((s) => s.effects);
 
   if (!participant) {
     return <Text color="white">Nothing selected</Text>;
   }
 
-  const statusEffects = allEffects.filter(
-    (ae) => ae.target?.type === "character" && ae.target.participantId === participant.id,
-  );
-
   const stats = participant.stats || {};
-  const characteristics = {
+  const characteristics: CharacteristicSet = {
     brawn: stats.brawn ?? 2,
     agility: stats.agility ?? 2,
     intellect: stats.intellect ?? 2,
@@ -136,7 +130,7 @@ const StatSheetOld = ({participant}: Props) => {
     <div>
       <HStack alignItems="center" spacing={3}>
         <Box w="32px" h="32px" flexShrink={0}>
-          <AdversaryTypeBadgeOld type={type} isPC={participant.isPC}/>
+          <AdversaryTypeBadgeOld type={type} isPC={participant.isPC} clout={adversaryDetail?.clout}/>
         </Box>
         <VStack alignItems="flex-start" spacing={0} flex="1" minW={0}>
           <HStack spacing={2} align="center">
@@ -174,66 +168,18 @@ const StatSheetOld = ({participant}: Props) => {
               ))}
             </HStack>
           )}
-          {statusEffects.length > 0 && (
-            <HStack spacing={1} wrap="wrap" mt={1}>
-              {statusEffects.map((ae, i) => (
-                <Tooltip
-                  key={`${ae.id}-${i}`}
-                  hasArrow
-                  placement="top"
-                  openDelay={200}
-                  bg="#1f2125"
-                  color="gray.100"
-                  borderColor="whiteAlpha.200"
-                  borderWidth="1px"
-                  borderRadius="md"
-                  label={
-                    <Box fontSize="xs" maxW="320px">
-                      <Text fontWeight="bold" mb={1}>{ae.effect.name}</Text>
-                      {ae.effect.description && <Text>{ae.effect.description}</Text>}
-                      {typeof ae.remainingDuration === "number" && (
-                        <Text color="whiteAlpha.600" mt={1}>
-                          {ae.remainingDuration} round{ae.remainingDuration === 1 ? "" : "s"} remaining
-                        </Text>
-                      )}
-                    </Box>
-                  }
-                >
-                  <Box
-                    px={2}
-                    py="2px"
-                    bg="#5a2f8a"
-                    color="white"
-                    fontSize="10px"
-                    fontWeight="bold"
-                    letterSpacing="0.06em"
-                    textTransform="uppercase"
-                    borderRadius="sm"
-                    cursor="help"
-                  >
-                    {ae.effect.name}
-                    {typeof ae.remainingDuration === "number" ? ` ${ae.remainingDuration}` : ""}
-                  </Box>
-                </Tooltip>
-              ))}
-            </HStack>
-          )}
         </VStack>
       </HStack>
 
       <StatusCardOld participant={participant}/>
-
-      <CharacteristicsOld
-        characteristics={characteristics}
-        setCurrentCharacteristic={setCurrentCharacteristic}
-        onEdit={(key, value) => setStat(participant.id, key, value)}
-      />
 
       <SkillListOld
         participant={participant}
         profileSkills={skills}
         characteristics={characteristics}
         currentCharacteristic={currentCharacteristic}
+        setCurrentCharacteristic={setCurrentCharacteristic}
+        onEditCharacteristic={(key, value) => setStat(participant.id, key, value)}
         aliveMinions={aliveMinions}
       />
 

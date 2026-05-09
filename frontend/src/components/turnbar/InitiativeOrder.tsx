@@ -1,28 +1,19 @@
 import React from "react";
 import {Box, HStack, Text, Tooltip} from "@chakra-ui/react";
 import useGameplayStore from "@/state/newGameplayStore";
-import useParticipantStore, {Participant} from "@/state/participantsStore";
-
-function isDead(p: Participant): boolean {
-  const stats = p.stats ?? {};
-  const wt = stats.woundThreshold ?? (p.isPC ? 12 : 8);
-  const wounds = stats.wounds ?? 0;
-  if (stats.minions !== undefined) {
-    const alive = Math.max(stats.minions - Math.floor(wounds / Math.max(wt, 1)), 0);
-    return alive === 0;
-  }
-  return wounds >= wt;
-}
+import useParticipantStore, {isParticipantDead} from "@/state/participantsStore";
 
 const InitiativeOrder: React.FC = () => {
   const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
   const currentTurnIndex = useGameplayStore((state) => state.context.currentTurnIndex);
   const participants = useParticipantStore((state) => state.participants);
 
-  const deadNames = React.useMemo(() => {
+  // Dead detection by participantId (slot.name kept for tooltip display only —
+  // duplicate names would otherwise collide).
+  const deadIds = React.useMemo(() => {
     const set = new Set<string>();
     for (const p of participants) {
-      if (isDead(p)) set.add(p.name);
+      if (isParticipantDead(p)) set.add(p.id);
     }
     return set;
   }, [participants]);
@@ -36,7 +27,7 @@ const InitiativeOrder: React.FC = () => {
         const isPast = index < currentTurnIndex;
         const isPC = slot.team === "PC";
         const teamColor = isPC ? "#3a7e57" : "#b03030";
-        const slotDead = !!slot.name && deadNames.has(slot.name);
+        const slotDead = !!slot.participantId && deadIds.has(slot.participantId);
         // Only past + dead slots reveal the participant's name on hover (chronicling who took
         // the slot). Future slots show the team only and the tooltip just states the team.
         const tooltipText = slotDead && slot.name

@@ -9,7 +9,9 @@ import ContentCardTargetsOld from "@/ContentCardTargetsOld";
 import ContentCardTargetedOld from "@/ContentCardTargetedOld";
 import {DiceRollerModal} from "@components/dice/DiceRollerModal";
 import Spotlight from "@components/Spotlight";
+import Sidebar from "@components/Sidebar";
 import useDiceRollerStore from "@/state/diceRollerStore";
+import "@/state/sessionLogStore";
 import {useSpotlightStore} from "@/state/spotlightStore";
 
 function App() {
@@ -17,8 +19,8 @@ function App() {
   const closeSnapshot = useDiceRollerStore((s) => s.close);
   const openSpotlight = useSpotlightStore((s) => s.open);
 
-  const templateAreas = `"turn   turn    turn"
-                         "active targets targeted"`
+  const templateAreas = `"turn   turn    turn     turn"
+                         "active targets targeted log"`
 
   return (
     <>
@@ -43,7 +45,7 @@ function App() {
       <Grid
         templateAreas={templateAreas}
         gridTemplateRows={'60px calc(100vh - 125px)'}
-        gridTemplateColumns={'4fr 3fr 4fr'}
+        gridTemplateColumns={'4fr 3fr 4fr 300px'}
         gap='5px'
         padding='5px'
         bg="#36393F"
@@ -62,6 +64,10 @@ function App() {
 
         <GridItem area='targeted' overflow="hidden" minH={0}>
           <ContentCardTargetedOld/>
+        </GridItem>
+
+        <GridItem area='log' overflow="hidden" minH={0}>
+          <Sidebar/>
         </GridItem>
       </Grid>
       <DiceRollerModal snapshot={snapshot} onClose={closeSnapshot}/>

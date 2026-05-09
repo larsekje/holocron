@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Box,
   Checkbox,
-  Divider,
-  Heading,
+  Flex,
   HStack,
+  Input,
   SimpleGrid,
   Text,
   useMediaQuery,
@@ -30,6 +30,8 @@ interface Props {
   profileSkills: Record<string, number> | string[];
   characteristics: CharacteristicSet;
   currentCharacteristic?: string;
+  setCurrentCharacteristic?: (characteristic: string) => void;
+  onEditCharacteristic?: (key: keyof CharacteristicSet, value: number) => void;
   // For minion groups: how many minions are currently alive. When provided,
   // listed-skill rank is overridden by the standard SWRPG minion rule
   // (rank = max(0, aliveMinions - 1)) regardless of stored rank.
@@ -112,7 +114,24 @@ function rearrange<T>(items: T[], columns: number): T[] {
   return out;
 }
 
-const SkillListOld = ({participant, profileSkills, characteristics, currentCharacteristic = "", aliveMinions}: Props) => {
+const CHAR_ROW: Array<[keyof CharacteristicSet, string]> = [
+  ["brawn", "BR"],
+  ["agility", "AG"],
+  ["intellect", "INT"],
+  ["cunning", "CUN"],
+  ["willpower", "WIL"],
+  ["presence", "PR"],
+];
+
+const SkillListOld = ({
+  participant,
+  profileSkills,
+  characteristics,
+  currentCharacteristic = "",
+  setCurrentCharacteristic,
+  onEditCharacteristic,
+  aliveMinions,
+}: Props) => {
   // Default to listed-only — toggle "Show all" to expand.
   const [showAll, setShowAll] = useState(false);
   const [isSmallScreen] = useMediaQuery("(max-width: 1668px)");
@@ -152,14 +171,21 @@ const SkillListOld = ({participant, profileSkills, characteristics, currentChara
 
   return (
     <Box padding="0 5px">
-      <HStack justifyContent="space-between" paddingBottom="5px" paddingTop="10px">
-        <Heading size="md" as="h2" color="white">Skills</Heading>
-        <HStack>
-          <Text color="white" fontSize="sm">Show all</Text>
-          <Checkbox onChange={() => setShowAll(!showAll)} isChecked={showAll}/>
+      <Flex align="center" justify="space-between" mt={3} mb={1}>
+        <Text
+          as="b"
+          fontSize="10px"
+          letterSpacing="0.16em"
+          textTransform="uppercase"
+          color="#d39939"
+        >
+          Skills
+        </Text>
+        <HStack spacing={2}>
+          <Text color="whiteAlpha.700" fontSize="xs">Show all</Text>
+          <Checkbox size="sm" onChange={() => setShowAll(!showAll)} isChecked={showAll}/>
         </HStack>
-      </HStack>
-      <Divider/>
+      </Flex>
       {entries.length === 0 && !showAll && (
         <Text color="whiteAlpha.700" fontSize="sm" mt={2}>
           No listed skills. Toggle "Show all" to see the full skill list.
@@ -193,7 +219,120 @@ const SkillListOld = ({participant, profileSkills, characteristics, currentChara
           );
         })}
       </SimpleGrid>
+      <HStack spacing={2} mt={3} justify="center" wrap="wrap">
+        {CHAR_ROW.map(([key, abbr], i) => (
+          <React.Fragment key={key}>
+            {i > 0 && <Text color="whiteAlpha.300" fontSize="xs" lineHeight="1">·</Text>}
+            <InlineCharacteristic
+              abbr={abbr}
+              full={key}
+              value={characteristics[key] ?? 0}
+              active={currentCharacteristic === key}
+              onHover={setCurrentCharacteristic}
+              onEdit={onEditCharacteristic ? (v) => onEditCharacteristic(key, v) : undefined}
+            />
+          </React.Fragment>
+        ))}
+      </HStack>
     </Box>
+  );
+};
+
+interface InlineCharacteristicProps {
+  abbr: string;
+  full: string;
+  value: number;
+  active: boolean;
+  onHover?: (characteristic: string) => void;
+  onEdit?: (value: number) => void;
+}
+
+const InlineCharacteristic: React.FC<InlineCharacteristicProps> = ({abbr, full, value, active, onHover, onEdit}) => {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(String(value));
+  const ref = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => setDraft(String(value)), [value]);
+  useEffect(() => {
+    if (editing && ref.current) {
+      ref.current.focus();
+      ref.current.select();
+    }
+  }, [editing]);
+
+  const commit = () => {
+    if (onEdit) {
+      const n = parseInt(draft, 10);
+      if (!Number.isNaN(n)) onEdit(Math.max(0, Math.min(10, n)));
+    }
+    setEditing(false);
+  };
+
+  const editable = !!onEdit;
+
+  return (
+    <HStack
+      spacing={1.5}
+      px={1.5}
+      py={0.5}
+      borderRadius="sm"
+      bg={active ? "whiteAlpha.100" : "transparent"}
+      cursor={editable ? "pointer" : "default"}
+      onMouseEnter={() => onHover?.(full)}
+      onMouseLeave={() => onHover?.("")}
+      onClick={() => editable && !editing && setEditing(true)}
+    >
+      <Text
+        fontSize="2xs"
+        fontWeight="700"
+        letterSpacing="0.10em"
+        color={active ? "#d39939" : "whiteAlpha.500"}
+        textTransform="uppercase"
+        lineHeight="1"
+      >
+        {abbr}
+      </Text>
+      <Box w="2ch" h="14px" textAlign="center" lineHeight="14px" display="flex" alignItems="center" justifyContent="center">
+        {editing ? (
+          <Input
+            ref={ref}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commit();
+              else if (e.key === "Escape") {
+                setDraft(String(value));
+                setEditing(false);
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+            type="number"
+            variant="unstyled"
+            textAlign="center"
+            fontWeight="bold"
+            fontSize="sm"
+            color="white"
+            p={0}
+            h="14px"
+            minH="14px"
+            w="100%"
+            lineHeight="14px"
+            sx={{
+              "&::-webkit-inner-spin-button, &::-webkit-outer-spin-button": {
+                WebkitAppearance: "none",
+                margin: 0,
+              },
+              MozAppearance: "textfield",
+            }}
+          />
+        ) : (
+          <Text fontSize="sm" fontWeight="bold" color="white" lineHeight="14px">
+            {value}
+          </Text>
+        )}
+      </Box>
+    </HStack>
   );
 };
 

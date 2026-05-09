@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, CardBody, HStack, Text} from "@chakra-ui/react";
 import HealthBarOld from "./HealthBarOld";
 import InlineNumber from "@components/common/InlineNumber";
+import EffectChipRow from "@components/effects/EffectChipRow";
 import {Participant} from "@/state/participantsStore";
 import useParticipantStore from "@/state/participantsStore";
 
@@ -106,6 +107,8 @@ const StatusCardOld = ({participant}: Props) => {
             </>
           )}
         </HStack>
+
+        <EffectChipRow participantId={participant.id} />
       </CardBody>
     </Card>
   );
