@@ -345,24 +345,6 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                             transition="background 0.1s ease"
                           >
                             <Flex
-                              as="button"
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleExpand(v.id);
-                              }}
-                              w="28px"
-                              flexShrink={0}
-                              align="center"
-                              justify="center"
-                              color="whiteAlpha.500"
-                              _hover={{color: 'orange.300', bg: 'whiteAlpha.50'}}
-                              aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
-                              title={isExpanded ? 'Collapse details' : 'Expand details'}
-                            >
-                              {isExpanded ? <ChevronDownIcon boxSize={4}/> : <ChevronRightIcon boxSize={4}/>}
-                            </Flex>
-                            <Flex
                               w="44px"
                               flexShrink={0}
                               align="center"
@@ -404,6 +386,24 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                                   ) : null;
                                 })()}
                               </VStack>
+                            </Flex>
+                            <Flex
+                              as="button"
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleExpand(v.id);
+                              }}
+                              w="32px"
+                              flexShrink={0}
+                              align="center"
+                              justify="center"
+                              color="whiteAlpha.500"
+                              _hover={{color: 'orange.300', bg: 'whiteAlpha.50'}}
+                              aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                              title={isExpanded ? 'Collapse details' : 'Expand details'}
+                            >
+                              {isExpanded ? <ChevronDownIcon boxSize={4}/> : <ChevronRightIcon boxSize={4}/>}
                             </Flex>
                           </Flex>
                           {isExpanded && <ExpandedDetail vehicleId={v.id}/>}
