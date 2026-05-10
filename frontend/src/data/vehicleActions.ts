@@ -242,15 +242,6 @@ export function speedBandFor(currentSpeed: number): SpeedBand {
 
 export const VEHICLE_MANEUVERS: VehicleMove[] = [
   {
-    id: 'accelerate',
-    name: 'Accelerate',
-    role: 'Pilot',
-    category: 'Movement',
-    summary: 'Increase current speed by N (up to max). Suffer system strain = N − 1.',
-    description:
-      'The pilot may increase the vehicle’s current speed by one or more, to a maximum of the vehicle’s maximum speed. The vehicle suffers a number of system strain equal to the amount its speed increased minus 1, to a minimum of 0.',
-  },
-  {
     id: 'decelerate',
     name: 'Decelerate',
     role: 'Pilot',
@@ -259,6 +250,15 @@ export const VEHICLE_MANEUVERS: VehicleMove[] = [
     description:
       'Mirror of Accelerate. The pilot may decrease the vehicle’s current speed by one or more. The vehicle suffers a number of system strain equal to the amount its speed decreased minus 1, to a minimum of 0.',
     minSpeed: 1,
+  },
+  {
+    id: 'accelerate',
+    name: 'Accelerate',
+    role: 'Pilot',
+    category: 'Movement',
+    summary: 'Increase current speed by N (up to max). Suffer system strain = N − 1.',
+    description:
+      'The pilot may increase the vehicle’s current speed by one or more, to a maximum of the vehicle’s maximum speed. The vehicle suffers a number of system strain equal to the amount its speed increased minus 1, to a minimum of 0.',
   },
   {
     id: 'brace-for-impact',
