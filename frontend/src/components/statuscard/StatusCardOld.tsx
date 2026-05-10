@@ -47,8 +47,14 @@ const StatusCardOld = ({participant}: Props) => {
   const highlightedTalents = findHighlightedTalents(stats.talents ?? []);
 
   return (
-    <Card margin="10px 0" bg="#2A2C30">
-      <CardBody width="100%" padding="2">
+    <Card
+      margin="10px 0"
+      bg="#1f2125"
+      borderRadius="md"
+      borderWidth="1px"
+      borderColor="whiteAlpha.100"
+    >
+      <CardBody width="100%" padding="3">
         <HealthBarOld
           name="Wounds"
           max={woundThreshold}

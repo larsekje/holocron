@@ -34,7 +34,7 @@ import {
 import type {ModalSnapshot} from '@components/dice/mockSnapshots';
 import VehicleWeaponCardOld from '@components/statblock/VehicleWeaponCardOld';
 import EnterVehicleModal from '@components/vehicle/EnterVehicleModal';
-import EffectChipRow from '@components/effects/EffectChipRow';
+import StatusCardOld from '@components/statuscard/StatusCardOld';
 import {
   MOVE_CATEGORIES,
   MOVE_EFFECT_SPECS,
@@ -90,10 +90,6 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
   const applyVehicleEffect = useActiveVehicleStore((s) => s.applyVehicleEffect);
   const removeVehicleEffect = useActiveVehicleStore((s) => s.removeVehicleEffect);
   const participants = useParticipantStore((s) => s.participants);
-  const addWounds = useParticipantStore((s) => s.addWounds);
-  const removeWounds = useParticipantStore((s) => s.removeWounds);
-  const addStrain = useParticipantStore((s) => s.addStrain);
-  const removeStrain = useParticipantStore((s) => s.removeStrain);
   const openDiceRoller = useDiceRollerStore((s) => s.open);
 
   const [enterOpen, setEnterOpen] = useState(false);
@@ -507,52 +503,10 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
       {/* Character vitals strip — wounds/strain/soak/defense/effect chips for
           the participant whose pane this is. Lets the GM apply character-side
           damage (system-strain rollover, boarding hits) without leaving the
-          starship view. Built inline (not StatusCardOld) so the visual
-          vocabulary matches MetricTrack/StatChip above; the Personal view
-          still uses StatusCardOld with its inline threshold edits. */}
-      {contextParticipant && (() => {
-        const cs = contextParticipant.stats ?? {};
-        const woundThreshold = cs.woundThreshold ?? (contextParticipant.isPC ? 12 : 8);
-        const woundsTaken = cs.wounds ?? 0;
-        const tracksStrain = contextParticipant.isPC || cs.type === 'Nemesis';
-        const strainThreshold = cs.strainThreshold ?? (contextParticipant.isPC ? 14 : 0);
-        const strain = (cs as Record<string, number>).strain ?? 0;
-        const soak = cs.soak ?? (contextParticipant.isPC ? 3 : 2);
-        const meleeDefense = cs.meleeDefense ?? 0;
-        const rangedDefense = cs.rangedDefense ?? 0;
-        return (
-          <Box mt={3}>
-            <HStack spacing={3} align="stretch">
-              <MetricTrack
-                label="Wounds"
-                current={woundsTaken}
-                max={woundThreshold}
-                onAdd={() => addWounds(contextParticipant.id, 1)}
-                onRemove={() => removeWounds(contextParticipant.id, 1)}
-                colorScheme="red"
-                tone="damage"
-              />
-              {tracksStrain && strainThreshold > 0 && (
-                <MetricTrack
-                  label="Strain"
-                  current={strain}
-                  max={strainThreshold}
-                  onAdd={() => addStrain(contextParticipant.id, 1)}
-                  onRemove={() => removeStrain(contextParticipant.id, 1)}
-                  colorScheme="yellow"
-                  tone="damage"
-                />
-              )}
-            </HStack>
-            <Wrap spacing={3} fontSize="sm" color="whiteAlpha.900" mt={2}>
-              <StatChip label="Soak" value={soak}/>
-              <StatChip label="Def M" value={meleeDefense}/>
-              <StatChip label="Def R" value={rangedDefense}/>
-            </Wrap>
-            <EffectChipRow participantId={contextParticipant.id}/>
-          </Box>
-        );
-      })()}
+          starship view. Only rendered when we have a context participant. */}
+      {contextParticipant && (
+        <StatusCardOld participant={contextParticipant}/>
+      )}
 
       <SectionHeading>Weapons</SectionHeading>
       <VStack align="stretch" spacing={2}>
