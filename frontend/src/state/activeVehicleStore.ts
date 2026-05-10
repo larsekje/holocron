@@ -77,6 +77,10 @@ export interface ActiveVehicle {
   systemThreshold: number;
   weapons: VehicleWeapon[];
   vehicleInfo: Record<string, any>;
+  /** Narrative blurb pulled from the OggDude XML at build time. Optional —
+   * older or homebrew entries may not have one. Rendered in the vehicle
+   * stat sheet under a "Description" section. */
+  description?: string;
   /** Starship-scale minion-group size. Undefined or 1 = a single ship.
    * When >1, this entry represents N identical ships acting as a group
    * (e.g., a TIE squadron). The group shares a hull pool of
@@ -196,6 +200,9 @@ export function buildVehicleSpecFromSpotlight(detail: any): VehicleSpec {
     systemThreshold: typeof derived.system === 'number' ? derived.system : 8,
     weapons: Array.isArray(detail?.weapons) ? detail.weapons : [],
     vehicleInfo: detail?.info ?? {},
+    description: typeof detail?.description === 'string' && detail.description.length > 0
+      ? detail.description
+      : undefined,
   };
 }
 

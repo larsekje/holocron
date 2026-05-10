@@ -164,7 +164,57 @@ function buildWeapons(rawList) {
   return results;
 }
 
-function buildVehicles(rawList, book) {
+// Strip OggDude bracketed prose markup down to plain text with paragraph
+// breaks. Vehicle XML descriptions are wrapped in tags like [H3]Title[h3]
+// (usually the vehicle name, redundant), [P] (paragraph break), and the
+// occasional [B][b] / [I][i]. We drop the headers, replace [P] with a
+// double newline, and pass the rest through. Dice symbols use a separate
+// bracket grammar (handled by renderSwrpgText at render time).
+function cleanOggDudeDescription(desc) {
+  return desc
+    .replace(/\[H\d+\][\s\S]*?\[h\d+\]/gi, '')
+    .replace(/\[P\]/gi, '\n\n')
+    .replace(/\[B\]([\s\S]*?)\[b\]/gi, '$1')
+    .replace(/\[I\]([\s\S]*?)\[i\]/gi, '$1')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+// Walk the raw OggDude vehicle XML directory and pull out
+// `<Description>` blocks keyed by `<Name>`. The stoogoff JSON is the
+// canonical stat-block source but it doesn't carry the narrative blurb
+// the GMs want in the sheet. Returns a Map<vehicleName, descriptionText>.
+async function loadVehicleDescriptions() {
+  const dir = path.resolve(projectRoot, 'backend', 'data', 'oggdude', 'Vehicles');
+  let files;
+  try {
+    files = await fs.readdir(dir);
+  } catch (e) {
+    console.warn(
+      `[spotlight] No OggDude vehicle XML at ${path.relative(projectRoot, dir)}; vehicle descriptions will be empty.`,
+    );
+    return new Map();
+  }
+  const map = new Map();
+  for (const f of files) {
+    if (!f.endsWith('.xml')) continue;
+    let xml;
+    try {
+      xml = await fs.readFile(path.join(dir, f), 'utf-8');
+    } catch {
+      continue;
+    }
+    const nameMatch = xml.match(/<Name>([\s\S]*?)<\/Name>/);
+    const descMatch = xml.match(/<Description>([\s\S]*?)<\/Description>/);
+    if (!nameMatch || !descMatch) continue;
+    const name = nameMatch[1].trim();
+    const desc = cleanOggDudeDescription(descMatch[1]);
+    if (desc) map.set(name, desc);
+  }
+  return map;
+}
+
+function buildVehicles(rawList, book, descriptions = new Map()) {
   const results = [];
   if (!Array.isArray(rawList)) return results;
   let skipped = 0;
@@ -181,12 +231,17 @@ function buildVehicles(rawList, book) {
       typeof sil === 'number' ? `Sil ${sil}` : null,
     ].filter(Boolean);
     const subtitle = converted.group ?? converted.info?.type ?? undefined;
+    const displayName = converted.fullName ?? converted.name;
+    // Look up the narrative blurb from OggDude XML (if any). Try the full
+    // name first since OggDude entries usually carry the marketing name.
+    const description =
+      descriptions.get(displayName) ?? descriptions.get(converted.name);
     pushUnique(
       results,
-      entry('vehicle', converted.fullName ?? converted.name, {
+      entry('vehicle', displayName, {
         subtitle,
         tags,
-        // Vehicle JSONs carry stat blocks, not narrative descriptions.
+        description,
         extra: {
           book,
           fullName: converted.fullName,
@@ -224,7 +279,7 @@ async function main() {
     return;
   }
 
-  const [adversariesRaw, talentsRaw, weaponsRaw, eoteVehicles, aorVehicles, fadVehicles, cloutMap] = await Promise.all([
+  const [adversariesRaw, talentsRaw, weaponsRaw, eoteVehicles, aorVehicles, fadVehicles, cloutMap, vehicleDescriptions] = await Promise.all([
     readJson('adversaries.json'),
     readJson('talents.json'),
     readJson('weapons.json'),
@@ -238,15 +293,16 @@ async function main() {
         console.warn(`[spotlight] No clout map at ${path.relative(projectRoot, cloutFile)}: ${e.message}`);
         return null;
       }),
+    loadVehicleDescriptions(),
   ]);
 
   const results = [
     ...buildAdversaries(adversariesRaw, cloutMap),
     ...buildTalents(talentsRaw),
     ...buildWeapons(weaponsRaw),
-    ...buildVehicles(eoteVehicles, 'eote'),
-    ...buildVehicles(aorVehicles, 'aor'),
-    ...buildVehicles(fadVehicles, 'fad'),
+    ...buildVehicles(eoteVehicles, 'eote', vehicleDescriptions),
+    ...buildVehicles(aorVehicles, 'aor', vehicleDescriptions),
+    ...buildVehicles(fadVehicles, 'fad', vehicleDescriptions),
   ];
 
   await fs.mkdir(path.dirname(outFile), { recursive: true });
