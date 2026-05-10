@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import {AddIcon, InfoOutlineIcon, MinusIcon} from '@chakra-ui/icons';
 import {ReactComponent as DifficultySvg} from '@/assets/dice/difficulty.svg';
+import {ReactComponent as ChallengeSvg} from '@/assets/dice/challenge.svg';
 import useActiveVehicleStore, {
   aliveMinions,
   type ActiveVehicle,
@@ -869,25 +870,86 @@ const MetricTrack: React.FC<MetricTrackProps> = ({
   );
 };
 
-// Compact context-aware footer for the Speed track. Shows the active
-// speed-band's forced-move and effect summary so the GM gets the band info
-// without a separate Movement section.
+// Compact context-aware footer for the Speed track. The mechanical effects
+// are rendered as small icon chips with tooltips so the GM can scan them at
+// a glance instead of reading a wall of prose. Range-band count keeps its
+// text since the number is the headline info.
 const SpeedBandFooter: React.FC<{currentSpeed: number}> = ({currentSpeed}) => {
   const band = speedBandFor(currentSpeed);
   return (
-    <Text fontSize="xs" color="whiteAlpha.500" lineHeight="1.35">
-      <Text as="span" color="whiteAlpha.700" fontWeight="semibold">
+    <HStack spacing={1.5} mt={1} flexWrap="wrap" align="center">
+      <Text fontSize="xs" color="whiteAlpha.700" fontWeight="semibold">
         {band.rangeBands === 0 ? 'No move' : `${band.rangeBands} bands`}
       </Text>
-      {band.effects.length > 0 && (
-        <>
-          {' · '}
-          {band.effects.join(' · ')}
-        </>
+      {band.pilotUpgrades > 0 && (
+        <SpeedBandChip
+          tooltip={
+            band.pilotUpgrades === 1
+              ? 'Upgrade difficulty of Piloting checks once.'
+              : `Upgrade difficulty of Piloting checks ${band.pilotUpgrades === 2 ? 'twice' : `${band.pilotUpgrades} times`}.`
+          }
+        >
+          <Text fontSize="9px" color="whiteAlpha.700" letterSpacing="0.04em">PILOT</Text>
+          {Array.from({length: band.pilotUpgrades}).map((_, i) => (
+            <ChallengeSvg key={i} width={9} height={9}/>
+          ))}
+        </SpeedBandChip>
       )}
-    </Text>
+      {band.attackedUpgrades > 0 && (
+        <SpeedBandChip
+          tooltip={
+            band.attackedUpgrades === 1
+              ? 'Upgrade difficulty of attacks targeting the vehicle once.'
+              : `Upgrade difficulty of attacks targeting the vehicle ${band.attackedUpgrades === 2 ? 'twice' : `${band.attackedUpgrades} times`}.`
+          }
+        >
+          <Text fontSize="9px" color="whiteAlpha.700" letterSpacing="0.04em">ATK</Text>
+          {Array.from({length: band.attackedUpgrades}).map((_, i) => (
+            <ChallengeSvg key={i} width={9} height={9}/>
+          ))}
+        </SpeedBandChip>
+      )}
+      {band.collisionCritBonus > 0 && (
+        <SpeedBandChip tooltip={`+${band.collisionCritBonus} to collision Critical Hits.`}>
+          <Text fontSize="9px" color="whiteAlpha.700" letterSpacing="0.04em">
+            CRIT +{band.collisionCritBonus}
+          </Text>
+        </SpeedBandChip>
+      )}
+    </HStack>
   );
 };
+
+const SpeedBandChip: React.FC<{tooltip: string; children: React.ReactNode}> = ({tooltip, children}) => (
+  <Tooltip
+    label={tooltip}
+    hasArrow
+    placement="top"
+    openDelay={250}
+    bg="#1f2125"
+    color="gray.100"
+    borderColor="whiteAlpha.200"
+    borderWidth="1px"
+    borderRadius="md"
+    maxW="280px"
+    fontSize="xs"
+    px={2}
+    py={1.5}
+  >
+    <HStack
+      spacing="3px"
+      px={1.5}
+      py="1px"
+      bg="whiteAlpha.100"
+      borderRadius="sm"
+      borderWidth="1px"
+      borderColor="whiteAlpha.200"
+      cursor="help"
+    >
+      {children}
+    </HStack>
+  </Tooltip>
+);
 
 const StatChip: React.FC<{label: string; value: React.ReactNode}> = ({label, value}) => (
   <WrapItem>
