@@ -1,10 +1,12 @@
 import React, {useState} from "react";
-import {Box, Button, Collapse, Divider, Flex, Heading, HStack, Text, VStack, Wrap, WrapItem} from "@chakra-ui/react";
+import {Box, Button, Collapse, Divider, Flex, Heading, HStack, IconButton, Text, Tooltip, VStack, Wrap, WrapItem} from "@chakra-ui/react";
+import {FaRocket} from "react-icons/fa";
 import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
 import type {CharacteristicSet} from "@components/statblock/CharacteristicsOld";
 import SkillListOld from "@components/statblock/SkillListOld";
 import WeaponListOld from "@components/statblock/WeaponListOld";
 import StatusCardOld from "@components/statuscard/StatusCardOld";
+import AttachVehicleModal from "@components/vehicle/AttachVehicleModal";
 import AdversaryTypeBadgeOld from "@components/target/AdversaryTypeBadgeOld";
 import SourcesOld from "@components/statblock/SourcesOld";
 import {isSourceTag} from "@/utils/statify";
@@ -56,6 +58,7 @@ function lookupAdversaryDetail(participant: {name: string; stats?: any}): Record
 const StatSheetOld = ({participant}: Props) => {
   const [currentCharacteristic, setCurrentCharacteristic] = useState("");
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [attachOpen, setAttachOpen] = useState(false);
   const setStat = useParticipantStore((s) => s.setStat);
 
   if (!participant) {
@@ -132,7 +135,7 @@ const StatSheetOld = ({participant}: Props) => {
         <Box w="32px" h="32px" flexShrink={0}>
           <AdversaryTypeBadgeOld type={type} isPC={participant.isPC} clout={adversaryDetail?.clout}/>
         </Box>
-        <VStack alignItems="flex-start" spacing={0} flex="1" minW={0}>
+        <VStack alignItems="flex-start" spacing={0} flex="1" minW={0} mr={2}>
           <HStack spacing={2} align="center">
             <Heading size="md" color="white">{participant.name}</Heading>
             <SourcesOld tags={tags}/>
@@ -169,6 +172,20 @@ const StatSheetOld = ({participant}: Props) => {
             </HStack>
           )}
         </VStack>
+        {!participant.equippedVehicleId && (
+          <Tooltip label="Attach a vehicle (pilot)" placement="left" hasArrow openDelay={300}>
+            <IconButton
+              aria-label="Attach vehicle"
+              icon={<FaRocket/>}
+              size="sm"
+              variant="ghost"
+              color="whiteAlpha.700"
+              _hover={{bg: 'whiteAlpha.100', color: 'orange.300'}}
+              flexShrink={0}
+              onClick={() => setAttachOpen(true)}
+            />
+          </Tooltip>
+        )}
       </HStack>
 
       <StatusCardOld participant={participant}/>
@@ -261,6 +278,12 @@ const StatSheetOld = ({participant}: Props) => {
           </Box>
         </>
       )}
+
+      <AttachVehicleModal
+        isOpen={attachOpen}
+        onClose={() => setAttachOpen(false)}
+        participant={participant}
+      />
     </div>
   );
 };
