@@ -225,20 +225,28 @@ function buildVehicles(rawList, book, descriptions = new Map()) {
     }
     const converted = convertVehicleToGenesys(v);
     const sil = converted.characteristics?.Silhouette;
+    // Stoogoff carries both a short canonical `name` ("Hawk", "X-Wing",
+    // "TIE Fighter") and an official `fullName` ("HWK-290 Light Freighter",
+    // "T-65B 'X-Wing' Starfighter"). Prefer the short name as the entry's
+    // display name — it's what stoogoff's own picker shows and matches how
+    // GMs actually refer to ships at the table. The full name still goes
+    // into tags so search can still find "HWK-290" or "T-65B" by typing
+    // the marketing designation.
     const tags = [
       converted.group,
       converted.info?.type,
+      converted.fullName && converted.fullName !== converted.name ? converted.fullName : null,
       typeof sil === 'number' ? `Sil ${sil}` : null,
     ].filter(Boolean);
     const subtitle = converted.group ?? converted.info?.type ?? undefined;
-    const displayName = converted.fullName ?? converted.name;
-    // Look up the narrative blurb from OggDude XML (if any). Try the full
-    // name first since OggDude entries usually carry the marketing name.
+    // OggDude XML keys descriptions by official long name, so look up by
+    // fullName first; fall back to the short name for entries that don't
+    // have a fullName separator.
     const description =
-      descriptions.get(displayName) ?? descriptions.get(converted.name);
+      descriptions.get(converted.fullName) ?? descriptions.get(converted.name);
     pushUnique(
       results,
-      entry('vehicle', displayName, {
+      entry('vehicle', converted.name, {
         subtitle,
         tags,
         description,

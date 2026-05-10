@@ -187,7 +187,10 @@ export function buildVehicleSpecFromSpotlight(detail: any): VehicleSpec {
   const derived = detail?.derived ?? {};
   return {
     vehicleId: detail?.id ?? '',
-    name: detail?.fullName ?? detail?.name ?? 'Vehicle',
+    // Prefer the short stoogoff name (e.g. "TIE Fighter", "Hawk", "X-Wing")
+    // for the in-encounter label. The full marketing designation lives on
+    // the spotlight detail's `fullName` field if anything wants it.
+    name: detail?.name ?? detail?.fullName ?? 'Vehicle',
     silhouette: typeof characteristics.Silhouette === 'number' ? characteristics.Silhouette : 3,
     speed: typeof characteristics.Speed === 'number' ? characteristics.Speed : 0,
     handling:

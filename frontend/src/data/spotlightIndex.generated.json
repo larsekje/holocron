@@ -119667,13 +119667,13 @@
     ]
   },
   {
-    "id": "vehicle_firespray-sysem-patrol-craft",
+    "id": "vehicle_firespray",
     "type": "vehicle",
-    "name": "Firespray Sysem Patrol Craft",
+    "name": "Firespray",
     "detail": {
-      "id": "vehicle_firespray-sysem-patrol-craft",
+      "id": "vehicle_firespray",
       "type": "vehicle",
-      "name": "Firespray Sysem Patrol Craft",
+      "name": "Firespray",
       "book": "eote",
       "fullName": "Firespray Sysem Patrol Craft",
       "group": "Patrol Boats",
@@ -119732,17 +119732,18 @@
     "tags": [
       "Patrol Boats",
       "Patrol Boat/Firespray",
+      "Firespray Sysem Patrol Craft",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_jm-5000-jumpmaster-long-range-scout",
+    "id": "vehicle_jumpmaster",
     "type": "vehicle",
-    "name": "JM-5000 Jumpmaster Long Range Scout",
+    "name": "Jumpmaster",
     "detail": {
-      "id": "vehicle_jm-5000-jumpmaster-long-range-scout",
+      "id": "vehicle_jumpmaster",
       "type": "vehicle",
-      "name": "JM-5000 Jumpmaster Long Range Scout",
+      "name": "Jumpmaster",
       "description": "Corellian Engineering's JumpMaster-class long range scouts are small, one-person vessels designed for autonomous, long-range scouting and reconnaissance. Relatively fast and agile, JumpMasters have a flat, roughly crescent-shaped hull packed with the ship's powerful and sensitive sensor systems. An off-set, cylindrical pod located to starboard of the ship's centerline houses the cockpit, the pilot's small and spartan quarters, and the ship's power generators and drive system. Lightly armored and carrying only a light laser cannon as armament, JumpMasters rely on their speed and sensors to avoid trouble. \n\nThanks to their powerful sensor suite, JumpMasters serve in many planetary militaries as picket ships and early warning patrol craft within star systems. Their primary user, however, is the galaxy's Civilian Astrogation Corps, the volunteer group of explorers, astrogators, and cartographers responsible for keeping hyperspace navigation charts up to date.",
       "book": "eote",
       "fullName": "JM-5000 Jumpmaster Long Range Scout",
@@ -119790,17 +119791,18 @@
     "tags": [
       "Patrol Boats",
       "Patrol Boat/JumpMaster",
+      "JM-5000 Jumpmaster Long Range Scout",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_z-95-af4-headhunter",
+    "id": "vehicle_headhunter",
     "type": "vehicle",
-    "name": "Z-95-AF4 Headhunter",
+    "name": "Headhunter",
     "detail": {
-      "id": "vehicle_z-95-af4-headhunter",
+      "id": "vehicle_headhunter",
       "type": "vehicle",
-      "name": "Z-95-AF4 Headhunter",
+      "name": "Headhunter",
       "description": "Designed as part of a joint venture between Incom Corporation and Subpro Corporation during the early days of the Clone Wars, the tiny Z-95 was considered one of the most capable starfighters of its day. Small, lightly armored, and shielded, the Headhunter is a one-man, short-range fighter powered by an lncom 44-a5 multi-reactor. The aerodynamic fuselage combined with an incredible thrust-to-weight ratio makes the Z-95 quite fast and agile. Initially classified as an interceptor and armed with wing-mounted triple blaster cannons, the Headhunter quickly proved itself a competent space superiority fighter. It has gone through numerous redesigns, and today, most sport twin laser cannons and concussion missile launchers. \n\nDespite their age, the Z-95 remains a popular starfighter. Considered outdated compared to modern fighters such as Koensayr's Y-wing and Incom's brand new X-wing (a fighter that shares more than a passing resemblance to the Headhunter), sales of the little fighter are still brisk in the Outer Rim territories.",
       "book": "eote",
       "fullName": "Z-95-AF4 Headhunter",
@@ -119862,17 +119864,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/Headhunter",
+      "Z-95-AF4 Headhunter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_gat-12h-skipray-blastboat",
+    "id": "vehicle_skipray",
     "type": "vehicle",
-    "name": "GAT-12H Skipray Blastboat",
+    "name": "Skipray",
     "detail": {
-      "id": "vehicle_gat-12h-skipray-blastboat",
+      "id": "vehicle_skipray",
       "type": "vehicle",
-      "name": "GAT-12H Skipray Blastboat",
+      "name": "Skipray",
       "description": "Another pre-Clone Wars design, Sienar Fleet Systems'. Skipray Blastboat is a heavily armed and armored patrol craft and gunboat descended from the ancient Turbostorm-class gunships used by the Old Republic. Officially listed as a patrol boat in SFS advertising, the Skipray seems to defy classification. Slightly larger than a typical heavy starfighter, these ships consist of a narrow, heavily reinforced and armored forward hull section and an aft rotating wing and pylon section. The forward section houses the four crew in a reinforced command cabin. Two short canards angle down from the sides of the cockpit, each equipped with a Siep-Irol Omni-Vu sensor array that gives the Skipray exceptional battlespace awareness. The forward hull section also houses the majority of the ship's weapons systems, with an ion cannon, proton torpedo launcher, and concussion missile launcher clustered in the nose and a turret-mounted twin laser cannon aft of the cockpit on the ship's dorsal ridge. The rotating wing assembly that makes up the aft third of the ship consists of two swept-forward wings connected to an armored collar rotating around the ship's powerful single ion engine. The wings are deployed in a vertical configuration for flight and rotate horizontally for landing, and each is tipped with an ion cannon. \n\nAlthough it was initially designed for use by the Imperial Navy as a heavy, hyperspace-capable starfighter, it was largely rejected by the Admiralty as it didn't fit into the Navy's rigid order of battle, which at the time eschewed heavy, multi-crewed fighters. In response, SFS began selling the Skipray on the open market. There it garnered a loyal following among both planetary defense forces and the various corporate, mercenary, and pirate fleets that operate in the Outer Rim. Skiprays make a deadly and competent patrol and anti-shipping vessels, and can easily threaten ships many times their size.",
       "book": "eote",
       "fullName": "GAT-12H Skipray Blastboat",
@@ -119959,17 +119962,18 @@
     "tags": [
       "Patrol Boats",
       "Patrol Boat/Skipray",
+      "GAT-12H Skipray Blastboat",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_mobquet-flare-s-swoop",
+    "id": "vehicle_swoop",
     "type": "vehicle",
-    "name": "Mobquet Flare-S Swoop",
+    "name": "Swoop",
     "detail": {
-      "id": "vehicle_mobquet-flare-s-swoop",
+      "id": "vehicle_swoop",
       "type": "vehicle",
-      "name": "Mobquet Flare-S Swoop",
+      "name": "Swoop",
       "description": "Popular among swoop gangs and adrenaline junkies throughout the galaxy, the Fla re-S is the very epitome of the swoop builder's art. The Flare-S is a high-performance, one-person sport swoop built for raw, straight-line speed as opposed to agility. Powered by a supercharged Mobquet R1k repulsorlift engine supplemented by a number of thrust vectoring turbothrusters, this tiny swoop has enough power to overtake or outrun nearly anything in its class.",
       "book": "eote",
       "fullName": "Mobquet Flare-S Swoop",
@@ -120004,17 +120008,18 @@
     "tags": [
       "Landspeeders",
       "Swoop/Flare-S",
+      "Mobquet Flare-S Swoop",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_trast-a-a5-heavy-speeder-truck",
+    "id": "vehicle_speeder-truck",
     "type": "vehicle",
-    "name": "Trast A-A5 Heavy Speeder Truck",
+    "name": "Speeder Truck",
     "detail": {
-      "id": "vehicle_trast-a-a5-heavy-speeder-truck",
+      "id": "vehicle_speeder-truck",
       "type": "vehicle",
-      "name": "Trast A-A5 Heavy Speeder Truck",
+      "name": "Speeder Truck",
       "description": "Built by Trast Heavy Transports, the A-A5 is a popular vehicle among the Outer Rim Territories. Built to haul heavy bulk cargo long distances over rough terrain, the lumbering A-A5 has a stiff and rugged hull equipped with hardened systems that can shrug off even the heaviest abuse. In addition, armor add-ons can make it all but impervious to small-arms fire. The vehicle is separated into two main compartments: the crew compartment and the cargo compartment. The cargo compartment is capacious and features a number of tie-downs, latches, and other cargo management apparatuses that keep the cargo safe and secure. When not hauling cargo, fold-out benches in the cargo hold can be deployed to carry up to twenty-five sentients, albeit in cramped and uncomfortable conditions.",
       "book": "eote",
       "fullName": "Trast A-A5 Heavy Speeder Truck",
@@ -120049,17 +120054,18 @@
     "tags": [
       "Landspeeders",
       "Speeder Truck/A-A5",
+      "Trast A-A5 Heavy Speeder Truck",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_x-34-landspeeder",
+    "id": "vehicle_landspeeder",
     "type": "vehicle",
-    "name": "X-34 Landspeeder",
+    "name": "Landspeeder",
     "detail": {
-      "id": "vehicle_x-34-landspeeder",
+      "id": "vehicle_landspeeder",
       "type": "vehicle",
-      "name": "X-34 Landspeeder",
+      "name": "Landspeeder",
       "description": "SoroSuub's X-34 is a two-passenger, coupe-styled civilian landspeeder known for its solid reputation for reliability. Powered by SoroSuub's Twinstar repulsorlift engine and supplemented by a trio of low-output turbofan engines, the X-34 provides utility and respectable performance, if not a large amount of style or dash, in a sturdy, affordable package. More utilitarian than many offerings from SoroSuub, this speeder has little in the way of amenities. It has a snug cockpit with two form-fitting seats covered in hard-wearing rubberized fabric. The controls are simple and the speeder is easy to drive, making it a useful utility speeder.",
       "book": "eote",
       "fullName": "X-34 Landspeeder",
@@ -120094,17 +120100,18 @@
     "tags": [
       "Landspeeders",
       "Landspeeder/X-34",
+      "X-34 Landspeeder",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_all-terrain-personal-transport",
+    "id": "vehicle_at-pt",
     "type": "vehicle",
-    "name": "All Terrain Personal Transport",
+    "name": "AT-PT",
     "detail": {
-      "id": "vehicle_all-terrain-personal-transport",
+      "id": "vehicle_at-pt",
       "type": "vehicle",
-      "name": "All Terrain Personal Transport",
+      "name": "AT-PT",
       "book": "eote",
       "fullName": "All Terrain Personal Transport",
       "group": "Walkers",
@@ -120159,17 +120166,18 @@
     "tags": [
       "Walkers",
       "Walker/AT-PT",
+      "All Terrain Personal Transport",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_exploration-and-survey-walker",
+    "id": "vehicle_at-est",
     "type": "vehicle",
-    "name": "Exploration and Survey Walker",
+    "name": "AT-EST",
     "detail": {
-      "id": "vehicle_exploration-and-survey-walker",
+      "id": "vehicle_at-est",
       "type": "vehicle",
-      "name": "Exploration and Survey Walker",
+      "name": "AT-EST",
       "book": "eote",
       "fullName": "Exploration and Survey Walker",
       "group": "Walkers",
@@ -120211,6 +120219,7 @@
     "tags": [
       "Walkers",
       "Walker/AT-EST",
+      "Exploration and Survey Walker",
       "Sil 4"
     ]
   },
@@ -120258,13 +120267,13 @@
     ]
   },
   {
-    "id": "vehicle_incom-t-16-skyhopper",
+    "id": "vehicle_skyhopper",
     "type": "vehicle",
-    "name": "Incom T-16 Skyhopper",
+    "name": "Skyhopper",
     "detail": {
-      "id": "vehicle_incom-t-16-skyhopper",
+      "id": "vehicle_skyhopper",
       "type": "vehicle",
-      "name": "Incom T-16 Skyhopper",
+      "name": "Skyhopper",
       "description": "Beloved of hot-rodders, daredevils, and law enforcement agencies throughout the galaxy, Incom's T-16 skyhopper is as fun as it is dangerous. A tiny, fragile craft with a pyramidal hull and three airfoils arranged in a triangular formation, the skyhopper is fast, nimble, and incredibly demanding of its pilots. Equipped with a pressurized, one-person cockpit and powered by redoubtable E-16/x ion engines, the T-16 is capable of both astonishing straight-line speed and aerial agility from low altitude to the limits of the atmosphere. Built primarily for pleasure and sport flying, armed and lightly armored skyhoppers are used by many law enforcement agencies and paramilitary forces around the galaxy for reconnaissance and patrol. Some even serve as trainers for starfighter pilots, as the control layout and performance share features with starfighters like the Z-95 Headhunter and the new T-65 X-wing.",
       "book": "eote",
       "fullName": "Incom T-16 Skyhopper",
@@ -120299,17 +120308,18 @@
     "tags": [
       "Airspeeders",
       "Airspeeder/T-16 Skyhopper",
+      "Incom T-16 Skyhopper",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_incom-t-47-airspeeder",
+    "id": "vehicle_t-47-airspeeder",
     "type": "vehicle",
-    "name": "Incom T-47 Airspeeder",
+    "name": "T-47 Airspeeder",
     "detail": {
-      "id": "vehicle_incom-t-47-airspeeder",
+      "id": "vehicle_t-47-airspeeder",
       "type": "vehicle",
-      "name": "Incom T-47 Airspeeder",
+      "name": "T-47 Airspeeder",
       "description": "Incom's T-47 is a powerful, low-altitude airspeeder. This low-profile, wedge-shaped airspeeder seats its two crew back-to-back in a cramped but well laid-out cockpit with the pilot facing forward and the systems operator facing aft. The T-47 draws power from Karydee's reliable KD49 repulsorlift engine, which gives it immense towing power while providing better than average speed and agility. Supplementing the KD49 is one of Incom's 5i.2 ion afterburners, which provides extra thrust when needed. \n\nLike many of Incom's products, the T-47s were designed with an eye to end-user modification. In this case, Incom designers felt that since the industrial and commercial economies of the galaxy are so varied, a vehicle designed to work in these environments should be easily adaptable to any job or environment. The speeders repulsorlift engine produces an immense amount of power, and combined with a number of redundant electrical systems and a modular design, the T-47 can easily handle both the weight and power demands of aftermarket modifications. Incom itself sells a number of modification packages for the T-47, as do a number of smaller manufacturers, It's also rumored that some paramilitary and insurgent forces in the galaxy have modified these stout vehicles with weapons and heavy armor, a rumor not outside the realm of possibility, but one that is officially denied by Incom.",
       "book": "eote",
       "fullName": "Incom T-47 Airspeeder",
@@ -120357,17 +120367,18 @@
     "tags": [
       "Airspeeders",
       "Airspeeder/T-47",
+      "Incom T-47 Airspeeder",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_action-v1-bulk-transport",
+    "id": "vehicle_bulk-transport",
     "type": "vehicle",
-    "name": "Action V1 Bulk Transport",
+    "name": "Bulk Transport",
     "detail": {
-      "id": "vehicle_action-v1-bulk-transport",
+      "id": "vehicle_bulk-transport",
       "type": "vehicle",
-      "name": "Action V1 Bulk Transport",
+      "name": "Bulk Transport",
       "book": "eote",
       "fullName": "Action V1 Bulk Transport",
       "group": "Freighters",
@@ -120406,17 +120417,18 @@
     "tags": [
       "Freighters",
       "Transport/Action VI",
+      "Action V1 Bulk Transport",
       "Sil 5"
     ]
   },
   {
-    "id": "vehicle_ilh-kk-citadel-class-light-freighter",
+    "id": "vehicle_citadel-freighter",
     "type": "vehicle",
-    "name": "ILH-KK Citadel-Class Light Freighter",
+    "name": "Citadel Freighter",
     "detail": {
-      "id": "vehicle_ilh-kk-citadel-class-light-freighter",
+      "id": "vehicle_citadel-freighter",
       "type": "vehicle",
-      "name": "ILH-KK Citadel-Class Light Freighter",
+      "name": "Citadel Freighter",
       "description": "Produced by Koensayr, a company known more for its starfighters and starship components than for cargo ships, the Citadel-class is a small, relatively fast freighter built to compete with CEC's VT and W class of light freighters. Known for their ruggedness and reliability, these ships have a broad, flat hull reminiscent of the Imperial Navy's Lambda-class shuttle with two long, side-mounted vertical stabilizers aft and a short, thick stabilizer mounted between that holds the ship's transponder and comms array. The forward hull section houses the bridge and living quarters for the three-person crew, with more cabins behind for passengers. Quite heavily armored for a ship of this size and class, and equipped with military-grade shields, Citadels have gained a reputation for being able to absorb incredible amounts of punishment and still deliver their passengers and cargo safely.\n\nWhile Citadels are, on paper, passenger carriers, they are remarkably well armed for their role. Due to their heavy weapons load-out, their powerful KM-440.a1 reactor, and midships external docking clamps that can easily be used to carry two starfighters, many have been re-purposed as fighting ships. Many of these reconfigured ships have found their way into the hands of freebooters and smugglers.",
       "book": "eote",
       "fullName": "ILH-KK Citadel-Class Light Freighter",
@@ -120499,6 +120511,7 @@
     "tags": [
       "Freighters",
       "Freighter/Citadel",
+      "ILH-KK Citadel-Class Light Freighter",
       "Sil 4"
     ]
   },
@@ -120552,13 +120565,13 @@
     ]
   },
   {
-    "id": "vehicle_sorosuub-luxury-3000-space-yacht",
+    "id": "vehicle_luxury-space-yacht",
     "type": "vehicle",
-    "name": "SoroSuub Luxury 3000 Space Yacht",
+    "name": "Luxury Space Yacht",
     "detail": {
-      "id": "vehicle_sorosuub-luxury-3000-space-yacht",
+      "id": "vehicle_luxury-space-yacht",
       "type": "vehicle",
-      "name": "SoroSuub Luxury 3000 Space Yacht",
+      "name": "Luxury Space Yacht",
       "description": "SoroSuub's popular space yacht is the final word in luxury VIP transportation. Each vessel is custom-built from the keel up to the specific needs of each owner. Every decision from the hyperdrive model to which rare hardwoods and precious metals to use as accents in The VIP suite are dictated by the owner and SoroSuub's expert ship system associates. This allows the ships to be outfitted for myriad uses from shuttling important government officials to mobile offices of powerful commercial concerns to extravagant party vessels. \n\nWhile each yacht is unique, with features and amenities as varied as the tastes of their myriad owners, there is some commonality among them. The ship's hull is long and narrow, with the command deck forward, offering a commanding view of surrounding space through its wraparound viewports. The passengers are carried in luxurious quarters abaft the command deck that contain a grand dining cabin, a single VIP suite, a recreation center, an observation deck, and a number of small, but well-appointed passenger cabins. Both the sublight and hyperdrive engines are housed in outboard nacelles located at the aft of the vessel.",
       "book": "eote",
       "fullName": "SoroSuub Luxury 3000 Space Yacht",
@@ -120598,17 +120611,18 @@
     "tags": [
       "Freighters",
       "Yacht/Luxury 3000",
+      "SoroSuub Luxury 3000 Space Yacht",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_space-master-medium-transport",
+    "id": "vehicle_space-master",
     "type": "vehicle",
-    "name": "Space Master Medium Transport",
+    "name": "Space Master",
     "detail": {
-      "id": "vehicle_space-master-medium-transport",
+      "id": "vehicle_space-master",
       "type": "vehicle",
-      "name": "Space Master Medium Transport",
+      "name": "Space Master",
       "description": "The Space Master Medium transport is Kuat Drive Yards' version of Galloftee Yards BR-75. Slightly smaller, the Space Master follows a similar design concept to the GR-75, being built around a central spar with copious attachment points for modular cargo pods. A bulbous engine assembly provides mediocre thrust, and a saucer-shaped command section makes up the ship's bow. \n\nThe Space Master is slower and more ungainly than the GR-75, with slightly less cargo capacity. However, it possesses certain benefits over its competitor, including more spacious facilities for the ship's eight crew and integral weapon mounts for defensive laser cannons. These unassuming vessels operate across the galaxy moving freight from one location to another.",
       "book": "eote",
       "fullName": "Space Master Medium Transport",
@@ -120659,17 +120673,18 @@
     "tags": [
       "Freighters",
       "Transport/Space Master",
+      "Space Master Medium Transport",
       "Sil 5"
     ]
   },
   {
-    "id": "vehicle_starwind-pleasure-yacht",
+    "id": "vehicle_starwind",
     "type": "vehicle",
-    "name": "Starwind Pleasure Yacht",
+    "name": "Starwind",
     "detail": {
-      "id": "vehicle_starwind-pleasure-yacht",
+      "id": "vehicle_starwind",
       "type": "vehicle",
-      "name": "Starwind Pleasure Yacht",
+      "name": "Starwind",
       "description": "The Starwind-class pleaure yacht was originally Kuat Drive Yards' attempt to create a competitor for Corellian Engineering Corporation's VT series. However, before the project even launched, KDY changed their mind and repackaged the ship as a luxury yacht. \n\nThe Starwind has been moderately successful on the market, although its redesign never quite shook its light freighter origins. The trident-shaped starship has two side sections mounted along each side of the ship's main hull. One side section houses the ship's crew quarters, the other contains a reasonable sized cargo hold. The central spar contains the bridge, guest quarters, stateroom, lounge, galley, conference room, holotheater, and even a zero-gee relaxation table. All in all, the ship has a thorough catalog of amenities, as well as substantial cargo space. \n\nHowever, the Starwind's main drawback is that it costs as much as a light freighter and luxury yacht combined. This has kept sales lukewarm, although some particularly rich smuggler barons and criminal lords have taken the ship as their personal vessel/command center.",
       "book": "eote",
       "fullName": "Starwind Pleasure Yacht",
@@ -120717,17 +120732,18 @@
     "tags": [
       "Freighters",
       "Freighter/Starwind",
+      "Starwind Pleasure Yacht",
       "Sil 5"
     ]
   },
   {
-    "id": "vehicle_wayfarer-class-medium-freighter",
+    "id": "vehicle_wayfarer",
     "type": "vehicle",
-    "name": "Wayfarer-Class Medium Freighter",
+    "name": "Wayfarer",
     "detail": {
-      "id": "vehicle_wayfarer-class-medium-freighter",
+      "id": "vehicle_wayfarer",
       "type": "vehicle",
-      "name": "Wayfarer-Class Medium Freighter",
+      "name": "Wayfarer",
       "description": "Kuat Systems Engineering's Wayfarer class, is a relatively new entry to the medium transport market. Designed accommodate unique modular shipping containers built specifically for the ship, the Wayfarer was designed to revolutionize galactic shipping. In reality these ships had a rocky development process. By the time the first Wayfarers came off the stocks for their shakedown cruise's, the project was terribly over budget and behind schedule. Only one of the many types of shipping container was actually built, the bulk cargo container. This, combined with the fact that the Wayfarer's cargo containers are bespoke and the ship can't carry standard shipping containers, limited its usefulness. Although they never revolutionized shipping, they have found a niche among wealthy shipping conglomerates in the developed parts of the galaxy where their owners have custom containers fabricated.\n\nThe vessel itself has a strange, ungainly design, with the modular cargo container hung from an armature that extends from the port side of the ship's hull. The ship is slightly unbalanced and requires a talented and even-handed pilot to make the most of it.",
       "book": "eote",
       "fullName": "Wayfarer-Class Medium Freighter",
@@ -120779,17 +120795,18 @@
     "tags": [
       "Freighters",
       "Freighter/Wayfarer",
+      "Wayfarer-Class Medium Freighter",
       "Sil 5"
     ]
   },
   {
-    "id": "vehicle_yt-1300-light-freighter",
+    "id": "vehicle_yt-1300",
     "type": "vehicle",
-    "name": "YT-1300 Light Freighter",
+    "name": "YT-1300",
     "detail": {
-      "id": "vehicle_yt-1300-light-freighter",
+      "id": "vehicle_yt-1300",
       "type": "vehicle",
-      "name": "YT-1300 Light Freighter",
+      "name": "YT-1300",
       "description": "Perhaps the most common light freighter in service today, Corellian Engineering's YT-1300 is the very epitome of the freighter concept. Quick, rugged, and endlessly modifiable, the YT-1300 consists of a central main hull compartment around which are arranged a number of modular compartments within a saucer-shaped outer hull. Two cargo mandibles extend from the bow, and the CEC trademark offset cockpit is mounted on the starboard side of the vessel, with weapon points located in the center of the ventral and dorsal surface. \n\nIn their factory configuration, a rarity among such versatile and easily modifiable ships, the YT-1300 is relatively well armored and is equipped with a small but powerful shield generator. It mounts only one weapon, a medium laser cannon on the dorsal gun mount, but the ship features a number of built-in weapon hard points. Of the hundreds of thousands of these popular ships currently in service, perhaps no two are exactly alike, and none resemble the ships that left CEC's production facility. Due to the sheer number of vessels extant and the long decades for which they've been in service, the YT-1300 is a common sight among the freebooters, smugglers, and pirates of the Outer Rim. Indeed, many of these rugged men and women count these ships as either the first or the finest ship they've ever owned, and commonly both.",
       "book": "eote",
       "fullName": "YT-1300 Light Freighter",
@@ -120837,17 +120854,18 @@
     "tags": [
       "Freighters",
       "Freighter/YT-1300",
+      "YT-1300 Light Freighter",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_yt-2400-light-freighter",
+    "id": "vehicle_yt-2400",
     "type": "vehicle",
-    "name": "YT-2400 Light Freighter",
+    "name": "YT-2400",
     "detail": {
-      "id": "vehicle_yt-2400-light-freighter",
+      "id": "vehicle_yt-2400",
       "type": "vehicle",
-      "name": "YT-2400 Light Freighter",
+      "name": "YT-2400",
       "description": "Corellian Engineering's YT-2400 class light freighters are an update of the aging, reliable YT-1300 class. Using the lessons learned over the decades since the YT-1300's initial launch, CEC's engineers packed as much power and as many sophisticated flight and cargo handling systems into the YT-2400 as it could possibly hold. The YT-2400 has a saucer-shaped hull with a central circular core surrounded by cargo and passenger modules. Like all YT series freighters, it has a starboard-mounted cockpit connected to the main hull by a pair of reinforced pylons. The cockpit section contains its own access hatch and crew escape pod. Overall, these ships are slightly smaller than the YT-1300, thus they make better, more efficient use of the space available to them. The bow of the ship and forward cockpit pylon contain the ship's main cargo hold and the crew quarters. Opposite the cockpit are the common galley and refresher, and abaft the central core are a number of private cabins, the engineering bay, and the passenger escape pod. \n\nWhile officially built as a civilian freighter to be used for legitimate business, Corellian Engineering's marketing and development departments are fully aware that the majority of their customers are, perhaps, on the far side of the law. The ship is touted as being \"Double Plated,\" which is essentially advertising-speak for military grade armor. YT-2400s also feature heavy shields, room for larger reactors and ion drives, and a number of dedicated weapon hard points that come out of the shipyard unused.",
       "book": "eote",
       "fullName": "YT-2400 Light Freighter",
@@ -120898,17 +120916,18 @@
     "tags": [
       "Freighters",
       "Freighter/YT-2400",
+      "YT-2400 Light Freighter",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_star-galleon-armed-transport",
+    "id": "vehicle_star-galleon",
     "type": "vehicle",
-    "name": "Star Galleon Armed Transport",
+    "name": "Star Galleon",
     "detail": {
-      "id": "vehicle_star-galleon-armed-transport",
+      "id": "vehicle_star-galleon",
       "type": "vehicle",
-      "name": "Star Galleon Armed Transport",
+      "name": "Star Galleon",
       "description": "Used primarily by the Imperial Navy's Logistics Corps as a long-haul heavy cargo lifter, the Star Galleon is yet another sturdy and well founded ship from the shipwrights at Kuat Drive Yards. A massive, plodding, humpbacked vessel, this frigate-sized transport carries 100,000 tons of bulk cargo in its cavernous modular cargo holds. The ship itself is as utilitarian as a ship can be. The forward quarter of the vessel contains the bridge, crew quarters, and primary systems. The remainder of the ship is given over to cargo space. Abaft the command decks is a hulking, multi-decked cargo hold equipped with countless sliding bulkheads, retractable decks, sophisticated anti-boarding systems, and a state-of-the-art cargo handling system. The two hull sections are, in fact, detachable, in case the ship is ever in danger of losing its cargo. Both the command section and the cargo hold are hyperspace capable. The forward section has a traditional hyperdrive and navicomputer, while the cargo section uses an automated emergency escape system that transitions it into hyperspace as soon as it is jettisoned, to keep it out of the hands of pirates. \n\nDue to their size, durability, and heavy armament, Star Galleons are used by the Empire to transport high-value cargoes without needing escort vessels.",
       "book": "eote",
       "fullName": "Star Galleon Armed Transport",
@@ -120973,17 +120992,18 @@
     "tags": [
       "Freighters",
       "Transport/Star Galleon",
+      "Star Galleon Armed Transport",
       "Sil 6"
     ]
   },
   {
-    "id": "vehicle_rz-1-a-wing-light-interceptor",
+    "id": "vehicle_a-wing",
     "type": "vehicle",
-    "name": "RZ-1 “A-Wing” Light Interceptor",
+    "name": "A-Wing",
     "detail": {
-      "id": "vehicle_rz-1-a-wing-light-interceptor",
+      "id": "vehicle_a-wing",
       "type": "vehicle",
-      "name": "RZ-1 “A-Wing” Light Interceptor",
+      "name": "A-Wing",
       "book": "aor",
       "fullName": "RZ-1 “A-Wing” Light Interceptor",
       "group": "Starfighters",
@@ -121030,17 +121050,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/RZ-1 “A-wing”",
+      "RZ-1 “A-Wing” Light Interceptor",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_t-65b-x-wing-starfighter",
+    "id": "vehicle_x-wing",
     "type": "vehicle",
-    "name": "T-65B “X-Wing” Starfighter",
+    "name": "X-Wing",
     "detail": {
-      "id": "vehicle_t-65b-x-wing-starfighter",
+      "id": "vehicle_x-wing",
       "type": "vehicle",
-      "name": "T-65B “X-Wing” Starfighter",
+      "name": "X-Wing",
       "book": "aor",
       "fullName": "T-65B “X-Wing” Starfighter",
       "group": "Starfighters",
@@ -121101,17 +121122,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/T-65B X-wing",
+      "T-65B “X-Wing” Starfighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_btl-a4-btl-s3-y-wing-attack-starfighter",
+    "id": "vehicle_y-wing",
     "type": "vehicle",
-    "name": "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
+    "name": "Y-Wing",
     "detail": {
-      "id": "vehicle_btl-a4-btl-s3-y-wing-attack-starfighter",
+      "id": "vehicle_y-wing",
       "type": "vehicle",
-      "name": "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
+      "name": "Y-Wing",
       "book": "aor",
       "fullName": "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
       "group": "Starfighters",
@@ -121182,17 +121204,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/BTL Y-wing",
+      "BTl-A4/BTL-S3 “Y-Wing” Attack Starfighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_a-sf-01-b-wing-heavy-fast-attack-starfighter",
+    "id": "vehicle_b-wing",
     "type": "vehicle",
-    "name": "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
+    "name": "B-Wing",
     "detail": {
-      "id": "vehicle_a-sf-01-b-wing-heavy-fast-attack-starfighter",
+      "id": "vehicle_b-wing",
       "type": "vehicle",
-      "name": "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
+      "name": "B-Wing",
       "book": "aor",
       "fullName": "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
       "group": "Starfighters",
@@ -121272,17 +121295,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/A/SF-01 B-wing",
+      "A/SF-01 “B-Wing” Heavy Fast Attack Starfighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_tie-ln-starfighter",
+    "id": "vehicle_tie-fighter",
     "type": "vehicle",
-    "name": "TIE/LN Starfighter",
+    "name": "TIE Fighter",
     "detail": {
-      "id": "vehicle_tie-ln-starfighter",
+      "id": "vehicle_tie-fighter",
       "type": "vehicle",
-      "name": "TIE/LN Starfighter",
+      "name": "TIE Fighter",
       "description": "The primary space superiority fighter of the Imperial Navy, the tiny and fragile Twin Ion Engine fighter has been in service for decades. Light, fast, and incredibly nimble, the iconic TIE fighter is a bare-bones, no-nonsense fightercraft. Consisting of a spherical, lightly armored command module with a large circular transparisteel viewport attached to two massive hexagonal wing and solar panel assemblies, the TIE fighter has no shields, no landing gear, no hyperdrive, few computerized systems, and no life support system, requiring the pilots to wear vacuum suits. Every bit of fat was trimmed from the initial design, resulting in a blisteringly fast and shockingly agile ship, albeit one with a high attrition rate. \n\nAlong with being light, the ship is also incredibly simple. It draws its power from a miniature version of SFS's I-a2b solar ionization reactor, which collects solar energy from the panels in the fighter's wing assemblies. This generator powers the twinned, high-output SFS P-s4 ion engines from which the craft takes its name, as well as the twin linked laser cannons under the cockpit. TIE fighters are necessarily short-range fighters. When not based at planetary or orbital naval installations, they must be carried into battle by carrier ships such as Star Destroyers or escort frigates.",
       "book": "aor",
       "fullName": "TIE/LN Starfighter",
@@ -121331,17 +121355,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/TIE Series",
+      "TIE/LN Starfighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_tie-in-interceptor",
+    "id": "vehicle_tie-interceptor",
     "type": "vehicle",
-    "name": "TIE/IN Interceptor",
+    "name": "TIE Interceptor",
     "detail": {
-      "id": "vehicle_tie-in-interceptor",
+      "id": "vehicle_tie-interceptor",
       "type": "vehicle",
-      "name": "TIE/IN Interceptor",
+      "name": "TIE Interceptor",
       "description": "Referred to as \"fast movers\" by many Alliance fighter pilots, the Imperial Navy's TIE/in light interceptor is one of the most feared fightercraft in the Empire's arsenal. A development of the standard TIE/In space superiority fighter, the TIE interceptor is even faster, more agile, and, if possible, more fragile than its hangar mates. These fighters are reserved for the finest pilots in the Imperial Navy, as their inherently unstable design and lightning fast agility require an incredible amount of flying prowess to tame. Relatively rare among Imperial fighter squadrons, TIE/in squadrons are typically reserved for front-line battle groups. There, they are used as shock troops, screaming in on enemy fighters and destroying them with their powerful quad-linked heavy blaster cannons before their unfortunate targets know what's hit them. \n\nTIE/in interceptors and their pilots are regarded by their counterparts in the Alliance with a mixture of respect, admiration, and dread. They are considered to be mad or suicidal, or probably both, by those with the luxury of a shielded fighter with a reliable hyperdrive, systems that the TIE/in pilots must do without. Their skill as pilots is without question, and the bravery they show entering combat in their extremely fragile and near-uncontrollable fighters engenders grudging respect from even the most hard-line Rebel in the fleet. TIE interceptors are not to be underestimated, a lesson learned the hard way by many a cocky or ill-prepared Alliance pilot.",
       "book": "aor",
       "fullName": "TIE/IN Interceptor",
@@ -121390,17 +121415,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/TIE Series",
+      "TIE/IN Interceptor",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_tie-d-defender-multi-role-starfighter",
+    "id": "vehicle_tie-defender",
     "type": "vehicle",
-    "name": "TIE/D “Defender” Multi-Role Starfighter",
+    "name": "TIE Defender",
     "detail": {
-      "id": "vehicle_tie-d-defender-multi-role-starfighter",
+      "id": "vehicle_tie-defender",
       "type": "vehicle",
-      "name": "TIE/D “Defender” Multi-Role Starfighter",
+      "name": "TIE Defender",
       "book": "aor",
       "fullName": "TIE/D “Defender” Multi-Role Starfighter",
       "group": "Starfighters",
@@ -121472,17 +121498,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/TIE Series",
+      "TIE/D “Defender” Multi-Role Starfighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_tie-sa-tactical-bomber",
+    "id": "vehicle_tie-bomber",
     "type": "vehicle",
-    "name": "TIE/SA Tactical Bomber",
+    "name": "TIE Bomber",
     "detail": {
-      "id": "vehicle_tie-sa-tactical-bomber",
+      "id": "vehicle_tie-bomber",
       "type": "vehicle",
-      "name": "TIE/SA Tactical Bomber",
+      "name": "TIE Bomber",
       "description": "An uncommon sight within the Imperial Navy fighter community, the TIE/sa is a dedicated bomber and attack fighter equivalent to the Alliances Y-wing and B-wing fighters. Slow and relatively sturdy for a TIE series fighter, TIE bombers feature a twin-boom hull design that contains the pilot and all the ship's control systems in the starboard pod and a multi-purpose launcher and ordnance magazine in the port pod. Coupled with their elongated form and their canted solar collectors, they are unmistakable in a formation, a trait that is both a blessing and a curse to their pilots. While their shape announces them as the heavy hitters and lets their enemies know that the gloves are, in fact, off, it also makes them incredibly conspicuous, standing out as primary targets for enemy interceptors and anti-fighter weapons. \n\nDespite their slow speed, lack of agility, and reliance on faster fighters to escort them to their targets, TIE bombers are incredibly effective attack craft. Their ability to carry numerous types of ordnance makes them quite versatile, and although not designed as such, they can pose quite a threat to enemy fighters, especially as their slow speed allows them to out-maneuver faster ships. Their proton bombs are death to even the most well-armored light capital ship or space station; it's a rare planetary fortification that can stand up to a concentrated bombing campaign by these fighters.",
       "book": "aor",
       "fullName": "TIE/SA Tactical Bomber",
@@ -121570,17 +121597,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/TIE Series",
+      "TIE/SA Tactical Bomber",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_lambda-class-t-4a-long-range-shuttle",
+    "id": "vehicle_lambda-shuttle",
     "type": "vehicle",
-    "name": "Lambda-Class T-4A Long Range Shuttle",
+    "name": "Lambda Shuttle",
     "detail": {
-      "id": "vehicle_lambda-class-t-4a-long-range-shuttle",
+      "id": "vehicle_lambda-shuttle",
       "type": "vehicle",
-      "name": "Lambda-Class T-4A Long Range Shuttle",
+      "name": "Lambda Shuttle",
       "description": "A common utility shuttle used by the Imperial Navy, Sienar Fleet Systems' Lambda-class shuttles are a common sight at Imperial installations. Slow and sturdy, these shuttles were designed to haul both passengers and cargo, and can be configured as troop carriers, heavy cargo shuttles, and even luxury VIP transports. Lambda-class shuttles have a heavily armored square hull with a single tall vertical stabilizer mounted to the dorsal part of the main hull. Two additional fold-ing wings with an inverted gull wing design help stabilize the vessel. \n\nLambda-class shuttles are driven by two SFS-204 ion engines with an SFS S/ig-37 hyperdrive providing long-range capabilities. Incredibly well-armed for a shuttle, they are equipped with a number of laser and blaster cannons in both forward and aft hard points that give the ship good fire coverage. Instead of standard escape pods, the entire forward bridge section detaches from the hull as a lifeboat in case of emergency. Incredibly useful and surprisingly versatile for a military design, these ships are often the target of ship thieves and pirates and can, on occasion, be purchased at staggering cost from the black market.",
       "book": "aor",
       "fullName": "Lambda-Class T-4A Long Range Shuttle",
@@ -121650,17 +121678,18 @@
     "tags": [
       "Patrol Boats",
       "Shuttle/Lambda",
+      "Lambda-Class T-4A Long Range Shuttle",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_sentinel-class-landing-craft",
+    "id": "vehicle_sentinel-shuttle",
     "type": "vehicle",
-    "name": "Sentinel-Class Landing Craft",
+    "name": "Sentinel Shuttle",
     "detail": {
-      "id": "vehicle_sentinel-class-landing-craft",
+      "id": "vehicle_sentinel-shuttle",
       "type": "vehicle",
-      "name": "Sentinel-Class Landing Craft",
+      "name": "Sentinel Shuttle",
       "book": "aor",
       "fullName": "Sentinel-Class Landing Craft",
       "group": "Patrol Boats",
@@ -121729,17 +121758,18 @@
     "tags": [
       "Patrol Boats",
       "Shuttle/Sentinel",
+      "Sentinel-Class Landing Craft",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_vigil-class-corvette",
+    "id": "vehicle_vigil-corvette",
     "type": "vehicle",
-    "name": "Vigil-Class Corvette",
+    "name": "Vigil Corvette",
     "detail": {
-      "id": "vehicle_vigil-class-corvette",
+      "id": "vehicle_vigil-corvette",
       "type": "vehicle",
-      "name": "Vigil-Class Corvette",
+      "name": "Vigil Corvette",
       "description": "Produced by Kuat Drive Yards for the Imperial Navy, the Vigil-class corvette is the smallest vessel in the iconic Star Destroyer class of ships. Lightly armed and armored, it shares the dagger-shaped hull and large crew of its larger siblings, and operates as both a picket and reconnaissance vessel as well as an escort ship for larger, cruiser-sized ships. Their command decks sit flush with the hull, all the way aft over the main drive thrusters. This gives the Vigil-class a smaller silhouette and protects the crew better than the tall, exposed control towers found on larger KDY vessels. For its primary armament, the Vigil-class carries a trio of turret-mounted heavy turbolasers on the dorsal hull, giving it quite a heavy punch for so small a vessel. In addition, smaller turbolaser turrets are scattered over the ship's hull along with smaller, anti-starfighter laser cannons. Thanks to their size and role, these vessels rarely serve in the line of battle with larger types of Star Destroyers. Instead, they patrol trade routes, serve as battlegroup leaders for small, backwater fleets, and operate as lone cruisers among the fringes of the Inner and Outer Rim, battling pirates and smugglers and rooting out Alliance agents.",
       "book": "aor",
       "fullName": "Vigil-Class Corvette",
@@ -121810,6 +121840,7 @@
     "tags": [
       "Gunships",
       "Corvette/Vigil",
+      "Vigil-Class Corvette",
       "Sil 5"
     ]
   },
@@ -121967,13 +121998,13 @@
     ]
   },
   {
-    "id": "vehicle_storm-iv-cloud-car",
+    "id": "vehicle_cloud-car",
     "type": "vehicle",
-    "name": "Storm IV Cloud Car",
+    "name": "Cloud Car",
     "detail": {
-      "id": "vehicle_storm-iv-cloud-car",
+      "id": "vehicle_cloud-car",
       "type": "vehicle",
-      "name": "Storm IV Cloud Car",
+      "name": "Cloud Car",
       "description": "The first high-atmospheric airspeeder to be classified as a cloud car, the Storm IV was built by Bespin Motors for use by Cloud City's Bespin Wing Guard. Designed as a fast patrol and interdiction craft, the Storm IV is a sturdy, reliable airspeeder composed of two single-occupant armored pods joined by a central spar. The port side pod holds the pilot and is equipped with a number of sophisticated sensors and an advanced navigation system. The starboard pod holds the craft's gunner along with the targeting and fire-control computers. While the Storm IV can't leave the atmosphere, each pod is pressurized and provides oxygen for high altitude flights. While they are typically used in patrol and interdiction roles, they can also be used in more martial roles to give air support to law enforcement.",
       "book": "aor",
       "fullName": "Storm IV Cloud Car",
@@ -122019,17 +122050,18 @@
     "tags": [
       "Airspeeders",
       "Cloud Car/Storm IV",
+      "Storm IV Cloud Car",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_alliance-t-47-airspeeder",
+    "id": "vehicle_alliance-airspeeder",
     "type": "vehicle",
-    "name": "Alliance T-47 Airspeeder",
+    "name": "Alliance Airspeeder",
     "detail": {
-      "id": "vehicle_alliance-t-47-airspeeder",
+      "id": "vehicle_alliance-airspeeder",
       "type": "vehicle",
-      "name": "Alliance T-47 Airspeeder",
+      "name": "Alliance Airspeeder",
       "description": "Initially designed as a cargo tender and shipyard tug, the T-47 is a rugged, wedge-shaped airspeeder that is both reliable and easy to modify. Built for low altitude work, this vehicle seats two crew members back to back in a cramped but well laid out cockpit, with the pilot facing forward and the systems operator facing aft. While ostensibly an industrial labor vehicle, the T-47 was designed with an eye toward end-user modification. Numerous redundant systems, universal power couplings, and modular data input areas allow the vehicle's abilities and systems to be tailored to many tasks, including combat. The Rebel Alliance uses modified T-47s as fast ground attack airspeeders. Loaded with heavy blaster cannons and heavy armor, they make excellent fightercraft despite their low altitude, and they have shown a surprising ability to operate in extremes of heat and cold with little problem.",
       "book": "aor",
       "fullName": "Alliance T-47 Airspeeder",
@@ -122086,17 +122118,18 @@
     "tags": [
       "Airspeeders",
       "Airspeeder/T-47",
+      "Alliance T-47 Airspeeder",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_74-z-speeder-bike",
+    "id": "vehicle_speeder-bike",
     "type": "vehicle",
-    "name": "74-Z Speeder Bike",
+    "name": "Speeder Bike",
     "detail": {
-      "id": "vehicle_74-z-speeder-bike",
+      "id": "vehicle_speeder-bike",
       "type": "vehicle",
-      "name": "74-Z Speeder Bike",
+      "name": "Speeder Bike",
       "book": "aor",
       "fullName": "74-Z Speeder Bike",
       "group": "Landspeeders",
@@ -122143,17 +122176,18 @@
     "tags": [
       "Landspeeders",
       "Speeder Bike/74-Z",
+      "74-Z Speeder Bike",
       "Sil 2"
     ]
   },
   {
-    "id": "vehicle_all-terrain-armoured-transport",
+    "id": "vehicle_at-at",
     "type": "vehicle",
-    "name": "All Terrain Armoured Transport",
+    "name": "AT-AT",
     "detail": {
-      "id": "vehicle_all-terrain-armoured-transport",
+      "id": "vehicle_at-at",
       "type": "vehicle",
-      "name": "All Terrain Armoured Transport",
+      "name": "AT-AT",
       "book": "aor",
       "fullName": "All Terrain Armoured Transport",
       "group": "Walkers",
@@ -122207,17 +122241,18 @@
     "tags": [
       "Walkers",
       "Heavy Assault Walker/AT-AT",
+      "All Terrain Armoured Transport",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_all-terrain-scout-transport",
+    "id": "vehicle_at-st",
     "type": "vehicle",
-    "name": "All Terrain Scout Transport",
+    "name": "AT-ST",
     "detail": {
-      "id": "vehicle_all-terrain-scout-transport",
+      "id": "vehicle_at-st",
       "type": "vehicle",
-      "name": "All Terrain Scout Transport",
+      "name": "AT-ST",
       "description": "The Imperial Army's AT-ST is a medium-sized bipedal walker designed as a fast force reconnaissance vehicle. Unlike their larger, heavier AT-AT siblings, AT-STs are quite fast and agile. Deployed either in tandem for long range reconnaissance or in squadrons when supporting troops or armor, the AT-ST consists of a lightly armored, slab-sided command pod set atop a pair of thin reverse-articulated legs. The command pod can rotate through 180 degrees, allowing the walker to bring its weapons quickly to bear without having to change the position of its legs, an extremely useful feature when fighting in rough or broken terrain. They are armed with a versatile mix of blasters and ordnance, and can fill both antipersonnel and light anti-armor roles with ease. While certainly capable, AT-STs have a reputation as relatively fragile, high-maintenance vehicles. Their drive systems are especially finicky, requiring many, many hours of maintenance, and an inattentive pilot can easily become entangled in obstacles or heavy ground cover.",
       "book": "aor",
       "fullName": "All Terrain Scout Transport",
@@ -122280,17 +122315,18 @@
     "tags": [
       "Walkers",
       "Reconnaissance Walker/AT-ST",
+      "All Terrain Scout Transport",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_delta-6-system-defence-starfighter",
+    "id": "vehicle_sprite",
     "type": "vehicle",
-    "name": "Delta-6 System Defence Starfighter",
+    "name": "Sprite",
     "detail": {
-      "id": "vehicle_delta-6-system-defence-starfighter",
+      "id": "vehicle_sprite",
       "type": "vehicle",
-      "name": "Delta-6 System Defence Starfighter",
+      "name": "Sprite",
       "book": "fad",
       "fullName": "Delta-6 System Defence Starfighter",
       "group": "Starfighters",
@@ -122337,17 +122373,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/Delta-6",
+      "Delta-6 System Defence Starfighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_delta-7-aethersprite-interceptor",
+    "id": "vehicle_aethersprite",
     "type": "vehicle",
-    "name": "Delta-7 Aethersprite Interceptor",
+    "name": "Aethersprite",
     "detail": {
-      "id": "vehicle_delta-7-aethersprite-interceptor",
+      "id": "vehicle_aethersprite",
       "type": "vehicle",
-      "name": "Delta-7 Aethersprite Interceptor",
+      "name": "Aethersprite",
       "book": "fad",
       "fullName": "Delta-7 Aethersprite Interceptor",
       "group": "Starfighters",
@@ -122394,17 +122431,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/Delta-7",
+      "Delta-7 Aethersprite Interceptor",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_delta-12-skysprite",
+    "id": "vehicle_skysprite",
     "type": "vehicle",
-    "name": "Delta-12 Skysprite",
+    "name": "Skysprite",
     "detail": {
-      "id": "vehicle_delta-12-skysprite",
+      "id": "vehicle_skysprite",
       "type": "vehicle",
-      "name": "Delta-12 Skysprite",
+      "name": "Skysprite",
       "description": "The Delta-12 Skysprite-class is a rare two-seat version of the Delta-7 Aethersprite light interceptor. Designed by KSE as both a trainer and long-range reconnaissance fighter, the Skysprite features the same hull and internal systems, with an elongated cockpit that seats two individuals in tandem. Thanks to their speed, stores, and limited amenities, Skysprites were often used by the Jedi Order as VIP couriers. \n\nDelta-12s feature stronger shields, stronger armor, and a more powerful sensor suite. The Delta-12s were stripped of their weapons, which made their sale to civilian organizations easier. The internal systems remained intact, however, and with a small amount of work and an upgrade to the ship's computer systems, the Skysprite can carry a respectable armament of light or even medium laser cannons.",
       "book": "fad",
       "fullName": "Delta-12 Skysprite",
@@ -122441,17 +122479,18 @@
     "tags": [
       "Starfighters",
       "Starfighter/Delta-12",
+      "Delta-12 Skysprite",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_pathfinder-scout-ship",
+    "id": "vehicle_pathfinder",
     "type": "vehicle",
-    "name": "Pathfinder Scout Ship",
+    "name": "Pathfinder",
     "detail": {
-      "id": "vehicle_pathfinder-scout-ship",
+      "id": "vehicle_pathfinder",
       "type": "vehicle",
-      "name": "Pathfinder Scout Ship",
+      "name": "Pathfinder",
       "book": "fad",
       "fullName": "Pathfinder Scout Ship",
       "group": "Patrol Boats",
@@ -122498,17 +122537,18 @@
     "tags": [
       "Patrol Boats",
       "Scout Ship/Pathfinder",
+      "Pathfinder Scout Ship",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_heavy-civilian-transport",
+    "id": "vehicle_at-hct",
     "type": "vehicle",
-    "name": "Heavy Civilian Transport",
+    "name": "AT-HCT",
     "detail": {
-      "id": "vehicle_heavy-civilian-transport",
+      "id": "vehicle_at-hct",
       "type": "vehicle",
-      "name": "Heavy Civilian Transport",
+      "name": "AT-HCT",
       "description": "A derivative of the popular AT-EST, Rothana Heavy Engineering's All Terrain Heavy Civilian Transport has served the needs of isolated colonies for decades. Designed for simplicity and versatility, the AT-HCT resembles an eight-legged beast of burden. A single driver controls the vehicle from a saddle-seat mounted off its front. Behind the driver, the rest of the AT-HCT consists of a single open-topped bed. The vehicle is not flashy, fast. or particularly combat-capable, but it is tough and durable, and it can carry a great deal of cargo over lone distances.",
       "book": "fad",
       "fullName": "Heavy Civilian Transport",
@@ -122542,17 +122582,18 @@
     "tags": [
       "Walkers",
       "Walker/AT-HCT",
+      "Heavy Civilian Transport",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_g9-rigger-light-freighter",
+    "id": "vehicle_rigger",
     "type": "vehicle",
-    "name": "G9 Rigger Light Freighter",
+    "name": "Rigger",
     "detail": {
-      "id": "vehicle_g9-rigger-light-freighter",
+      "id": "vehicle_rigger",
       "type": "vehicle",
-      "name": "G9 Rigger Light Freighter",
+      "name": "Rigger",
       "description": "Already considered an antique at the outset of the Clone Wars, Corellian Engineering Corporation's C9 Rigger-class light freighter is a rare sight in the modern spacelanes. A small, unremarkable craft, the G9 has a blocky, double-decked hull which resembles a speeder truck more than a starship. A single long, thin wing extends from the starboard side of the ship, and a short folding stabilizer is mounted to the vessel's ventral side. The forward third of the vessel contains the flight deck, engineering deck, and crew quarters on two spartan decks. The rest of the ship is given over to a single large cargo hold accessed by a large aft-loading ramp. \n\nDesigned as a utilitarian, short-to-medium-range hauler, the Rigger-class has little in the way of amenities and only the most basic of defensive systems. Armament consists of dorsal auto-blasters and two light blaster cannons. Shields are a simple low-output Novaldex system, and the ship's armor is basic carbon-durasteel. Little thought was given to speed or handling, and while these ships aren't dangerously slow or sluggish, they are not high-performance by any stretch of the imagination. What they lack in frills and comfort, however, these little ships more than make up for in reliability, sturdiness, and ease of repair. In fact, so well-built are these ancient freighters that many are still operating, and operating quite well, with much of their original equipement.",
       "book": "fad",
       "fullName": "G9 Rigger Light Freighter",
@@ -122612,17 +122653,18 @@
     "tags": [
       "Freighters",
       "Light Freighter/Rigger",
+      "G9 Rigger Light Freighter",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_hwk-290-light-freighter",
+    "id": "vehicle_hawk",
     "type": "vehicle",
-    "name": "HWK-290 Light Freighter",
+    "name": "Hawk",
     "detail": {
-      "id": "vehicle_hwk-290-light-freighter",
+      "id": "vehicle_hawk",
       "type": "vehicle",
-      "name": "HWK-290 Light Freighter",
+      "name": "Hawk",
       "description": "First designed decades before the Battle of Naboo, these tough little freighters were Corellian Engineering Corporation's first attempt to break into the rapidly expanding \"executive light freighter\" market. Unlike the relatively staid and workmanlike YT-series, which was marketed toward smaller profile traders and tramp freighter operators, the HWK-290 was targeted at wealthy, high-profile clients such as powerful interstellar shipping conglomerates and planetary governments. While they enjoyed modest success, and were highly praised for their performance and ease of operation, the Hawk-290s never reached the sales numbers of the more popular VT-series, and the entire line was discontinued during the Clone Wars to free up production lines for military use. \n\nThe Hawk-290 is a light, fast, agile craft designed for speed and comfort rather than heavy lifting. They are handsome vessels with lean, angular hulls and narrow, deeply tinted viewports that make them look fast and aggressive, even when parked in a hangar. While they were never designed to carry much cargo, the HWK-series still has a respectable lift capacity for vessels of their size, and are well suited for courier work and the transportation of small, highly valuable cargoes. They have light armor and were originally designed with no weapon systems, relying instead on raw speed and maneuverability for protection. Of course, being CEC products, they are incredibly versatile and modular, and most Hawks still plying the spacelanes are so heavily modified as to be nearly unrecognizable.",
       "book": "fad",
       "fullName": "HWK-290 Light Freighter",
@@ -122659,17 +122701,18 @@
     "tags": [
       "Freighters",
       "Freighter/HWK-290",
+      "HWK-290 Light Freighter",
       "Sil 3"
     ]
   },
   {
-    "id": "vehicle_ht-2200-medium-freighter",
+    "id": "vehicle_ht-2200",
     "type": "vehicle",
-    "name": "HT-2200 Medium Freighter",
+    "name": "HT-2200",
     "detail": {
-      "id": "vehicle_ht-2200-medium-freighter",
+      "id": "vehicle_ht-2200",
       "type": "vehicle",
-      "name": "HT-2200 Medium Freighter",
+      "name": "HT-2200",
       "description": "Corellian Engineering Corporation's HT-2200 is a lumbering, slab-sided medium freighter initially designed to capitalize on the success of CEC's wildly popular YT-series of light freighters. Solidly built and packed with state of the art avionics and cargo handling systems, these massive vessels are shaped like a tuning fork with the crew, weapons, and engineering sections in the central hull and four airtight cargo holds in the port and starboard booms. The trademark CEC conical cockpit is located amidships between the booms, giving the pilot and co-pilot a nearly 180 degree view of their surroundings. The ship's primary selling point, aside from its vast cargo capacity for a ship of its size, is the design of its holds. Each of the four holds is shielded, reinforced, and contains a number of modular cargo systems that allow them to be configured for different types of cargo. In addition, each hold has its own environmental systems, allowing the crew to adjust the temperature, atmospheric makeup, and gravity of each hold separately. \n\nInitial reviews were favorable, and orders steadily came in from large shipping concerns in the mid and Outer Rim territories. As pilots and crews became more familiar with them, however, they reported a number of serious shortcomings. While the hull and power distribution systems were designed to allow the types of modification and hot-rodding that CEC ships are famous for, the ships' primary power generator was woefully underpowered. In addition, thanks to these power shortcomings and the choice of Koensayr's single-tube ion drive as its primary drive, the HT-2200 proved slow and sluggish with poor acceleration and even poorer maneuverability. This, along with its surprisingly light weapons loadout, made the freighters easy pickings for pirates. Despite all of their inherent flaws, HT-2200s remain in limited production, thanks to their advanced cargo systems and sturdy hull.",
       "book": "fad",
       "fullName": "HT-2200 Medium Freighter",
@@ -122717,17 +122760,18 @@
     "tags": [
       "Freighters",
       "Freighter/HT-2200",
+      "HT-2200 Medium Freighter",
       "Sil 5"
     ]
   },
   {
-    "id": "vehicle_simiyiar-light-freighter",
+    "id": "vehicle_simiyiar",
     "type": "vehicle",
-    "name": "Simiyiar Light Freighter",
+    "name": "Simiyiar",
     "detail": {
-      "id": "vehicle_simiyiar-light-freighter",
+      "id": "vehicle_simiyiar",
       "type": "vehicle",
-      "name": "Simiyiar Light Freighter",
+      "name": "Simiyiar",
       "description": "One of the more popular ships to come out of the vaunted Mon Calamari Shipyards, the Simiyiar-class light freighter is a study in both form and function. A lovely ship by any standard, this small, nimble freighter shows all the hallmarks of the smooth-edged, quasi-organic styling for which the Mon Calamari shipwrights are so famous. A Simiyiar-class vessel is flat, low-slung, and single-decked, with a bulbous forward section, a narrow midships section. and a flaring, wing-like aft section. The entire forward third of the ship is given over to its cargo hold, a capacious modular space accessed by port and starboard cargo lifts and a ventral loading ramp. The midships section contains crew and passenger berthing and common areas, as well as a ladderway to the small, two-person command deck. In addition to its drive, most of the ship's power, weapons, and hyperspace systems are housed in the outboard wing sections or the flaring forward section, and a pair of escape pods are mounted directly aft, over the primary thrusters. \n\nRelatively heavily armed for a vessel of its class, the Simiyiar is armed with a turret-mounted twin light laser cannon on the dorsal surface and a single light ion cannon in a fixed forward position. Speed and handling are a little above average, and the stout, ablative armor and well-tuned shields provide more than adequate protection. Although popular, Simiyiar-class light freighters suffer many of the downsides common to Mon Calamari ships. Each ship is unique, essentially hand-made, and there is little-to-no parts commonality from one to another. As such, they are among the most expensive light freighters on the market. They are very reliable, however, and achingly beautiful. These two traits alone are enough to explain the popularity of these fine little ships.",
       "book": "fad",
       "fullName": "Simiyiar Light Freighter",
@@ -122778,17 +122822,18 @@
     "tags": [
       "Freighters",
       "Freighter/Simiyiar",
+      "Simiyiar Light Freighter",
       "Sil 4"
     ]
   },
   {
-    "id": "vehicle_zh-25-questor-light-freighter",
+    "id": "vehicle_questor",
     "type": "vehicle",
-    "name": "ZH-25 Questor Light Freighter",
+    "name": "Questor",
     "detail": {
-      "id": "vehicle_zh-25-questor-light-freighter",
+      "id": "vehicle_questor",
       "type": "vehicle",
-      "name": "ZH-25 Questor Light Freighter",
+      "name": "Questor",
       "description": "Spurred by the success of the Z-10 Seeker-class scout ship, the ZH-25 Ouestor-class is Starfeld Industries' first foray into the light freighter market. Essentially a Seeker writ large, the ZH-25 is a fast, reliable, easily modifiable freighter designed to compete against Corellian Engineering Corporation's YT- and YV-series freighters. With a hull that resembles a pair of magnoculars in planform, the ZH-25 consists of a central hull section of a vaguely hourglass shape with a CEC-style cockpit forward and a bank of powerful Novaldex JV-74 engines in the stern. The port and starboard hull sections contain crew quarters, common areas, and escape pods for crew and passengers. The aft two-thirds of the ship is given over to a massive open cargo hold equipped with all the usual modern cargo-handling systems. In addition, two external cargo pods are slung beneath the hull and serve to extend both the ship's carer) and storage capacity. \n\nFrom the factory, Starfeld fits out the Questor with a single medium laser cannon in a ventral-mounted turret, good carbon-durasteel armor, and a reliable Sirplex shield generator, which together provide the vessel with respectable defensive capabilities. The crew and passenger areas, while utilitarian, are comfortable and designed to alleviate the stresses of long-distance travel in hyperspace. Like most light freighters from CEC, SoroSuub, and Ghtroc, the ZH-25 was built with an eye toward end-user modification and the use of aftermarket parts. To that end, these ships feature modular power fittings and numerous redundant systems that allow owners to easily customize their ships to their own tastes and needs. While still a relative newcomer to the freighter market, the ZH-25 is quick y gaining popularity among private shipping concerns, single owner-operators, and smugglers thanks to its reliability and smart design.",
       "book": "fad",
       "fullName": "ZH-25 Questor Light Freighter",
@@ -122836,6 +122881,7 @@
     "tags": [
       "Freighters",
       "Freighter/Questor",
+      "ZH-25 Questor Light Freighter",
       "Sil 4"
     ]
   }
