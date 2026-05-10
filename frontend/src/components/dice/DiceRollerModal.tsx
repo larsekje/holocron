@@ -101,11 +101,6 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
             {snapshot && <TargetText snapshot={snapshot} />}
             <Spacer />
             {snapshot && <TargetToggle snapshot={snapshot} />}
-            {snapshot?.difficultyLabel && (
-              <Tag colorScheme="purple" variant="outline" size="sm">
-                {snapshot.difficultyLabel}
-              </Tag>
-            )}
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
