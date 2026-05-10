@@ -22,7 +22,7 @@ import useActiveVehicleStore, {
   type ActiveVehicle,
   type VehicleWeapon,
 } from '@/state/activeVehicleStore';
-import useParticipantStore from '@/state/participantsStore';
+import useParticipantStore, {type Participant} from '@/state/participantsStore';
 import useDiceRollerStore from '@/state/diceRollerStore';
 import useSessionLogStore from '@/state/sessionLogStore';
 import {
@@ -34,7 +34,7 @@ import {
 import type {ModalSnapshot} from '@components/dice/mockSnapshots';
 import VehicleWeaponCardOld from '@components/statblock/VehicleWeaponCardOld';
 import EnterVehicleModal from '@components/vehicle/EnterVehicleModal';
-import StatSheetOld from '@components/StatSheetOld';
+import StatusCardOld from '@components/statuscard/StatusCardOld';
 import {
   MOVE_CATEGORIES,
   MOVE_EFFECT_SPECS,
@@ -51,6 +51,14 @@ import {
 
 interface Props {
   vehicle: ActiveVehicle;
+  /** When set, the sheet is rendered in the context of a specific participant
+   * aboard this vehicle (the Active or Targeted pane's character). The header
+   * banner shows their name + role, a character vitals strip is inserted under
+   * the vehicle tracks, and they're treated as the active occupant for
+   * cheat-sheet filtering and dice-roll prefill. When omitted (direct vehicle
+   * selection in Targets), the sheet behaves as before: vehicle name as the
+   * header, no vitals strip, active occupant auto-pins to the pilot. */
+  contextParticipant?: Participant;
 }
 
 function formatHyperdrive(hd: any): string | null {
@@ -71,7 +79,7 @@ function formatHyperdrive(hd: any): string | null {
  * orange section headings, and weapon CARDS rather than a table — same card
  * vocabulary the player rows use.
  */
-const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
+const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => {
   const addHull = useActiveVehicleStore((s) => s.addHull);
   const removeHull = useActiveVehicleStore((s) => s.removeHull);
   const addSystem = useActiveVehicleStore((s) => s.addSystemStrain);
@@ -88,13 +96,10 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
   // Active-occupant context: which crew member the GM is currently
   // role-playing through. Drives the cheat-sheet filter (only show what they
   // can do) and the per-card click → dice roller wiring (rolls the active
-  // occupant's pool). Auto-resets to the pilot (else the first occupant)
-  // whenever the occupant set changes.
+  // occupant's pool). When `contextParticipant` is provided (we're in that
+  // participant's pane), it wins outright. Otherwise the local state auto-pins
+  // to the pilot (else the first occupant) whenever the occupant set changes.
   const [activeOccupantId, setActiveOccupantId] = useState<string | null>(null);
-  // View mode: starship sheet vs the active occupant's personal sheet. Same
-  // pane, just swapping what's rendered below the toggle. Defaults to
-  // 'starship'; resets to 'starship' if the active occupant disappears.
-  const [viewMode, setViewMode] = useState<'starship' | 'personal'>('starship');
   const everyoneAboard =
     participants.length > 0 &&
     participants.every((p) => p.equippedVehicleId === vehicle.id);
@@ -104,8 +109,10 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
   // Auto-pin the active occupant to the pilot when one exists, else the
   // first occupant; clear when there's no one aboard. Runs whenever the
   // occupant set or the stored id changes — keeps activeOccupantId pointing
-  // at someone real after a Leave / new Add.
+  // at someone real after a Leave / new Add. Skipped when contextParticipant
+  // is set: that participant is the activeOccupant by definition.
   React.useEffect(() => {
+    if (contextParticipant) return;
     if (occupants.length === 0) {
       if (activeOccupantId !== null) setActiveOccupantId(null);
       return;
@@ -115,14 +122,10 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
     const pilot = occupants.find((p) => p.vehicleRole === 'pilot');
     setActiveOccupantId((pilot ?? occupants[0]).id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [occupants.map((p) => p.id).join('|'), activeOccupantId]);
-  const activeOccupant = occupants.find((p) => p.id === activeOccupantId) ?? null;
-
-  // Force back to the starship view if the active occupant goes away — the
-  // 'personal' mode has no participant to render.
-  React.useEffect(() => {
-    if (!activeOccupant && viewMode === 'personal') setViewMode('starship');
-  }, [activeOccupant, viewMode]);
+  }, [occupants.map((p) => p.id).join('|'), activeOccupantId, contextParticipant?.id]);
+  const activeOccupant = contextParticipant
+    ? occupants.find((p) => p.id === contextParticipant.id) ?? null
+    : occupants.find((p) => p.id === activeOccupantId) ?? null;
 
   // Cheat-sheet filtering. By default, hide moves that **structurally** can't
   // apply to this ship — wrong silhouette, or astromech-only when this ship
@@ -381,52 +384,34 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
         </Flex>
         <VStack alignItems="flex-start" spacing={0} flex="1" minW={0}>
           <HStack spacing={2} align="center">
-            <Heading size="md" color="white">{vehicle.name}</Heading>
+            <Heading size="md" color="white">
+              {contextParticipant ? contextParticipant.name : vehicle.name}
+            </Heading>
           </HStack>
-          {info.type && (
-            <Text color="whiteAlpha.800" as="i" fontSize="sm" noOfLines={1}>
-              {String(info.type)}
+          {contextParticipant ? (
+            <Text color="whiteAlpha.800" fontSize="sm" noOfLines={1}>
+              {contextParticipant.vehicleRole
+                ? `${contextParticipant.vehicleRole.charAt(0).toUpperCase()}${contextParticipant.vehicleRole.slice(1)}`
+                : 'Aboard'}
+              {' · '}
+              {vehicle.name}
             </Text>
-          )}
-          {info.manufacturer && (
-            <Text color="whiteAlpha.600" fontSize="xs" noOfLines={1}>
-              {info.manufacturer}
-            </Text>
+          ) : (
+            <>
+              {info.type && (
+                <Text color="whiteAlpha.800" as="i" fontSize="sm" noOfLines={1}>
+                  {String(info.type)}
+                </Text>
+              )}
+              {info.manufacturer && (
+                <Text color="whiteAlpha.600" fontSize="xs" noOfLines={1}>
+                  {info.manufacturer}
+                </Text>
+              )}
+            </>
           )}
         </VStack>
       </HStack>
-
-      {/* Personal/Starship toggle — when an occupant is active, the GM can
-          flip the lower half of this pane between the ship's surface and
-          the occupant's personal sheet without reselecting a target. */}
-      {activeOccupant && (
-        <HStack mt={3} mb={1} spacing={2} align="center">
-          <Text fontSize="xs" color="whiteAlpha.600" textTransform="uppercase" letterSpacing="0.06em">
-            View
-          </Text>
-          <ToggleButton
-            active={viewMode === 'starship'}
-            onClick={() => setViewMode('starship')}
-          >
-            Starship
-          </ToggleButton>
-          <ToggleButton
-            active={viewMode === 'personal'}
-            onClick={() => setViewMode('personal')}
-          >
-            {activeOccupant.name}
-          </ToggleButton>
-        </HStack>
-      )}
-
-      {/* When toggled to Personal, render the active occupant's character
-          sheet inline; the vehicle header above stays visible so the GM
-          knows they're still anchored to the ship. */}
-      {activeOccupant && viewMode === 'personal' ? (
-        <Box mt={2}>
-          <StatSheetOld participant={activeOccupant}/>
-        </Box>
-      ) : <>
 
       {(vehicle.activeEffects ?? []).length > 0 && (
         <Wrap spacing={1.5} mt={3}>
@@ -514,6 +499,14 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
         />
       </HStack>
 
+      {/* Character vitals strip — wounds/strain/soak/defense/effect chips for
+          the participant whose pane this is. Lets the GM apply character-side
+          damage (system-strain rollover, boarding hits) without leaving the
+          starship view. Only rendered when we have a context participant. */}
+      {contextParticipant && (
+        <StatusCardOld participant={contextParticipant}/>
+      )}
+
       {/* Specs — derived stats + crew/cargo + systems condensed into one
           inline strip. Each entry is a label/value pair rendered the same
           way regardless of category, so the GM can scan them at a glance. */}
@@ -555,7 +548,7 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
       ) : (
         <VStack align="stretch" spacing={1}>
           {occupants.map((p) => {
-            const isActive = p.id === activeOccupantId;
+            const isActive = activeOccupant ? p.id === activeOccupant.id : false;
             return (
               <Flex
                 key={p.id}
@@ -747,7 +740,6 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle}) => {
         onClose={() => setEnterOpen(false)}
         vehicleId={vehicle.id}
       />
-      </>}
     </div>
   );
 };
@@ -1135,34 +1127,6 @@ const CategoryTag: React.FC<{category: MoveCategory; edge: string}> = ({category
     flexShrink={0}
   >
     {category}
-  </Box>
-);
-
-// Two-state toggle button (Starship vs Personal). Visually parallels the
-// FilterChip style — orange accent when active, neutral when not.
-const ToggleButton: React.FC<{
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}> = ({active, onClick, children}) => (
-  <Box
-    as="button"
-    type="button"
-    onClick={onClick}
-    px={3}
-    py={1}
-    borderWidth="1px"
-    borderColor={active ? '#d39939' : 'whiteAlpha.200'}
-    bg={active ? 'rgba(211,153,57,0.15)' : 'transparent'}
-    borderRadius="sm"
-    fontSize="xs"
-    color={active ? '#d39939' : 'whiteAlpha.800'}
-    fontWeight={active ? 'bold' : 'normal'}
-    cursor="pointer"
-    transition="all 0.1s ease"
-    _hover={{bg: active ? 'rgba(211,153,57,0.22)' : 'whiteAlpha.100'}}
-  >
-    {children}
   </Box>
 );
 

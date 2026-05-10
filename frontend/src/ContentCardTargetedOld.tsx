@@ -2,8 +2,8 @@ import React from 'react';
 import {Button, Text} from "@chakra-ui/react";
 import {FaCrosshairs} from "react-icons/fa";
 import ContentCardOld from "@/ContentCardOld";
-import StatSheetOld from "@components/StatSheetOld";
 import VehicleStatSheetOld from "@components/VehicleStatSheetOld";
+import {useParticipantSheetView} from "@components/ParticipantSheetView";
 import useParticipantStore from "@/state/participantsStore";
 import useActiveVehicleStore from "@/state/activeVehicleStore";
 import useGameplayStore from "@/state/newGameplayStore";
@@ -24,8 +24,10 @@ const ContentCardTargetedOld = () => {
   // Vehicle selection wins if both happen to be set (shouldn't, since the
   // click handlers cross-clear, but defensive). Vehicles don't have an
   // initiative slot, so the "Set Active" button is participant-only.
-  const buttons = selectedVehicle
-    ? undefined
+  const {toggle, body} = useParticipantSheetView(selectedVehicle ? null : selectedParticipant);
+
+  const setActiveButton = selectedVehicle
+    ? null
     : selectedParticipant
       ? (
         <Button
@@ -37,14 +39,21 @@ const ContentCardTargetedOld = () => {
           {isAlreadyActive ? "Active" : "Set Active"}
         </Button>
       )
-      : undefined;
+      : null;
+
+  const buttons = (toggle || setActiveButton) ? (
+    <>
+      {toggle}
+      {setActiveButton}
+    </>
+  ) : undefined;
 
   return (
     <ContentCardOld heading="Targeted" buttons={buttons} icon={<FaCrosshairs/>}>
       {selectedVehicle ? (
         <VehicleStatSheetOld vehicle={selectedVehicle}/>
       ) : selectedParticipant ? (
-        <StatSheetOld participant={selectedParticipant}/>
+        body
       ) : (
         <Text color="gray.400">No target selected — click a row in Targets.</Text>
       )}
