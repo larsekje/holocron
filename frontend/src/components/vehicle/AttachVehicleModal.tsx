@@ -219,7 +219,7 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                           as="button"
                           type="button"
                           onClick={() => handlePick(v.id)}
-                          minH="52px"
+                          h="44px"
                           bg="#26292d"
                           borderRadius="md"
                           overflow="hidden"
@@ -246,16 +246,11 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                               {sil ?? '—'}
                             </Text>
                           </Flex>
-                          <VStack align="flex-start" justify="center" flex="1" minW={0} px={3} py={2} spacing={0.5}>
+                          <Flex flex="1" minW={0} px={3} align="center">
                             <Text fontSize="sm" color="white" noOfLines={1} fontWeight="semibold" w="100%">
                               {v.name}
                             </Text>
-                            {v.subtitle && (
-                              <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1} w="100%">
-                                {v.subtitle}
-                              </Text>
-                            )}
-                          </VStack>
+                          </Flex>
                         </Flex>
                       );
                     })}
