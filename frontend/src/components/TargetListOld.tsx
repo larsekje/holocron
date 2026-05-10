@@ -3,7 +3,7 @@ import {Box, Flex, Text, VStack} from "@chakra-ui/react";
 import TargetCardOld from "@components/target/TargetCardOld";
 import VehicleTargetCardOld from "@components/target/VehicleTargetCardOld";
 import useParticipantStore, {Participant} from "@/state/participantsStore";
-import useActiveVehicleStore from "@/state/activeVehicleStore";
+import useActiveVehicleStore, {isVehicleDead, type ActiveVehicle} from "@/state/activeVehicleStore";
 import useGameplayStore from "@/state/newGameplayStore";
 
 function isParticipantDead(p: Participant): boolean {
@@ -56,6 +56,13 @@ const TargetListOld = () => {
     else if (p.isPC) livePCs.push(p);
     else liveNPCs.push(p);
   }
+  const liveVehicles: ActiveVehicle[] = [];
+  const deadVehicles: ActiveVehicle[] = [];
+  for (const v of vehicleList) {
+    if (isVehicleDead(v)) deadVehicles.push(v);
+    else liveVehicles.push(v);
+  }
+  const graveyardCount = dead.length + deadVehicles.length;
 
   const inSelectingMode = isStructured && currentSlotTeam !== undefined;
   const activeParticipant = participants.find((p) => p.id === activeParticipantId);
@@ -145,11 +152,11 @@ const TargetListOld = () => {
         </Box>
       )}
 
-      {vehicleList.length > 0 && (
+      {liveVehicles.length > 0 && (
         <Box mt={livePCs.length > 0 || liveNPCs.length > 0 ? 3 : 0}>
-          {sectionHeader('Ships and vehicles', vehicleList.length)}
+          {sectionHeader('Ships and vehicles', liveVehicles.length)}
           <VStack align="stretch" spacing="6px">
-            {vehicleList.map((v) => (
+            {liveVehicles.map((v) => (
               <VehicleTargetCardOld
                 key={v.id}
                 vehicle={v}
@@ -166,7 +173,7 @@ const TargetListOld = () => {
         </Box>
       )}
 
-      {dead.length > 0 && (
+      {graveyardCount > 0 && (
         // mt="auto" pins this section to the bottom of the available column space.
         <Box mt="auto">
           <Flex align="center" gap={2} mt={2} mb={1}>
@@ -178,12 +185,23 @@ const TargetListOld = () => {
               textTransform="uppercase"
               color="whiteAlpha.500"
             >
-              Graveyard ({dead.length})
+              Graveyard ({graveyardCount})
             </Text>
             <Box flex="1" h="1px" bg="whiteAlpha.150"/>
           </Flex>
           <VStack align="stretch" spacing="6px" opacity={0.55}>
             {dead.map(renderRow)}
+            {deadVehicles.map((v) => (
+              <VehicleTargetCardOld
+                key={v.id}
+                vehicle={v}
+                isSelected={selectedVehicleId === v.id}
+                onClick={() => {
+                  selectVehicle(v.id);
+                  selectParticipant(null);
+                }}
+              />
+            ))}
           </VStack>
         </Box>
       )}

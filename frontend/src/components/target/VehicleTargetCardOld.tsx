@@ -13,7 +13,7 @@ import {
   Progress,
   Text,
 } from '@chakra-ui/react';
-import useActiveVehicleStore, {type ActiveVehicle} from '@/state/activeVehicleStore';
+import useActiveVehicleStore, {aliveMinions, type ActiveVehicle} from '@/state/activeVehicleStore';
 import useParticipantStore from '@/state/participantsStore';
 
 interface Props {
@@ -45,16 +45,20 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle, isSelected, onClick}) =
 
   const occupants = participants.filter((p) => p.equippedVehicleId === vehicle.id);
 
+  const groupSize = vehicle.minions ?? 1;
+  const isMinionGroup = groupSize > 1;
   const hullThreshold = vehicle.hullThreshold;
-  const hullRemaining = Math.max(hullThreshold - vehicle.hullCurrent, 0);
-  const hullPct = hullThreshold > 0 ? Math.max(0, hullRemaining / hullThreshold) * 100 : 0;
+  const hullPoolMax = hullThreshold * groupSize;
+  const hullRemaining = Math.max(hullPoolMax - vehicle.hullCurrent, 0);
+  const hullPct = hullPoolMax > 0 ? Math.max(0, hullRemaining / hullPoolMax) * 100 : 0;
+  const aliveCount = aliveMinions(vehicle);
 
   const sysThreshold = vehicle.systemThreshold;
   const sysRatio =
     sysThreshold > 0 ? Math.max(0, (sysThreshold - vehicle.systemCurrent) / sysThreshold) * 100 : 0;
 
   const tier = silColor(vehicle.silhouette);
-  const isDisabled = hullRemaining <= 0;
+  const isDisabled = isMinionGroup ? aliveCount === 0 : hullRemaining <= 0;
 
   return (
     <Flex
@@ -118,7 +122,9 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle, isSelected, onClick}) =
 
       {/* Hull bar + system-strain sliver + name overlay */}
       <Box flex="1" position="relative" h="100%" overflow="hidden" onClick={onClick} cursor="pointer">
-        {/* Hull bar */}
+        {/* Hull bar — single Progress for solo ships, N split segments for
+            minion-group squadrons (mirrors the character minion-group bar
+            in TargetCardOld so the GM reads them in the same vocabulary). */}
         <Box
           position="absolute"
           top={0}
@@ -127,12 +133,39 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle, isSelected, onClick}) =
           h={sysThreshold > 0 ? 'calc(100% - 8px)' : '100%'}
           bg="#1a1d21"
         >
-          <Progress
-            value={hullPct}
-            colorScheme={isDisabled ? 'red' : 'orange'}
-            bg="#1a1d21"
-            h="100%"
-          />
+          {isMinionGroup ? (
+            <HStack spacing="2px" h="100%" w="100%">
+              {(() => {
+                const segments: React.ReactNode[] = [];
+                for (let i = 0; i < groupSize; i++) {
+                  const remaining = hullThreshold * groupSize - vehicle.hullCurrent;
+                  const cappedRemaining = Math.max(
+                    Math.min(remaining - i * hullThreshold, hullThreshold),
+                    0,
+                  );
+                  const segPct = hullThreshold > 0 ? (cappedRemaining / hullThreshold) * 100 : 0;
+                  segments.unshift(
+                    <Box key={i} flex="1" h="100%" bg="#1a1d21" overflow="hidden">
+                      <Progress
+                        value={segPct}
+                        colorScheme={isDisabled ? 'red' : 'orange'}
+                        bg="transparent"
+                        h="100%"
+                      />
+                    </Box>,
+                  );
+                }
+                return segments;
+              })()}
+            </HStack>
+          ) : (
+            <Progress
+              value={hullPct}
+              colorScheme={isDisabled ? 'red' : 'orange'}
+              bg="#1a1d21"
+              h="100%"
+            />
+          )}
         </Box>
         {/* System strain sliver */}
         {sysThreshold > 0 && (
@@ -204,8 +237,17 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle, isSelected, onClick}) =
             )}
           </HStack>
           <HStack spacing={0} flexShrink={0} textShadow="0 1px 2px rgba(0,0,0,0.7)">
-            <Text fontWeight="bold" fontSize="md" lineHeight="1">{hullRemaining}</Text>
-            <Text fontSize="xs" color="whiteAlpha.700" lineHeight="1">/{hullThreshold}</Text>
+            {isMinionGroup ? (
+              <>
+                <Text fontWeight="bold" fontSize="md" lineHeight="1">{aliveCount}</Text>
+                <Text fontSize="xs" color="whiteAlpha.700" lineHeight="1">/{groupSize}</Text>
+              </>
+            ) : (
+              <>
+                <Text fontWeight="bold" fontSize="md" lineHeight="1">{hullRemaining}</Text>
+                <Text fontSize="xs" color="whiteAlpha.700" lineHeight="1">/{hullThreshold}</Text>
+              </>
+            )}
           </HStack>
         </HStack>
       </Box>

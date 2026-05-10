@@ -90,6 +90,15 @@ export function aliveMinions(v: ActiveVehicle): number {
   return Math.max(0, total - Math.floor(v.hullCurrent / v.hullThreshold));
 }
 
+/** A vehicle is "destroyed" (graveyard-bound) when it has nothing left to
+ * fly. Single ship: hull damage past threshold. Minion group: every ship
+ * in the squadron is gone. Mirrors `isParticipantDead` for characters. */
+export function isVehicleDead(v: ActiveVehicle): boolean {
+  if (v.minions && v.minions > 1) return aliveMinions(v) === 0;
+  if (v.hullThreshold <= 0) return false;
+  return v.hullCurrent >= v.hullThreshold;
+}
+
 export type VehicleSpec = Omit<
   ActiveVehicle,
   | 'id'
