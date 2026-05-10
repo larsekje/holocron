@@ -107,21 +107,24 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
     onClose();
   };
 
-  // Per-row subtitle, distinct from the group header. Prefer the
-  // manufacturer (most distinctive flavour text — "Sienar Fleet
-  // Systems", "Incom Corporation"); fall back to a compact stat line
-  // (Hull · Speed) so even homebrew entries without a manufacturer
-  // still get a useful second line.
+  // Per-row subtitle: a compact stat line useful for picking — Hull,
+  // Speed, Handling. No manufacturer / flavour text; the GM is choosing
+  // a stat block, not reading lore.
   const subtitleFor = (id: string): string | null => {
     const detail = getDetail('vehicle' as any, id) as any;
     if (!detail) return null;
-    const mfr = detail.info?.manufacturer;
-    if (typeof mfr === 'string' && mfr.trim().length > 0) return mfr.trim();
     const hull = detail.derived?.hull;
     const speed = detail.characteristics?.Speed;
+    const handling = detail.characteristics?.Handling;
     const bits: string[] = [];
     if (typeof hull === 'number') bits.push(`Hull ${hull}`);
     if (typeof speed === 'number') bits.push(`Speed ${speed}`);
+    if (handling != null && handling !== '') {
+      const h = typeof handling === 'number'
+        ? (handling >= 0 ? `+${handling}` : String(handling))
+        : String(handling);
+      bits.push(`Hndl ${h}`);
+    }
     return bits.length > 0 ? bits.join(' · ') : null;
   };
 
