@@ -3,7 +3,9 @@ import {Button, Text} from "@chakra-ui/react";
 import {FaCrosshairs} from "react-icons/fa";
 import ContentCardOld from "@/ContentCardOld";
 import StatSheetOld from "@components/StatSheetOld";
+import VehicleStatSheetOld from "@components/VehicleStatSheetOld";
 import useParticipantStore from "@/state/participantsStore";
+import useActiveVehicleStore from "@/state/activeVehicleStore";
 import useGameplayStore from "@/state/newGameplayStore";
 
 const ContentCardTargetedOld = () => {
@@ -12,24 +14,37 @@ const ContentCardTargetedOld = () => {
   const setActiveParticipantId = useGameplayStore((state) => state.setActiveParticipantId);
   const activeParticipantId = useGameplayStore((state) => state.context.activeParticipantId);
 
-  const selected = participants.find((p) => p.id === selectedParticipantId) ?? null;
-  const isAlreadyActive = selected != null && selected.id === activeParticipantId;
+  const vehicles = useActiveVehicleStore((state) => state.vehicles);
+  const selectedVehicleId = useActiveVehicleStore((state) => state.selectedVehicleId);
+  const selectedVehicle = selectedVehicleId ? vehicles[selectedVehicleId] ?? null : null;
 
-  const buttons = selected ? (
-    <Button
-      size="sm"
-      colorScheme="blue"
-      onClick={() => setActiveParticipantId(selected.id)}
-      isDisabled={isAlreadyActive}
-    >
-      {isAlreadyActive ? "Active" : "Set Active"}
-    </Button>
-  ) : undefined;
+  const selectedParticipant = participants.find((p) => p.id === selectedParticipantId) ?? null;
+  const isAlreadyActive = selectedParticipant != null && selectedParticipant.id === activeParticipantId;
+
+  // Vehicle selection wins if both happen to be set (shouldn't, since the
+  // click handlers cross-clear, but defensive). Vehicles don't have an
+  // initiative slot, so the "Set Active" button is participant-only.
+  const buttons = selectedVehicle
+    ? undefined
+    : selectedParticipant
+      ? (
+        <Button
+          size="sm"
+          colorScheme="blue"
+          onClick={() => setActiveParticipantId(selectedParticipant.id)}
+          isDisabled={isAlreadyActive}
+        >
+          {isAlreadyActive ? "Active" : "Set Active"}
+        </Button>
+      )
+      : undefined;
 
   return (
     <ContentCardOld heading="Targeted" buttons={buttons} icon={<FaCrosshairs/>}>
-      {selected ? (
-        <StatSheetOld participant={selected}/>
+      {selectedVehicle ? (
+        <VehicleStatSheetOld vehicle={selectedVehicle}/>
+      ) : selectedParticipant ? (
+        <StatSheetOld participant={selectedParticipant}/>
       ) : (
         <Text color="gray.400">No target selected — click a row in Targets.</Text>
       )}

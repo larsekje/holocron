@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { useSpotlightStore } from '@/state/spotlightStore';
-import { VehicleWeaponsTable } from '@components/participantStatus/VehicleWeaponsTable';
+import VehicleWeaponCardOld from '@components/statblock/VehicleWeaponCardOld';
 import { AddVehicleModal } from './AddVehicleModal';
 
 interface Props {
@@ -208,19 +208,25 @@ export const VehiclePreview: React.FC<Props> = ({ detail }) => {
         </Box>
       )}
 
-      {/* Weapons */}
+      {/* Weapons — same card vocabulary the in-game stat sheet uses. */}
       {Array.isArray(detail.weapons) && detail.weapons.length > 0 && (
         <Box>
           <Text
-            fontSize="xs"
-            color="gray.500"
+            as="b"
+            fontSize="10px"
+            letterSpacing="0.16em"
             textTransform="uppercase"
-            letterSpacing="0.06em"
+            color="#d39939"
+            display="block"
             mb={2}
           >
             Weapons
           </Text>
-          <VehicleWeaponsTable weapons={detail.weapons} />
+          <VStack align="stretch" spacing={2}>
+            {detail.weapons.map((w: any, i: number) => (
+              <VehicleWeaponCardOld key={`${w.name}-${i}`} weapon={w}/>
+            ))}
+          </VStack>
         </Box>
       )}
 

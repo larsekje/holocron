@@ -10,6 +10,14 @@ const theme = extendTheme({
       body: {
         bg: "#191A1C",
       },
+      // Suppress text-selection on anything button-shaped — double-tapping
+      // a clickable card was leaving a selection range behind. Custom
+      // clickable boxes elsewhere should carry role="button" both for
+      // accessibility and to opt into this rule.
+      'button, [role="button"]': {
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+      },
     }),
   },
 });

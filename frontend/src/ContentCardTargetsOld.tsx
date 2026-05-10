@@ -8,7 +8,8 @@ import AdversarySelector from "@components/adversaries/AdversarySelector";
 import AddPCModal from "@components/adversaries/AddPCModal";
 import adversaryService from "@/services/adversaryService";
 import useParticipantStore from "@/state/participantsStore";
-import {useSpotlightStore} from "@/state/spotlightStore";
+import useActiveVehicleStore, {buildVehicleSpecFromSpotlight} from "@/state/activeVehicleStore";
+import {browseIndex, getDetail} from "@/data/spotlightIndex";
 import {ReactComponent as AbilitySvg} from "@/assets/dice/ability.svg";
 import {ReactComponent as SetbackSvg} from "@/assets/dice/setback.svg";
 import {ReactComponent as DifficultySvg} from "@/assets/dice/difficulty.svg";
@@ -16,13 +17,55 @@ import {ReactComponent as ChallengeSvg} from "@/assets/dice/challenge.svg";
 
 type AdversaryType = 'Minion' | 'Rival' | 'Nemesis' | undefined;
 
+// Vehicle `info.type` is a hierarchical "category/subtype" string
+// (e.g. "starfighter/tie series", "walker/at-pt"). The first segment is the
+// category — exclude ground/atmospheric craft so "Add starship" doesn't drop
+// a Speeder Bike into the encounter.
+const NON_STARSHIP_CATEGORIES = new Set([
+  'speeder',
+  'speeder truck',
+  'airspeeder',
+  'landspeeder',
+  'walker',
+  'swoop',
+]);
+
+function isStarship(detail: any): boolean {
+  const t = String(detail?.info?.type ?? '').toLowerCase().trim();
+  if (!t) return true; // no category → assume starship rather than filter out
+  const root = t.split('/')[0]?.trim() ?? '';
+  return !NON_STARSHIP_CATEGORIES.has(root);
+}
+
 const ContentCardTargetsOld = () => {
   const addParticipant = useParticipantStore((state) => state.addParticipant);
-  const openSpotlight = useSpotlightStore((s) => s.open);
+  const addVehicle = useActiveVehicleStore((s) => s.add);
   const [isSelectorOpen, setSelectorOpen] = useState(false);
   const [isPcOpen, setPcOpen] = useState(false);
   const [loadingType, setLoadingType] = useState<AdversaryType | 'any' | null>(null);
   const toast = useToast();
+
+  const handleAddRandomStarship = () => {
+    const all = browseIndex(5000, ['vehicle']);
+    const candidates: any[] = [];
+    for (const e of all) {
+      const detail = getDetail('vehicle', e.id);
+      if (detail && isStarship(detail)) candidates.push(detail);
+    }
+    if (candidates.length === 0) {
+      toast({title: 'No starships available', status: 'error', duration: 3000, isClosable: true});
+      return;
+    }
+    const pick = candidates[Math.floor(Math.random() * candidates.length)];
+    addVehicle(buildVehicleSpecFromSpotlight(pick));
+    toast({
+      title: 'Starship added',
+      description: pick.fullName ?? pick.name,
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    });
+  };
 
   const handleAddRandomAdversary = async (type?: AdversaryType) => {
     const loadKey = type ?? 'any';
@@ -108,13 +151,13 @@ const ContentCardTargetsOld = () => {
           isDisabled={loadingType !== null}
         />
       </Tooltip>
-      <Tooltip label="Add starship">
+      <Tooltip label="Add random starship">
         <IconButton
-          aria-label="Add starship"
+          aria-label="Add random starship"
           icon={<FaSpaceShuttle/>}
           size="sm"
           variant="ghost"
-          onClick={() => openSpotlight(['vehicle'])}
+          onClick={handleAddRandomStarship}
         />
       </Tooltip>
     </HStack>

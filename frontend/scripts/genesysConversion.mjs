@@ -85,7 +85,10 @@ function convertWeapon(weapon) {
   const qualities = Array.isArray(weapon.qualities)
     ? weapon.qualities.map(convertQuality).filter((q) => q != null)
     : weapon.qualities;
-  return { ...weapon, damage, qualities };
+  // `arc` (Forward / Aft / Port / Starboard / Dorsal / Ventral) is intentionally
+  // dropped — the homebrew Genesys rules don't track firing arcs.
+  const { arc: _arc, ...rest } = weapon;
+  return { ...rest, damage, qualities };
 }
 
 function convertQuality(qStr) {

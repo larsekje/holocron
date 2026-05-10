@@ -44,7 +44,7 @@ export function isParticipantDead(p: Participant): boolean {
     return wounds >= wt;
 }
 
-export type VehicleRole = 'pilot' | 'gunner' | 'passenger';
+export type VehicleRole = 'pilot' | 'gunner' | 'astromech' | 'passenger';
 
 export interface Participant {
     id: string;

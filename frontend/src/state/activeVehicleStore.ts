@@ -20,9 +20,24 @@ import { nanoid } from 'nanoid';
 import type { CritInjury } from '@/data/critTable';
 import useParticipantStore, { type VehicleRole } from './participantsStore';
 
+/** Visible reminder of a maneuver/action that's currently in play (Evasive
+ * Maneuvers, Boost Shields, etc.). Tracked on the vehicle as a chip the GM
+ * can clear when its window has passed. No automatic decay or rules-engine
+ * influence — pure mental-load aid per the holocron scope. */
+export interface VehicleEffect {
+  id: string;
+  /** The move id this effect originated from (for de-duplication and the
+   * eventual auto-decay hookup). */
+  moveId: string;
+  /** Display name shown in the chip. */
+  name: string;
+  /** Optional one-line note shown in the tooltip. */
+  note?: string;
+  appliedAt: number;
+}
+
 export interface VehicleWeapon {
   name: string;
-  arc?: string;
   damage?: number | null;
   critical?: number | null;
   range?: string;
@@ -49,12 +64,22 @@ export interface ActiveVehicle {
   // Mutable state
   hullCurrent: number;
   systemCurrent: number;
+  /** Pilot-controlled throttle, 0..speed (max). Independent of damage —
+   * "full throttle" isn't a bad state. Adjusted by the GM/pilot during play. */
+  currentSpeed: number;
   criticalInjuries: CritInjury[];
+  /** Active maneuver/action reminders (Evasive, Boost Shields, etc.). */
+  activeEffects: VehicleEffect[];
 }
 
 export type VehicleSpec = Omit<
   ActiveVehicle,
-  'id' | 'hullCurrent' | 'systemCurrent' | 'criticalInjuries'
+  | 'id'
+  | 'hullCurrent'
+  | 'systemCurrent'
+  | 'currentSpeed'
+  | 'criticalInjuries'
+  | 'activeEffects'
 >;
 
 export interface Occupant {
@@ -64,6 +89,12 @@ export interface Occupant {
 
 interface ActiveVehicleStore {
   vehicles: Record<string, ActiveVehicle>;
+  /** The vehicle currently shown in the right "Targeted" pane. Mutually
+   * exclusive with the participant selection — clicking either kind of row
+   * cross-clears the other at the call site (TargetListOld /
+   * VehicleTargetCardOld). */
+  selectedVehicleId: string | null;
+  selectVehicle: (id: string | null) => void;
   /** Add a new vehicle to the encounter, optionally with starting occupants.
    * An empty `occupants` is valid — the ship sits in the encounter unmanned
    * until someone enters it. Returns the instance id. */
@@ -79,8 +110,16 @@ interface ActiveVehicleStore {
   removeHull: (vehicleId: string, n: number) => void;
   addSystemStrain: (vehicleId: string, n: number) => void;
   removeSystemStrain: (vehicleId: string, n: number) => void;
+  /** Throttle controls — clamp to 0..speed (max). */
+  addSpeed: (vehicleId: string, n: number) => void;
+  removeSpeed: (vehicleId: string, n: number) => void;
   addCrit: (vehicleId: string, injury: CritInjury) => void;
   removeCrit: (vehicleId: string, injuryId: string) => void;
+  /** Apply (or refresh) a maneuver/action effect on the vehicle. If an
+   * effect from the same `moveId` is already present, it's replaced — we
+   * don't stack identical reminders. */
+  applyVehicleEffect: (vehicleId: string, effect: Omit<VehicleEffect, 'id' | 'appliedAt'>) => void;
+  removeVehicleEffect: (vehicleId: string, effectId: string) => void;
 }
 
 /** Build a VehicleSpec from a Spotlight detail entry. The detail's data has
@@ -124,6 +163,9 @@ function setParticipantVehicle(
 
 const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
   vehicles: {},
+  selectedVehicleId: null,
+
+  selectVehicle: (id) => set({ selectedVehicleId: id }),
 
   add: (spec, occupants = []) => {
     const id = nanoid();
@@ -132,7 +174,9 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
       id,
       hullCurrent: 0,
       systemCurrent: 0,
+      currentSpeed: 0,
       criticalInjuries: [],
+      activeEffects: [],
     };
     set((state) => ({ vehicles: { ...state.vehicles, [id]: vehicle } }));
     for (const occ of occupants) {
@@ -154,7 +198,11 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
     set((state) => {
       const next = { ...state.vehicles };
       delete next[vehicleId];
-      return { vehicles: next };
+      return {
+        vehicles: next,
+        selectedVehicleId:
+          state.selectedVehicleId === vehicleId ? null : state.selectedVehicleId,
+      };
     });
   },
 
@@ -216,6 +264,30 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
       };
     }),
 
+  addSpeed: (vehicleId, n) =>
+    set((state) => {
+      const v = state.vehicles[vehicleId];
+      if (!v) return state;
+      return {
+        vehicles: {
+          ...state.vehicles,
+          [vehicleId]: { ...v, currentSpeed: Math.min(v.speed, v.currentSpeed + n) },
+        },
+      };
+    }),
+
+  removeSpeed: (vehicleId, n) =>
+    set((state) => {
+      const v = state.vehicles[vehicleId];
+      if (!v) return state;
+      return {
+        vehicles: {
+          ...state.vehicles,
+          [vehicleId]: { ...v, currentSpeed: Math.max(0, v.currentSpeed - n) },
+        },
+      };
+    }),
+
   addCrit: (vehicleId, injury) =>
     set((state) => {
       const v = state.vehicles[vehicleId];
@@ -241,6 +313,44 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
           [vehicleId]: {
             ...v,
             criticalInjuries: v.criticalInjuries.filter((c) => c.id !== injuryId),
+          },
+        },
+      };
+    }),
+
+  applyVehicleEffect: (vehicleId, effect) =>
+    set((state) => {
+      const v = state.vehicles[vehicleId];
+      if (!v) return state;
+      const newEffect: VehicleEffect = {
+        id: nanoid(),
+        appliedAt: Date.now(),
+        ...effect,
+      };
+      // Replace any existing effect from the same move so duplicate clicks
+      // refresh rather than stack.
+      const filtered = v.activeEffects.filter((e) => e.moveId !== newEffect.moveId);
+      return {
+        vehicles: {
+          ...state.vehicles,
+          [vehicleId]: {
+            ...v,
+            activeEffects: [...filtered, newEffect],
+          },
+        },
+      };
+    }),
+
+  removeVehicleEffect: (vehicleId, effectId) =>
+    set((state) => {
+      const v = state.vehicles[vehicleId];
+      if (!v) return state;
+      return {
+        vehicles: {
+          ...state.vehicles,
+          [vehicleId]: {
+            ...v,
+            activeEffects: v.activeEffects.filter((e) => e.id !== effectId),
           },
         },
       };

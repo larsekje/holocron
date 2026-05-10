@@ -24,6 +24,8 @@ const TargetListOld = () => {
 
   const vehicles = useActiveVehicleStore((s) => s.vehicles);
   const vehicleList = Object.values(vehicles);
+  const selectedVehicleId = useActiveVehicleStore((s) => s.selectedVehicleId);
+  const selectVehicle = useActiveVehicleStore((s) => s.selectVehicle);
 
   const activeParticipantId = useGameplayStore((state) => state.context.activeParticipantId);
   const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
@@ -74,6 +76,9 @@ const TargetListOld = () => {
         setActiveParticipantId(participant.id);
       } else {
         selectParticipant(participant.id);
+        // Cross-clear: a participant and a vehicle can't both be the
+        // "Targeted" entity at once.
+        selectVehicle(null);
       }
     };
     // Highlighting/dimming flips with phase:
@@ -145,7 +150,17 @@ const TargetListOld = () => {
           {sectionHeader('Ships and vehicles', vehicleList.length)}
           <VStack align="stretch" spacing="6px">
             {vehicleList.map((v) => (
-              <VehicleTargetCardOld key={v.id} vehicle={v}/>
+              <VehicleTargetCardOld
+                key={v.id}
+                vehicle={v}
+                isSelected={selectedVehicleId === v.id}
+                onClick={() => {
+                  selectVehicle(v.id);
+                  // Cross-clear participant selection so the right pane
+                  // shows the ship, not whoever was previously targeted.
+                  selectParticipant(null);
+                }}
+              />
             ))}
           </VStack>
         </Box>

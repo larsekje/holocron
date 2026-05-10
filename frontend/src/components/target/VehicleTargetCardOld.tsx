@@ -18,6 +18,8 @@ import useParticipantStore from '@/state/participantsStore';
 
 interface Props {
   vehicle: ActiveVehicle;
+  isSelected: boolean;
+  onClick: () => void;
 }
 
 // Sil-coded tier color so capital ships read differently from a speeder.
@@ -37,7 +39,7 @@ function silColor(silhouette: number): {bg: string; accent: string} {
  * - ⋮ menu currently exposes "Remove from encounter" only; damage/crit
  *   targeting hooks land in a follow-up.
  */
-const VehicleTargetCardOld: React.FC<Props> = ({vehicle}) => {
+const VehicleTargetCardOld: React.FC<Props> = ({vehicle, isSelected, onClick}) => {
   const remove = useActiveVehicleStore((s) => s.remove);
   const participants = useParticipantStore((s) => s.participants);
 
@@ -57,11 +59,11 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle}) => {
   return (
     <Flex
       h="40px"
-      bg="#26292d"
+      bg={isSelected ? '#33363c' : '#26292d'}
       borderRadius="md"
       overflow="hidden"
       borderWidth="1px"
-      borderColor="whiteAlpha.100"
+      borderColor={isSelected ? 'yellow.500' : 'whiteAlpha.100'}
       transition="background 0.1s ease"
       position="relative"
     >
@@ -73,6 +75,8 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle}) => {
         flexShrink={0}
         _hover={{bg: tier.accent}}
         title={`Silhouette ${vehicle.silhouette}`}
+        onClick={onClick}
+        cursor="pointer"
       >
         <Text fontSize="xs" fontWeight="bold" color="white">
           Sil
@@ -82,25 +86,38 @@ const VehicleTargetCardOld: React.FC<Props> = ({vehicle}) => {
         </Text>
       </Center>
 
-      {/* No initiative slot — placeholder kept the same width to align with
-          the participant rows visually. */}
+      {/* Speed box — same width as the participant initiative slot for
+          visual alignment. Shows current/max throttle so the GM sees how
+          fast the ship is moving without opening the sheet. */}
       <Center
         w="32px"
         h="100%"
         bg="#1c1e21"
         flexShrink={0}
         flexDirection="column"
+        onClick={onClick}
+        cursor="pointer"
+        title={`Speed ${vehicle.currentSpeed} / ${vehicle.speed}`}
       >
-        <Text fontSize="9px" color="whiteAlpha.500" lineHeight="1" letterSpacing="0.05em">
-          SHIP
+        <Text
+          fontSize="9px"
+          color="whiteAlpha.500"
+          lineHeight="1"
+          letterSpacing="0.05em"
+          textTransform="uppercase"
+        >
+          Speed
         </Text>
-        <Text fontSize="9px" color="whiteAlpha.400" lineHeight="1.1">
-          —
+        <Text fontWeight="bold" color="white" fontSize="md" lineHeight="1.1">
+          {vehicle.currentSpeed}
+          <Text as="span" fontSize="xs" color="whiteAlpha.500">
+            /{vehicle.speed}
+          </Text>
         </Text>
       </Center>
 
       {/* Hull bar + system-strain sliver + name overlay */}
-      <Box flex="1" position="relative" h="100%" overflow="hidden">
+      <Box flex="1" position="relative" h="100%" overflow="hidden" onClick={onClick} cursor="pointer">
         {/* Hull bar */}
         <Box
           position="absolute"

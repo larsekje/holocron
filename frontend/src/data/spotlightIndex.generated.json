@@ -119633,7 +119633,6 @@
       "weapons": [
         {
           "name": "Light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -119643,7 +119642,6 @@
         },
         {
           "name": "Concussion missile launchers",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -119709,7 +119707,6 @@
       "weapons": [
         {
           "name": "Auto-blasters",
-          "arc": "Forward",
           "damage": 1,
           "critical": 5,
           "range": "Close",
@@ -119719,7 +119716,6 @@
         },
         {
           "name": "Light tractor beam projector",
-          "arc": "Forward",
           "damage": null,
           "critical": null,
           "range": "Close",
@@ -119780,7 +119776,6 @@
       "weapons": [
         {
           "name": "Light laser cannon",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close"
@@ -119835,7 +119830,6 @@
       "weapons": [
         {
           "name": "Light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -119845,7 +119839,6 @@
         },
         {
           "name": "Concussion missile launchers",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -119911,7 +119904,6 @@
       "weapons": [
         {
           "name": "Triple light ion cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -119922,7 +119914,6 @@
         },
         {
           "name": "Dorsal turret-mounted twin medium laser cannon",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -119932,7 +119923,6 @@
         },
         {
           "name": "Proton torpedo launcher",
-          "arc": "Forward",
           "damage": 6,
           "critical": 2,
           "range": "Short",
@@ -119946,7 +119936,6 @@
         },
         {
           "name": "Concussion missile launcher",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -120137,7 +120126,6 @@
       "weapons": [
         {
           "name": "Twin light blaster cannons",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -120147,7 +120135,6 @@
         },
         {
           "name": "Concussion grenade launcher",
-          "arc": "Forward",
           "damage": 8,
           "critical": 4,
           "range": "Extreme",
@@ -120205,7 +120192,6 @@
       "weapons": [
         {
           "name": "Light blaster cannon",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close"
@@ -120345,7 +120331,6 @@
       "weapons": [
         {
           "name": "Turret-mounted electromagnetic harpoon",
-          "arc": "Aft",
           "damage": null,
           "critical": null,
           "range": "Close",
@@ -120457,7 +120442,6 @@
       "weapons": [
         {
           "name": "Medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -120467,7 +120451,6 @@
         },
         {
           "name": "Port and starboard turret-mounted light ion cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -120478,7 +120461,6 @@
         },
         {
           "name": "Concussion missile launcher",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -120492,7 +120474,6 @@
         },
         {
           "name": "Medium tractor beam projector",
-          "arc": "Forward",
           "damage": null,
           "critical": null,
           "range": "Short",
@@ -120650,7 +120631,6 @@
       "weapons": [
         {
           "name": "Dorsal and ventral turret-mounted light laser cannons",
-          "arc": "All",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -120711,7 +120691,6 @@
       "weapons": [
         {
           "name": "Dorsal and ventral turret-mounted medium laser cannon",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Close"
@@ -120769,7 +120748,6 @@
       "weapons": [
         {
           "name": "Dorsal quad laser cannon",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -120831,7 +120809,6 @@
       "weapons": [
         {
           "name": "Dorsal and ventral turret-mounted medium laser cannon",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Close"
@@ -120889,7 +120866,6 @@
       "weapons": [
         {
           "name": "Dorsal and ventral turret-mounted twin medium laser cannon",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -120951,7 +120927,6 @@
       "weapons": [
         {
           "name": "Five port and starboard medium turbolasers",
-          "arc": "Port or Starboard",
           "damage": 7,
           "critical": 3,
           "range": "Long",
@@ -120962,7 +120937,6 @@
         },
         {
           "name": "Concussion missile launcher",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -121023,7 +120997,6 @@
       "weapons": [
         {
           "name": "Light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -121081,7 +121054,6 @@
       "weapons": [
         {
           "name": "Medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -121091,7 +121063,6 @@
         },
         {
           "name": "Proton torpedo launchers",
-          "arc": "Forward",
           "damage": 6,
           "critical": 2,
           "range": "Short",
@@ -121154,7 +121125,6 @@
       "weapons": [
         {
           "name": "Twin-light ion cannons",
-          "arc": "Forward (All for S3)",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -121165,7 +121135,6 @@
         },
         {
           "name": "Medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -121175,7 +121144,6 @@
         },
         {
           "name": "Proton torpedo launchers",
-          "arc": "Forward",
           "damage": 6,
           "critical": 2,
           "range": "Short",
@@ -121238,7 +121206,6 @@
       "weapons": [
         {
           "name": "Light ion cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -121250,7 +121217,6 @@
         },
         {
           "name": "Heavy laser cannon",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -121258,7 +121224,6 @@
         },
         {
           "name": "Proton torpedo launchers",
-          "arc": "Forward",
           "damage": 6,
           "critical": 2,
           "range": "Short",
@@ -121273,7 +121238,6 @@
         },
         {
           "name": "Cockpit mounted autoblasters",
-          "arc": "Forward",
           "damage": 1,
           "critical": 5,
           "range": "Close",
@@ -121333,7 +121297,6 @@
       "weapons": [
         {
           "name": "Medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -121392,7 +121355,6 @@
       "weapons": [
         {
           "name": "Medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -121451,7 +121413,6 @@
       "weapons": [
         {
           "name": "Medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -121461,7 +121422,6 @@
         },
         {
           "name": "Twin light ion cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -121472,7 +121432,6 @@
         },
         {
           "name": "Concussion missile launchers",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -121536,7 +121495,6 @@
       "weapons": [
         {
           "name": "Light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -121546,7 +121504,6 @@
         },
         {
           "name": "Concussion missile launchers",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -121561,7 +121518,6 @@
         },
         {
           "name": "Proton torpedo launchers",
-          "arc": "Forward",
           "damage": 6,
           "critical": 2,
           "range": "Short",
@@ -121576,7 +121532,6 @@
         },
         {
           "name": "Ventral-mounted proton bomb",
-          "arc": "Down",
           "damage": 5,
           "critical": 2,
           "range": "Close",
@@ -121640,7 +121595,6 @@
       "weapons": [
         {
           "name": "Twin light blaster cannons",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -121650,7 +121604,6 @@
         },
         {
           "name": "Twin light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -121660,7 +121613,6 @@
         },
         {
           "name": "Retractable light blaster cannons",
-          "arc": "Aft",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -121722,7 +121674,6 @@
       "weapons": [
         {
           "name": "Twin light blaster cannons",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -121732,7 +121683,6 @@
         },
         {
           "name": "Twin light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -121742,7 +121692,6 @@
         },
         {
           "name": "Retractable light blaster cannons",
-          "arc": "Aft",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -121804,7 +121753,6 @@
       "weapons": [
         {
           "name": "Three dorsal turret-mounted light turbolasers",
-          "arc": "All",
           "damage": 7,
           "critical": 3,
           "range": "Medium",
@@ -121815,7 +121763,6 @@
         },
         {
           "name": "Three dorsal turret-mounted heavy laser cannons",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -121825,7 +121772,6 @@
         },
         {
           "name": "Medium tractor beam emitter",
-          "arc": "Forward",
           "damage": null,
           "critical": null,
           "range": "Close",
@@ -121884,7 +121830,6 @@
       "weapons": [
         {
           "name": "One dorsal and one ventral turret-mounted medium turbolaser battery",
-          "arc": "All",
           "damage": 8,
           "critical": 3,
           "range": "Long",
@@ -121896,7 +121841,6 @@
         },
         {
           "name": "Two port and starboard turret-mounted light turbolasers",
-          "arc": "Port and Starboard",
           "damage": 7,
           "critical": 3,
           "range": "Medium",
@@ -121956,7 +121900,6 @@
       "weapons": [
         {
           "name": "Two light blaster cannons",
-          "arc": "Forward and Port, or Forward and Starboard",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -121966,7 +121909,6 @@
         },
         {
           "name": "Turret-mounted twin light ion cannon",
-          "arc": "Forward, Port and Starboard",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -121977,7 +121919,6 @@
         },
         {
           "name": "Two forward and one rear-mounted concussion missile launchers",
-          "arc": "Forward or Rear",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -122038,7 +121979,6 @@
       "weapons": [
         {
           "name": "Light blaster cannons",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close",
@@ -122094,7 +122034,6 @@
       "weapons": [
         {
           "name": "Twin heavy blaster cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -122104,7 +122043,6 @@
         },
         {
           "name": "Aft turret-mounted electromagnetic harpoon",
-          "arc": "Rear",
           "damage": null,
           "critical": null,
           "range": "Close",
@@ -122162,7 +122100,6 @@
       "weapons": [
         {
           "name": "Forward-mounted light repeating blaster",
-          "arc": "Forward",
           "damage": 9,
           "critical": 3,
           "range": "Extreme",
@@ -122220,7 +122157,6 @@
       "weapons": [
         {
           "name": "Forward-mounted twin heavy laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Short",
@@ -122230,7 +122166,6 @@
         },
         {
           "name": "Forward-mounted twin heavy blaster cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -122286,14 +122221,12 @@
       "weapons": [
         {
           "name": "Port-mounted light blaster cannon",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close"
         },
         {
           "name": "Chin-mounted twin heavy blaster cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 4,
           "range": "Close",
@@ -122303,7 +122236,6 @@
         },
         {
           "name": "Starboard-mounted concussion grenade launcher",
-          "arc": "Forward",
           "damage": 8,
           "critical": 4,
           "range": "Extreme",
@@ -122363,7 +122295,6 @@
       "weapons": [
         {
           "name": "Twin light laser cannons",
-          "arc": "Forward",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -122421,7 +122352,6 @@
       "weapons": [
         {
           "name": "Twin medium laser cannons",
-          "arc": "Forward",
           "damage": 4,
           "critical": 3,
           "range": "Close",
@@ -122528,7 +122458,6 @@
       "weapons": [
         {
           "name": "Dorsal turret-mounted light laser cannon",
-          "arc": "All",
           "damage": 3,
           "critical": 3,
           "range": "Close"
@@ -122626,7 +122555,6 @@
       "weapons": [
         {
           "name": "Dorsal autoblasters",
-          "arc": "Forward",
           "damage": 1,
           "critical": 5,
           "range": "Close",
@@ -122636,14 +122564,12 @@
         },
         {
           "name": "Turret-mounted light blaster cannon",
-          "arc": "Forward, Starboard, and Aft",
           "damage": 2,
           "critical": 4,
           "range": "Close"
         },
         {
           "name": "Ventral light blaster cannon",
-          "arc": "Forward",
           "damage": 2,
           "critical": 4,
           "range": "Close"
@@ -122747,7 +122673,6 @@
       "weapons": [
         {
           "name": "Dorsal and ventral turret-mounted medium laser cannon",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Close"
@@ -122805,7 +122730,6 @@
       "weapons": [
         {
           "name": "Dorsal turret-mounted twin light laser cannons",
-          "arc": "All",
           "damage": 3,
           "critical": 3,
           "range": "Close",
@@ -122866,7 +122790,6 @@
       "weapons": [
         {
           "name": "Ventral turret-mounted medium laser cannon",
-          "arc": "All",
           "damage": 4,
           "critical": 3,
           "range": "Close"

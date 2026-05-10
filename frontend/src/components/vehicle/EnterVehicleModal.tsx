@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Button,
@@ -15,23 +15,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import useParticipantStore from '@/state/participantsStore';
-import useActiveVehicleStore, {
-  buildVehicleSpecFromSpotlight,
-  type Occupant,
-} from '@/state/activeVehicleStore';
-import type { VehicleRole } from '@/state/participantsStore';
+import useParticipantStore, {type VehicleRole} from '@/state/participantsStore';
+import useActiveVehicleStore from '@/state/activeVehicleStore';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  /** The spotlight detail entry for the vehicle being added — contains
-   * characteristics, derived, weapons, info needed to build a fresh active
-   * vehicle instance. */
-  vehicleDetail: any | null;
-  /** Optional callback after the vehicle is added to the encounter (used by
-   * Spotlight to close itself and toast). */
-  onAdded?: (vehicleId: string) => void;
+  vehicleId: string;
 }
 
 const ROLES: VehicleRole[] = ['pilot', 'gunner', 'astromech', 'passenger'];
@@ -44,91 +34,82 @@ function defaultRoleForIndex(i: number): VehicleRole {
 }
 
 /**
- * Multi-select participant + role picker for adding a vehicle to the
- * encounter. Occupants are optional — a ship can sit in the encounter empty
- * and be entered later. Multi-crew is supported: multiple participants can
- * share one ship instance, all referencing the shared hull pool. Roles are
- * free-form display labels and don't gate mechanics.
+ * Bring participants aboard an existing vehicle. Multi-select with per-pick
+ * role; submit calls `addOccupant` once per pick. Participants already aboard
+ * another vehicle are flagged so the GM knows the assignment will move them.
  */
-export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetail, onAdded }) => {
+const EnterVehicleModal: React.FC<Props> = ({isOpen, onClose, vehicleId}) => {
   const participants = useParticipantStore((s) => s.participants);
-  const addVehicle = useActiveVehicleStore((s) => s.add);
+  const vehicle = useActiveVehicleStore((s) => s.vehicles[vehicleId]);
+  const addOccupant = useActiveVehicleStore((s) => s.addOccupant);
 
   const [selected, setSelected] = useState<Record<string, VehicleRole>>({});
 
-  // Reset selection state every time the modal opens with a new vehicle.
   useEffect(() => {
     if (isOpen) setSelected({});
-  }, [isOpen, vehicleDetail?.id]);
+  }, [isOpen, vehicleId]);
 
   const selectedIds = Object.keys(selected);
-  const canAdd = !!vehicleDetail;
+  const canSubmit = selectedIds.length > 0;
+
+  // Anyone not already on THIS vehicle is a candidate. Already-aboard-elsewhere
+  // is allowed but flagged — selecting them moves them.
+  const candidates = participants.filter((p) => p.equippedVehicleId !== vehicleId);
 
   const toggle = (participantId: string) => {
     setSelected((prev) => {
       if (prev[participantId]) {
-        const next = { ...prev };
+        const next = {...prev};
         delete next[participantId];
         return next;
       }
       const idx = Object.keys(prev).length;
-      return { ...prev, [participantId]: defaultRoleForIndex(idx) };
+      return {...prev, [participantId]: defaultRoleForIndex(idx)};
     });
   };
 
   const setRole = (participantId: string, role: VehicleRole) => {
-    setSelected((prev) => ({ ...prev, [participantId]: role }));
+    setSelected((prev) => ({...prev, [participantId]: role}));
   };
 
-  const handleAdd = () => {
-    if (!vehicleDetail) return;
-    const spec = buildVehicleSpecFromSpotlight(vehicleDetail);
-    const occupants: Occupant[] = selectedIds.map((id) => ({
-      participantId: id,
-      role: selected[id],
-    }));
-    const id = addVehicle(spec, occupants);
-    onAdded?.(id);
+  const handleSubmit = () => {
+    for (const id of selectedIds) {
+      addOccupant(vehicleId, id, selected[id]);
+    }
     onClose();
   };
 
-  const vehicleName = vehicleDetail?.fullName ?? vehicleDetail?.name ?? 'Vehicle';
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" isCentered>
-      <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.700" />
+      <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.700"/>
       <ModalContent bg="gray.900" color="gray.100">
         <ModalHeader>
           <HStack spacing={2}>
-            <Text>Add to encounter</Text>
-            <Text color="gray.400">{vehicleName}</Text>
+            <Text>Bring aboard</Text>
+            <Text color="gray.400">{vehicle?.name ?? 'Vehicle'}</Text>
           </HStack>
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton/>
         <ModalBody>
-          {participants.length === 0 ? (
+          {candidates.length === 0 ? (
             <Text fontSize="sm" color="gray.400">
-              The ship will be added to the encounter empty. Add PCs/NPCs first if you want to
-              place crew aboard now.
+              No participants available — every PC/NPC in the encounter is already aboard this
+              ship.
             </Text>
           ) : (
             <VStack align="stretch" spacing={1}>
-              <HStack justify="space-between" mb={1}>
-                <Text
-                  fontSize="xs"
-                  color="gray.400"
-                  textTransform="uppercase"
-                  letterSpacing="0.06em"
-                >
-                  Pick occupants
-                </Text>
-                <Text fontSize="xs" color="gray.500" fontStyle="italic">
-                  optional
-                </Text>
-              </HStack>
-              {participants.map((p) => {
+              <Text
+                fontSize="xs"
+                color="gray.400"
+                mb={1}
+                textTransform="uppercase"
+                letterSpacing="0.06em"
+              >
+                Pick crew
+              </Text>
+              {candidates.map((p) => {
                 const isSelected = !!selected[p.id];
-                const alreadyAboard = !!p.equippedVehicleId;
+                const alreadyElsewhere = !!p.equippedVehicleId;
                 return (
                   <HStack
                     key={p.id}
@@ -137,7 +118,7 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
                     py={2}
                     borderRadius="sm"
                     bg={isSelected ? 'rgba(211,153,57,0.10)' : 'transparent'}
-                    _hover={{ bg: isSelected ? 'rgba(211,153,57,0.15)' : 'whiteAlpha.50' }}
+                    _hover={{bg: isSelected ? 'rgba(211,153,57,0.15)' : 'whiteAlpha.50'}}
                     align="center"
                   >
                     <Box
@@ -173,9 +154,9 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
                         {p.name}
                       </Text>
                       {p.isPC && <Tag size="sm" variant="subtle" colorScheme="blue">PC</Tag>}
-                      {alreadyAboard && (
+                      {alreadyElsewhere && (
                         <Tag size="sm" variant="subtle" colorScheme="orange">
-                          already aboard
+                          will move
                         </Tag>
                       )}
                     </HStack>
@@ -190,7 +171,7 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
                         onChange={(e) => setRole(p.id, e.target.value as VehicleRole)}
                       >
                         {ROLES.map((r) => (
-                          <option key={r} value={r} style={{ background: '#1a202c' }}>
+                          <option key={r} value={r} style={{background: '#1a202c'}}>
                             {r[0].toUpperCase() + r.slice(1)}
                           </option>
                         ))}
@@ -206,8 +187,8 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
           <Button variant="ghost" mr={2} onClick={onClose} color="gray.300">
             Cancel
           </Button>
-          <Button colorScheme="orange" onClick={handleAdd} isDisabled={!canAdd}>
-            {selectedIds.length > 0 ? 'Add with crew' : 'Add empty'}
+          <Button colorScheme="orange" onClick={handleSubmit} isDisabled={!canSubmit}>
+            {selectedIds.length > 1 ? `Bring ${selectedIds.length} aboard` : 'Bring aboard'}
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -215,4 +196,4 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
   );
 };
 
-export default AddVehicleModal;
+export default EnterVehicleModal;
