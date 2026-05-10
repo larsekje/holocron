@@ -601,38 +601,6 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
         {info.sensors && <StatChip label="Sensors" value={info.sensors}/>}
       </Wrap>
 
-      {/* Vehicle's narrative blurb (when the OggDude XML carried one).
-          Click to expand/collapse — same fade-out pattern as the occupant
-          description and StatSheetOld's adversary description. */}
-      {vehicle.description && (
-        <>
-          <SectionHeading>Description</SectionHeading>
-          <Box
-            position="relative"
-            maxH={vehicleDescExpanded ? "unset" : "4.5em"}
-            overflow="hidden"
-            cursor="pointer"
-            onClick={() => setVehicleDescExpanded((x) => !x)}
-            transition="max-height 0.25s ease"
-          >
-            <Text color="white" fontSize="sm" whiteSpace="pre-line">
-              {vehicle.description}
-            </Text>
-            {!vehicleDescExpanded && (
-              <Box
-                position="absolute"
-                bottom={0}
-                left={0}
-                right={0}
-                h="2em"
-                pointerEvents="none"
-                bgGradient="linear(to-b, rgba(51,54,60,0), rgba(51,54,60,1))"
-              />
-            )}
-          </Box>
-        </>
-      )}
-
       {/* Cheat-sheet filters. Two refinement axes (role + category) layered
           on top of the structural "applicable to this ship" filter. Counts
           on each chip reflect the post-structural set so the GM sees what
@@ -773,6 +741,39 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
               {activeOccupant.stats.description}
             </Text>
             {!descriptionExpanded && (
+              <Box
+                position="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                h="2em"
+                pointerEvents="none"
+                bgGradient="linear(to-b, rgba(51,54,60,0), rgba(51,54,60,1))"
+              />
+            )}
+          </Box>
+        </>
+      )}
+
+      {/* Vehicle's narrative blurb (when the OggDude XML carried one) — lives
+          at the bottom with the rest of the reference / flavour content
+          rather than wedged between Specs and the cheat sheet, so the GM's
+          eye lands on the action surface up top. */}
+      {vehicle.description && (
+        <>
+          <SectionHeading>Description</SectionHeading>
+          <Box
+            position="relative"
+            maxH={vehicleDescExpanded ? "unset" : "4.5em"}
+            overflow="hidden"
+            cursor="pointer"
+            onClick={() => setVehicleDescExpanded((x) => !x)}
+            transition="max-height 0.25s ease"
+          >
+            <Text color="white" fontSize="sm" whiteSpace="pre-line">
+              {vehicle.description}
+            </Text>
+            {!vehicleDescExpanded && (
               <Box
                 position="absolute"
                 bottom={0}

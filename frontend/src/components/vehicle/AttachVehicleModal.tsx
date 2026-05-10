@@ -1,6 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   Box,
+  Button,
+  Flex,
   HStack,
   Input,
   Modal,
@@ -9,7 +11,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Tag,
   Text,
   VStack,
 } from '@chakra-ui/react';
@@ -29,6 +30,33 @@ interface Props {
   participant: Participant;
 }
 
+/** Short-list of the iconic SWRPG vehicles the GM most often reaches for
+ * — OT starfighters, the YT freighters, walkers, the speeder bike. The
+ * full 50+ catalogue is one click away via "Show all", and the search
+ * box always queries the full set so anything off the curated list is
+ * still findable by typing its name. Same hand-curated pattern stoogoff
+ * uses on its picker. */
+const CURATED_VEHICLE_IDS = new Set<string>([
+  'vehicle_tie-ln-starfighter',
+  'vehicle_tie-in-interceptor',
+  'vehicle_tie-sa-tactical-bomber',
+  'vehicle_tie-d-defender-multi-role-starfighter',
+  'vehicle_t-65b-x-wing-starfighter',
+  'vehicle_btl-a4-btl-s3-y-wing-attack-starfighter',
+  'vehicle_rz-1-a-wing-light-interceptor',
+  'vehicle_a-sf-01-b-wing-heavy-fast-attack-starfighter',
+  'vehicle_z-95-af4-headhunter',
+  'vehicle_yt-1300-light-freighter',
+  'vehicle_yt-2400-light-freighter',
+  'vehicle_hwk-290-light-freighter',
+  'vehicle_lambda-class-t-4a-long-range-shuttle',
+  'vehicle_alliance-t-47-airspeeder',
+  'vehicle_all-terrain-armoured-transport',
+  'vehicle_all-terrain-scout-transport',
+  'vehicle_74-z-speeder-bike',
+  'vehicle_cr90-corvette',
+]);
+
 /** Quick-setup picker: from a character's sheet, pick a vehicle from the
  * spotlight library and instantiate it with this character pre-bound as
  * the pilot. Skips the longer "make participant → add vehicle → attach
@@ -37,23 +65,35 @@ interface Props {
 const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => {
   const addVehicle = useActiveVehicleStore((s) => s.add);
   const [query, setQuery] = useState('');
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    if (isOpen) setQuery('');
+    if (isOpen) {
+      setQuery('');
+      setShowAll(false);
+    }
   }, [isOpen]);
 
   // Browse all vehicles up-front, then narrow with the local query — the
   // index is small (~50 entries) so client-side filter is fine.
   const allVehicles = useMemo(() => browseIndex(500, ['vehicle' as any]), []);
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return allVehicles;
-    return allVehicles.filter((v) =>
+  const q = query.trim().toLowerCase();
+
+  // When searching, always query the full catalogue (curation is for
+  // picking, not for hiding). Without a query: show only the curated set
+  // unless the GM has clicked Show all.
+  const visible = useMemo(() => {
+    let pool = allVehicles;
+    if (!q && !showAll) {
+      pool = allVehicles.filter((v) => CURATED_VEHICLE_IDS.has(v.id));
+    }
+    if (!q) return pool;
+    return pool.filter((v) =>
       v.name.toLowerCase().includes(q)
       || (v.subtitle ?? '').toLowerCase().includes(q)
       || (v.tags ?? []).some((t) => t.toLowerCase().includes(q)),
     );
-  }, [allVehicles, query]);
+  }, [allVehicles, q, showAll]);
 
   const handlePick = (id: string) => {
     const detail = getDetail('vehicle' as any, id);
@@ -66,6 +106,33 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
     );
     onClose();
   };
+
+  // Pull a Sil-N tag out of the index entry so the row can show a tier
+  // square — same visual signal the targets list uses.
+  const silOf = (tags?: string[]): number | null => {
+    if (!tags) return null;
+    for (const t of tags) {
+      const m = t.match(/^Sil\s+(\d+)$/i);
+      if (m) return parseInt(m[1], 10);
+    }
+    return null;
+  };
+
+  // Sil-coded tier color, matching VehicleTargetCardOld.silColor so the
+  // chip in the picker reads as the same vocabulary.
+  const silColor = (sil: number | null): string => {
+    if (sil == null) return '#3a3f47';
+    if (sil >= 6) return '#3a2455';
+    if (sil >= 4) return '#3a3a18';
+    if (sil >= 2) return '#1f3a4a';
+    return '#3a3f47';
+  };
+
+  const totalCurated = useMemo(
+    () => allVehicles.filter((v) => CURATED_VEHICLE_IDS.has(v.id)).length,
+    [allVehicles],
+  );
+  const isShortlistMode = !q && !showAll;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" isCentered scrollBehavior="inside">
@@ -86,48 +153,84 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
             onChange={(e) => setQuery(e.target.value)}
             bg="gray.800"
             borderColor="gray.700"
-            mb={3}
+            mb={2}
             autoFocus
           />
-          <VStack align="stretch" spacing={1} maxH="55vh" overflowY="auto">
-            {filtered.length === 0 ? (
+          <HStack justify="space-between" mb={2} fontSize="xs" color="whiteAlpha.500">
+            <Text>
+              {isShortlistMode
+                ? `Popular (${visible.length})`
+                : q
+                  ? `${visible.length} match`
+                  : `All (${visible.length})`}
+            </Text>
+            {!q && (
+              <Button
+                size="xs"
+                variant="ghost"
+                color="orange.300"
+                _hover={{bg: 'whiteAlpha.100'}}
+                onClick={() => setShowAll((v) => !v)}
+              >
+                {showAll ? `Show curated (${totalCurated})` : `Show all (${allVehicles.length})`}
+              </Button>
+            )}
+          </HStack>
+          <VStack align="stretch" spacing="6px" maxH="55vh" overflowY="auto" pr={1}>
+            {visible.length === 0 ? (
               <Text fontSize="sm" color="gray.500" fontStyle="italic" py={4} textAlign="center">
                 No vehicles match.
               </Text>
             ) : (
-              filtered.map((v) => (
-                <Box
-                  key={v.id}
-                  as="button"
-                  type="button"
-                  onClick={() => handlePick(v.id)}
-                  textAlign="left"
-                  px={2}
-                  py={2}
-                  borderRadius="sm"
-                  bg="transparent"
-                  _hover={{bg: 'whiteAlpha.100'}}
-                  transition="background 0.1s ease"
-                >
-                  <HStack justify="space-between" spacing={2} align="baseline">
-                    <Text fontSize="sm" color="white" noOfLines={1} flex="1" minW={0}>
-                      {v.name}
-                    </Text>
-                    {v.subtitle && (
-                      <Text fontSize="xs" color="whiteAlpha.500" noOfLines={1} flexShrink={0}>
-                        {v.subtitle}
+              visible.map((v) => {
+                const sil = silOf(v.tags);
+                return (
+                  <Flex
+                    key={v.id}
+                    as="button"
+                    type="button"
+                    onClick={() => handlePick(v.id)}
+                    h="38px"
+                    bg="#26292d"
+                    borderRadius="md"
+                    overflow="hidden"
+                    borderWidth="1px"
+                    borderColor="whiteAlpha.100"
+                    _hover={{bg: '#33363c', borderColor: 'orange.400'}}
+                    transition="background 0.1s ease, border-color 0.1s ease"
+                    align="center"
+                    textAlign="left"
+                  >
+                    <Flex
+                      w="36px"
+                      h="100%"
+                      flexShrink={0}
+                      align="center"
+                      justify="center"
+                      flexDirection="column"
+                      bg={silColor(sil)}
+                      color="white"
+                    >
+                      <Text fontSize="9px" fontWeight="bold" lineHeight="1" letterSpacing="0.05em">
+                        SIL
                       </Text>
-                    )}
-                  </HStack>
-                  {v.tags && v.tags.length > 0 && (
-                    <HStack spacing={1} mt={1} flexWrap="wrap">
-                      {v.tags.slice(0, 3).map((t) => (
-                        <Tag key={t} size="sm" colorScheme="gray" variant="subtle">{t}</Tag>
-                      ))}
-                    </HStack>
-                  )}
-                </Box>
-              ))
+                      <Text fontSize="sm" fontWeight="bold" lineHeight="1" mt="1px">
+                        {sil ?? '—'}
+                      </Text>
+                    </Flex>
+                    <Box flex="1" minW={0} px={3}>
+                      <Text fontSize="sm" color="white" noOfLines={1} fontWeight="medium">
+                        {v.name}
+                      </Text>
+                      {v.subtitle && (
+                        <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1}>
+                          {v.subtitle}
+                        </Text>
+                      )}
+                    </Box>
+                  </Flex>
+                );
+              })
             )}
           </VStack>
         </ModalBody>
