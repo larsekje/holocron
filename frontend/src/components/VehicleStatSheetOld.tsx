@@ -93,6 +93,7 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
   const openDiceRoller = useDiceRollerStore((s) => s.open);
 
   const [enterOpen, setEnterOpen] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   // Active-occupant context: which crew member the GM is currently
   // role-playing through. Drives the cheat-sheet filter (only show what they
   // can do) and the per-card click → dice roller wiring (rolls the active
@@ -507,6 +508,21 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
         <StatusCardOld participant={contextParticipant}/>
       )}
 
+      <SectionHeading>Weapons</SectionHeading>
+      <VStack align="stretch" spacing={2}>
+        {vehicle.weapons.length > 0 ? (
+          vehicle.weapons.map((w, i) => (
+            <VehicleWeaponCardOld
+              key={`${w.name}-${i}`}
+              weapon={w}
+              onClick={buildWeaponClickHandler(w)}
+            />
+          ))
+        ) : (
+          <Text fontSize="sm" color="whiteAlpha.700">None</Text>
+        )}
+      </VStack>
+
       {/* Specs — derived stats + crew/cargo + systems condensed into one
           inline strip. Each entry is a label/value pair rendered the same
           way regardless of category, so the GM can scan them at a glance. */}
@@ -524,80 +540,6 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
         {hyperdriveText && <StatChip label="Hyperdrive" value={hyperdriveText}/>}
         {info.sensors && <StatChip label="Sensors" value={info.sensors}/>}
       </Wrap>
-
-      <SectionHeading
-        trailing={
-          <Button
-            size="xs"
-            variant="ghost"
-            color="#d39939"
-            leftIcon={<AddIcon boxSize={2.5}/>}
-            onClick={() => setEnterOpen(true)}
-            isDisabled={everyoneAboard}
-            _hover={{bg: 'whiteAlpha.100'}}
-            title={everyoneAboard ? 'Everyone in the encounter is already aboard' : 'Bring participants aboard'}
-          >
-            Add crew
-          </Button>
-        }
-      >
-        Aboard ({occupants.length})
-      </SectionHeading>
-      {occupants.length === 0 ? (
-        <Text fontSize="sm" color="whiteAlpha.600">Unmanned. Use “Add crew” to bring a PC or NPC aboard.</Text>
-      ) : (
-        <VStack align="stretch" spacing={1}>
-          {occupants.map((p) => {
-            const isActive = activeOccupant ? p.id === activeOccupant.id : false;
-            return (
-              <Flex
-                key={p.id}
-                role="button"
-                px={2}
-                py={1}
-                borderRadius="sm"
-                bg={isActive ? 'rgba(211,153,57,0.15)' : 'whiteAlpha.50'}
-                borderLeftWidth="3px"
-                borderLeftColor={isActive ? '#d39939' : 'transparent'}
-                align="center"
-                justify="space-between"
-                cursor="pointer"
-                onClick={() => setActiveOccupantId(p.id)}
-                _hover={isActive ? undefined : {bg: 'whiteAlpha.100'}}
-                transition="background 0.1s ease"
-              >
-                <HStack spacing={2}>
-                  <Text fontSize="sm" fontWeight="semibold" color="white">{p.name}</Text>
-                  {p.vehicleRole && (
-                    <Tag size="sm" colorScheme="blue" variant="subtle">{p.vehicleRole}</Tag>
-                  )}
-                  {p.isPC && <Tag size="sm" colorScheme="green" variant="subtle">PC</Tag>}
-                  {isActive && (
-                    <Tag size="sm" colorScheme="orange" variant="solid" fontSize="9px">
-                      ACTIVE
-                    </Tag>
-                  )}
-                </HStack>
-                <Tooltip label={`Remove ${p.name} from ${vehicle.name}`} hasArrow openDelay={300}>
-                  <Button
-                    size="xs"
-                    variant="ghost"
-                    color="whiteAlpha.700"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeOccupant(vehicle.id, p.id);
-                    }}
-                    _hover={{bg: 'whiteAlpha.100', color: 'white'}}
-                  >
-                    Leave
-                  </Button>
-                </Tooltip>
-              </Flex>
-            );
-          })}
-        </VStack>
-      )}
-
 
       {/* Cheat-sheet filters. Two refinement axes (role + category) layered
           on top of the structural "applicable to this ship" filter. Counts
@@ -701,22 +643,6 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
         </>
       )}
 
-
-      <SectionHeading>Weapons</SectionHeading>
-      <VStack align="stretch" spacing={2}>
-        {vehicle.weapons.length > 0 ? (
-          vehicle.weapons.map((w, i) => (
-            <VehicleWeaponCardOld
-              key={`${w.name}-${i}`}
-              weapon={w}
-              onClick={buildWeaponClickHandler(w)}
-            />
-          ))
-        ) : (
-          <Text fontSize="sm" color="whiteAlpha.700">None</Text>
-        )}
-      </VStack>
-
       {vehicle.criticalInjuries.length > 0 && (
         <>
           <SectionHeading>Critical Hits ({vehicle.criticalInjuries.length})</SectionHeading>
@@ -733,6 +659,111 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
             ))}
           </List>
         </>
+      )}
+
+      {/* Active occupant's narrative blurb (when they have one). Mirrors the
+          collapsible Description in StatSheetOld so the GM has the same
+          hook-of-flavor available without flipping to Personal. */}
+      {activeOccupant?.stats?.description && (
+        <>
+          <SectionHeading>Description</SectionHeading>
+          <Box
+            position="relative"
+            maxH={descriptionExpanded ? "unset" : "4.5em"}
+            overflow="hidden"
+            cursor="pointer"
+            onClick={() => setDescriptionExpanded((x) => !x)}
+            transition="max-height 0.25s ease"
+          >
+            <Text color="white" fontSize="sm" whiteSpace="pre-line">
+              {activeOccupant.stats.description}
+            </Text>
+            {!descriptionExpanded && (
+              <Box
+                position="absolute"
+                bottom={0}
+                left={0}
+                right={0}
+                h="2em"
+                pointerEvents="none"
+                bgGradient="linear(to-b, rgba(51,54,60,0), rgba(51,54,60,1))"
+              />
+            )}
+          </Box>
+        </>
+      )}
+
+      <SectionHeading
+        trailing={
+          <Button
+            size="xs"
+            variant="ghost"
+            color="#d39939"
+            leftIcon={<AddIcon boxSize={2.5}/>}
+            onClick={() => setEnterOpen(true)}
+            isDisabled={everyoneAboard}
+            _hover={{bg: 'whiteAlpha.100'}}
+            title={everyoneAboard ? 'Everyone in the encounter is already aboard' : 'Bring participants aboard'}
+          >
+            Add crew
+          </Button>
+        }
+      >
+        Aboard ({occupants.length})
+      </SectionHeading>
+      {occupants.length === 0 ? (
+        <Text fontSize="sm" color="whiteAlpha.600">Unmanned. Use “Add crew” to bring a PC or NPC aboard.</Text>
+      ) : (
+        <VStack align="stretch" spacing={1}>
+          {occupants.map((p) => {
+            const isActive = activeOccupant ? p.id === activeOccupant.id : false;
+            return (
+              <Flex
+                key={p.id}
+                role="button"
+                px={2}
+                py={1}
+                borderRadius="sm"
+                bg={isActive ? 'rgba(211,153,57,0.15)' : 'whiteAlpha.50'}
+                borderLeftWidth="3px"
+                borderLeftColor={isActive ? '#d39939' : 'transparent'}
+                align="center"
+                justify="space-between"
+                cursor="pointer"
+                onClick={() => setActiveOccupantId(p.id)}
+                _hover={isActive ? undefined : {bg: 'whiteAlpha.100'}}
+                transition="background 0.1s ease"
+              >
+                <HStack spacing={2}>
+                  <Text fontSize="sm" fontWeight="semibold" color="white">{p.name}</Text>
+                  {p.vehicleRole && (
+                    <Tag size="sm" colorScheme="blue" variant="subtle">{p.vehicleRole}</Tag>
+                  )}
+                  {p.isPC && <Tag size="sm" colorScheme="green" variant="subtle">PC</Tag>}
+                  {isActive && (
+                    <Tag size="sm" colorScheme="orange" variant="solid" fontSize="9px">
+                      ACTIVE
+                    </Tag>
+                  )}
+                </HStack>
+                <Tooltip label={`Remove ${p.name} from ${vehicle.name}`} hasArrow openDelay={300}>
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    color="whiteAlpha.700"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeOccupant(vehicle.id, p.id);
+                    }}
+                    _hover={{bg: 'whiteAlpha.100', color: 'white'}}
+                  >
+                    Leave
+                  </Button>
+                </Tooltip>
+              </Flex>
+            );
+          })}
+        </VStack>
       )}
 
       <EnterVehicleModal
