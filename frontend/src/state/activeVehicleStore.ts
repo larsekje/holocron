@@ -61,6 +61,14 @@ export interface ActiveVehicle {
   systemThreshold: number;
   weapons: VehicleWeapon[];
   vehicleInfo: Record<string, any>;
+  /** Starship-scale minion-group size. Undefined or 1 = a single ship.
+   * When >1, this entry represents N identical ships acting as a group
+   * (e.g., a TIE squadron). The group shares a hull pool of
+   * `hullThreshold × minions`; each multiple of `hullThreshold` worth of
+   * accumulated damage destroys one ship in the group. `hullThreshold`
+   * itself stays per-ship. Mirrors the character-minion model on
+   * `Participant.stats.minions` / `woundThreshold`. */
+  minions?: number;
   // Mutable state
   hullCurrent: number;
   systemCurrent: number;
@@ -70,6 +78,16 @@ export interface ActiveVehicle {
   criticalInjuries: CritInjury[];
   /** Active maneuver/action reminders (Evasive, Boost Shields, etc.). */
   activeEffects: VehicleEffect[];
+}
+
+/** Alive-ship count for a minion-group vehicle. For a single ship
+ * (minions undefined or 1), returns 1 while the ship still has hull
+ * capacity, else 0. For groups, returns N − floor(damage / per-ship-threshold)
+ * — same formula as character minion-group survivors. */
+export function aliveMinions(v: ActiveVehicle): number {
+  const total = v.minions ?? 1;
+  if (v.hullThreshold <= 0) return total;
+  return Math.max(0, total - Math.floor(v.hullCurrent / v.hullThreshold));
 }
 
 export type VehicleSpec = Omit<
@@ -97,8 +115,14 @@ interface ActiveVehicleStore {
   selectVehicle: (id: string | null) => void;
   /** Add a new vehicle to the encounter, optionally with starting occupants.
    * An empty `occupants` is valid — the ship sits in the encounter unmanned
-   * until someone enters it. Returns the instance id. */
-  add: (spec: VehicleSpec, occupants?: Occupant[]) => string;
+   * until someone enters it. `options.minions` declares this as a starship-
+   * scale minion group (N ships sharing a hull pool); omit or pass 1 for a
+   * single ship. Returns the instance id. */
+  add: (
+    spec: VehicleSpec,
+    occupants?: Occupant[],
+    options?: { minions?: number },
+  ) => string;
   /** Remove the vehicle from the encounter and clear
    * `equippedVehicleId`/`vehicleRole` on every linked participant. */
   remove: (vehicleId: string) => void;
@@ -167,11 +191,13 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
 
   selectVehicle: (id) => set({ selectedVehicleId: id }),
 
-  add: (spec, occupants = []) => {
+  add: (spec, occupants = [], options) => {
     const id = nanoid();
+    const minions = options?.minions && options.minions > 1 ? options.minions : undefined;
     const vehicle: ActiveVehicle = {
       ...spec,
       id,
+      minions,
       hullCurrent: 0,
       systemCurrent: 0,
       currentSpeed: 0,

@@ -10,6 +10,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   Tag,
   Text,
@@ -55,10 +60,14 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
   const addVehicle = useActiveVehicleStore((s) => s.add);
 
   const [selected, setSelected] = useState<Record<string, VehicleRole>>({});
+  const [groupSize, setGroupSize] = useState<number>(1);
 
   // Reset selection state every time the modal opens with a new vehicle.
   useEffect(() => {
-    if (isOpen) setSelected({});
+    if (isOpen) {
+      setSelected({});
+      setGroupSize(1);
+    }
   }, [isOpen, vehicleDetail?.id]);
 
   const selectedIds = Object.keys(selected);
@@ -87,7 +96,7 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
       participantId: id,
       role: selected[id],
     }));
-    const id = addVehicle(spec, occupants);
+    const id = addVehicle(spec, occupants, { minions: groupSize });
     onAdded?.(id);
     onClose();
   };
@@ -106,6 +115,32 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {/* Group size — leave at 1 for a single ship; bump up to add a
+              starship-scale minion group (TIE squadron etc.) sharing one
+              hull pool. Crew assignment below still applies to the group as
+              a whole, not per-ship. */}
+          <HStack mb={3} spacing={3} align="center">
+            <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="0.06em">
+              Group size
+            </Text>
+            <NumberInput
+              size="xs"
+              min={1}
+              max={20}
+              value={groupSize}
+              onChange={(_, n) => setGroupSize(Number.isFinite(n) && n >= 1 ? n : 1)}
+              w="64px"
+            >
+              <NumberInputField bg="gray.800" borderColor="gray.700" />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <Text fontSize="xs" color="gray.500" fontStyle="italic" noOfLines={1}>
+              {groupSize > 1 ? `Minion group of ${groupSize} ships (shared hull pool)` : 'Single ship'}
+            </Text>
+          </HStack>
           {participants.length === 0 ? (
             <Text fontSize="sm" color="gray.400">
               The ship will be added to the encounter empty. Add PCs/NPCs first if you want to

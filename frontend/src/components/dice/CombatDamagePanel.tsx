@@ -99,6 +99,13 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const newSystem =
     (targetVehicle?.systemCurrent ?? 0)
     + (vehicleDestination === 'system' ? finalDamage : 0);
+  // For starship-scale minion groups the threshold to "exceed" is the
+  // group's pooled hull (per-ship × N), not the per-ship value — otherwise
+  // every ship-killing hit would re-fire the alert. The Vehicle Critical
+  // Hit prompt then signals the entire group being wiped out; per-ship
+  // kills just decrement the alive-count display in the vehicle sheet.
+  const vehicleGroupSize = targetVehicle?.minions ?? 1;
+  const vehicleHullPool = (targetVehicle?.hullThreshold ?? 0) * vehicleGroupSize;
   const vehicleExceeds =
     !!result
     && succeeded
@@ -106,7 +113,7 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
     && !!targetVehicle
     && finalDamage > 0
     && (vehicleDestination === 'hull'
-      ? newHull > targetVehicle.hullThreshold
+      ? newHull > vehicleHullPool
       : newSystem > targetVehicle.systemThreshold);
   const exceedsThreshold = characterExceeds || vehicleExceeds;
 
@@ -255,7 +262,9 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
             : vehicleExceeds && targetVehicle
               ? vehicleDestination === 'system'
                 ? `System strain exceeds threshold (${newSystem}/${targetVehicle.systemThreshold}) — Vehicle Critical Hit.`
-                : `Hull exceeds threshold (${newHull}/${targetVehicle.hullThreshold}) — Vehicle Critical Hit.`
+                : vehicleGroupSize > 1
+                  ? `Group hull pool exhausted (${newHull}/${vehicleHullPool}) — squadron destroyed.`
+                  : `Hull exceeds threshold (${newHull}/${targetVehicle.hullThreshold}) — Vehicle Critical Hit.`
               : 'Critical threshold reserved'}
         </Text>
       </Alert>

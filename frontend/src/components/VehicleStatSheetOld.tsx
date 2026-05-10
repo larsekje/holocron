@@ -19,6 +19,7 @@ import {
 import {AddIcon, InfoOutlineIcon, MinusIcon} from '@chakra-ui/icons';
 import {ReactComponent as DifficultySvg} from '@/assets/dice/difficulty.svg';
 import useActiveVehicleStore, {
+  aliveMinions,
   type ActiveVehicle,
   type VehicleWeapon,
 } from '@/state/activeVehicleStore';
@@ -357,8 +358,16 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
       ? structurallyVisibleCount
       : allStructurallyVisible.filter((m) => m.category === cat).length;
 
-  const hullRemaining = Math.max(vehicle.hullThreshold - vehicle.hullCurrent, 0);
+  // For minion-group ships the hull track represents the GROUP's shared
+  // pool: max = per-ship-threshold × group-size, current = total damage so
+  // far, alive = ships still flying. Single ships keep the original
+  // per-ship max so the existing layout doesn't change.
+  const groupSize = vehicle.minions ?? 1;
+  const isMinionGroup = groupSize > 1;
+  const hullPoolMax = vehicle.hullThreshold * groupSize;
+  const hullRemaining = Math.max(hullPoolMax - vehicle.hullCurrent, 0);
   const systemRemaining = Math.max(vehicle.systemThreshold - vehicle.systemCurrent, 0);
+  const aliveCount = aliveMinions(vehicle);
 
   const info = vehicle.vehicleInfo ?? {};
   const hyperdriveText = formatHyperdrive(info.hyperdrive);
@@ -388,6 +397,11 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
             <Heading size="md" color="white">
               {contextParticipant ? contextParticipant.name : vehicle.name}
             </Heading>
+            {isMinionGroup && !contextParticipant && (
+              <Tag size="sm" colorScheme="orange" variant="subtle">
+                Minion ×{groupSize}
+              </Tag>
+            )}
           </HStack>
           {contextParticipant ? (
             <Text color="whiteAlpha.800" fontSize="sm" noOfLines={1}>
@@ -469,14 +483,19 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
       <SectionHeading>Status</SectionHeading>
       <HStack spacing={3} align="stretch">
         <MetricTrack
-          label="Hull"
+          label={isMinionGroup ? `Hull (×${groupSize})` : 'Hull'}
           current={vehicle.hullCurrent}
-          max={vehicle.hullThreshold}
+          max={hullPoolMax}
           remaining={hullRemaining}
           onAdd={() => addHull(vehicle.id, 1)}
           onRemove={() => removeHull(vehicle.id, 1)}
           colorScheme="orange"
           tone="damage"
+          footer={isMinionGroup ? (
+            <Text fontSize="xs" color={aliveCount === 0 ? 'red.300' : 'whiteAlpha.700'} mt={1}>
+              Alive: <Text as="span" fontWeight="bold">{aliveCount}</Text>/{groupSize}
+            </Text>
+          ) : undefined}
         />
         <MetricTrack
           label="System Strain"
