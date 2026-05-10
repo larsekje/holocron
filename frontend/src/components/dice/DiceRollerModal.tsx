@@ -21,6 +21,8 @@ import { CombatDamagePanel } from './CombatDamagePanel';
 import { OpposedPanel } from './OpposedPanel';
 import { SkillChallengePlaceholder } from './SkillChallengePlaceholder';
 import { ModifiersPopover } from './ModifiersPopover';
+import { SegmentedToggle } from '@/components/ParticipantSheetView';
+import useDiceRollerStore from '@/state/diceRollerStore';
 
 interface DiceRollerModalProps {
   snapshot: ModalSnapshot | null;
@@ -44,6 +46,44 @@ function formatChar(c?: string): string {
   return c.charAt(0).toUpperCase() + c.slice(1);
 }
 
+/** Inline header chip showing the resolved attack target. When the snapshot
+ * carries both a candidate participant and vehicle (vehicle weapon resolved
+ * to a ship via a selected occupant), renders a [Pilot|Ship] segmented
+ * switch right next to the name so the GM can flip without leaving the
+ * modal. Direct selections (no candidates) render plain text. */
+const TargetIndicator: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
+  const flipAttackTarget = useDiceRollerStore((s) => s.flipAttackTarget);
+  const isVehicleTarget = !!snapshot.targetVehicleId;
+  const targetName = isVehicleTarget
+    ? snapshot.targetVehicleName
+    : snapshot.target?.name;
+  if (!targetName) return null;
+
+  const hasToggle =
+    snapshot.weaponKind === 'vehicle'
+    && !!snapshot.targetCandidateParticipantId
+    && !!snapshot.targetCandidateVehicleId;
+
+  return (
+    <HStack spacing={2} align="center">
+      <Text fontSize="sm" color="gray.500">→</Text>
+      <Text fontSize="sm" color="gray.50" fontWeight="semibold" noOfLines={1} maxW="220px">
+        {targetName}
+      </Text>
+      {hasToggle && (
+        <SegmentedToggle
+          options={[
+            { value: 'vehicle', label: 'Ship' },
+            { value: 'character', label: 'Pilot' },
+          ]}
+          value={isVehicleTarget ? 'vehicle' : 'character'}
+          onChange={(v) => flipAttackTarget(v as 'vehicle' | 'character')}
+        />
+      )}
+    </HStack>
+  );
+};
+
 export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onClose }) => {
   const isOpen = snapshot !== null;
   const mode = snapshot?.mode ?? 'basic';
@@ -62,6 +102,7 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
                 {snapshot.attacker.name}
               </Heading>
             )}
+            {snapshot && <TargetIndicator snapshot={snapshot} />}
             {snapshot?.skill && (
               <Text fontSize="sm" color="gray.400">
                 {formatSkill(snapshot.skill)}

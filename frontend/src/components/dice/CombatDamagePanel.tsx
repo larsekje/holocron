@@ -13,6 +13,7 @@ import {
 import type { ModalSnapshot } from './mockSnapshots';
 import useDiceRollerStore from '@/state/diceRollerStore';
 import useParticipantStore from '@/state/participantsStore';
+import useActiveVehicleStore from '@/state/activeVehicleStore';
 import useSessionLogStore from '@/state/sessionLogStore';
 
 interface Props {
@@ -49,25 +50,42 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const toast = useToast();
   const update = useDiceRollerStore((s) => s.update);
   const addWounds = useParticipantStore((s) => s.addWounds);
+  const addHull = useActiveVehicleStore((s) => s.addHull);
+  const targetVehicle = useActiveVehicleStore((s) =>
+    snapshot.targetVehicleId ? s.vehicles[snapshot.targetVehicleId] ?? null : null,
+  );
 
   const { weapon, target, result } = snapshot;
   if (!weapon) return null;
 
+  const isVehicleTarget = !!snapshot.targetVehicleId;
+
   const netSuccess = result?.net.netSuccess ?? 0;
   const succeeded = result?.net.succeeded ?? false;
-  const soak = target?.soak ?? 0;
+  // Vehicle "soak" comes from `armor`; characters use the existing target.soak.
+  const soak = isVehicleTarget ? (targetVehicle?.armor ?? 0) : (target?.soak ?? 0);
   const baseDamage = (weapon.damage ?? 0) + Math.max(0, netSuccess);
   const finalDamage = result ? Math.max(0, baseDamage - soak) : 0;
   const newWounds = (target?.wounds ?? 0) + finalDamage;
   const exceedsThreshold = !!result && succeeded && !!target && newWounds > target.woundThreshold;
 
+  // Display name + soak source for chips and the apply button label.
+  const targetName = isVehicleTarget
+    ? (targetVehicle?.name ?? snapshot.targetVehicleName ?? 'Vehicle')
+    : (target?.name ?? null);
+  const soakLabel = isVehicleTarget ? `${targetName} armor` : (target ? `${target.name} soak` : 'Target soak');
+  const damageBucketLabel = isVehicleTarget ? 'Hull damage' : 'Wounds dealt';
+  const hasTarget = isVehicleTarget ? !!targetVehicle : !!target;
+
   const damageDisplay = !result ? '—' : succeeded ? String(finalDamage) : '—';
   const successesDisplay = !result ? '—' : String(Math.max(0, netSuccess));
   const applyLabel = !result
     ? 'Apply'
-    : target
-      ? `Apply ${finalDamage} to ${target.name}`
-      : 'Apply';
+    : isVehicleTarget && targetName
+      ? `Apply ${finalDamage} to ${targetName} hull`
+      : target
+        ? `Apply ${finalDamage} to ${target.name}`
+        : 'Apply';
 
   return (
     <VStack align="stretch" spacing={2}>
@@ -92,12 +110,12 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
           <Box className="icon success" fontSize="13px" />
         </Chip>
         <Text color="gray.500" fontSize="sm">−</Text>
-        <Chip tip={target ? `${target.name} soak` : 'Target soak'}>
+        <Chip tip={soakLabel}>
           <Text>{soak}</Text>
         </Chip>
         <Text color="gray.500" fontSize="sm">=</Text>
         <Chip
-          tip={!result ? 'Damage (pending)' : succeeded && target ? 'Wounds dealt' : succeeded ? 'Damage (no target)' : 'Miss'}
+          tip={!result ? 'Damage (pending)' : succeeded && hasTarget ? damageBucketLabel : succeeded ? 'Damage (no target)' : 'Miss'}
           color={result && succeeded && finalDamage > 0 ? 'red.300' : 'gray.400'}
         >
           <Text fontWeight="bold">{damageDisplay}</Text>
@@ -106,17 +124,10 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
         <Button
           size="sm"
           colorScheme="orange"
-          isDisabled={!result || !succeeded || !target || finalDamage === 0}
+          isDisabled={!result || !succeeded || !hasTarget || finalDamage === 0}
           onClick={() => {
-            if (!result || !target || !snapshot.targetParticipantId || !succeeded || finalDamage === 0) return;
+            if (!result || !succeeded || finalDamage === 0) return;
             const log = useSessionLogStore.getState();
-            // Suppress the auto wound delta so we don't double-log the hit;
-            // we replace the existing roll entry with a combined line that
-            // names attacker, weapon, and the dice symbols.
-            log.suppressNextWoundLog(snapshot.targetParticipantId);
-            addWounds(snapshot.targetParticipantId, finalDamage);
-            update({ target: { ...target, wounds: target.wounds + finalDamage } });
-
             const attackerName = snapshot.attacker?.name ?? 'Attacker';
             const net = result.net;
             const symbolBits: string[] = [];
@@ -127,6 +138,30 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
             if (net.triumph > 0) symbolBits.push(`${net.triumph}[TR]`);
             if (net.despair > 0) symbolBits.push(`${net.despair}[DE]`);
             const symbolText = symbolBits.length > 0 ? ` (${symbolBits.join(' ')})` : '';
+
+            if (isVehicleTarget && snapshot.targetVehicleId && targetVehicle) {
+              addHull(snapshot.targetVehicleId, finalDamage);
+              const hullWord = finalDamage === 1 ? 'hull' : 'hull';
+              log.rewriteLastDamageForRoll(
+                snapshot.id,
+                `${attackerName} — ${weapon.name} → ${targetVehicle.name}: ${finalDamage} ${hullWord}${symbolText}`,
+              );
+              toast({
+                title: `${finalDamage} hull applied to ${targetVehicle.name}`,
+                status: 'success',
+                duration: 2500,
+              });
+              return;
+            }
+
+            if (!target || !snapshot.targetParticipantId) return;
+            // Suppress the auto wound delta so we don't double-log the hit;
+            // we replace the existing roll entry with a combined line that
+            // names attacker, weapon, and the dice symbols.
+            log.suppressNextWoundLog(snapshot.targetParticipantId);
+            addWounds(snapshot.targetParticipantId, finalDamage);
+            update({ target: { ...target, wounds: target.wounds + finalDamage } });
+
             const woundsWord = finalDamage === 1 ? 'wound' : 'wounds';
             log.rewriteLastDamageForRoll(
               snapshot.id,

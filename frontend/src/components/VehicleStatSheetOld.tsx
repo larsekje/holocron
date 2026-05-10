@@ -315,7 +315,7 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
           }
         }
         const charValue = (stats.agility as number) ?? 0;
-        const snap = buildAttackSnapshot(activeOccupant, weaponLike, rank, 'agility', charValue);
+        const snap = buildAttackSnapshot(activeOccupant, weaponLike, rank, 'agility', charValue, 'vehicle');
         snap.label = `${activeOccupant.name} — ${weapon.name}`;
         openDiceRoller(snap);
       } else {

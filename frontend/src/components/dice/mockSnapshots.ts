@@ -49,8 +49,28 @@ export interface ModalSnapshot {
    * participantsStore. Optional for freestanding rolls with no character. */
   attackerParticipantId?: string;
   target?: SnapshotTarget;
-  /** Stable id of the target participant. Optional for non-combat rolls. */
+  /** Stable id of the target participant. Optional for non-combat rolls.
+   * Mutually exclusive with `targetVehicleId` — at most one is set. */
   targetParticipantId?: string;
+  /** Stable id of the target vehicle when a vehicle weapon is fired at a
+   * ship (either directly selected, or resolved from a character target who
+   * is aboard a vehicle). When set, `target` is undefined and damage routes
+   * to hull rather than wounds. */
+  targetVehicleId?: string;
+  /** Cheap denormalised vehicle name so the modal header doesn't have to
+   * subscribe to the vehicle store on every render. */
+  targetVehicleName?: string;
+  /** 'vehicle' for vehicle-weapon attacks, 'personal' otherwise. Drives the
+   * visibility of the [Pilot|Ship] target toggle in the modal header and
+   * the re-derivation logic when the toggle flips. */
+  weaponKind?: 'personal' | 'vehicle';
+  /** Persistent linkage for the [Pilot|Ship] toggle. Populated once at build
+   * time when a vehicle weapon resolves to a vehicle target *via* a selected
+   * character (i.e. the GM clicked a person, we routed to their ship). The
+   * toggle swaps `targetParticipantId` ↔ `targetVehicleId` between the
+   * candidates without mutating these. Both undefined → no toggle. */
+  targetCandidateParticipantId?: string;
+  targetCandidateVehicleId?: string;
   defender?: SnapshotDefender;
   weapon?: SnapshotWeapon;
   skill?: string;

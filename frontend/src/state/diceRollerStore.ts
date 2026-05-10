@@ -4,6 +4,7 @@ import type { ModalSnapshot } from '@components/dice/mockSnapshots';
 import type { ModifierEntry } from '@components/dice/modifiers';
 import useParticipantStore from '@/state/participantsStore';
 import useSessionLogStore from '@/state/sessionLogStore';
+import { flipAttackTarget as computeFlippedSnapshot } from '@/utils/diceSnapshots';
 
 export type BonusSymbolKind = keyof SymbolTotals;
 
@@ -23,6 +24,11 @@ interface DiceRollerState {
   /** Hand the prepared pool off to another participant — they become the
    * attacker of the snapshot and roll the same pool/modifiers/bonuses. */
   passPoolTo: (participantId: string) => void;
+  /** Flip the resolved attack target between the vehicle and the character
+   * it carries (when both candidates are on the snapshot). Strips the
+   * vehicle-target modifier dice for the previous target and re-applies for
+   * the new one; preserves manual additions. */
+  flipAttackTarget: (newKind: 'vehicle' | 'character') => void;
   roll: () => void;
   recordSpend: (optionId: string, label?: string, recipientId?: string) => void;
   undoSpend: (spendIndex: number) => void;
@@ -273,6 +279,13 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
       },
     });
   },
+  flipAttackTarget: (newKind) =>
+    set((state) => {
+      if (!state.snapshot) return state;
+      const next = computeFlippedSnapshot(state.snapshot, newKind);
+      if (next === state.snapshot) return state;
+      return { snapshot: next };
+    }),
   roll: () => {
     const snap = get().snapshot;
     if (!snap) return;
