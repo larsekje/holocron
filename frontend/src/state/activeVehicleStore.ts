@@ -215,6 +215,33 @@ function setParticipantVehicle(
   ps.updateParticipants(next);
 }
 
+/** Re-entry guard for the bidirectional ship/crew alive-count mirror.
+ * Whichever side initiates the change (vehicle hull damage OR participant
+ * wound damage) sets the flag while it pushes the matching change to the
+ * other side; the other side's listener sees the flag and skips so we
+ * don't ping-pong. Cleared in a `finally` so a thrown error can't leave
+ * the system locked. */
+let crewShipMirrorInProgress = false;
+
+function withMirrorLock<T>(fn: () => T): T {
+  crewShipMirrorInProgress = true;
+  try {
+    return fn();
+  } finally {
+    crewShipMirrorInProgress = false;
+  }
+}
+
+/** Per-minion alive count for a participant, mirroring the formula used
+ * elsewhere (`isParticipantDead`, character minion segment renderer). */
+function aliveCrewMinions(p: ReturnType<typeof useParticipantStore.getState>['participants'][number]): number {
+  const total = p.stats?.minions ?? 1;
+  const wt = p.stats?.woundThreshold ?? 0;
+  const wounds = p.stats?.wounds ?? 0;
+  if (wt <= 0) return total;
+  return Math.max(0, total - Math.floor(wounds / wt));
+}
+
 /** Mirror a change in a vehicle's alive-ship count to any aboard
  * minion-group crew. One ship lost = one pilot killed (adds the pilot's
  * woundThreshold to their wounds, since that's the per-minion threshold).
@@ -227,6 +254,7 @@ function mirrorHullToCrew(
   before: ActiveVehicle,
   after: ActiveVehicle,
 ) {
+  if (crewShipMirrorInProgress) return;
   const aliveBefore = aliveMinions(before);
   const aliveAfter = aliveMinions(after);
   const delta = aliveBefore - aliveAfter; // positive = ships lost
@@ -235,12 +263,15 @@ function mirrorHullToCrew(
   const linked = ps.participants.filter(
     (p) => p.equippedVehicleId === vehicleId && (p.stats?.minions ?? 1) > 1,
   );
-  for (const p of linked) {
-    const wt = p.stats?.woundThreshold ?? 0;
-    if (wt <= 0) continue;
-    if (delta > 0) ps.addWounds(p.id, wt * delta);
-    else ps.removeWounds(p.id, wt * -delta);
-  }
+  if (linked.length === 0) return;
+  withMirrorLock(() => {
+    for (const p of linked) {
+      const wt = p.stats?.woundThreshold ?? 0;
+      if (wt <= 0) continue;
+      if (delta > 0) ps.addWounds(p.id, wt * delta);
+      else ps.removeWounds(p.id, wt * -delta);
+    }
+  });
 }
 
 const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
@@ -311,15 +342,17 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
       // Keep any aboard minion-group crew the same size as the squadron.
       // GM edits to the vehicle's group count flow through to the linked
       // pilots so 'pilot count = ship count' stays an invariant from this
-      // direction. (Edits to participant.stats.minions via the stat sheet
-      // don't push back the other way yet — known asymmetric edge case.)
+      // direction. The mirror lock prevents the participant subscription
+      // from looping back through addHull while this push is in flight.
       const ps = useParticipantStore.getState();
       const linked = ps.participants.filter(
         (p) => p.equippedVehicleId === vehicleId && (p.stats?.minions ?? 1) > 1,
       );
-      for (const p of linked) {
-        ps.setMinionCount(p.id, Math.max(1, n));
-      }
+      withMirrorLock(() => {
+        for (const p of linked) {
+          ps.setMinionCount(p.id, Math.max(1, n));
+        }
+      });
       return {
         vehicles: { ...state.vehicles, [vehicleId]: { ...v, minions: next } },
       };
@@ -459,6 +492,37 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
       };
     }),
 }));
+
+// Reverse-direction mirror: when a minion-group crew member is killed by
+// wound damage (alive count drops), destroy the matching number of ships
+// in the linked vehicle. The forward direction (hull → wounds) is wired
+// inside addHull/removeHull via mirrorHullToCrew; both share the
+// `crewShipMirrorInProgress` flag to break the otherwise-infinite ping-
+// pong. Solo (non-minion-group) crew is ignored: a single PC pilot taking
+// wounds shouldn't auto-destroy their ship.
+useParticipantStore.subscribe((state, prevState) => {
+  if (crewShipMirrorInProgress) return;
+  for (const curr of state.participants) {
+    if (!curr.equippedVehicleId) continue;
+    if ((curr.stats?.minions ?? 1) <= 1) continue;
+    const prev = prevState.participants.find((p) => p.id === curr.id);
+    if (!prev) continue;
+    const aliveBefore = aliveCrewMinions(prev);
+    const aliveAfter = aliveCrewMinions(curr);
+    const minionsLost = aliveBefore - aliveAfter;
+    if (minionsLost === 0) continue;
+    const v = useActiveVehicleStore.getState().vehicles[curr.equippedVehicleId];
+    if (!v || v.hullThreshold <= 0) continue;
+    const hullDelta = v.hullThreshold * Math.abs(minionsLost);
+    withMirrorLock(() => {
+      if (minionsLost > 0) {
+        useActiveVehicleStore.getState().addHull(v.id, hullDelta);
+      } else {
+        useActiveVehicleStore.getState().removeHull(v.id, hullDelta);
+      }
+    });
+  }
+});
 
 // Auto-expire vehicle effects tagged with a pilot when that pilot's turn
 // starts. Mirrors the SWRPG core's "until the pilot's next turn" duration —
