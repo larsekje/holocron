@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Tag,
   Text,
   VStack,
@@ -35,16 +36,6 @@ const MODE_LABEL: Record<string, string> = {
   combat:         'Combat',
   skillChallenge: 'Skill Challenge',
 };
-
-function formatSkill(skill?: string): string {
-  if (!skill) return '';
-  return skill.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
-}
-
-function formatChar(c?: string): string {
-  if (!c) return '';
-  return c.charAt(0).toUpperCase() + c.slice(1);
-}
 
 /** Inline header chip showing the resolved attack target. When the snapshot
  * carries both a candidate participant and vehicle (vehicle weapon resolved
@@ -102,15 +93,8 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
                 {snapshot.attacker.name}
               </Heading>
             )}
+            <Spacer />
             {snapshot && <TargetIndicator snapshot={snapshot} />}
-            {snapshot?.skill && (
-              <Text fontSize="sm" color="gray.400">
-                {formatSkill(snapshot.skill)}
-                {snapshot.characteristic && (
-                  <Text as="span" color="gray.500">{` · ${formatChar(snapshot.characteristic)}`}</Text>
-                )}
-              </Text>
-            )}
             {snapshot?.difficultyLabel && (
               <Tag colorScheme="purple" variant="outline" size="sm">
                 {snapshot.difficultyLabel}
