@@ -134,6 +134,20 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
   );
   const isShortlistMode = !q && !showAll;
 
+  // Group visible rows by class (subtitle = the vehicle's group/type from
+  // the OggDude data: "Starfighters", "Freighters", "Walkers", etc.) so
+  // the GM scans by category rather than a long flat alphabetical wall.
+  // Within a group we still sort by name for stability.
+  const grouped = useMemo(() => {
+    const map = new Map<string, typeof visible>();
+    for (const v of visible) {
+      const key = v.subtitle && v.subtitle.length > 0 ? v.subtitle : 'Other';
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(v);
+    }
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [visible]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" isCentered scrollBehavior="inside">
       <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.700"/>
@@ -176,61 +190,78 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
               </Button>
             )}
           </HStack>
-          <VStack align="stretch" spacing="6px" maxH="55vh" overflowY="auto" pr={1}>
+          <VStack align="stretch" spacing={3} maxH="55vh" overflowY="auto" pr={1}>
             {visible.length === 0 ? (
               <Text fontSize="sm" color="gray.500" fontStyle="italic" py={4} textAlign="center">
                 No vehicles match.
               </Text>
             ) : (
-              visible.map((v) => {
-                const sil = silOf(v.tags);
-                return (
-                  <Flex
-                    key={v.id}
-                    as="button"
-                    type="button"
-                    onClick={() => handlePick(v.id)}
-                    h="38px"
-                    bg="#26292d"
-                    borderRadius="md"
-                    overflow="hidden"
-                    borderWidth="1px"
-                    borderColor="whiteAlpha.100"
-                    _hover={{bg: '#33363c', borderColor: 'orange.400'}}
-                    transition="background 0.1s ease, border-color 0.1s ease"
-                    align="center"
-                    textAlign="left"
-                  >
-                    <Flex
-                      w="36px"
-                      h="100%"
-                      flexShrink={0}
-                      align="center"
-                      justify="center"
-                      flexDirection="column"
-                      bg={silColor(sil)}
-                      color="white"
+              grouped.map(([group, items]) => (
+                <Box key={group}>
+                  <Flex align="center" gap={2} mb={1}>
+                    <Text
+                      as="b"
+                      fontSize="9px"
+                      letterSpacing="0.18em"
+                      textTransform="uppercase"
+                      color="whiteAlpha.500"
                     >
-                      <Text fontSize="9px" fontWeight="bold" lineHeight="1" letterSpacing="0.05em">
-                        SIL
-                      </Text>
-                      <Text fontSize="sm" fontWeight="bold" lineHeight="1" mt="1px">
-                        {sil ?? '—'}
-                      </Text>
-                    </Flex>
-                    <Box flex="1" minW={0} px={3}>
-                      <Text fontSize="sm" color="white" noOfLines={1} fontWeight="medium">
-                        {v.name}
-                      </Text>
-                      {v.subtitle && (
-                        <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1}>
-                          {v.subtitle}
-                        </Text>
-                      )}
-                    </Box>
+                      {group} ({items.length})
+                    </Text>
+                    <Box flex="1" h="1px" bg="whiteAlpha.100"/>
                   </Flex>
-                );
-              })
+                  <VStack align="stretch" spacing="6px">
+                    {items.map((v) => {
+                      const sil = silOf(v.tags);
+                      return (
+                        <Flex
+                          key={v.id}
+                          as="button"
+                          type="button"
+                          onClick={() => handlePick(v.id)}
+                          minH="52px"
+                          bg="#26292d"
+                          borderRadius="md"
+                          overflow="hidden"
+                          borderWidth="1px"
+                          borderColor="whiteAlpha.100"
+                          _hover={{bg: '#33363c', borderColor: 'orange.400'}}
+                          transition="background 0.1s ease, border-color 0.1s ease"
+                          align="stretch"
+                          textAlign="left"
+                        >
+                          <Flex
+                            w="44px"
+                            flexShrink={0}
+                            align="center"
+                            justify="center"
+                            flexDirection="column"
+                            bg={silColor(sil)}
+                            color="white"
+                          >
+                            <Text fontSize="9px" fontWeight="bold" lineHeight="1" letterSpacing="0.05em">
+                              SIL
+                            </Text>
+                            <Text fontSize="md" fontWeight="bold" lineHeight="1" mt="2px">
+                              {sil ?? '—'}
+                            </Text>
+                          </Flex>
+                          <VStack align="flex-start" justify="center" flex="1" minW={0} px={3} py={2} spacing={0.5}>
+                            <Text fontSize="sm" color="white" noOfLines={1} fontWeight="semibold" w="100%">
+                              {v.name}
+                            </Text>
+                            {v.subtitle && (
+                              <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1} w="100%">
+                                {v.subtitle}
+                              </Text>
+                            )}
+                          </VStack>
+                        </Flex>
+                      );
+                    })}
+                  </VStack>
+                </Box>
+              ))
             )}
           </VStack>
         </ModalBody>
