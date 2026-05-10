@@ -221,6 +221,10 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
   const maybeApplyEffect = (move: VehicleMove) => {
     const spec = MOVE_EFFECT_SPECS[move.id];
     if (!spec) return;
+    // Snapshot the pilot at click time so the auto-decay listener knows
+    // whose TURN_START clears the chip — even if the GM swaps active
+    // occupants before confirming the reminder.
+    const pilotId = activeOccupant?.id;
     useSessionLogStore.getState().addReminder({
       effectName: spec.name,
       description: spec.note,
@@ -232,6 +236,7 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
           moveId: move.id,
           name: spec.name,
           note: spec.note,
+          pilotParticipantId: pilotId,
         });
       },
       onSkip: undefined,

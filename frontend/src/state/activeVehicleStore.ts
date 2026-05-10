@@ -19,6 +19,7 @@ import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import type { CritInjury } from '@/data/critTable';
 import useParticipantStore, { type VehicleRole } from './participantsStore';
+import { addGameEventListener } from './eventSystem';
 
 /** Visible reminder of a maneuver/action that's currently in play (Evasive
  * Maneuvers, Boost Shields, etc.). Tracked on the vehicle as a chip the GM
@@ -27,14 +28,29 @@ import useParticipantStore, { type VehicleRole } from './participantsStore';
 export interface VehicleEffect {
   id: string;
   /** The move id this effect originated from (for de-duplication and the
-   * eventual auto-decay hookup). */
+   * auto-decay hookup). */
   moveId: string;
   /** Display name shown in the chip. */
   name: string;
   /** Optional one-line note shown in the tooltip. */
   note?: string;
   appliedAt: number;
+  /** Participant whose next turn-start clears the effect (when applicable).
+   * Set to the active occupant at apply time so the auto-decay listener
+   * knows whose `TURN_START` to listen for. */
+  pilotParticipantId?: string;
 }
+
+/** Move ids whose vehicle effect auto-expires at the start of the pilot's
+ * next turn (per FFG SWRPG: "until the pilot's next turn"). When TURN_START
+ * fires for a pilot tagged on one of these effects, the effect is cleared. */
+const PILOT_NEXT_TURN_AUTO_EXPIRE = new Set<string>([
+  'evasive-maneuvers',
+  'brace-for-impact',
+  'boost-shields',
+  'stay-on-target',
+  'gain-advantage',
+]);
 
 export interface VehicleWeapon {
   name: string;
@@ -443,5 +459,30 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
       };
     }),
 }));
+
+// Auto-expire vehicle effects tagged with a pilot when that pilot's turn
+// starts. Mirrors the SWRPG core's "until the pilot's next turn" duration —
+// when TURN_START fires for participant X, any vehicle carrying an
+// auto-expire effect (Evasive Maneuvers, Brace, Boost Shields, Stay on
+// Target, Has the Advantage) where pilotParticipantId === X has the chip
+// cleared. Effects applied during the same turn don't loop-clear because
+// TURN_START has already fired for that turn before the effect was applied;
+// the next firing for the same pilot is on their NEXT turn.
+addGameEventListener((event) => {
+  if (event.type !== 'TURN_START') return;
+  const pilotId = event.participantId;
+  if (!pilotId) return;
+  const state = useActiveVehicleStore.getState();
+  for (const v of Object.values(state.vehicles)) {
+    for (const eff of v.activeEffects ?? []) {
+      if (
+        eff.pilotParticipantId === pilotId
+        && PILOT_NEXT_TURN_AUTO_EXPIRE.has(eff.moveId)
+      ) {
+        state.removeVehicleEffect(v.id, eff.id);
+      }
+    }
+  }
+});
 
 export default useActiveVehicleStore;
