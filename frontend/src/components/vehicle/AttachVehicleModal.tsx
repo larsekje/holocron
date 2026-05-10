@@ -11,9 +11,13 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tag,
   Text,
   VStack,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react';
+import {ChevronDownIcon, ChevronRightIcon} from '@chakra-ui/icons';
 import {browseIndex, getDetail} from '@/data/spotlightIndex';
 import useActiveVehicleStore, {
   buildVehicleSpecFromSpotlight,
@@ -57,6 +61,84 @@ const CURATED_VEHICLE_IDS = new Set<string>([
   'vehicle_cr90-corvette',
 ]);
 
+/** Stat / weapon summary shown when a row's chevron is expanded. Pulled
+ * directly from the spotlight detail — same numbers `buildVehicleSpec…`
+ * would copy onto the ActiveVehicle. Compact strip of stat chips on
+ * top, named weapons (with damage / crit / range / qualities) below.
+ * No mutation; this is read-only preview content. */
+const ExpandedDetail: React.FC<{vehicleId: string}> = ({vehicleId}) => {
+  const detail = getDetail('vehicle' as any, vehicleId) as any;
+  if (!detail) return null;
+  const ch = detail.characteristics ?? {};
+  const dr = detail.derived ?? {};
+  const info = detail.info ?? {};
+  const weapons: any[] = Array.isArray(detail.weapons) ? detail.weapons : [];
+
+  const stat = (label: string, value: React.ReactNode) => (
+    <WrapItem>
+      <HStack spacing={1.5}>
+        <Text fontSize="9px" color="whiteAlpha.500" textTransform="uppercase" letterSpacing="0.06em">
+          {label}
+        </Text>
+        <Text fontSize="xs" color="whiteAlpha.900" fontWeight="semibold">
+          {value}
+        </Text>
+      </HStack>
+    </WrapItem>
+  );
+
+  return (
+    <Box bg="#1f2125" borderTopWidth="1px" borderTopColor="whiteAlpha.100" px={3} py={2.5}>
+      <Wrap spacing={3} mb={weapons.length > 0 ? 2.5 : 0}>
+        {typeof ch.Speed === 'number' && stat('Speed', ch.Speed)}
+        {ch.Handling != null && ch.Handling !== '' && stat('Hndl', String(ch.Handling))}
+        {typeof dr.armour === 'number' && stat('Armor', dr.armour)}
+        {typeof dr.defense === 'number' && stat('Def', dr.defense)}
+        {typeof dr.hull === 'number' && stat('Hull', dr.hull)}
+        {typeof dr.system === 'number' && stat('Sys', dr.system)}
+        {info.complement && stat('Crew', String(info.complement))}
+        {info.passengers != null && stat('Pass', String(info.passengers))}
+        {info.encumbrance != null && stat('Encum', String(info.encumbrance))}
+        {info.consumables && stat('Consum', String(info.consumables))}
+        {info.hyperdrive != null && stat('HD', typeof info.hyperdrive === 'object' ? `Cl ${info.hyperdrive.primary ?? '?'}` : `Cl ${info.hyperdrive}`)}
+        {info.sensors && stat('Sensors', String(info.sensors))}
+      </Wrap>
+      {weapons.length > 0 && (
+        <>
+          <Text fontSize="9px" color="whiteAlpha.500" textTransform="uppercase" letterSpacing="0.06em" mb={1}>
+            Weapons ({weapons.length})
+          </Text>
+          <VStack align="stretch" spacing={1}>
+            {weapons.map((w, i) => (
+              <Flex key={`${w.name}-${i}`} fontSize="11px" color="whiteAlpha.900" align="baseline" gap={2}>
+                <Text fontWeight="semibold" color="white" noOfLines={1} flex="1" minW={0}>
+                  {w.name}
+                </Text>
+                <HStack spacing={2} flexShrink={0} color="whiteAlpha.700">
+                  {w.damage != null && <Text>D{w.damage}</Text>}
+                  {w.critical != null && <Text>Cr{w.critical}</Text>}
+                  {w.range && <Text>{String(w.range)}</Text>}
+                </HStack>
+              </Flex>
+            ))}
+          </VStack>
+          {weapons.some((w) => Array.isArray(w.qualities) && w.qualities.length > 0) && (
+            <Wrap spacing={1} mt={1.5}>
+              {Array.from(new Set(weapons.flatMap((w) => w.qualities ?? []))).map((q) => (
+                <WrapItem key={q as string}>
+                  <Tag size="sm" colorScheme="gray" variant="subtle" fontSize="9px">
+                    {q as string}
+                  </Tag>
+                </WrapItem>
+              ))}
+            </Wrap>
+          )}
+        </>
+      )}
+    </Box>
+  );
+};
+
 /** Quick-setup picker: from a character's sheet, pick a vehicle from the
  * spotlight library and instantiate it with this character pre-bound as
  * the pilot. Skips the longer "make participant → add vehicle → attach
@@ -66,13 +148,24 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
   const addVehicle = useActiveVehicleStore((s) => s.add);
   const [query, setQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
       setQuery('');
       setShowAll(false);
+      setExpanded(new Set());
     }
   }, [isOpen]);
+
+  const toggleExpand = (id: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   // Browse all vehicles up-front, then narrow with the local query — the
   // index is small (~50 entries) so client-side filter is fine.
@@ -234,53 +327,87 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                   <VStack align="stretch" spacing="6px">
                     {items.map((v) => {
                       const sil = silOf(v.tags);
+                      const isExpanded = expanded.has(v.id);
                       return (
-                        <Flex
+                        <Box
                           key={v.id}
-                          as="button"
-                          type="button"
-                          onClick={() => handlePick(v.id)}
-                          minH="52px"
                           bg="#26292d"
                           borderRadius="md"
                           overflow="hidden"
                           borderWidth="1px"
-                          borderColor="whiteAlpha.100"
-                          _hover={{bg: '#33363c', borderColor: 'orange.400'}}
-                          transition="background 0.1s ease, border-color 0.1s ease"
-                          align="stretch"
-                          textAlign="left"
+                          borderColor={isExpanded ? 'whiteAlpha.300' : 'whiteAlpha.100'}
+                          transition="border-color 0.1s ease"
                         >
                           <Flex
-                            w="44px"
-                            flexShrink={0}
-                            align="center"
-                            justify="center"
-                            flexDirection="column"
-                            bg={silColor(sil)}
-                            color="white"
+                            minH="52px"
+                            align="stretch"
+                            _hover={{bg: '#2c2f34'}}
+                            transition="background 0.1s ease"
                           >
-                            <Text fontSize="9px" fontWeight="bold" lineHeight="1" letterSpacing="0.05em">
-                              SIL
-                            </Text>
-                            <Text fontSize="md" fontWeight="bold" lineHeight="1" mt="2px">
-                              {sil ?? '—'}
-                            </Text>
-                          </Flex>
-                          <VStack align="flex-start" justify="center" flex="1" minW={0} px={3} py={2} spacing={0.5}>
-                            <Text fontSize="sm" color="white" noOfLines={1} fontWeight="semibold" w="100%">
-                              {v.name}
-                            </Text>
-                            {(() => {
-                              const sub = subtitleFor(v.id);
-                              return sub ? (
-                                <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1} w="100%">
-                                  {sub}
+                            <Flex
+                              as="button"
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleExpand(v.id);
+                              }}
+                              w="28px"
+                              flexShrink={0}
+                              align="center"
+                              justify="center"
+                              color="whiteAlpha.500"
+                              _hover={{color: 'orange.300', bg: 'whiteAlpha.50'}}
+                              aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                              title={isExpanded ? 'Collapse details' : 'Expand details'}
+                            >
+                              {isExpanded ? <ChevronDownIcon boxSize={4}/> : <ChevronRightIcon boxSize={4}/>}
+                            </Flex>
+                            <Flex
+                              w="44px"
+                              flexShrink={0}
+                              align="center"
+                              justify="center"
+                              flexDirection="column"
+                              bg={silColor(sil)}
+                              color="white"
+                            >
+                              <Text fontSize="9px" fontWeight="bold" lineHeight="1" letterSpacing="0.05em">
+                                SIL
+                              </Text>
+                              <Text fontSize="md" fontWeight="bold" lineHeight="1" mt="2px">
+                                {sil ?? '—'}
+                              </Text>
+                            </Flex>
+                            <Flex
+                              as="button"
+                              type="button"
+                              onClick={() => handlePick(v.id)}
+                              flex="1"
+                              minW={0}
+                              px={3}
+                              py={2}
+                              align="center"
+                              textAlign="left"
+                              _hover={{bg: '#33363c'}}
+                              transition="background 0.1s ease"
+                            >
+                              <VStack align="flex-start" justify="center" flex="1" minW={0} spacing={0.5}>
+                                <Text fontSize="sm" color="white" noOfLines={1} fontWeight="semibold" w="100%">
+                                  {v.name}
                                 </Text>
-                              ) : null;
-                            })()}
-                          </VStack>
-                        </Flex>
+                                {(() => {
+                                  const sub = subtitleFor(v.id);
+                                  return sub ? (
+                                    <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1} w="100%">
+                                      {sub}
+                                    </Text>
+                                  ) : null;
+                                })()}
+                              </VStack>
+                            </Flex>
+                          </Flex>
+                          {isExpanded && <ExpandedDetail vehicleId={v.id}/>}
+                        </Box>
                       );
                     })}
                   </VStack>
