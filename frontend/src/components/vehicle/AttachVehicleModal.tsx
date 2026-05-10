@@ -107,6 +107,24 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
     onClose();
   };
 
+  // Per-row subtitle, distinct from the group header. Prefer the
+  // manufacturer (most distinctive flavour text — "Sienar Fleet
+  // Systems", "Incom Corporation"); fall back to a compact stat line
+  // (Hull · Speed) so even homebrew entries without a manufacturer
+  // still get a useful second line.
+  const subtitleFor = (id: string): string | null => {
+    const detail = getDetail('vehicle' as any, id) as any;
+    if (!detail) return null;
+    const mfr = detail.info?.manufacturer;
+    if (typeof mfr === 'string' && mfr.trim().length > 0) return mfr.trim();
+    const hull = detail.derived?.hull;
+    const speed = detail.characteristics?.Speed;
+    const bits: string[] = [];
+    if (typeof hull === 'number') bits.push(`Hull ${hull}`);
+    if (typeof speed === 'number') bits.push(`Speed ${speed}`);
+    return bits.length > 0 ? bits.join(' · ') : null;
+  };
+
   // Pull a Sil-N tag out of the index entry so the row can show a tier
   // square — same visual signal the targets list uses.
   const silOf = (tags?: string[]): number | null => {
@@ -219,7 +237,7 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                           as="button"
                           type="button"
                           onClick={() => handlePick(v.id)}
-                          h="44px"
+                          minH="52px"
                           bg="#26292d"
                           borderRadius="md"
                           overflow="hidden"
@@ -246,11 +264,19 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
                               {sil ?? '—'}
                             </Text>
                           </Flex>
-                          <Flex flex="1" minW={0} px={3} align="center">
+                          <VStack align="flex-start" justify="center" flex="1" minW={0} px={3} py={2} spacing={0.5}>
                             <Text fontSize="sm" color="white" noOfLines={1} fontWeight="semibold" w="100%">
                               {v.name}
                             </Text>
-                          </Flex>
+                            {(() => {
+                              const sub = subtitleFor(v.id);
+                              return sub ? (
+                                <Text fontSize="11px" color="whiteAlpha.500" noOfLines={1} w="100%">
+                                  {sub}
+                                </Text>
+                              ) : null;
+                            })()}
+                          </VStack>
                         </Flex>
                       );
                     })}
