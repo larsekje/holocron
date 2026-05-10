@@ -61,12 +61,18 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
 
   const [selected, setSelected] = useState<Record<string, VehicleRole>>({});
   const [groupSize, setGroupSize] = useState<number>(1);
+  // Tracks whether the GM has touched the Group Size input. While untouched,
+  // it auto-tracks the max minion count across selected occupants so that
+  // ticking a 3-pilot minion group bumps the squadron to 3 ships
+  // automatically. Once touched, the input becomes a manual override.
+  const [groupSizeTouched, setGroupSizeTouched] = useState(false);
 
   // Reset selection state every time the modal opens with a new vehicle.
   useEffect(() => {
     if (isOpen) {
       setSelected({});
       setGroupSize(1);
+      setGroupSizeTouched(false);
     }
   }, [isOpen, vehicleDetail?.id]);
 
@@ -75,13 +81,18 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
 
   const toggle = (participantId: string) => {
     setSelected((prev) => {
-      if (prev[participantId]) {
-        const next = { ...prev };
-        delete next[participantId];
-        return next;
+      const next = { ...prev };
+      if (next[participantId]) delete next[participantId];
+      else next[participantId] = defaultRoleForIndex(Object.keys(prev).length);
+      // Auto-track minion-group size unless the GM has manually edited.
+      if (!groupSizeTouched) {
+        const maxMinions = Object.keys(next).reduce((max, id) => {
+          const p = participants.find((pp) => pp.id === id);
+          return Math.max(max, p?.stats?.minions ?? 1);
+        }, 1);
+        setGroupSize(maxMinions);
       }
-      const idx = Object.keys(prev).length;
-      return { ...prev, [participantId]: defaultRoleForIndex(idx) };
+      return next;
     });
   };
 
@@ -128,7 +139,10 @@ export const AddVehicleModal: React.FC<Props> = ({ isOpen, onClose, vehicleDetai
               min={1}
               max={20}
               value={groupSize}
-              onChange={(_, n) => setGroupSize(Number.isFinite(n) && n >= 1 ? n : 1)}
+              onChange={(_, n) => {
+                setGroupSizeTouched(true);
+                setGroupSize(Number.isFinite(n) && n >= 1 ? n : 1);
+              }}
               w="64px"
             >
               <NumberInputField bg="gray.800" borderColor="gray.700" />

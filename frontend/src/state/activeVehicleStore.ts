@@ -130,6 +130,11 @@ interface ActiveVehicleStore {
   /** Detach a participant from the vehicle. The vehicle stays in the
    * encounter even if it becomes unmanned. */
   removeOccupant: (vehicleId: string, participantId: string) => void;
+  /** Adjust the starship-scale minion-group size after the vehicle is in
+   * the encounter. `n <= 1` collapses back to a single ship (clears the
+   * `minions` field). Useful when a minion-group participant boards a ship
+   * the GM created as a single hull and now wants scaled to N. */
+  setMinions: (vehicleId: string, n: number) => void;
   addHull: (vehicleId: string, n: number) => void;
   removeHull: (vehicleId: string, n: number) => void;
   addSystemStrain: (vehicleId: string, n: number) => void;
@@ -241,6 +246,17 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
     setParticipantVehicle(participantId, undefined, undefined);
     // No auto-purge: empty ships remain in the encounter as targets.
   },
+
+  setMinions: (vehicleId, n) =>
+    set((state) => {
+      const v = state.vehicles[vehicleId];
+      if (!v) return state;
+      const next = n > 1 ? n : undefined;
+      if (v.minions === next) return state;
+      return {
+        vehicles: { ...state.vehicles, [vehicleId]: { ...v, minions: next } },
+      };
+    }),
 
   addHull: (vehicleId, n) =>
     set((state) => {

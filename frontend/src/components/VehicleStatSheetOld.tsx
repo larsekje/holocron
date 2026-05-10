@@ -37,6 +37,7 @@ import type {ModalSnapshot} from '@components/dice/mockSnapshots';
 import VehicleWeaponCardOld from '@components/statblock/VehicleWeaponCardOld';
 import EnterVehicleModal from '@components/vehicle/EnterVehicleModal';
 import StatusCardOld from '@components/statuscard/StatusCardOld';
+import InlineNumber from '@components/common/InlineNumber';
 import {
   MOVE_CATEGORIES,
   MOVE_EFFECT_SPECS,
@@ -89,6 +90,7 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
   const addSpeed = useActiveVehicleStore((s) => s.addSpeed);
   const removeSpeed = useActiveVehicleStore((s) => s.removeSpeed);
   const removeOccupant = useActiveVehicleStore((s) => s.removeOccupant);
+  const setMinions = useActiveVehicleStore((s) => s.setMinions);
   const applyVehicleEffect = useActiveVehicleStore((s) => s.applyVehicleEffect);
   const removeVehicleEffect = useActiveVehicleStore((s) => s.removeVehicleEffect);
   const participants = useParticipantStore((s) => s.participants);
@@ -369,6 +371,15 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
   const hullRemaining = Math.max(hullPoolMax - vehicle.hullCurrent, 0);
   const systemRemaining = Math.max(vehicle.systemThreshold - vehicle.systemCurrent, 0);
   const aliveCount = aliveMinions(vehicle);
+  // The largest minion-group count among current occupants. Used to surface
+  // a "scale to N ships" affordance when the GM has e.g. boarded a 3-pilot
+  // minion group onto a single TIE — most natural is to scale the vehicle
+  // to match. Stays 1 when no minion-group occupants are aboard.
+  const maxOccupantMinions = occupants.reduce(
+    (m, p) => Math.max(m, p.stats?.minions ?? 1),
+    1,
+  );
+  const showMinionAffordance = isMinionGroup || maxOccupantMinions > 1;
 
   const info = vehicle.vehicleInfo ?? {};
   const hyperdriveText = formatHyperdrive(info.hyperdrive);
@@ -398,10 +409,32 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
             <Heading size="md" color="white">
               {contextParticipant ? contextParticipant.name : vehicle.name}
             </Heading>
-            {isMinionGroup && !contextParticipant && (
+            {showMinionAffordance && !contextParticipant && (
               <Tag size="sm" colorScheme="orange" variant="subtle">
-                Minion ×{groupSize}
+                <HStack spacing={0.5} align="baseline">
+                  <Text>Minion ×</Text>
+                  <InlineNumber
+                    value={groupSize}
+                    min={1}
+                    max={20}
+                    onSave={(n) => setMinions(vehicle.id, n)}
+                    cellWidth="20px"
+                    fontSize="xs"
+                    color="orange.200"
+                  />
+                </HStack>
               </Tag>
+            )}
+            {!isMinionGroup && maxOccupantMinions > 1 && !contextParticipant && (
+              <Button
+                size="xs"
+                variant="ghost"
+                colorScheme="orange"
+                onClick={() => setMinions(vehicle.id, maxOccupantMinions)}
+                title={`Pilot is a minion group of ${maxOccupantMinions} — scale ship to match`}
+              >
+                Scale to {maxOccupantMinions}
+              </Button>
             )}
           </HStack>
           {contextParticipant ? (
@@ -492,6 +525,7 @@ const VehicleStatSheetOld: React.FC<Props> = ({vehicle, contextParticipant}) => 
           onRemove={() => removeHull(vehicle.id, 1)}
           colorScheme="orange"
           tone="damage"
+          segments={isMinionGroup ? groupSize : undefined}
           footer={isMinionGroup ? (
             <Text fontSize="xs" color={aliveCount === 0 ? 'red.300' : 'whiteAlpha.700'} mt={1}>
               Alive: <Text as="span" fontWeight="bold">{aliveCount}</Text>/{groupSize}
@@ -810,6 +844,12 @@ interface MetricTrackProps {
   /** Optional content rendered below the bar (e.g. context-aware
    * speed-band effects under the Speed track). */
   footer?: React.ReactNode;
+  /** When >1, render the bar as N side-by-side segments, each
+   * representing one minion-group member's per-unit pool (max / segments).
+   * Damage fills segments left-to-right; a fully-filled segment = one
+   * member destroyed. Mirrors `HealthBarOld`'s minion-group behaviour for
+   * character minion groups. */
+  segments?: number;
 }
 
 const MetricTrack: React.FC<MetricTrackProps> = ({
@@ -822,10 +862,13 @@ const MetricTrack: React.FC<MetricTrackProps> = ({
   colorScheme,
   tone = 'damage',
   footer,
+  segments,
 }) => {
   const pct = max > 0 ? Math.min(100, (current / max) * 100) : 0;
   const exceeded = tone === 'damage' && current >= max && max > 0;
   const atMax = current >= max && max > 0;
+  const segmentCount = segments && segments > 1 ? segments : 1;
+  const perSegmentMax = segmentCount > 1 && max > 0 ? max / segmentCount : max;
   return (
     <Box flex="1" p={3} borderRadius="md" bg="#1f2125" borderWidth="1px" borderColor="whiteAlpha.100">
       <HStack justify="space-between" mb={2}>
@@ -857,9 +900,30 @@ const MetricTrack: React.FC<MetricTrackProps> = ({
         </Heading>
         <Text color="whiteAlpha.500">/ {max}</Text>
       </HStack>
-      <Box mt={2} h="6px" bg="#0e1014" borderRadius="sm" overflow="hidden">
-        <Box h="100%" w={`${pct}%`} bg={`var(--chakra-colors-${colorScheme}-400)`}/>
-      </Box>
+      {segmentCount > 1 ? (
+        <HStack mt={2} spacing="2px" w="100%">
+          {Array.from({length: segmentCount}).map((_, k) => {
+            const damageInSeg = Math.max(0, Math.min(perSegmentMax, current - k * perSegmentMax));
+            const segPct = perSegmentMax > 0 ? (damageInSeg / perSegmentMax) * 100 : 0;
+            return (
+              <Box
+                key={k}
+                flex="1"
+                h="6px"
+                bg="#0e1014"
+                borderRadius="sm"
+                overflow="hidden"
+              >
+                <Box h="100%" w={`${segPct}%`} bg={`var(--chakra-colors-${colorScheme}-400)`}/>
+              </Box>
+            );
+          })}
+        </HStack>
+      ) : (
+        <Box mt={2} h="6px" bg="#0e1014" borderRadius="sm" overflow="hidden">
+          <Box h="100%" w={`${pct}%`} bg={`var(--chakra-colors-${colorScheme}-400)`}/>
+        </Box>
+      )}
       {remaining !== undefined && (
         <Text fontSize="xs" color="whiteAlpha.500" mt={1}>
           {remaining} remaining

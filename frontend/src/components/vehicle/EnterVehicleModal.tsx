@@ -13,6 +13,7 @@ import {
   Select,
   Tag,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import useParticipantStore, {type VehicleRole} from '@/state/participantsStore';
@@ -42,6 +43,8 @@ const EnterVehicleModal: React.FC<Props> = ({isOpen, onClose, vehicleId}) => {
   const participants = useParticipantStore((s) => s.participants);
   const vehicle = useActiveVehicleStore((s) => s.vehicles[vehicleId]);
   const addOccupant = useActiveVehicleStore((s) => s.addOccupant);
+  const setMinions = useActiveVehicleStore((s) => s.setMinions);
+  const toast = useToast();
 
   const [selected, setSelected] = useState<Record<string, VehicleRole>>({});
 
@@ -75,6 +78,25 @@ const EnterVehicleModal: React.FC<Props> = ({isOpen, onClose, vehicleId}) => {
   const handleSubmit = () => {
     for (const id of selectedIds) {
       addOccupant(vehicleId, id, selected[id]);
+    }
+    // If any newly-added occupant is a minion group, scale the vehicle to
+    // match (one ship per pilot) — most natural when boarding e.g. a
+    // 3-pilot TIE squadron onto a TIE/ln entry. Don't shrink: if the
+    // vehicle is already a larger group, leave it.
+    const maxIncomingMinions = selectedIds.reduce((max, id) => {
+      const p = participants.find((pp) => pp.id === id);
+      const m = p?.stats?.minions ?? 1;
+      return Math.max(max, m);
+    }, 1);
+    const currentMinions = vehicle?.minions ?? 1;
+    if (maxIncomingMinions > currentMinions) {
+      setMinions(vehicleId, maxIncomingMinions);
+      toast({
+        title: `Scaled ${vehicle?.name ?? 'vehicle'} to ${maxIncomingMinions} ships`,
+        description: 'Pilot is a minion group — vehicle promoted to a matching squadron.',
+        status: 'info',
+        duration: 3500,
+      });
     }
     onClose();
   };
