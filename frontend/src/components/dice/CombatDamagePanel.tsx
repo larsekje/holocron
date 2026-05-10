@@ -51,6 +51,7 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const update = useDiceRollerStore((s) => s.update);
   const addWounds = useParticipantStore((s) => s.addWounds);
   const addHull = useActiveVehicleStore((s) => s.addHull);
+  const addSystemStrain = useActiveVehicleStore((s) => s.addSystemStrain);
   const targetVehicle = useActiveVehicleStore((s) =>
     snapshot.targetVehicleId ? s.vehicles[snapshot.targetVehicleId] ?? null : null,
   );
@@ -59,6 +60,13 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   if (!weapon) return null;
 
   const isVehicleTarget = !!snapshot.targetVehicleId;
+  // Ion damage routes to vehicle system strain instead of hull (rules: full
+  // damage to droids, affected by soak — the soak step is the same, only
+  // the destination changes). Quality match is case-insensitive.
+  const isIonWeapon = (weapon.qualities ?? []).some(
+    (q) => q.name.toLowerCase() === 'ion',
+  );
+  const vehicleDestination: 'hull' | 'system' = isIonWeapon ? 'system' : 'hull';
 
   const netSuccess = result?.net.netSuccess ?? 0;
   const succeeded = result?.net.succeeded ?? false;
@@ -66,15 +74,39 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const soak = isVehicleTarget ? (targetVehicle?.armor ?? 0) : (target?.soak ?? 0);
   const baseDamage = (weapon.damage ?? 0) + Math.max(0, netSuccess);
   const finalDamage = result ? Math.max(0, baseDamage - soak) : 0;
+
+  // Threshold checks fork on target kind. Characters: wounds vs woundThreshold
+  // → Critical Injury. Vehicles: hull vs hullThreshold (or system vs
+  // systemThreshold for Ion) → Vehicle Critical Hit. Either way the same
+  // amber alert slot is reused.
   const newWounds = (target?.wounds ?? 0) + finalDamage;
-  const exceedsThreshold = !!result && succeeded && !!target && newWounds > target.woundThreshold;
+  const characterExceeds =
+    !!result && succeeded && !!target && newWounds > target.woundThreshold;
+  const newHull =
+    (targetVehicle?.hullCurrent ?? 0)
+    + (vehicleDestination === 'hull' ? finalDamage : 0);
+  const newSystem =
+    (targetVehicle?.systemCurrent ?? 0)
+    + (vehicleDestination === 'system' ? finalDamage : 0);
+  const vehicleExceeds =
+    !!result
+    && succeeded
+    && isVehicleTarget
+    && !!targetVehicle
+    && finalDamage > 0
+    && (vehicleDestination === 'hull'
+      ? newHull > targetVehicle.hullThreshold
+      : newSystem > targetVehicle.systemThreshold);
+  const exceedsThreshold = characterExceeds || vehicleExceeds;
 
   // Display name + soak source for chips and the apply button label.
   const targetName = isVehicleTarget
     ? (targetVehicle?.name ?? snapshot.targetVehicleName ?? 'Vehicle')
     : (target?.name ?? null);
   const soakLabel = isVehicleTarget ? `${targetName} armor` : (target ? `${target.name} soak` : 'Target soak');
-  const damageBucketLabel = isVehicleTarget ? 'Hull damage' : 'Wounds dealt';
+  const damageBucketLabel = isVehicleTarget
+    ? (vehicleDestination === 'system' ? 'System strain' : 'Hull damage')
+    : 'Wounds dealt';
   const hasTarget = isVehicleTarget ? !!targetVehicle : !!target;
 
   const damageDisplay = !result ? '—' : succeeded ? String(finalDamage) : '—';
@@ -82,7 +114,9 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const applyLabel = !result
     ? 'Apply'
     : isVehicleTarget && targetName
-      ? `Apply ${finalDamage} to ${targetName} hull`
+      ? vehicleDestination === 'system'
+        ? `Apply ${finalDamage} system strain to ${targetName}`
+        : `Apply ${finalDamage} to ${targetName} hull`
       : target
         ? `Apply ${finalDamage} to ${target.name}`
         : 'Apply';
@@ -140,14 +174,18 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
             const symbolText = symbolBits.length > 0 ? ` (${symbolBits.join(' ')})` : '';
 
             if (isVehicleTarget && snapshot.targetVehicleId && targetVehicle) {
-              addHull(snapshot.targetVehicleId, finalDamage);
-              const hullWord = finalDamage === 1 ? 'hull' : 'hull';
+              const destWord = vehicleDestination === 'system' ? 'system strain' : 'hull';
+              if (vehicleDestination === 'system') {
+                addSystemStrain(snapshot.targetVehicleId, finalDamage);
+              } else {
+                addHull(snapshot.targetVehicleId, finalDamage);
+              }
               log.rewriteLastDamageForRoll(
                 snapshot.id,
-                `${attackerName} — ${weapon.name} → ${targetVehicle.name}: ${finalDamage} ${hullWord}${symbolText}`,
+                `${attackerName} — ${weapon.name} → ${targetVehicle.name}: ${finalDamage} ${destWord}${symbolText}`,
               );
               toast({
-                title: `${finalDamage} hull applied to ${targetVehicle.name}`,
+                title: `${finalDamage} ${destWord} applied to ${targetVehicle.name}`,
                 status: 'success',
                 duration: 2500,
               });
@@ -197,9 +235,13 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
       >
         <AlertIcon color="#ffb454" />
         <Text fontWeight="semibold">
-          {exceedsThreshold && target
+          {characterExceeds && target
             ? `Wounds exceed threshold (${newWounds}/${target.woundThreshold}) — Critical Injury.`
-            : 'Critical Injury threshold reserved'}
+            : vehicleExceeds && targetVehicle
+              ? vehicleDestination === 'system'
+                ? `System strain exceeds threshold (${newSystem}/${targetVehicle.systemThreshold}) — Vehicle Critical Hit.`
+                : `Hull exceeds threshold (${newHull}/${targetVehicle.hullThreshold}) — Vehicle Critical Hit.`
+              : 'Critical threshold reserved'}
         </Text>
       </Alert>
     </VStack>
