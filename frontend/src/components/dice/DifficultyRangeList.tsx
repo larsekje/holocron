@@ -28,12 +28,30 @@ interface RangeTier {
   reminder: string;
 }
 
-const RANGE_REMINDERS: Record<NonNullable<SnapshotWeapon['range']>, string> = {
+// Personal-scale band reminders (default for character weapons).
+const PERSONAL_RANGE_REMINDERS: Record<NonNullable<SnapshotWeapon['range']>, string> = {
   engaged: 'touching / hand-to-hand — Light +1 diff, Heavy +2 diff, no Gunnery',
   short: 'same room, normal conversation',
   medium: 'across the street, raised voice',
   long: 'across a courtyard, ~100 m',
   extreme: 'edge of perception, ~500 m',
+};
+
+// Planetary-scale band reminders for vehicle/starship weapons. The pip
+// counts (Average / Easy / Average / Hard / Daunting) match personal scale,
+// only the band labels and the actual distances differ — "Engaged" reads
+// as "Close" at this scale (boarding range / adjacent ships).
+const PLANETARY_RANGE_REMINDERS: Record<NonNullable<SnapshotWeapon['range']>, string> = {
+  engaged: 'close — adjacent ships, boarding range (no Gunnery at Close)',
+  short: 'a few km — within point-defense reach',
+  medium: 'tens of km — typical starship engagement',
+  long: 'hundreds of km — beyond visual range',
+  extreme: 'edge of weapon reach — sensor-only',
+};
+
+// Planetary-scale label overrides where the band name itself differs.
+const PLANETARY_RANGE_LABELS: Partial<Record<NonNullable<SnapshotWeapon['range']>, string>> = {
+  engaged: 'Close',
 };
 
 const RANGE_TIERS: RangeTier[] = (['engaged', 'short', 'medium', 'long', 'extreme'] as const).map(
@@ -44,7 +62,7 @@ const RANGE_TIERS: RangeTier[] = (['engaged', 'short', 'medium', 'long', 'extrem
       label: r === 'engaged' ? 'Engaged' : r[0].toUpperCase() + r.slice(1),
       presetId: t.presetId,
       pips: t.count,
-      reminder: RANGE_REMINDERS[r],
+      reminder: PERSONAL_RANGE_REMINDERS[r],
     };
   },
 );
@@ -125,15 +143,25 @@ export const DifficultyRangeList: React.FC<Props> = ({ mode, appliedPresetIds, w
   if (isCombat) {
     const baseRange = snapshot?.weapon?.baseRange;
     const baseRangeIdx = baseRange ? RANGE_TIERS.findIndex((t) => t.id === baseRange) : -1;
+    // Vehicle weapons use planetary-scale band labels and reminders. The
+    // pip counts are identical to personal scale, only the names + tooltip
+    // text differ ("Engaged" → "Close", "across the street" → "tens of km").
+    const isPlanetary = snapshot?.weaponKind === 'vehicle';
 
     return (
       <VStack align="stretch" spacing={0}>
         {RANGE_TIERS.map((r, idx) => {
           const isActive = weaponRange === r.id;
           const outOfReach = baseRangeIdx >= 0 && idx > baseRangeIdx;
+          const label = isPlanetary && PLANETARY_RANGE_LABELS[r.id]
+            ? (PLANETARY_RANGE_LABELS[r.id] as string)
+            : r.label;
+          const reminder = isPlanetary
+            ? PLANETARY_RANGE_REMINDERS[r.id]
+            : r.reminder;
           return renderRow(
             r.id,
-            r.label,
+            label,
             isActive,
             r.pips,
             () => {
@@ -141,7 +169,7 @@ export const DifficultyRangeList: React.FC<Props> = ({ mode, appliedPresetIds, w
               if (weapon) update({ weapon: { ...weapon, range: r.id } });
               setDifficulty(r.presetId, r.pips, 'Difficulty');
             },
-            `${r.label} — ${r.reminder} (${r.pips} difficulty)`,
+            `${label} — ${reminder} (${r.pips} difficulty)`,
             outOfReach,
           );
         })}

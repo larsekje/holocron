@@ -68,11 +68,22 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   );
   const vehicleDestination: 'hull' | 'system' = isIonWeapon ? 'system' : 'hull';
 
+  // Cross-scale damage: a vehicle/starship weapon hitting a personal-scale
+  // target deals 10× its base damage (FFG SWRPG core: each point of higher-
+  // scale damage = 10 of the lower scale). Net successes still add at the
+  // higher scale; soak still subtracts. In practice a single hit usually
+  // vaporises the character — the GM can mercy-rule narratively if needed.
+  const isCrossScalePersonal =
+    snapshot.weaponKind === 'vehicle' && !isVehicleTarget && !!target;
+  const scaledWeaponDamage = isCrossScalePersonal
+    ? (weapon.damage ?? 0) * 10
+    : (weapon.damage ?? 0);
+
   const netSuccess = result?.net.netSuccess ?? 0;
   const succeeded = result?.net.succeeded ?? false;
   // Vehicle "soak" comes from `armor`; characters use the existing target.soak.
   const soak = isVehicleTarget ? (targetVehicle?.armor ?? 0) : (target?.soak ?? 0);
-  const baseDamage = (weapon.damage ?? 0) + Math.max(0, netSuccess);
+  const baseDamage = scaledWeaponDamage + Math.max(0, netSuccess);
   const finalDamage = result ? Math.max(0, baseDamage - soak) : 0;
 
   // Threshold checks fork on target kind. Characters: wounds vs woundThreshold
@@ -132,8 +143,12 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
         align="center"
         flexWrap="wrap"
       >
-        <Chip tip={`${weapon.name} base damage`}>
-          <Text>{weapon.damage}</Text>
+        <Chip
+          tip={isCrossScalePersonal
+            ? `${weapon.name}: vehicle weapon ×10 vs personal target (${weapon.damage} → ${scaledWeaponDamage})`
+            : `${weapon.name} base damage`}
+        >
+          <Text>{scaledWeaponDamage}</Text>
         </Chip>
         <Text color="gray.500" fontSize="sm">+</Text>
         <Chip
