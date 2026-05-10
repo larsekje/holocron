@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   Box,
-  Button,
   Flex,
   HStack,
   Input,
@@ -34,32 +33,8 @@ interface Props {
   participant: Participant;
 }
 
-/** Short-list of the iconic SWRPG vehicles the GM most often reaches for
- * — OT starfighters, the YT freighters, walkers, the speeder bike. The
- * full 50+ catalogue is one click away via "Show all", and the search
- * box always queries the full set so anything off the curated list is
- * still findable by typing its name. Same hand-curated pattern stoogoff
- * uses on its picker. */
-const CURATED_VEHICLE_IDS = new Set<string>([
-  'vehicle_tie-ln-starfighter',
-  'vehicle_tie-in-interceptor',
-  'vehicle_tie-sa-tactical-bomber',
-  'vehicle_tie-d-defender-multi-role-starfighter',
-  'vehicle_t-65b-x-wing-starfighter',
-  'vehicle_btl-a4-btl-s3-y-wing-attack-starfighter',
-  'vehicle_rz-1-a-wing-light-interceptor',
-  'vehicle_a-sf-01-b-wing-heavy-fast-attack-starfighter',
-  'vehicle_z-95-af4-headhunter',
-  'vehicle_yt-1300-light-freighter',
-  'vehicle_yt-2400-light-freighter',
-  'vehicle_hwk-290-light-freighter',
-  'vehicle_lambda-class-t-4a-long-range-shuttle',
-  'vehicle_alliance-t-47-airspeeder',
-  'vehicle_all-terrain-armoured-transport',
-  'vehicle_all-terrain-scout-transport',
-  'vehicle_74-z-speeder-bike',
-  'vehicle_cr90-corvette',
-]);
+// (No hand-curated short-list — the picker shows the full stoogoff
+// catalogue, grouped by class so scanning stays fast.)
 
 /** Stat / weapon summary shown when a row's chevron is expanded. Pulled
  * directly from the spotlight detail — same numbers `buildVehicleSpec…`
@@ -147,13 +122,11 @@ const ExpandedDetail: React.FC<{vehicleId: string}> = ({vehicleId}) => {
 const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => {
   const addVehicle = useActiveVehicleStore((s) => s.add);
   const [query, setQuery] = useState('');
-  const [showAll, setShowAll] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
       setQuery('');
-      setShowAll(false);
       setExpanded(new Set());
     }
   }, [isOpen]);
@@ -172,21 +145,14 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
   const allVehicles = useMemo(() => browseIndex(500, ['vehicle' as any]), []);
   const q = query.trim().toLowerCase();
 
-  // When searching, always query the full catalogue (curation is for
-  // picking, not for hiding). Without a query: show only the curated set
-  // unless the GM has clicked Show all.
   const visible = useMemo(() => {
-    let pool = allVehicles;
-    if (!q && !showAll) {
-      pool = allVehicles.filter((v) => CURATED_VEHICLE_IDS.has(v.id));
-    }
-    if (!q) return pool;
-    return pool.filter((v) =>
+    if (!q) return allVehicles;
+    return allVehicles.filter((v) =>
       v.name.toLowerCase().includes(q)
       || (v.subtitle ?? '').toLowerCase().includes(q)
       || (v.tags ?? []).some((t) => t.toLowerCase().includes(q)),
     );
-  }, [allVehicles, q, showAll]);
+  }, [allVehicles, q]);
 
   const handlePick = (id: string) => {
     const detail = getDetail('vehicle' as any, id);
@@ -242,12 +208,6 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
     return '#3a3f47';
   };
 
-  const totalCurated = useMemo(
-    () => allVehicles.filter((v) => CURATED_VEHICLE_IDS.has(v.id)).length,
-    [allVehicles],
-  );
-  const isShortlistMode = !q && !showAll;
-
   // Group visible rows by class (subtitle = the vehicle's group/type from
   // the OggDude data: "Starfighters", "Freighters", "Walkers", etc.) so
   // the GM scans by category rather than a long flat alphabetical wall.
@@ -285,24 +245,7 @@ const AttachVehicleModal: React.FC<Props> = ({isOpen, onClose, participant}) => 
             autoFocus
           />
           <HStack justify="space-between" mb={2} fontSize="xs" color="whiteAlpha.500">
-            <Text>
-              {isShortlistMode
-                ? `Popular (${visible.length})`
-                : q
-                  ? `${visible.length} match`
-                  : `All (${visible.length})`}
-            </Text>
-            {!q && (
-              <Button
-                size="xs"
-                variant="ghost"
-                color="orange.300"
-                _hover={{bg: 'whiteAlpha.100'}}
-                onClick={() => setShowAll((v) => !v)}
-              >
-                {showAll ? `Show curated (${totalCurated})` : `Show all (${allVehicles.length})`}
-              </Button>
-            )}
+            <Text>{q ? `${visible.length} match` : `All vehicles (${visible.length})`}</Text>
           </HStack>
           <VStack align="stretch" spacing={3} maxH="55vh" overflowY="auto" pr={1}>
             {visible.length === 0 ? (
