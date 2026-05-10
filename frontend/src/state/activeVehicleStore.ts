@@ -190,6 +190,34 @@ function setParticipantVehicle(
   ps.updateParticipants(next);
 }
 
+/** Mirror a change in a vehicle's alive-ship count to any aboard
+ * minion-group crew. One ship lost = one pilot killed (adds the pilot's
+ * woundThreshold to their wounds, since that's the per-minion threshold).
+ * Reverse direction (ship "un-killed" by a hull-damage undo) removes the
+ * matching wounds — same lossy revive semantics character minion groups
+ * use in this codebase. Non-minion crew is untouched: a sole PC pilot of a
+ * group ship doesn't take wound damage when their squadron loses ships. */
+function mirrorHullToCrew(
+  vehicleId: string,
+  before: ActiveVehicle,
+  after: ActiveVehicle,
+) {
+  const aliveBefore = aliveMinions(before);
+  const aliveAfter = aliveMinions(after);
+  const delta = aliveBefore - aliveAfter; // positive = ships lost
+  if (delta === 0) return;
+  const ps = useParticipantStore.getState();
+  const linked = ps.participants.filter(
+    (p) => p.equippedVehicleId === vehicleId && (p.stats?.minions ?? 1) > 1,
+  );
+  for (const p of linked) {
+    const wt = p.stats?.woundThreshold ?? 0;
+    if (wt <= 0) continue;
+    if (delta > 0) ps.addWounds(p.id, wt * delta);
+    else ps.removeWounds(p.id, wt * -delta);
+  }
+}
+
 const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
   vehicles: {},
   selectedVehicleId: null,
@@ -252,35 +280,43 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
       const v = state.vehicles[vehicleId];
       if (!v) return state;
       const next = n > 1 ? n : undefined;
-      if (v.minions === next) return state;
+      if (v.minions === next) {
+        return state;
+      }
+      // Keep any aboard minion-group crew the same size as the squadron.
+      // GM edits to the vehicle's group count flow through to the linked
+      // pilots so 'pilot count = ship count' stays an invariant from this
+      // direction. (Edits to participant.stats.minions via the stat sheet
+      // don't push back the other way yet — known asymmetric edge case.)
+      const ps = useParticipantStore.getState();
+      const linked = ps.participants.filter(
+        (p) => p.equippedVehicleId === vehicleId && (p.stats?.minions ?? 1) > 1,
+      );
+      for (const p of linked) {
+        ps.setMinionCount(p.id, Math.max(1, n));
+      }
       return {
         vehicles: { ...state.vehicles, [vehicleId]: { ...v, minions: next } },
       };
     }),
 
-  addHull: (vehicleId, n) =>
-    set((state) => {
-      const v = state.vehicles[vehicleId];
-      if (!v) return state;
-      return {
-        vehicles: {
-          ...state.vehicles,
-          [vehicleId]: { ...v, hullCurrent: v.hullCurrent + n },
-        },
-      };
-    }),
+  addHull: (vehicleId, n) => {
+    const state = get();
+    const v = state.vehicles[vehicleId];
+    if (!v) return;
+    const nextV = { ...v, hullCurrent: v.hullCurrent + n };
+    set({ vehicles: { ...state.vehicles, [vehicleId]: nextV } });
+    mirrorHullToCrew(vehicleId, v, nextV);
+  },
 
-  removeHull: (vehicleId, n) =>
-    set((state) => {
-      const v = state.vehicles[vehicleId];
-      if (!v) return state;
-      return {
-        vehicles: {
-          ...state.vehicles,
-          [vehicleId]: { ...v, hullCurrent: Math.max(0, v.hullCurrent - n) },
-        },
-      };
-    }),
+  removeHull: (vehicleId, n) => {
+    const state = get();
+    const v = state.vehicles[vehicleId];
+    if (!v) return;
+    const nextV = { ...v, hullCurrent: Math.max(0, v.hullCurrent - n) };
+    set({ vehicles: { ...state.vehicles, [vehicleId]: nextV } });
+    mirrorHullToCrew(vehicleId, v, nextV);
+  },
 
   addSystemStrain: (vehicleId, n) =>
     set((state) => {
