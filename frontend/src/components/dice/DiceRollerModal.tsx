@@ -88,7 +88,7 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
       <ModalOverlay backdropFilter="blur(4px)" bg="blackAlpha.700" />
       <ModalContent bg="gray.900" color="gray.100" maxH="85vh">
-        <ModalHeader bg="gray.800" borderBottomWidth="1px" borderColor="gray.700" py={3}>
+        <ModalHeader bg="gray.800" borderBottomWidth="1px" borderColor="gray.700" py={3} pr={12}>
           <HStack spacing={3} align="baseline">
             <Tag colorScheme="orange" variant="subtle" size="sm" textTransform="uppercase" letterSpacing="0.1em">
               {MODE_LABEL[mode] ?? 'Roll'}
