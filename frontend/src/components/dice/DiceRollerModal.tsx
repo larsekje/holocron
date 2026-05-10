@@ -37,41 +37,46 @@ const MODE_LABEL: Record<string, string> = {
   skillChallenge: 'Skill Challenge',
 };
 
-/** Inline header chip showing the resolved attack target. When the snapshot
- * carries both a candidate participant and vehicle (vehicle weapon resolved
- * to a ship via a selected occupant), renders a [Pilot|Ship] segmented
- * switch right next to the name so the GM can flip without leaving the
- * modal. Direct selections (no candidates) render plain text. */
-const TargetIndicator: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
-  const flipAttackTarget = useDiceRollerStore((s) => s.flipAttackTarget);
+/** `→ TargetName` chip — sits inline next to the attacker name on the left
+ * side of the header, so the GM reads "Han Solo → TIE Advanced" as one
+ * phrase. The toggle is rendered separately on the right by `TargetToggle`. */
+const TargetText: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
   const isVehicleTarget = !!snapshot.targetVehicleId;
   const targetName = isVehicleTarget
     ? snapshot.targetVehicleName
     : snapshot.target?.name;
   if (!targetName) return null;
-
-  const hasToggle =
-    snapshot.weaponKind === 'vehicle'
-    && !!snapshot.targetCandidateParticipantId
-    && !!snapshot.targetCandidateVehicleId;
-
   return (
     <HStack spacing={2} align="center">
       <Text fontSize="sm" color="gray.500">→</Text>
       <Text fontSize="sm" color="gray.50" fontWeight="semibold" noOfLines={1} maxW="220px">
         {targetName}
       </Text>
-      {hasToggle && (
-        <SegmentedToggle
-          options={[
-            { value: 'vehicle', label: 'Ship' },
-            { value: 'character', label: 'Pilot' },
-          ]}
-          value={isVehicleTarget ? 'vehicle' : 'character'}
-          onChange={(v) => flipAttackTarget(v as 'vehicle' | 'character')}
-        />
-      )}
     </HStack>
+  );
+};
+
+/** [Ship|Pilot] segmented switch — right-anchored in the header so flipping
+ * doesn't shift its position under the cursor. Only renders when the
+ * snapshot carries both a candidate participant and vehicle (a vehicle
+ * weapon resolved to a ship via a selected occupant). */
+const TargetToggle: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
+  const flipAttackTarget = useDiceRollerStore((s) => s.flipAttackTarget);
+  const isVehicleTarget = !!snapshot.targetVehicleId;
+  const hasToggle =
+    snapshot.weaponKind === 'vehicle'
+    && !!snapshot.targetCandidateParticipantId
+    && !!snapshot.targetCandidateVehicleId;
+  if (!hasToggle) return null;
+  return (
+    <SegmentedToggle
+      options={[
+        { value: 'vehicle', label: 'Ship' },
+        { value: 'character', label: 'Pilot' },
+      ]}
+      value={isVehicleTarget ? 'vehicle' : 'character'}
+      onChange={(v) => flipAttackTarget(v as 'vehicle' | 'character')}
+    />
   );
 };
 
@@ -93,8 +98,9 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
                 {snapshot.attacker.name}
               </Heading>
             )}
+            {snapshot && <TargetText snapshot={snapshot} />}
             <Spacer />
-            {snapshot && <TargetIndicator snapshot={snapshot} />}
+            {snapshot && <TargetToggle snapshot={snapshot} />}
             {snapshot?.difficultyLabel && (
               <Tag colorScheme="purple" variant="outline" size="sm">
                 {snapshot.difficultyLabel}
