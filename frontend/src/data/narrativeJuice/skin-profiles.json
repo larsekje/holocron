@@ -1,0 +1,780 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Skin tone profiles for the Narrative Juice GM tool. Each skin defines its baseline tone profile (mean + spread on four axes), heat adjustments (deltas applied at heat 2 and 3), and bias adjustments (deltas applied when a bias tag is active). The app loads this file at startup, and when the user picks a skin + heat + active biases, it computes the effective tone target and uses that to drive (a) the visual dials and (b) the matching algorithm.",
+    "tone_axes": ["pulpy", "seedy", "intrigue", "refined"],
+    "tone_range": [-1, 2],
+    "heat_levels": [1, 2, 3],
+    "bias_tags": ["imperial", "rebel", "underworld", "corporate", "mystical", "frontier", "noble"]
+  },
+
+  "drinking_establishment": {
+    "spaceport_dive": {
+      "display_name": "Spaceport dive",
+      "blurb": "Working-class transit bar. Sticky floors, freighters rumbling overhead, blaster scoring on the bar from old fights.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 1.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "intrigue": 1.0, "pulpy": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":   { "intrigue": 0.5, "refined": 0.5 },
+        "rebel":      { "intrigue": 0.5 },
+        "underworld": { "seedy": 0.5 },
+        "frontier":   { "seedy": 0.3 }
+      }
+    },
+    "backwater_hole": {
+      "display_name": "Backwater hole",
+      "blurb": "Locals-only dive on a frontier moon. Dewback on a spit, sandstorms outside, the holonews running hours behind.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.5, "spread": 0.8 },
+        "intrigue": { "mean": 0.0, "spread": 0.8 },
+        "refined":  { "mean": -0.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "frontier": { "seedy": 0.3, "intrigue": -0.3 },
+        "imperial": { "intrigue": 0.5 },
+        "rebel":    { "intrigue": 0.5 },
+        "mystical": { "intrigue": 0.5 }
+      }
+    },
+    "coruscant_club": {
+      "display_name": "Coruscant club",
+      "blurb": "Upper-level establishment. Bith quartets, sommeliers, Senate aides pretending not to recognize each other.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 0.8 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "intrigue": 0.5, "refined": -1.0, "pulpy": 0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":   { "intrigue": 0.5, "refined": 0.5 },
+        "rebel":      { "intrigue": 0.5 },
+        "noble":      { "refined": 0.5 },
+        "corporate":  { "intrigue": 0.3, "refined": 0.3 },
+        "underworld": { "seedy": 1.0, "refined": -0.5 }
+      }
+    },
+    "hutt_parlor": {
+      "display_name": "Hutt parlor",
+      "blurb": "Front-of-house for a crime syndicate. Heavy incense, Twi'lek dancers, Gamorrean bouncers, deals in the back curtains.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.0, "spread": 1.0 },
+        "seedy":    { "mean": 1.5, "spread": 0.8 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 0.5, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "seedy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.3 },
+        "imperial":   { "intrigue": 0.5, "seedy": -0.3 },
+        "noble":      { "refined": 0.5 }
+      }
+    },
+    "sabacc_den": {
+      "display_name": "Sabacc den",
+      "blurb": "Gambling hall with the bar as an afterthought. Death-stick haze, chip stacks clinking, somebody about to lose badly.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 1.0, "spread": 0.8 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 0.0, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5, "pulpy": 0.3 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.5, "intrigue": 0.3 },
+        "imperial":   { "intrigue": 0.5 },
+        "noble":      { "refined": 0.5 }
+      }
+    },
+    "smugglers_haunt": {
+      "display_name": "Smuggler's haunt",
+      "blurb": "Coded entrance, regulars only. Every patron has a sightline to an exit. Conversations drop when the door slides open.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 1.0, "spread": 0.8 },
+        "intrigue": { "mean": 1.5, "spread": 0.8 },
+        "refined":  { "mean": -0.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.3 },
+        "imperial":   { "intrigue": 0.5, "seedy": 0.3 },
+        "rebel":      { "intrigue": 0.3 }
+      }
+    }
+  },
+
+  "public_crowd_space": {
+    "market_bazaar": {
+      "display_name": "Market / bazaar",
+      "blurb": "Bustling vendor lanes. Hawkers, contraband under counters, an Imperial customs sweep always somewhere.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 0.0, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.5 },
+        "imperial":   { "intrigue": 0.5 },
+        "frontier":   { "pulpy": 0.3 }
+      }
+    },
+    "concourse_terminal": {
+      "display_name": "Concourse / spaceport terminal",
+      "blurb": "Transit hub with arrivals boards, customs lines, and travelers nobody questions until they should have.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 0.8 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": 0.0, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 1.0, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":   { "intrigue": 0.5, "refined": 0.3 },
+        "rebel":      { "intrigue": 0.5 },
+        "underworld": { "seedy": 0.5, "intrigue": 0.3 }
+      }
+    },
+    "festival": {
+      "display_name": "Festival",
+      "blurb": "Costumed celebration, civic or religious. Anonymity through crowd, theft through chaos, music everywhere.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.0, "spread": 1.0 },
+        "seedy":    { "mean": -0.5, "spread": 1.0 },
+        "intrigue": { "mean": 0.0, "spread": 1.0 },
+        "refined":  { "mean": 0.0, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 1.0, "seedy": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "noble":    { "refined": 0.5 },
+        "frontier": { "pulpy": 0.3 },
+        "mystical": { "intrigue": 0.3 },
+        "imperial": { "intrigue": 0.5 }
+      }
+    },
+    "slum_street": {
+      "display_name": "Slum street",
+      "blurb": "Coruscant lower-level alley or backwater shantytown. Vertical, lawless, gang-marked walls.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 1.0, "spread": 0.8 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5, "seedy": 0.3 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "seedy": 0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.3 },
+        "imperial":   { "intrigue": 0.5, "seedy": 0.3 },
+        "rebel":      { "intrigue": 0.5 }
+      }
+    },
+    "arena": {
+      "display_name": "Arena",
+      "blurb": "Spectacle venue. Pod race stands, gladiator pit, the crowd itself a roaring character.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.5, "spread": 0.8 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 0.0, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 0.5, "seedy": 0.5 }
+      },
+      "bias_adjustments": {
+        "noble":      { "refined": 0.5 },
+        "underworld": { "seedy": 0.5 },
+        "imperial":   { "intrigue": 0.5 }
+      }
+    },
+    "pilgrimage_site": {
+      "display_name": "Pilgrimage site",
+      "blurb": "Public sacred space. Masses of believers, incense, devotional chants, the air heavy with quiet purpose.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": -0.5, "spread": 0.8 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": 1.0, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 1.0, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "mystical": { "intrigue": 0.3, "refined": 0.3 },
+        "imperial": { "intrigue": 0.5, "refined": -0.3 },
+        "rebel":    { "intrigue": 0.5 }
+      }
+    }
+  },
+
+  "stronghold_of_power": {
+    "imperial": {
+      "display_name": "Imperial stronghold",
+      "blurb": "Star Destroyer bridge, ISB office, garrison command. Sterile corridors, regimented patrols, recordings everywhere.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 0.8 },
+        "seedy":    { "mean": 0.0, "spread": 0.8 },
+        "intrigue": { "mean": 1.5, "spread": 0.8 },
+        "refined":  { "mean": 1.0, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial": { "intrigue": 0.3, "refined": 0.3 },
+        "rebel":    { "intrigue": 0.5 },
+        "mystical": { "intrigue": 0.5 }
+      }
+    },
+    "hutt_crimelord": {
+      "display_name": "Hutt crimelord stronghold",
+      "blurb": "Throne room and operations of a Hutt or equivalent boss. Carved sandstone, retinues, dangling debts.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 1.5, "spread": 0.8 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 0.0, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "seedy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.3 },
+        "imperial":   { "intrigue": 0.5 },
+        "noble":      { "refined": 0.5 }
+      }
+    },
+    "corporate": {
+      "display_name": "Corporate stronghold",
+      "blurb": "Czerka headquarters, Kuat boardroom, Banking Clan tower. Chrome, glass, polite menace.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 0.8 },
+        "seedy":    { "mean": 0.5, "spread": 0.8 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "corporate":  { "refined": 0.3 },
+        "underworld": { "seedy": 0.5 },
+        "imperial":   { "intrigue": 0.5 }
+      }
+    },
+    "noble_royal": {
+      "display_name": "Noble / royal stronghold",
+      "blurb": "Alderaanian estate, Naboo palace, family seat. Old wealth, ceremonial guards, dynastic stakes.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "noble":    { "refined": 0.3 },
+        "imperial": { "intrigue": 0.5, "refined": 0.3 },
+        "rebel":    { "intrigue": 0.5 }
+      }
+    },
+    "religious_sacred": {
+      "display_name": "Religious / sacred stronghold",
+      "blurb": "Jedi Temple, Sith shrine, monastery. Ritualized, hushed, gatekept knowledge.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 1.0 },
+        "seedy":    { "mean": -0.5, "spread": 0.8 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "mystical": { "intrigue": 0.3, "refined": 0.3 },
+        "imperial": { "intrigue": 0.5 },
+        "rebel":    { "intrigue": 0.5 }
+      }
+    },
+    "warlord_pirate": {
+      "display_name": "Warlord / pirate stronghold",
+      "blurb": "Pirate king's flagship, Nightsister stronghold, mercenary fortress. Improvised hierarchy, brutal etiquette.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.0, "spread": 1.0 },
+        "seedy":    { "mean": 1.5, "spread": 0.8 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "seedy": 0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.3 },
+        "frontier":   { "pulpy": 0.3 },
+        "imperial":   { "intrigue": 0.5 }
+      }
+    }
+  },
+
+  "wilderness": {
+    "desert": {
+      "display_name": "Desert",
+      "blurb": "Tatooine, Jakku, Geonosis surface. Heat, dehydration, sandstorms, scavengers.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.5 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.0, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "frontier": { "pulpy": 0.3 },
+        "mystical": { "intrigue": 0.5 },
+        "imperial": { "intrigue": 0.5 }
+      }
+    },
+    "swamp_jungle": {
+      "display_name": "Swamp / jungle",
+      "blurb": "Dagobah, Felucia, Yavin IV. Predators, disease, low visibility, ancient ruins.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.5 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "mystical": { "intrigue": 0.5 },
+        "frontier": { "seedy": 0.3 },
+        "imperial": { "intrigue": 0.5 }
+      }
+    },
+    "ice_tundra": {
+      "display_name": "Ice / tundra",
+      "blurb": "Hoth, Ilum. Exposure, glare, wampas, frozen base camps.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.5 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.0, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "rebel":    { "intrigue": 0.5 },
+        "imperial": { "intrigue": 0.5 },
+        "frontier": { "pulpy": 0.3 }
+      }
+    },
+    "mountain_rocky": {
+      "display_name": "Mountain / rocky",
+      "blurb": "High peaks, narrow passes, ambush terrain, rockfalls.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.5 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.0, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "mystical": { "intrigue": 0.5 },
+        "frontier": { "pulpy": 0.3 },
+        "rebel":    { "intrigue": 0.5 }
+      }
+    },
+    "aquatic_coastal": {
+      "display_name": "Aquatic / coastal",
+      "blurb": "Kamino, Mon Cala, Naboo lakes. Drowning, native predators, salt-rotted infrastructure.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.5 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "frontier":   { "pulpy": 0.3 },
+        "underworld": { "seedy": 0.5 },
+        "mystical":   { "intrigue": 0.5 }
+      }
+    },
+    "volcanic": {
+      "display_name": "Volcanic / industrial wasteland",
+      "blurb": "Mustafar, mining colonies on the brink. Heat, toxic air, unstable ground.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "mystical": { "intrigue": 0.5 },
+        "imperial": { "intrigue": 0.5 },
+        "frontier": { "pulpy": 0.3 }
+      }
+    },
+    "toxic_dead": {
+      "display_name": "Toxic / dead world",
+      "blurb": "Mimban, ravaged worlds. Environment suits required, no rescue, ruins of what was.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 1.0 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "mystical":   { "intrigue": 0.5 },
+        "rebel":      { "intrigue": 0.5 },
+        "underworld": { "seedy": 0.5 }
+      }
+    }
+  },
+
+  "vehicle_transit": {
+    "starship_interior": {
+      "display_name": "Starship interior",
+      "blurb": "Corridors, cockpit, cargo bay. Confined, moving, intruders and system failures.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.5 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": 0.0, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":   { "intrigue": 0.5, "refined": 0.3 },
+        "rebel":      { "intrigue": 0.5 },
+        "underworld": { "seedy": 0.5 },
+        "corporate":  { "refined": 0.3 }
+      }
+    },
+    "space_dogfight": {
+      "display_name": "Space dogfight",
+      "blurb": "Fighter combat. Debris fields, comm chatter, capital ships looming.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.5, "spread": 0.7 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3 },
+        "3": { "pulpy": 0.5, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":   { "intrigue": 0.5 },
+        "rebel":      { "intrigue": 0.5 },
+        "underworld": { "seedy": 0.5 }
+      }
+    },
+    "speeder_chase": {
+      "display_name": "Speeder chase",
+      "blurb": "Low-altitude pursuit. Open terrain, narrow alleys, gunfire across hoods.",
+      "tone_profile": {
+        "pulpy":    { "mean": 1.5, "spread": 0.7 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -1.0, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "pulpy": 0.3, "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.5 },
+        "imperial":   { "intrigue": 0.5 },
+        "frontier":   { "pulpy": 0.3 }
+      }
+    },
+    "magnatrain": {
+      "display_name": "Magnatrain / skytram",
+      "blurb": "Mass transit on rails or repulsorlift. Carriages, scheduled stops, fellow passengers nobody chose.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 0.5, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":   { "intrigue": 0.5, "refined": 0.3 },
+        "rebel":      { "intrigue": 0.5 },
+        "noble":      { "refined": 0.5 },
+        "underworld": { "seedy": 0.5 }
+      }
+    },
+    "convoy": {
+      "display_name": "Convoy / caravan",
+      "blurb": "Multiple vehicles in formation. The weakest link sets the pace, and someone is always behind.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 0.5, "spread": 1.0 },
+        "refined":  { "mean": -0.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.5 },
+        "imperial":   { "intrigue": 0.5 },
+        "frontier":   { "pulpy": 0.3 },
+        "rebel":      { "intrigue": 0.5 }
+      }
+    },
+    "hyperspace": {
+      "display_name": "Hyperspace transit",
+      "blurb": "Sealed time between jumps. Confined ship interior, no escape from the conversation, mottled blue outside.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 0.0, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "mystical": { "intrigue": 0.5 },
+        "imperial": { "intrigue": 0.5 },
+        "rebel":    { "intrigue": 0.5 }
+      }
+    }
+  },
+
+  "negotiation_room": {
+    "back_room": {
+      "display_name": "Back room",
+      "blurb": "Neutral ground for a scheduled meeting. Two factions, stated positions, a blaster under the table.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.5, "spread": 1.0 },
+        "intrigue": { "mean": 1.5, "spread": 0.8 },
+        "refined":  { "mean": 0.5, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.3 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "underworld": { "seedy": 0.3 },
+        "imperial":   { "intrigue": 0.3, "refined": 0.3 },
+        "corporate":  { "refined": 0.3 },
+        "rebel":      { "intrigue": 0.5 }
+      }
+    },
+    "audience_chamber": {
+      "display_name": "Audience chamber",
+      "blurb": "Power-imbalanced petition. You face them across the floor; they decide whether to hear you.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.8 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "noble":    { "refined": 0.3 },
+        "imperial": { "intrigue": 0.5, "refined": 0.3 },
+        "rebel":    { "intrigue": 0.5 }
+      }
+    },
+    "diplomatic_suite": {
+      "display_name": "Diplomatic suite",
+      "blurb": "Formal multi-party negotiation with observers and protocol staff. Every gesture means something.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 0.8 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.5, "spread": 0.8 },
+        "refined":  { "mean": 1.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 0.5, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial":  { "intrigue": 0.3, "refined": 0.3 },
+        "rebel":     { "intrigue": 0.5 },
+        "noble":     { "refined": 0.3 },
+        "corporate": { "refined": 0.3 }
+      }
+    },
+    "high_society_function": {
+      "display_name": "High society function",
+      "blurb": "Negotiation disguised as a party. Coruscant gala, senatorial reception, Naboo wedding.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.0, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "noble":     { "refined": 0.3 },
+        "imperial":  { "intrigue": 0.5, "refined": 0.3 },
+        "corporate": { "refined": 0.3 },
+        "rebel":     { "intrigue": 0.5 }
+      }
+    },
+    "tribunal": {
+      "display_name": "Tribunal / court",
+      "blurb": "Public procedural setting. Witnesses, evidence, formal robes, careful words for the record.",
+      "tone_profile": {
+        "pulpy":    { "mean": -0.5, "spread": 0.8 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 1.5, "spread": 0.7 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5, "refined": -0.5 }
+      },
+      "bias_adjustments": {
+        "imperial": { "intrigue": 0.5, "refined": 0.3 },
+        "rebel":    { "intrigue": 0.5 },
+        "noble":    { "refined": 0.3 }
+      }
+    },
+    "parley_field": {
+      "display_name": "Parley / field meeting",
+      "blurb": "Outdoor meeting under a flag of truce. Two camps in view, no walls, formality without comfort.",
+      "tone_profile": {
+        "pulpy":    { "mean": 0.5, "spread": 1.0 },
+        "seedy":    { "mean": 0.0, "spread": 1.0 },
+        "intrigue": { "mean": 1.0, "spread": 1.0 },
+        "refined":  { "mean": 0.5, "spread": 1.0 }
+      },
+      "heat_adjustments": {
+        "1": {},
+        "2": { "intrigue": 0.5 },
+        "3": { "pulpy": 1.0, "intrigue": 0.5 }
+      },
+      "bias_adjustments": {
+        "imperial": { "intrigue": 0.5 },
+        "rebel":    { "intrigue": 0.5 },
+        "frontier": { "pulpy": 0.3 },
+        "noble":    { "refined": 0.3 }
+      }
+    }
+  }
+}

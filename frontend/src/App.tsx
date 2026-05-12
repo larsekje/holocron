@@ -10,9 +10,11 @@ import ContentCardTargetedOld from "@/ContentCardTargetedOld";
 import {DiceRollerModal} from "@components/dice/DiceRollerModal";
 import Spotlight from "@components/Spotlight";
 import Sidebar from "@components/Sidebar";
+import NarrativeJuicePanel from "@components/narrativeJuice/NarrativeJuicePanel";
 import useDiceRollerStore from "@/state/diceRollerStore";
 import "@/state/sessionLogStore";
 import {useSpotlightStore} from "@/state/spotlightStore";
+import {useNarrativeJuiceStore} from "@/state/narrativeJuiceStore";
 import {buildFreestandingSnapshot} from "@/utils/diceSnapshots";
 import {ReactComponent as ProficiencySvg} from "@/assets/dice/proficiency.svg";
 import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
@@ -22,6 +24,7 @@ function App() {
   const closeSnapshot = useDiceRollerStore((s) => s.close);
   const openDiceRoller = useDiceRollerStore((s) => s.open);
   const openSpotlight = useSpotlightStore((s) => s.open);
+  const openNarrativeJuice = useNarrativeJuiceStore((s) => s.open);
 
   const templateAreas = `"turn   turn    turn     log"
                          "active targets targeted log"`
@@ -47,6 +50,17 @@ function App() {
                 <Kbd bg="gray.700" color="gray.200" borderColor="gray.500">⌘K</Kbd>
               </HStack>
             </Button>
+            <Tooltip label="Roll a scene of narrative juice" placement="bottom" hasArrow openDelay={300}>
+              <Button
+                size="sm"
+                variant="outline"
+                colorScheme="whiteAlpha"
+                color="whiteAlpha.900"
+                onClick={openNarrativeJuice}
+              >
+                Juice
+              </Button>
+            </Tooltip>
             <Tooltip label="Open a freestanding dice roller" placement="bottom" hasArrow openDelay={300}>
               <IconButton
                 size="sm"
@@ -90,6 +104,7 @@ function App() {
       </Grid>
       <DiceRollerModal snapshot={snapshot} onClose={closeSnapshot}/>
       <Spotlight/>
+      <NarrativeJuicePanel/>
     </>
   )
 }
