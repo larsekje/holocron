@@ -1,7 +1,7 @@
 import drinkingEstablishment from './drinking_establishment.json';
 import skinProfilesData from './skin-profiles.json';
 
-export type JuiceSlot = 'sensory' | 'npc' | 'environmental' | 'complication';
+export type JuiceSlot = 'atmosphere' | 'npc' | 'environmental' | 'complication';
 export type JuiceArchetype =
   | 'drinking_establishment'
   | 'public_crowd_space'
@@ -18,7 +18,9 @@ export interface JuiceTone {
   refined: number;
 }
 
-export type JuiceNpcType = 'featured' | 'background';
+export type JuiceNpcType = 'featured' | 'background' | 'dual_extreme';
+export type JuiceNpcComposition = 'single' | 'pair' | 'group';
+export type JuiceNpcMode = 'description' | 'action';
 
 export interface JuiceEntry {
   slot: JuiceSlot;
@@ -26,9 +28,21 @@ export interface JuiceEntry {
   skin: string;
   text: string;
   tone: JuiceTone;
-  heat: number[];
+  heat: number;
   bias: string[];
   npc_type?: JuiceNpcType;
+  npc_composition?: JuiceNpcComposition;
+  npc_mode?: JuiceNpcMode;
+}
+
+// Time-invariant entries (atmosphere; description-mode NPCs) treat heat as
+// authoring preference, not a runtime filter — they surface at any active
+// heat. Moment-bound entries (action NPCs, environmental, complications)
+// require a strict heat match.
+export function isTimeInvariant(e: JuiceEntry): boolean {
+  if (e.slot === 'atmosphere') return true;
+  if (e.slot === 'npc' && e.npc_mode === 'description') return true;
+  return false;
 }
 
 const banks: Partial<Record<JuiceArchetype, JuiceEntry[]>> = {
@@ -43,14 +57,52 @@ export function listAvailableArchetypes(): JuiceArchetype[] {
   return Object.keys(banks) as JuiceArchetype[];
 }
 
-export const SLOT_DISTRIBUTION: Record<JuiceArchetype, Partial<Record<JuiceSlot, number>>> = {
-  drinking_establishment: { sensory: 3, npc: 3, complication: 1 },
-  public_crowd_space: { sensory: 3, npc: 2, environmental: 1, complication: 1 },
-  stronghold_of_power: { sensory: 2, npc: 3, environmental: 1, complication: 1 },
-  negotiation_room: { sensory: 2, npc: 3, complication: 1 },
-  vehicle_transit: { sensory: 2, npc: 2, environmental: 1, complication: 1 },
-  wilderness: { sensory: 2, npc: 1, environmental: 3, complication: 1 },
+// Atmosphere is a single pre-composed scene anchor (2–3 sentences).
+export const ATMOSPHERE_COUNT = 1;
+
+export interface NpcMix {
+  anchor: number;
+  featured: number;
+  background: number;
+}
+
+export interface NpcModeMix {
+  description: number;
+  action: number;
+}
+
+// NPC count is constant (3) but the mix shifts with heat. At Heat 3 the
+// scene gets an anchor (a dual_extreme NPC); the matcher falls back to
+// 2 featured + 1 background when no anchor candidate exists in the bank.
+export function getNpcMixForHeat(heat: 1 | 2 | 3): NpcMix {
+  if (heat === 1) return { anchor: 0, featured: 1, background: 2 };
+  if (heat === 2) return { anchor: 0, featured: 2, background: 1 };
+  return { anchor: 1, featured: 1, background: 1 };
+}
+
+// Mode budget per scene. The anchor (when present) takes the action slot —
+// anchors are almost always mid-verb, so the rest of the room can lean
+// description-heavy.
+export function getNpcModeMixForHeat(heat: 1 | 2 | 3): NpcModeMix {
+  if (heat === 1) return { description: 2, action: 1 };
+  if (heat === 2) return { description: 1, action: 2 };
+  return { description: 2, action: 1 };
+}
+
+// Per-archetype × heat environmental card counts. Bars and negotiation
+// rooms have none; wilderness is environmental-heavy.
+const ENV_COUNTS: Record<JuiceArchetype, Record<1 | 2 | 3, number>> = {
+  drinking_establishment: { 1: 0, 2: 0, 3: 0 },
+  public_crowd_space: { 1: 1, 2: 1, 3: 2 },
+  stronghold_of_power: { 1: 1, 2: 1, 3: 2 },
+  wilderness: { 1: 3, 2: 4, 3: 5 },
+  vehicle_transit: { 1: 2, 2: 3, 3: 3 },
+  negotiation_room: { 1: 0, 2: 0, 3: 0 },
 };
+
+export function getEnvCount(archetype: JuiceArchetype, heat: 1 | 2 | 3): number {
+  return ENV_COUNTS[archetype]?.[heat] ?? 0;
+}
 
 export const SKINS_BY_ARCHETYPE: Record<JuiceArchetype, string[]> = {
   drinking_establishment: ['spaceport_dive', 'backwater_hole', 'coruscant_club', 'hutt_parlor', 'sabacc_den', 'smugglers_haunt'],
