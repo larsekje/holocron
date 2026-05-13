@@ -2,12 +2,19 @@ import React from 'react';
 import {Box, Card, CardBody, Flex, HStack, Text, Tooltip, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import DicePoolOld, {DicePool} from "./DicePoolOld";
 import type {WeaponLike} from "@/utils/diceSnapshots";
+import {finalWeaponDamage} from "@/utils/diceSnapshots";
 import {getDetail} from "@/data/spotlightIndex";
 import {renderSwrpgText} from "@/utils/swrpgText";
 
 interface Props {
   weapon: WeaponLike;
-  pool: DicePool;
+  // Pool is optional so the dice roller can reuse the card without
+  // duplicating its own pool display below.
+  pool?: DicePool;
+  // Wielder's Brawn — used to resolve melee plus-damage. Optional so legacy
+  // callers don't break; without it melee weapons fall back to their raw
+  // damage value (which for plusDamage entries is 0).
+  wielderBrawn?: number;
   onClick?: () => void;
 }
 
@@ -38,7 +45,8 @@ function lookupQualityDescription(quality: string): {label: string; description?
   return {label, description};
 }
 
-const WeaponCardOld = ({weapon, pool, onClick}: Props) => {
+const WeaponCardOld = ({weapon, pool, wielderBrawn, onClick}: Props) => {
+  const displayDamage = finalWeaponDamage(weapon, wielderBrawn ?? 0);
   return (
     <Card
       bg="#26292d"
@@ -52,7 +60,7 @@ const WeaponCardOld = ({weapon, pool, onClick}: Props) => {
         <Flex align="center" gap={3}>
           <VStack spacing={0} minW="60px" align="center">
             <Text fontSize="2xl" color="white" fontWeight="bold" lineHeight="1">
-              {String(weapon.damage ?? "—")}
+              {String(displayDamage)}
             </Text>
             <Text fontSize="9px" color="whiteAlpha.700" letterSpacing="0.1em">
               DMG
@@ -122,9 +130,11 @@ const WeaponCardOld = ({weapon, pool, onClick}: Props) => {
             )}
           </Box>
 
-          <HStack spacing={1} flexShrink={0}>
-            <DicePoolOld pool={pool}/>
-          </HStack>
+          {pool && (
+            <HStack spacing={1} flexShrink={0}>
+              <DicePoolOld pool={pool}/>
+            </HStack>
+          )}
         </Flex>
       </CardBody>
     </Card>

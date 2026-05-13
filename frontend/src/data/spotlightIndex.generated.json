@@ -118631,13 +118631,14 @@
       "type": "weapon",
       "name": "Brass knuckles",
       "skill": "Brawl",
+      "plusDamage": 1,
       "crit": 4,
       "range": "Engaged",
       "qualities": [
         "Disorient 3"
       ]
     },
-    "subtitle": "Crit 4",
+    "subtitle": "Damage +1, Crit 4",
     "tags": [
       "Disorient 3"
     ]
@@ -118651,13 +118652,14 @@
       "type": "weapon",
       "name": "Cortosis gauntlets",
       "skill": "Brawl",
+      "plusDamage": 1,
       "crit": 4,
       "range": "Engaged",
       "qualities": [
         "Cortosis"
       ]
     },
-    "subtitle": "Crit 4",
+    "subtitle": "Damage +1, Crit 4",
     "tags": [
       "Cortosis"
     ]
@@ -118671,13 +118673,14 @@
       "type": "weapon",
       "name": "Shock gloves",
       "skill": "Brawl",
+      "plusDamage": 0,
       "crit": 5,
       "range": "Engaged",
       "qualities": [
         "Stun 3"
       ]
     },
-    "subtitle": "Crit 5",
+    "subtitle": "Damage +0, Crit 5",
     "tags": [
       "Stun 3"
     ]
@@ -118691,13 +118694,14 @@
       "type": "weapon",
       "name": "Stun baton",
       "skill": "Melee",
+      "plusDamage": 2,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
         "Stun Setting"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +2, Crit 2",
     "tags": [
       "Stun Setting"
     ]
@@ -118732,13 +118736,14 @@
       "type": "weapon",
       "name": "Ancient sword",
       "skill": "Lightsaber",
+      "plusDamage": 2,
       "crit": 3,
       "range": "Engaged",
       "qualities": [
         "Defensive 1"
       ]
     },
-    "subtitle": "Crit 3",
+    "subtitle": "Damage +2, Crit 3",
     "tags": [
       "Defensive 1"
     ]
@@ -118752,11 +118757,12 @@
       "type": "weapon",
       "name": "Combat knife",
       "skill": "Melee",
+      "plusDamage": 0,
       "crit": 6,
       "range": "Engaged",
       "qualities": []
     },
-    "subtitle": "Crit 6"
+    "subtitle": "Damage +0, Crit 6"
   },
   {
     "id": "weapon_cortosis-shield",
@@ -118767,6 +118773,7 @@
       "type": "weapon",
       "name": "Cortosis shield",
       "skill": "Melee",
+      "plusDamage": 1,
       "crit": 6,
       "range": "Engaged",
       "qualities": [
@@ -118776,7 +118783,7 @@
         "Deflection 2"
       ]
     },
-    "subtitle": "Crit 6",
+    "subtitle": "Damage +1, Crit 6",
     "tags": [
       "Cortosis",
       "Cumbersome 3",
@@ -118793,13 +118800,14 @@
       "type": "weapon",
       "name": "Cortosis staff",
       "skill": "Melee",
+      "plusDamage": 3,
       "crit": 5,
       "range": "Engaged",
       "qualities": [
         "Cortosis"
       ]
     },
-    "subtitle": "Crit 5",
+    "subtitle": "Damage +3, Crit 5",
     "tags": [
       "Cortosis"
     ]
@@ -118813,6 +118821,7 @@
       "type": "weapon",
       "name": "Cortosis sword",
       "skill": "Melee",
+      "plusDamage": 2,
       "crit": 3,
       "range": "Engaged",
       "qualities": [
@@ -118820,7 +118829,7 @@
         "Defensive 1"
       ]
     },
-    "subtitle": "Crit 3",
+    "subtitle": "Damage +2, Crit 3",
     "tags": [
       "Cortosis",
       "Defensive 1"
@@ -118835,13 +118844,14 @@
       "type": "weapon",
       "name": "Diiro",
       "skill": "Melee",
+      "plusDamage": 1,
       "crit": 3,
       "range": "Engaged",
       "qualities": [
         "Defensive 1"
       ]
     },
-    "subtitle": "Crit 3",
+    "subtitle": "Damage +1, Crit 3",
     "tags": [
       "Defensive 1"
     ]
@@ -118855,6 +118865,7 @@
       "type": "weapon",
       "name": "Electrostaff",
       "skill": "Melee",
+      "plusDamage": 4,
       "crit": 3,
       "range": "Engaged",
       "qualities": [
@@ -118865,7 +118876,7 @@
         "Unwieldy 3"
       ]
     },
-    "subtitle": "Crit 3",
+    "subtitle": "Damage +4, Crit 3",
     "tags": [
       "Cortosis",
       "Cumbersome 3",
@@ -118883,6 +118894,7 @@
       "type": "weapon",
       "name": "Gaffi stick",
       "skill": "Melee",
+      "plusDamage": 2,
       "crit": 3,
       "range": "Engaged",
       "qualities": [
@@ -118890,7 +118902,7 @@
         "Disorient 3"
       ]
     },
-    "subtitle": "Crit 3",
+    "subtitle": "Damage +2, Crit 3",
     "tags": [
       "Defensive 1",
       "Disorient 3"
@@ -118905,6 +118917,7 @@
       "type": "weapon",
       "name": "Force pike",
       "skill": "Melee",
+      "plusDamage": 3,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
@@ -118912,7 +118925,7 @@
         "Stun Setting"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +3, Crit 2",
     "tags": [
       "Pierce 2",
       "Stun Setting"
@@ -118996,6 +119009,7 @@
       "type": "weapon",
       "name": "Riot shield",
       "skill": "Melee",
+      "plusDamage": 0,
       "crit": 6,
       "range": "Engaged",
       "qualities": [
@@ -119005,7 +119019,7 @@
         "Disorient 1"
       ]
     },
-    "subtitle": "Crit 6",
+    "subtitle": "Damage +0, Crit 6",
     "tags": [
       "Cumbersome 3",
       "Defensive 2",
@@ -119022,13 +119036,14 @@
       "type": "weapon",
       "name": "Truncheon",
       "skill": "Melee",
+      "plusDamage": 2,
       "crit": 5,
       "range": "Engaged",
       "qualities": [
         "Disorient 2"
       ]
     },
-    "subtitle": "Crit 5",
+    "subtitle": "Damage +2, Crit 5",
     "tags": [
       "Disorient 2"
     ]
@@ -119042,6 +119057,7 @@
       "type": "weapon",
       "name": "Vibro-ax",
       "skill": "Melee",
+      "plusDamage": 3,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
@@ -119050,7 +119066,7 @@
         "Vicious 3"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +3, Crit 2",
     "tags": [
       "Pierce 2",
       "Sunder",
@@ -119066,6 +119082,7 @@
       "type": "weapon",
       "name": "Vibroknife",
       "skill": "Melee",
+      "plusDamage": 1,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
@@ -119073,7 +119090,7 @@
         "Vicious 1"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +1, Crit 2",
     "tags": [
       "Pierce 2",
       "Vicious 1"
@@ -119088,6 +119105,7 @@
       "type": "weapon",
       "name": "Vibrosword",
       "skill": "Melee",
+      "plusDamage": 2,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
@@ -119096,7 +119114,7 @@
         "Vicious 1"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +2, Crit 2",
     "tags": [
       "Defensive 1",
       "Pierce 2",
@@ -119204,6 +119222,7 @@
       "type": "weapon",
       "name": "Vibroknucklers",
       "skill": "Brawl",
+      "plusDamage": 1,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
@@ -119211,7 +119230,7 @@
         "Vicious 1"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +1, Crit 2",
     "tags": [
       "Pierce 1",
       "Vicious 1"
@@ -119226,6 +119245,7 @@
       "type": "weapon",
       "name": "Vibrorapier",
       "skill": "Melee",
+      "plusDamage": 2,
       "crit": 2,
       "range": "Engaged",
       "qualities": [
@@ -119233,7 +119253,7 @@
         "Pierce 5"
       ]
     },
-    "subtitle": "Crit 2",
+    "subtitle": "Damage +2, Crit 2",
     "tags": [
       "Defensive 1",
       "Pierce 5"

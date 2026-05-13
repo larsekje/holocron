@@ -126,12 +126,40 @@ export function buildSkillCheckSnapshot(
 export interface WeaponLike {
   name: string;
   skill: string;
+  // For NPC stat-block weapons `damage` is the FINAL value (already includes
+  // Brawn for melee). For PC-style entries the underlying bonus is in
+  // `plusDamage` and the final value is `wielder.brawn + plusDamage`. Keep
+  // both fields so callers can pick the right one for display / rolls.
   damage: number | string;
+  plusDamage?: number;
   critical?: number | string;
   crit?: number | string;
   range: string;
   qualities?: string[];
   notes?: string;
+}
+
+// Melee skills under SWRPG. Lightsaber's characteristic is variable but it's
+// always a "Brawn-class" melee weapon for damage purposes (override may use
+// Willpower for the attack roll, but the weapon's damage still adds Brawn).
+const MELEE_SKILLS = ['brawl', 'melee', 'lightsaber'];
+export function isMeleeWeaponSkill(skill: string | undefined): boolean {
+  const s = (skill ?? '').toLowerCase();
+  return MELEE_SKILLS.some((m) => s.includes(m));
+}
+
+// Resolve the displayed damage for a weapon, given the wielder's Brawn.
+// Melee weapons add Brawn to their plusDamage; ranged weapons return their
+// damage as-is. Returns a number or, when neither field is set, the string
+// "—" so callers can drop it directly into the UI.
+export function finalWeaponDamage(weapon: WeaponLike, brawn: number): number | string {
+  if (isMeleeWeaponSkill(weapon.skill) && weapon.plusDamage !== undefined) {
+    return brawn + weapon.plusDamage;
+  }
+  if (typeof weapon.damage === 'number') return weapon.damage;
+  if (typeof weapon.damage === 'string' && weapon.damage.trim() !== '') return weapon.damage;
+  if (weapon.plusDamage !== undefined) return brawn + weapon.plusDamage;
+  return '—';
 }
 
 // Map a weapon's "range" string ('Engaged', 'Short', etc) to the SnapshotWeapon enum.
@@ -492,7 +520,12 @@ export function buildAttackSnapshot(
   const range = normaliseRange(weapon.range);
   const diff = RANGE_DIFFICULTY[range];
   const pool: DicePool = { ...skillPool(resolvedSkillRank, resolvedCharValue), difficulty: diff.count };
-  const damageValue = typeof weapon.damage === 'string' ? parseInt(weapon.damage, 10) : weapon.damage;
+  // Melee weapons add the wielder's Brawn to their `plusDamage` to produce
+  // the value that goes on the snapshot. finalWeaponDamage handles the
+  // ranged-as-is path too, so we always go through it.
+  const wielderBrawn = (participant.stats as any)?.brawn ?? 2;
+  const finalDmg = finalWeaponDamage(weapon, wielderBrawn);
+  const damageValue = typeof finalDmg === 'string' ? parseInt(finalDmg, 10) : finalDmg;
   const critValue = typeof weapon.critical === 'string'
     ? parseInt(weapon.critical, 10)
     : (weapon.critical ?? (typeof weapon.crit === 'string' ? parseInt(weapon.crit, 10) : weapon.crit) ?? 0);

@@ -26,9 +26,17 @@ function weaponSlug(name: string): string {
   );
 }
 
-// Resolve a weapon entry from the adversary profile to a flat WeaponLike object.
-function resolveWeapon(raw: any): WeaponLike | null {
+// Resolve a weapon entry from the adversary profile to a flat WeaponLike
+// object. Preserve `damage` and `plusDamage` separately so callers can tell
+// "+X to Brawn" entries from final-damage entries — without that distinction
+// melee weapons render and roll with the wrong number.
+export function resolveWeapon(raw: any): WeaponLike | null {
   if (!raw) return null;
+  // The source JSONs aren't consistent about field casing: catalog entries
+  // use `plusDamage` (camelCase), inline adversary weapons use
+  // `"plus-damage"` (hyphenated). Accept both.
+  const plusDamageOf = (o: any): number | undefined =>
+    o?.plusDamage ?? o?.["plus-damage"];
   if (typeof raw === "string") {
     const detail = getDetail("weapon", weaponSlug(raw));
     if (!detail) return {name: raw, skill: "", damage: 0, range: "", qualities: []};
@@ -37,6 +45,7 @@ function resolveWeapon(raw: any): WeaponLike | null {
       name: d.name ?? raw,
       skill: d.skill ?? "",
       damage: d.damage ?? 0,
+      plusDamage: plusDamageOf(d),
       crit: d.crit ?? d.critical,
       range: d.range ?? "",
       qualities: d.qualities ?? [],
@@ -45,7 +54,8 @@ function resolveWeapon(raw: any): WeaponLike | null {
   return {
     name: raw.name ?? "Weapon",
     skill: raw.skill ?? "",
-    damage: raw.damage ?? raw.plusDamage ?? 0,
+    damage: raw.damage ?? 0,
+    plusDamage: plusDamageOf(raw),
     critical: raw.critical,
     crit: raw.crit,
     range: raw.range ?? "",
@@ -56,7 +66,7 @@ function resolveWeapon(raw: any): WeaponLike | null {
 
 // Resolve the rank + characteristic actually used by this weapon's skill (e.g. Lightsaber
 // (Willpower) → use Willpower with that rank), accounting for minion-group rule when active.
-function resolveSkillForWeapon(
+export function resolveSkillForWeapon(
   weaponSkill: string,
   participant: Participant,
   characteristics: CharacteristicSet,
@@ -117,6 +127,7 @@ const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
         key={`${w.name}-${i}`}
         weapon={w}
         pool={pool}
+        wielderBrawn={characteristics.brawn}
         onClick={() =>
           openDiceRoller(buildAttackSnapshot(participant, w, rank, characteristicName, charValue))
         }

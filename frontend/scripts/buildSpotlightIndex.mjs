@@ -139,6 +139,7 @@ function buildWeapons(rawList) {
     const qualities = Array.isArray(w.qualities) ? w.qualities : [];
     const subtitleBits = [];
     if (w.damage != null) subtitleBits.push(`Damage ${w.damage}`);
+    else if (w.plusDamage != null) subtitleBits.push(`Damage +${w.plusDamage}`);
     if (w.critical != null) subtitleBits.push(`Crit ${w.critical}`);
     pushUnique(
       results,
@@ -149,6 +150,10 @@ function buildWeapons(rawList) {
         extra: {
           skill: w.skill,
           damage: w.damage,
+          // Melee weapons in the source data omit `damage` and use
+          // `plusDamage` (the bonus added to the wielder's Brawn). Preserve
+          // it so the runtime can compute final damage per wielder.
+          plusDamage: w.plusDamage,
           crit: w.critical,
           range: w.range,
           encum: w.encumbrance ?? w.encum,
