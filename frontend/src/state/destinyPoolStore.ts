@@ -1,5 +1,7 @@
 // src/stores/destinyStore.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { holocronPersist } from "./persist";
 
 interface DestinyStoreState {
     flipDestinyPoint: (atIndex: number) => void; // Flip a light to dark or vice versa
@@ -8,7 +10,7 @@ interface DestinyStoreState {
     destinyPool: boolean[];  // true for light side
 }
 
-export const useDestinyStore = create<DestinyStoreState>((set, get) => ({
+export const useDestinyStore = create<DestinyStoreState>()(persist((set, get) => ({
     destinyPool: [],
 
     flipDestinyPoint: (atIndex: number) => {
@@ -36,4 +38,7 @@ export const useDestinyStore = create<DestinyStoreState>((set, get) => ({
             ],
         })
     }
-}));
+}), holocronPersist({
+    name: 'destinyPool',
+    partialize: (s) => ({ destinyPool: s.destinyPool }),
+})));

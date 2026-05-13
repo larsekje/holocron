@@ -1,5 +1,7 @@
 // src/state/pocketedResultsStore.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { holocronPersist } from "./persist";
 
 interface PocketedResult {
     id: string;
@@ -14,7 +16,7 @@ interface PocketedResultsState {
     clearResults: () => void; // Clear all results
 }
 
-const usePocketedResultsStore = create<PocketedResultsState>((set) => ({
+const usePocketedResultsStore = create<PocketedResultsState>()(persist((set) => ({
     pocketedResults: [
         { id: "1", label: "Advantage", value: 2, source: "Thenn Hodar's agility check" },
         { id: "2", label: "Setback", value: 4, source: "Manually added" },
@@ -33,6 +35,9 @@ const usePocketedResultsStore = create<PocketedResultsState>((set) => ({
         set(() => ({
             pocketedResults: [],
         })),
-}));
+}), holocronPersist({
+    name: 'pocketedResults',
+    partialize: (s) => ({ pocketedResults: s.pocketedResults }),
+})));
 
 export default usePocketedResultsStore;

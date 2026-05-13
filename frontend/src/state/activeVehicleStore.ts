@@ -16,6 +16,8 @@
  * participant.
  */
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { holocronPersist } from './persist';
 import { nanoid } from 'nanoid';
 import type { CritInjury } from '@/data/critTable';
 import useParticipantStore, { type VehicleRole } from './participantsStore';
@@ -284,7 +286,7 @@ function mirrorHullToCrew(
   });
 }
 
-const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
+const useActiveVehicleStore = create<ActiveVehicleStore>()(persist((set, get) => ({
   vehicles: {},
   selectedVehicleId: null,
 
@@ -501,7 +503,13 @@ const useActiveVehicleStore = create<ActiveVehicleStore>((set, get) => ({
         },
       };
     }),
-}));
+}), holocronPersist({
+  name: 'activeVehicles',
+  partialize: (s) => ({
+    vehicles: s.vehicles,
+    selectedVehicleId: s.selectedVehicleId,
+  }),
+})));
 
 // Reverse-direction mirror: when a minion-group crew member is killed by
 // wound damage (alive count drops), destroy the matching number of ships

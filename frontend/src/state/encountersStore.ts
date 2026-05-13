@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { holocronPersist } from './persist';
 import {Participant} from "@/state/participantsStore";
 
 interface Encounter {
@@ -19,7 +21,7 @@ interface EncountersStore {
     updateGoals: (goals: string[]) => void; // Update encounter goals dynamically
 }
 
-const useEncountersStore = create<EncountersStore>((set) => ({
+const useEncountersStore = create<EncountersStore>()(persist((set) => ({
     activeEncounter: undefined,
 
     // Load a new encounter
@@ -41,6 +43,9 @@ const useEncountersStore = create<EncountersStore>((set) => ({
                 ? { ...state.activeEncounter, goals }
                 : undefined,
         })),
-}));
+}), holocronPersist({
+    name: 'encounters',
+    partialize: (s) => ({ activeEncounter: s.activeEncounter }),
+})));
 
 export default useEncountersStore;

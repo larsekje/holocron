@@ -14,6 +14,8 @@
  * timeline so the GM has a record of what they did.
  */
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { holocronPersist } from "./persist";
 import { nanoid } from "nanoid";
 import { addGameEventListener } from "./eventSystem";
 import useParticipantStore, { isParticipantDead } from "./participantsStore";
@@ -101,7 +103,7 @@ interface SessionLogStore {
   clearReminders: () => void;
 }
 
-const useSessionLogStore = create<SessionLogStore>((set, get) => ({
+const useSessionLogStore = create<SessionLogStore>()(persist((set, get) => ({
   reminders: [],
   timeline: [],
   suppressedWoundFor: null,
@@ -242,7 +244,23 @@ const useSessionLogStore = create<SessionLogStore>((set, get) => ({
 
   clearTimeline: () => set({ timeline: [] }),
   clearReminders: () => set({ reminders: [] }),
-}));
+}), holocronPersist({
+  name: 'sessionLog',
+  // Persist the timeline + outstanding reminders. Strip `onApply`/`onSkip`
+  // from reminders — they're closures created at the call site; after
+  // reload the Sidebar's Apply/Skip buttons still resolve the reminder
+  // (the optional-chained callback just no-ops). The GM has to follow
+  // through manually on the consequence, which is exactly what reminders
+  // are for. `suppressedWoundFor` is a transient one-shot — don't persist.
+  partialize: (s) => ({
+    timeline: s.timeline,
+    reminders: s.reminders.map((r) => ({
+      ...r,
+      onApply: undefined,
+      onSkip: undefined,
+    })),
+  }),
+})));
 
 // ── Subscriptions ──────────────────────────────────────────────────────────
 // Wire game events into the timeline. Verbose-by-default (TURN_END /

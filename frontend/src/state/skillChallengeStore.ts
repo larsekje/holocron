@@ -14,6 +14,8 @@
  * click would drown the timeline.
  */
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { holocronPersist } from './persist';
 import { nanoid } from 'nanoid';
 import useSessionLogStore from './sessionLogStore';
 
@@ -86,7 +88,7 @@ function recomputeStatus(s: SkillChallengeState): SkillChallengeStatus {
   return 'active';
 }
 
-const useSkillChallengeStore = create<SkillChallengeStore>((set, get) => ({
+const useSkillChallengeStore = create<SkillChallengeStore>()(persist((set, get) => ({
   active: null,
 
   start: (config) => {
@@ -234,6 +236,9 @@ const useSkillChallengeStore = create<SkillChallengeStore>((set, get) => ({
     }
     set({ active: null });
   },
-}));
+}), holocronPersist({
+  name: 'skillChallenge',
+  partialize: (s) => ({ active: s.active }),
+})));
 
 export default useSkillChallengeStore;

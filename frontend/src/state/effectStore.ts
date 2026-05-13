@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { holocronPersist } from './persist';
 import { ActiveEffect, Effect, EffectDuration, EffectTarget } from '../types/effectTypes';
 import { addGameEventListener, removeGameEventListener, GameEvent } from './eventSystem';
 import useParticipantStore from './participantsStore';
@@ -27,7 +29,7 @@ function targetMatches(a: EffectTarget, b: EffectTarget): boolean {
     return true;
 }
 
-export const useEffectStore = create<EffectStore>((set, get) => ({
+export const useEffectStore = create<EffectStore>()(persist((set, get) => ({
     effects: [],
     activeEffects: [],
     addEffect: (effect: Effect, target: EffectTarget) => {
@@ -120,7 +122,22 @@ export const useEffectStore = create<EffectStore>((set, get) => ({
             return { effects: filteredEffects };
         });
     }
-}));
+}), holocronPersist({
+    name: 'effects',
+    // Persist active effects only. Strip `effect.apply` from each entry —
+    // it's a closure (toast callback) created by the React component that
+    // applied the effect; closures don't survive serialization. The
+    // mechanical behavior lives in effectsEngine.ts keyed off
+    // `effect.status`/`rank`/etc., which IS serializable. After reload,
+    // the chip and its mechanical effects continue working; the only
+    // loss is the per-tick toast announcement.
+    partialize: (s) => ({
+        effects: s.effects.map((pe) => ({
+            ...pe,
+            effect: { ...pe.effect, apply: undefined },
+        })),
+    }),
+})));
 
 // Set up game event listener for effect triggers
 addGameEventListener((event) => {

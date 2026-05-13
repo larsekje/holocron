@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { holocronPersist } from "./persist";
 import {createEncounterFSM, EncounterContext, TurnState} from "./FSM";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import EventBus from "@/utils/events";
@@ -42,7 +44,7 @@ export interface GameplayStore {
 }
 
 
-const useGameplayStore = create<GameplayStore>((set, get) => {
+const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
 
     // Listen to the "participant-added" event
     EventBus.on("participant-added", (participant) => {
@@ -211,6 +213,27 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
             });
         },
     }
-});
+}, holocronPersist<GameplayStore, { state: string; context: Omit<EncounterContext, 'participants'> }>({
+    name: 'newGameplay',
+    // Skip `context.participants` — it's mirrored from participantsStore by
+    // the subscription below, and persisting both would let the two drift.
+    // Skip the initiative modal flag too — that's transient UI.
+    partialize: (s) => {
+        const { participants: _participants, ...persistedContext } = s.context;
+        return { state: s.state, context: persistedContext };
+    },
+    // After hydration, push the saved FSM state back into the singleton so
+    // it doesn't diverge from the store. Participants come from
+    // participantsStore via the subscription set up in the creator above —
+    // grab whatever it has now to seed the FSM's view.
+    onRehydrateStorage: () => (saved) => {
+        if (!saved) return;
+        encounterFSM.state = saved.state as any;
+        encounterFSM.context = {
+            ...saved.context,
+            participants: useParticipantsStore.getState().participants,
+        } as EncounterContext;
+    },
+})));
 
 export default useGameplayStore;

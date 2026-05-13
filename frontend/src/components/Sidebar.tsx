@@ -5,6 +5,7 @@ import useSessionLogStore, {
   LogEntry,
   Reminder,
 } from "@/state/sessionLogStore";
+import { nukeAndReload } from "@/state/persist";
 import { renderSwrpgText } from "@/utils/swrpgText";
 
 const toneBorder: Record<NonNullable<LogEntry["tone"]>, string> = {
@@ -500,6 +501,34 @@ const Sidebar: React.FC = () => {
           </VStack>
         )}
       </Box>
+
+      {/* Dev-only escape hatch — wipes all persisted holocron state and
+          reloads. Survives prod-build by being dropped at build time when
+          import.meta.env.DEV is false. Console-equivalent:
+          window.__nukeHolocron() (registered in state/persist.ts). */}
+      {import.meta.env.DEV && (
+        <Box
+          px={2}
+          py={1}
+          borderTopWidth="1px"
+          borderColor="whiteAlpha.150"
+        >
+          <Button
+            size="xs"
+            variant="ghost"
+            w="100%"
+            color="whiteAlpha.500"
+            _hover={{ bg: "rgba(176,48,48,0.12)", color: "#e08080" }}
+            onClick={() => {
+              if (window.confirm("Wipe persisted holocron state and reload?")) {
+                nukeAndReload();
+              }
+            }}
+          >
+            Nuke saved state (dev)
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

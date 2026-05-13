@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { holocronPersist } from "./persist";
 import EventBus from "@/utils/events";
 import { nanoid } from "nanoid";
 
@@ -108,7 +110,7 @@ interface ParticipantStore {
     clearDicePouch: (id: string) => void;
 }
 
-const useParticipantStore = create<ParticipantStore>((set) => ({
+const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
     participants: [],
     selectedParticipantId: null,
     selectParticipant: (id) => set({selectedParticipantId: id}),
@@ -339,6 +341,12 @@ const useParticipantStore = create<ParticipantStore>((set) => ({
             )
         }));
     },
-}));
+}), holocronPersist({
+    name: 'participants',
+    partialize: (s) => ({
+        participants: s.participants,
+        selectedParticipantId: s.selectedParticipantId,
+    }),
+})));
 
 export default useParticipantStore;
