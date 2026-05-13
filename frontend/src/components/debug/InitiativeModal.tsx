@@ -452,27 +452,42 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
         e.target.select();
     };
 
-    // Handler for Enter key press
+    // Handler for keyboard shortcuts within the modal.
     const handleKeyDown = (e: React.KeyboardEvent) => {
+        // Cmd/Ctrl+Enter submits from any focus, so the GM can confirm without
+        // tabbing to the last input. Disabled-state guard mirrors the button.
+        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+            const blocked = participants.some((p) => p.isPC && !initiatives[p.id]);
+            if (!blocked) {
+                e.preventDefault();
+                handleSubmit();
+            }
+            return;
+        }
+
+        // R re-rolls all NPC initiatives. Number inputs reject alphabetic
+        // keystrokes so it's safe to hijack inside the modal.
+        if ((e.key === 'r' || e.key === 'R') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+            e.preventDefault();
+            rollAllNpcInitiatives();
+            return;
+        }
+
         if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey) {
-            // Check if the active element is an input field
+            // Plain Enter: walk through inputs, submit on the last.
             const activeElement = document.activeElement;
-            if (activeElement && 
-                activeElement.tagName === 'INPUT' && 
+            if (activeElement &&
+                activeElement.tagName === 'INPUT' &&
                 activeElement.getAttribute('type') === 'number') {
-                // Move focus to next input or confirm if at last input
                 const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
                 const currentIndex = inputs.indexOf(activeElement as HTMLInputElement);
-                
+
                 if (currentIndex < inputs.length - 1) {
-                    // Move to next input
                     (inputs[currentIndex + 1] as HTMLInputElement).focus();
                 } else {
-                    // At last input, confirm the modal
                     handleSubmit();
                 }
             } else {
-                // Not in an input, just confirm
                 handleSubmit();
             }
         }
@@ -686,7 +701,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                 </ModalBody>
 
                 <ModalFooter>
-                    <Tooltip label="Re-roll initiative for all NPCs" bg="gray.900" color="white">
+                    <Tooltip label="Re-roll initiative for all NPCs (R)" bg="gray.900" color="white">
                         <Button
                             leftIcon={<MdRefresh />}
                             mr={3}

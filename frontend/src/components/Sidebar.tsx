@@ -181,7 +181,9 @@ const TimelineRow: React.FC<{ entry: LogEntry }> = ({ entry }) => {
         sx={{
           // Inherit whatever the surrounding row's text color is so icons
           // read against the dark Sidebar bg without their default near-black
-          // glyph fill (which disappears on the dark theme).
+          // glyph fill (which disappears on the dark theme). Specific dice
+          // kinds (boost, setback, etc.) override below so the GM still sees
+          // boost as blue, setback as a contrasting grey, etc.
           //
           // The base .icon style adds `top: 2px` (a nudge that suits the
           // larger contexts where the icon font is normally used). Inline
@@ -201,6 +203,17 @@ const TimelineRow: React.FC<{ entry: LogEntry }> = ({ entry }) => {
           '& .icon::before, & .icon::after': {
             color: 'currentColor',
           },
+          // Per-kind color overrides — selectors with two classes win over
+          // the single-class `.icon` rule above. Setback's native #413C42
+          // disappears on the dark Sidebar bg, so we bump it to a visible
+          // grey while keeping the "dark/black die" reading.
+          '& .icon.boost': { color: '#A0D9F5' },
+          '& .icon.setback': { color: '#BFBFBF' },
+          '& .icon.ability': { color: '#52B849' },
+          '& .icon.proficiency': { color: '#FEE800' },
+          '& .icon.difficulty': { color: '#9B6FCE' },
+          '& .icon.challenge': { color: '#E21D37' },
+          '& .icon.force': { color: '#FFFFFF' },
         }}
       >
         {renderSwrpgText(entry.summary)}

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {HStack, IconButton, Tooltip, useToast} from "@chakra-ui/react";
+import {Box, Flex, HStack, IconButton, Tooltip, useToast} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
 import {FaSpaceShuttle, FaUsers} from "react-icons/fa";
 import ContentCardOld from "@/ContentCardOld";
 import TargetListOld from "@components/TargetListOld";
+import MiniStatCard from "@components/target/MiniStatCard";
 import AdversarySelector from "@components/adversaries/AdversarySelector";
 import AddPCModal from "@components/adversaries/AddPCModal";
 import adversaryService from "@/services/adversaryService";
@@ -166,7 +167,16 @@ const ContentCardTargetsOld = () => {
   return (
     <>
       <ContentCardOld heading="Targets" buttons={buttons} icon={<FaUsers/>}>
-        <TargetListOld/>
+        {/* Flex column lets MiniStatCard size to its content while the target
+            list takes the remaining height and scrolls internally — without
+            this, TargetListOld's h="100%" stacks on top of the mini card and
+            forces the whole CardBody to scroll. */}
+        <Flex direction="column" h="100%" minH={0}>
+          <MiniStatCard/>
+          <Box flex="1" minH={0} overflowY="auto">
+            <TargetListOld/>
+          </Box>
+        </Flex>
       </ContentCardOld>
       <AdversarySelector isOpen={isSelectorOpen} onClose={() => setSelectorOpen(false)}/>
       <AddPCModal isOpen={isPcOpen} onClose={() => setPcOpen(false)}/>

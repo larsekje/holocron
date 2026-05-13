@@ -7,6 +7,8 @@ import {useParticipantSheetView} from "@components/ParticipantSheetView";
 import useParticipantStore from "@/state/participantsStore";
 import useActiveVehicleStore from "@/state/activeVehicleStore";
 import useGameplayStore from "@/state/newGameplayStore";
+import QuickActionsBar from "@components/quickActions/QuickActionsBar";
+import HotkeyHint from "@components/quickActions/HotkeyHint";
 
 const ContentCardTargetedOld = () => {
   const participants = useParticipantStore((state) => state.participants);
@@ -33,10 +35,12 @@ const ContentCardTargetedOld = () => {
         <Button
           size="sm"
           colorScheme="blue"
+          position="relative"
           onClick={() => setActiveParticipantId(selectedParticipant.id)}
           isDisabled={isAlreadyActive}
         >
           {isAlreadyActive ? "Active" : "Set Active"}
+          {!isAlreadyActive && <HotkeyHint>A</HotkeyHint>}
         </Button>
       )
       : null;
@@ -50,6 +54,7 @@ const ContentCardTargetedOld = () => {
 
   return (
     <ContentCardOld heading="Targeted" buttons={buttons} icon={<FaCrosshairs/>}>
+      {selectedParticipant && !selectedVehicle && <QuickActionsBar/>}
       {selectedVehicle ? (
         <VehicleStatSheetOld vehicle={selectedVehicle}/>
       ) : selectedParticipant ? (

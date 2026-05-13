@@ -79,6 +79,7 @@ const TargetCardOld = ({
 
   // Status effects targeted at this participant.
   const allEffects = useEffectStore((s) => s.effects);
+  const removeEffect = useEffectStore((s) => s.removeEffect);
   const statusEffects = allEffects.filter(
     (ae) => ae.target?.type === "character" && ae.target.participantId === participant.id,
   );
@@ -260,7 +261,13 @@ const TargetCardOld = ({
                       letterSpacing="0.06em"
                       textTransform="uppercase"
                       borderRadius="sm"
-                      title={ae.effect.description ?? ae.effect.name}
+                      cursor="pointer"
+                      _hover={{ bg: "#7a3fb0" }}
+                      title={`Click to dispel — ${ae.effect.description ?? ae.effect.name}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeEffect(ae.id);
+                      }}
                     >
                       {ae.effect.name}
                       {typeof ae.remainingDuration === "number" ? ` ${ae.remainingDuration}` : ""}

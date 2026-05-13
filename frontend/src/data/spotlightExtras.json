@@ -55,6 +55,8 @@
     "detail": { "id": "quality_autofire", "type": "quality", "name": "Autofire", "markdown": "May spend [AD] to hit the same or another target within range an additional time. GM may apply increased ammo usage or difficulty.", "category": "Active", "ranked": false, "source": "SRD" } },
   { "id": "quality_stun-setting", "type": "quality", "name": "Stun Setting",
     "detail": { "id": "quality_stun-setting", "type": "quality", "name": "Stun Setting", "markdown": "Weapon can switch to non-lethal mode, dealing strain damage instead of wounds.", "category": "Passive", "ranked": false, "source": "SRD" } },
+  { "id": "quality_stun-damage", "type": "quality", "name": "Stun Damage",
+    "detail": { "id": "quality_stun-damage", "type": "quality", "name": "Stun Damage", "markdown": "All damage from this weapon is applied as strain rather than wounds. The weapon's damage is otherwise unchanged (soak still reduces it; qualities still apply).", "category": "Passive", "ranked": false, "source": "SRD" } },
   { "id": "quality_blast", "type": "quality", "name": "Blast",
     "detail": { "id": "quality_blast", "type": "quality", "name": "Blast", "markdown": "On a hit (or with sufficient [TR]), nearby targets suffer X damage (at GM's discretion for minions).", "category": "Active", "ranked": true, "source": "SRD" } },
   { "id": "quality_pierce", "type": "quality", "name": "Pierce",

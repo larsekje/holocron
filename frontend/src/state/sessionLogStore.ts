@@ -146,14 +146,24 @@ const useSessionLogStore = create<SessionLogStore>((set, get) => ({
     delta: number,
     total: number,
   ) => {
+    // Plain-language summary: "took N wounds / healed N wounds" reads more
+    // naturally at the table than "+N / -N wounds (now total)". For strain
+    // we use "suffered / recovered" to mirror the rulebook phrasing.
+    const phrase = (signed: number): string => {
+      const abs = Math.abs(signed);
+      if (statType === "wounds") {
+        const noun = abs === 1 ? "wound" : "wounds";
+        return signed > 0
+          ? `took ${abs} ${noun}`
+          : `healed ${abs} ${noun}`;
+      }
+      return signed > 0
+        ? `suffered ${abs} strain`
+        : `recovered ${abs} strain`;
+    };
+
     set((state) => {
       const last = state.timeline[state.timeline.length - 1];
-      const word =
-        statType === "wounds"
-          ? Math.abs(delta) === 1
-            ? "wound"
-            : "wounds"
-          : "strain";
 
       if (
         last &&
@@ -168,17 +178,10 @@ const useSessionLogStore = create<SessionLogStore>((set, get) => ({
         if (newDelta === 0) {
           return { timeline: state.timeline.slice(0, -1) };
         }
-        const sign = newDelta > 0 ? "+" : "";
-        const foldedWord =
-          statType === "wounds"
-            ? Math.abs(newDelta) === 1
-              ? "wound"
-              : "wounds"
-            : "strain";
         const updated: LogEntry = {
           ...last,
           at: Date.now(),
-          summary: `${participantName}: ${sign}${newDelta} ${foldedWord} (now ${total})`,
+          summary: `${participantName} ${phrase(newDelta)}`,
           tone: newDelta > 0 ? (statType === "wounds" ? "bad" : "warn") : "good",
           meta: { ...last.meta, statType, delta: newDelta, total },
         };
@@ -187,14 +190,13 @@ const useSessionLogStore = create<SessionLogStore>((set, get) => ({
         };
       }
 
-      const sign = delta > 0 ? "+" : "";
       const fresh: LogEntry = {
         id: nanoid(),
         at: Date.now(),
         kind: "damage",
         participantId,
         participantName,
-        summary: `${participantName}: ${sign}${delta} ${word} (now ${total})`,
+        summary: `${participantName} ${phrase(delta)}`,
         tone: delta > 0 ? (statType === "wounds" ? "bad" : "warn") : "good",
         meta: { statType, delta, total },
       };
