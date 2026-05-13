@@ -165,6 +165,14 @@ dist
 dist-ssr
 *.local
 
+# Local Claude Code / AI tooling state (per-user, not shared)
+.claude/worktrees/
+.claude/skills/
+.junie/
+
+# Local rulebook PDFs and adversary references (bulky, copyright-restricted)
+references/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
