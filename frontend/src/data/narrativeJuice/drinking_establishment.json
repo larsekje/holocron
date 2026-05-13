@@ -3,8 +3,13 @@
     "slot": "atmosphere",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A sommelier tilts a bottle toward the lamplight, reads the label aloud in Old Corellian, sets it down with a slight bow.",
-    "tone": {"pulpy": 0, "seedy": -1, "intrigue": 0, "refined": 2},
+    "text": "A long bar in polished durasteel runs the length of the room. Glass shelves four high behind it, lit from below in pale amber. The bartender pours a tall green cocktail and slides it down the bar without looking up.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
     "heat": 1,
     "bias": []
   },
@@ -12,8 +17,83 @@
     "slot": "atmosphere",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Ozone and rosewood. A privacy emitter at every other booth, all of them lit.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "Black marble floors, gold inlay tracing the path from door to bar. Low conversation, the chime of crystal on crystal, no music. A server collects an empty glass before the patron has finished setting it down.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Curved booths in deep red leather, each angled inward so no patron faces another. Ozone and rosewood. A sommelier presents a bottle table-side with a slight bow and waits for the nod.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Floor-to-ceiling transparisteel walls open onto the skylane traffic two thousand levels down. Low gold light, no overheads. A server lights a dessert at a far table; the flame holds for a measured count and dies.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A grand staircase up to private rooms, brass rail polished to a wet shine. Caf and citrus oil in the air. The maître d' walks a couple up the stairs and does not return for several minutes.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Vaulted ceiling lost in shadow, the room intimate despite its scale. A pianist works through something quiet. Two parents and a daughter in birthday wear share a corner booth, laughing into their water glasses.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": -1,
+      "intrigue": -1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Tables spaced for conversation, no two close enough to overlap. The hum of privacy fields under the music. A coaster slides across a table to cover a credit chit, neither patron looking at the other.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
     "heat": 2,
     "bias": []
   },
@@ -21,91 +101,94 @@
     "slot": "atmosphere",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Strings playing too softly to follow. Conversation pitched to match.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 1, "refined": 2},
-    "heat": 1,
+    "text": "Hush of carpet, the soft click of a closing door somewhere. Recessed lighting, every fixture concealed. Two patrons at the bar lean apart the moment a server arrives, and lean back together when she's gone.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
+    "heat": 2,
     "bias": []
   },
   {
     "slot": "atmosphere",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Every privacy field in the room drops at once. Three seconds. Then they come back.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "Mirrored back-bar, every glass arrangement reflected to infinity. The bartender works without speaking, eyes flicking across the room between pours. The privacy field at booth four flickers, holds, flickers again.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 2,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Imperial officers occupy three tables along the south wall, dress greys and quiet talk. A server clears their glasses on a precise rotation. The pianist segues into something older, more measured, without missing a note.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 2,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The music cuts. Every privacy field in the room drops at once. The maître d' is at the front, speaking with a man in ISB charcoal, hands clasped at the small of his back.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 3,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Conversation continues, slightly too even. The bartender's hands are below the bar. At the central booth, a noblewoman's laugh has cut off mid-syllable; she has not moved since.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
     "heat": 3,
     "bias": []
   },
   {
-    "slot": "atmosphere",
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A server lights a dessert tableside. Blue flame, no smoke. Half the room watches.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 0, "refined": 2},
+    "text": "An Imperial officer in dress greys nurses a single brandy at the bar, posture immaculate. Switches to formal High Galactic the moment he's addressed — and doesn't notice he does it.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
     "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "The lift chimes. Two heads at the bar turn, then return to their drinks at exactly the same speed.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "Imperial dress greys at the corner banquette. The room is louder than it needs to be.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 1, "refined": 1},
-    "heat": 2,
-    "bias": ["imperial"]
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A coaster slides over a credit chit at the bar. Neither hand acknowledges the other.",
-    "tone": {"pulpy": 0, "seedy": 1, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "The music cuts. One full beat of silence. Then it resumes, a different piece, slightly slower.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 3,
-    "bias": []
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "Bantha-leather banquettes the color of dried wine. Someone laughs once, briefly, and stops.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 1, "refined": 2},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "The maître d' walks the room every twelve minutes. Nothing visibly changes when he passes.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 1, "refined": 2},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "atmosphere",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A senator-district staffer enters, scans the room, leaves without speaking. The maître d' notes something on a flimsi.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": ["noble"]
+    "bias": [
+      "imperial"
+    ]
   },
   {
     "slot": "npc",
@@ -114,8 +197,13 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "His glass is full. It's been full since the players walked in. He's watching the lift, not the door.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "A Bothan in a half-cape watches the lift doors more than her companion, datapad face-down beside her glass. Counts to three after every chime before looking back.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 0
+    },
     "heat": 2,
     "bias": []
   },
@@ -126,10 +214,17 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "An Imperial officer in dress greys nurses a single brandy, posture immaculate. Switches to formal High Galactic when addressed — and doesn't notice he does it.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 1, "refined": 2},
+    "text": "A Twi'lek woman holds court at the central booth, House Organa sash on her shoulder. Repeats the last word of every sentence in a whisper to herself, then continues. Denies doing it if asked.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
     "heat": 1,
-    "bias": ["imperial"]
+    "bias": [
+      "noble"
+    ]
   },
   {
     "slot": "npc",
@@ -138,8 +233,30 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A Twi'lek woman in pearl-grey sits alone at a four-top. Adjusts other people's cuffs when they walk past her booth, without asking. They thank her.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 1, "refined": 2},
+    "text": "A duelling scar at the jaw, civilian black, holding her brandy by the rim. Eyes track every entrance. The two bar stools beside her are empty; nobody has tried to sit there.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 2,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "description",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The sommelier — a Kel Dor, gloves spotless, decanting cart at his elbow. Pauses a half-beat before any reply, as if translating. Will not pour for a glass with fingerprints on it.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
     "heat": 1,
     "bias": []
   },
@@ -147,13 +264,21 @@
     "slot": "npc",
     "npc_type": "featured",
     "npc_composition": "single",
-    "npc_mode": "action",
+    "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "'Compliments of a guest who prefers not to be named.' The sommelier sets the bottle down at the players' table and waits.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "Grey at the temples, a senator's pin at the lapel. Will not say the word 'Empire' — substitutes 'the current administration,' every time, without breaking stride.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
     "heat": 2,
-    "bias": []
+    "bias": [
+      "noble",
+      "rebel"
+    ]
   },
   {
     "slot": "npc",
@@ -162,116 +287,13 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Piercing eyes, a duelling scar at the jaw, the wrong kind of stillness for a private brandy. Repeats the last word of every sentence in a whisper, then denies it.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "An older Chagrian holds his glass by the rim, never the body. Refers to the Emperor only as 'the current administration.' Will not be drawn further.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
-    "heat": 1,
-    "bias": ["noble"]
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "Has been signing flimsis for an hour, one at a time, sliding each into a different pocket. Pauses half a beat before any reply.",
-    "tone": {"pulpy": 0, "seedy": 1, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A human woman with grey at the temples, soldier's spine under a black evening dress. Scans every entrance on a count of three.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": ["rebel"]
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A Kel Dor in muted formal robes raises a finger; the sommelier arrives. He asks three different ways whether the players are expected. Each more polite than the last.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A Bothan in a half-cape watches the lift doors, datapad face-down on the table. Sniffs the air mid-sentence then turns sharply, every time.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "Crosses the room toward the players smiling, gets their names slightly wrong, kisses the air beside each cheek. Has never met them before.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 1, "refined": 2},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A Mirialan in a House Organa retainer's sash. Treats every mention of the Jedi as a small social error and graciously moves past it.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
-    "heat": 1,
-    "bias": ["noble", "rebel"]
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A woman at the bar laughs at something on her datapad, looks up at the players, laughs again. Compliments their clothing in a way that feels like inventory.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A Sullustan in a tailor's measured silence. Will not look directly at any human; tracks them in the bar mirror.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "A red-faced human in evening wear at the corner booth, talking loudly enough that the servers are giving him space. Repeats his own punchlines, louder each time.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": -1,
+      "refined": -1
+    },
     "heat": 2,
     "bias": []
   },
@@ -282,8 +304,13 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A young Zabrak duelist removes her gloves one finger at a time, watching the players. Hums between sentences — same three-note phrase, every time.",
-    "tone": {"pulpy": 2, "seedy": 0, "intrigue": 1, "refined": 2},
+    "text": "A Falleen in cream silks at the bar, drink untouched, every motion deliberate. Asks the same question three different ways across a conversation — and remembers which version you answered.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
     "heat": 2,
     "bias": []
   },
@@ -294,8 +321,32 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "An elderly Ithorian sips slowly, eyes closed. Has been here when each shift started.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
+    "text": "A Sullustan clerk at the bar, ledger stylus tucked behind one ear, working through a stack of bond receipts. He has not ordered a second drink.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "npc",
+    "npc_type": "background",
+    "npc_composition": "single",
+    "npc_mode": "description",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "An Ithorian in plain civilian dress, alone at a small table, working through course three of a quiet meal.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 1
+    },
     "heat": 1,
     "bias": []
   },
@@ -306,44 +357,13 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A human in a charcoal jacket reads a flimsi pamphlet at the bar, drink untouched.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "background",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A bartender pours three measures in a single uninterrupted arc, eyes never leaving the customer.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 2},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "background",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A protocol droid in club livery stands at parade rest beside the coat check, idle for the moment.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "background",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A server polishes a glass at the side station, holding it up to the light between passes.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
+    "text": "The pianist at the corner instrument, working through a set list pinned to the stand. Does not look at the keys or the room.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
     "heat": 1,
     "bias": []
   },
@@ -354,20 +374,13 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A red-eyed human sits alone with two empties and a third half-finished. Quiet, not maudlin.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 0},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "background",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A hostess at the lectern updates the reservations console, lips moving silently as she counts.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
+    "text": "A coat-check droid at the entrance, brass plating, single ceremonial epaulette. Hands back garments without a word.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
     "heat": 1,
     "bias": []
   },
@@ -378,34 +391,209 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A bored Duros at the end of the bar flicks credit chits one at a time into an empty glass.",
-    "tone": {"pulpy": 0, "seedy": 1, "intrigue": 0, "refined": 0},
+    "text": "A Devaronian at a two-top, reading a quarterly financial report on a datapad with the small smile of someone whose holdings did well.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
     "heat": 1,
-    "bias": []
+    "bias": [
+      "corporate"
+    ]
   },
   {
     "slot": "npc",
     "npc_type": "featured",
-    "npc_composition": "pair",
-    "npc_mode": "description",
+    "npc_composition": "single",
+    "npc_mode": "action",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Two human women at a side booth, ages thirty years apart, identical mannerisms. They trade the same brief glance every time someone passes their table.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "'Compliments of a guest who prefers not to be named.' The sommelier sets an unfamiliar bottle at the players' table and waits.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
     "heat": 2,
     "bias": []
   },
   {
     "slot": "npc",
     "npc_type": "featured",
-    "npc_composition": "pair",
+    "npc_composition": "single",
     "npc_mode": "action",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Two Imperial officers in civilian black are arguing in whispers. One finishes the other's sentences after a deliberate half-beat permission pause.",
-    "tone": {"pulpy": 0, "seedy": 1, "intrigue": 2, "refined": 1},
+    "text": "A Zabrak in midnight formalwear vaults the bar in a single motion, lands behind it, takes the bottle she wants and tosses a credit chit back over her shoulder. The bartender catches it without turning.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
     "heat": 2,
-    "bias": ["imperial"]
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The maître d' approaches the players' table at an unhurried pace, hands clasped at the small of his back. He has not looked away since he started walking.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 2,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A duelling scar at the jaw, removing her gloves at the bar one finger at a time. Two patrons on the next stools have stood and are leaving their drinks unfinished.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 3,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A senator in a House Organa sash walks past the players' table and lets a folded flimsi fall from her sleeve onto the empty chair. She does not slow down.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
+    "heat": 3,
+    "bias": [
+      "noble",
+      "rebel"
+    ]
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A Mirialan with intricate facial markings has just taken the empty chair at the players' booth. 'Please. Pretend I belong here for thirty seconds.'",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": -1
+    },
+    "heat": 3,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "An ISB officer in charcoal stands at the entrance, accepting a folded envelope from the maître d' and slipping it inside his tunic without looking down. The maître d' does not see him out.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 3,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "npc",
+    "npc_type": "dual_extreme",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A flushed human is shouting at his companion in the corner booth, finger jabbing the table. The maître d' is at his shoulder, voice too low to hear, hand resting lightly on his arm.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 3,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "background",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The bartender slides a drink down the bar. A credit chit is folded under the napkin; the patron pockets it as he lifts the glass.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "background",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A Gran in evening wear settles his bill, slides a small lacquered case across the bar with the credit chip, and leaves without a glance back.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "background",
+    "npc_composition": "single",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A young Rodian server is laughing — actually laughing — at something a regular has said. She catches herself, recovers, refills his glass.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
   },
   {
     "slot": "npc",
@@ -414,10 +602,36 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A Pantoran in formalwear and his Falleen companion. They never speak. They mirror each other's drinks down to the angle of the glass.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "Two senators in matching House sashes share a back booth. One finishes the other's sentences with a half-beat pause for permission, every time, without exception.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
     "heat": 1,
-    "bias": []
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "npc",
+    "npc_type": "featured",
+    "npc_composition": "pair",
+    "npc_mode": "description",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A grey-haired man in dress greys and a younger Chiss in civilian formalwear, drinks untouched. They have traded the same identical glance four times in five minutes.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
+    "heat": 2,
+    "bias": [
+      "imperial"
+    ]
   },
   {
     "slot": "npc",
@@ -426,10 +640,15 @@
     "npc_mode": "action",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A senator-district staffer and a journalist with a tucked recorder are not making eye contact. He talks; she listens; neither drinks.",
-    "tone": {"pulpy": 0, "seedy": 1, "intrigue": 2, "refined": 1},
+    "text": "Two Bothans at the mezzanine rail. The older one nods once at the players; the younger looks at her datapad and types a single line.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
     "heat": 2,
-    "bias": ["noble"]
+    "bias": []
   },
   {
     "slot": "npc",
@@ -438,10 +657,17 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Two human investors compare datapads quietly, nodding in unison at things only they understand.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 1, "refined": 1},
+    "text": "Two Sullustan executives at a corner booth, datapads between them, working through a contract over cocktails.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
     "heat": 1,
-    "bias": ["corporate"]
+    "bias": [
+      "corporate"
+    ]
   },
   {
     "slot": "npc",
@@ -450,8 +676,49 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "An older couple at the window-table, hands resting near each other but not touching, watching the skylane lights.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
+    "text": "A Twi'lek couple at the bar, talking quietly in Ryl, laughing into their glasses. They are holding hands under the bar.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": -1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "npc",
+    "npc_type": "background",
+    "npc_composition": "pair",
+    "npc_mode": "description",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A Mon Calamari accountant and a human auditor share a two-top, datapads turned inward, comparing columns line by line over untouched wine.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "npc",
+    "npc_type": "background",
+    "npc_composition": "pair",
+    "npc_mode": "action",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Two servers in livery clear a six-top in silence, working from opposite ends and meeting in the middle.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
     "heat": 1,
     "bias": []
   },
@@ -462,34 +729,53 @@
     "npc_mode": "action",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Two off-duty club servers at the back stairwell share a single tea, swapping the cup back and forth.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 0},
+    "text": "Two elderly humans share a dessert at a window table, his hand over hers, neither speaking. They have been there since the players arrived.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": -1,
+      "refined": 1
+    },
     "heat": 1,
     "bias": []
   },
   {
     "slot": "npc",
     "npc_type": "background",
-    "npc_composition": "pair",
+    "npc_composition": "group",
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A Twi'lek couple deep in conversation, glasses untouched. He laughs softly at something she didn't mean as a joke.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
+    "text": "A long table of four Imperial officers in dress greys, drinks untouched, conversation pitched too low to follow.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
     "heat": 1,
-    "bias": []
+    "bias": [
+      "imperial"
+    ]
   },
   {
     "slot": "npc",
     "npc_type": "background",
-    "npc_composition": "pair",
-    "npc_mode": "action",
+    "npc_composition": "group",
+    "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Two human businesswomen split a single dessert with two spoons, one of them taking notes between bites.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
+    "text": "Three Czerka executives at the central booth, plates cleared, datapads still out, laughing without raising their voices.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
     "heat": 1,
-    "bias": ["corporate"]
+    "bias": [
+      "corporate"
+    ]
   },
   {
     "slot": "npc",
@@ -498,22 +784,17 @@
     "npc_mode": "description",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Four young aristocrats at a round table go silent in perfect unison whenever a server approaches. Resume mid-sentence the moment the server leaves.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "Five young humans at the corner booth, all wearing the same House signet on the wrong finger. The whole table goes silent in unison when a server approaches, and resumes the moment she's gone.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 0
+    },
     "heat": 2,
-    "bias": ["noble"]
-  },
-  {
-    "slot": "npc",
-    "npc_type": "background",
-    "npc_composition": "group",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A table of corporate accountants in matching dark suits, laughing at someone's quiet joke. Three glasses, four people; one isn't drinking.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
-    "heat": 1,
-    "bias": ["corporate"]
+    "bias": [
+      "noble"
+    ]
   },
   {
     "slot": "npc",
@@ -522,74 +803,13 @@
     "npc_mode": "action",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Five university friends crowd a corner booth, toasting something none of them will explain to the servers.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 0, "refined": 0},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "background",
-    "npc_composition": "group",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A retirement party at the long table — three older humans, a Sullustan, gentle laughter, one chair empty with a glass at the place setting.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 0, "refined": 1},
-    "heat": 1,
-    "bias": []
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A grey-haired human in COMPNOR pins crosses the room toward the players, smiling. Three steps in, he stops, frowns at a chrono, turns back.",
-    "tone": {"pulpy": 0, "seedy": 1, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": ["imperial"]
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "description",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A Mon Calamari in House Organa colors sits with a single glass of water. Cannot perceive sarcasm. Will answer rhetorical questions with great care.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 1, "refined": 2},
-    "heat": 1,
-    "bias": ["rebel", "noble"]
-  },
-  {
-    "slot": "npc",
-    "npc_type": "featured",
-    "npc_composition": "single",
-    "npc_mode": "action",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "Has paid the bill three times in the last hour, each time waving the server away. Taps the table in groups of three between thoughts.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "complication",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "A senator at the next table mentions one of the players by name to her companion, then changes the subject.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
-    "heat": 1,
-    "bias": ["noble"]
-  },
-  {
-    "slot": "complication",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "The sommelier presents a bottle the players did not order. A folded flimsi is tied to the neck with silver wire.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "Three Aqualish at a mezzanine table raise glasses in a toast, drink, sit back. They have not spoken to each other since they ordered.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
     "heat": 1,
     "bias": []
   },
@@ -597,8 +817,29 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A junior staffer at the bar accidentally meets a player's eyes, blanches, looks away too fast. He keeps adjusting his collar.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "A senator at the next booth uses one of the players' names to her companion, then changes the subject before she can be asked how she knows it.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "complication",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The sommelier passes the players' table twice without acknowledging their empty glasses. On the third pass, he sets down a wine list none of them asked for.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
     "heat": 1,
     "bias": []
   },
@@ -606,8 +847,13 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A small folded card appears under one player's glass between sip and sip. No one is at the next table.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "A datachip arrives on the players' table on a folded napkin, no server visible. The napkin has a small embossed crest none of them recognize.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
     "heat": 1,
     "bias": []
   },
@@ -615,8 +861,27 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "The maître d' approaches and asks, with perfect courtesy, whether the gentleman who reserved the players' table will be joining them.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "The pianist segues from her standing repertoire into a piece one of the players grew up with — and pauses on the bridge as if waiting for a response.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "complication",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The maître d' approaches and asks, with perfect courtesy, whether the gentleman who reserved the players' table will be joining them tonight.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
     "heat": 2,
     "bias": []
   },
@@ -624,8 +889,13 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "A protocol droid in club livery requests, politely, that the players accompany it to a private room. It will not say at whose request.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 2},
+    "text": "A bottle the players did not order arrives at their table. The sommelier is already withdrawing. The card under the bottle reads only: 'We should talk. Upstairs.'",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
     "heat": 2,
     "bias": []
   },
@@ -633,8 +903,29 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "The privacy emitter at the players' booth fails with a soft pop. Three nearby tables conspicuously do not look over.",
-    "tone": {"pulpy": 0, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "The privacy field at the booth beside the players cuts out. Two senators continue talking for several seconds — names, dates, and a meeting place reach the players' table.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
+    "heat": 2,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "complication",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A serving droid sets a second bill on the players' table. The total has tripled. The droid waits, hands folded, until acknowledged.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 1
+    },
     "heat": 2,
     "bias": []
   },
@@ -642,35 +933,45 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Two patrons at the next stools stand and leave their drinks unfinished. The Zabrak duelist at the bar is removing her gloves.",
-    "tone": {"pulpy": 2, "seedy": 0, "intrigue": 1, "refined": 1},
-    "heat": 2,
-    "bias": []
-  },
-  {
-    "slot": "complication",
-    "archetype": "drinking_establishment",
-    "skin": "coruscant_club",
-    "text": "Three Imperial naval officers in dress uniforms have just entered, and the maître d' is leading them directly toward the players' booth.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "Three Imperial naval officers in dress uniforms have just entered. The maître d' is leading them directly toward the players' booth.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
     "heat": 3,
-    "bias": ["imperial"]
+    "bias": [
+      "imperial"
+    ]
   },
   {
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "Every server in the room steps simultaneously to the walls. The lift behind the players opens. Two figures in ISB charcoal are already inside.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "Every privacy field in the room drops at once. At the entrance, an officer in ISB charcoal is reading from a datapad — the maître d' glances toward the players' booth.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
     "heat": 3,
-    "bias": ["imperial"]
+    "bias": [
+      "imperial"
+    ]
   },
   {
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "The Bothan with the face-down datapad stands, walks to the players' booth, sets the datapad in front of them and keeps walking toward the lift.",
-    "tone": {"pulpy": 1, "seedy": 0, "intrigue": 2, "refined": 1},
+    "text": "The bartender catches one player's eye, drops her gaze to a holdout blaster set on the inside of the bar, and back up. A patron at the central booth has stood, not turned around.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": -1
+    },
     "heat": 3,
     "bias": []
   },
@@ -678,9 +979,16 @@
     "slot": "complication",
     "archetype": "drinking_establishment",
     "skin": "coruscant_club",
-    "text": "The duelist's gloves are off, she's three meters from the players' table, and the sommelier has stopped pouring mid-glass.",
-    "tone": {"pulpy": 2, "seedy": 0, "intrigue": 1, "refined": 1},
+    "text": "A senator at a far table collapses face-down into her plate. Her companion stands and walks toward the lift without raising the alarm.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 2,
+      "refined": -1
+    },
     "heat": 3,
-    "bias": []
+    "bias": [
+      "noble"
+    ]
   }
 ]

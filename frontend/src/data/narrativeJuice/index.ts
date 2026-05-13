@@ -1,5 +1,13 @@
-import drinkingEstablishment from './drinking_establishment.json';
 import skinProfilesData from './skin-profiles.json';
+
+// Auto-load every entry-bank JSON in this folder so adding a new content
+// file is a drop-in (no import edit). `eager: true` inlines the JSON at
+// build time, so this stays synchronous like the previous explicit imports.
+// `skin-profiles.json` is excluded because it isn't an entries array.
+const entryModules = import.meta.glob<{ default: unknown }>(
+  './*.json',
+  { eager: true },
+);
 
 export type JuiceSlot = 'atmosphere' | 'npc' | 'environmental' | 'complication';
 export type JuiceArchetype =
@@ -45,9 +53,24 @@ export function isTimeInvariant(e: JuiceEntry): boolean {
   return false;
 }
 
-const banks: Partial<Record<JuiceArchetype, JuiceEntry[]>> = {
-  drinking_establishment: drinkingEstablishment as JuiceEntry[],
-};
+// Merge all content files into per-archetype banks. Each entry carries its
+// own `archetype` so the filename is informational only — we route by the
+// data, not by the path.
+const banks: Partial<Record<JuiceArchetype, JuiceEntry[]>> = (() => {
+  const out: Partial<Record<JuiceArchetype, JuiceEntry[]>> = {};
+  for (const [path, mod] of Object.entries(entryModules)) {
+    // skin-profiles.json is the only non-entries JSON in this folder.
+    if (path.endsWith('/skin-profiles.json')) continue;
+    const raw = (mod as { default: unknown }).default;
+    if (!Array.isArray(raw)) continue;
+    for (const entry of raw as JuiceEntry[]) {
+      const archetype = entry?.archetype;
+      if (!archetype) continue;
+      (out[archetype] ??= []).push(entry);
+    }
+  }
+  return out;
+})();
 
 export function getBank(archetype: JuiceArchetype): JuiceEntry[] {
   return banks[archetype] ?? [];
