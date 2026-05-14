@@ -17,6 +17,7 @@ const dataDir = path.resolve(projectRoot, 'frontend', 'public', 'assets', 'data'
 const generatedDir = path.resolve(projectRoot, 'frontend', 'src', 'data');
 const outFile = path.resolve(generatedDir, 'spotlightIndex.generated.json');
 const cloutFile = path.resolve(generatedDir, 'adversaryClout.generated.json');
+const classificationFile = path.resolve(projectRoot, 'references', 'adversary-classifications-v4.2.jsonl');
 
 function slugify(s) {
   return String(s || '')
@@ -35,6 +36,38 @@ async function readJson(filename) {
     console.warn(`[spotlight] Failed to read ${path.relative(projectRoot, filePath)}: ${e.message}`);
     return null;
   }
+}
+
+// The one-line rationale for each adversary's v4.2 `coreArchetype` lives in
+// references/adversary-classifications-v4.2.jsonl, keyed by name. Read it as a
+// safe-optional input (like the clout map): missing file or bad lines just mean
+// fewer reasons, never a failed build. Returns Map<name, reason>.
+async function loadClassificationReasons() {
+  const map = new Map();
+  let raw;
+  try {
+    raw = (await fs.readFile(classificationFile, 'utf-8')).replace(/^﻿/, '');
+  } catch (e) {
+    console.warn(
+      `[spotlight] No classification rationale at ${path.relative(projectRoot, classificationFile)}: ${e.message}`,
+    );
+    return map;
+  }
+  let bad = 0;
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    try {
+      const rec = JSON.parse(trimmed);
+      if (rec && typeof rec.name === 'string' && typeof rec.reason === 'string') {
+        map.set(rec.name, rec.reason);
+      }
+    } catch {
+      bad++;
+    }
+  }
+  if (bad) console.warn(`[spotlight] Skipped ${bad} malformed classification lines.`);
+  return map;
 }
 
 function entry(type, name, { subtitle, tags = [], description, extra = {}, named, fromAdventure, clout } = {}) {
@@ -59,11 +92,17 @@ function pushUnique(results, e) {
 
 const ADVERSARY_TYPES = new Set(['Minion', 'Rival', 'Nemesis']);
 
-function buildAdversaries(rawList, cloutMap) {
+// Sources excluded from the index entirely — fan-forum / low-signal content the
+// GM doesn't want surfaced anywhere (search, browse, classification review).
+// Matched against the adversary's `source:<name>` tag.
+const EXCLUDED_SOURCE_RE = /^source:\s*(D20Radio\.com|For Light and Life)$/i;
+
+function buildAdversaries(rawList, cloutMap, reasonMap) {
   const results = [];
   if (!Array.isArray(rawList)) return results;
   let skipped = 0;
   let excluded = 0;
+  let withReason = 0;
   for (const adv of rawList) {
     if (!adv || typeof adv !== 'object') {
       skipped++;
@@ -80,8 +119,8 @@ function buildAdversaries(rawList, cloutMap) {
         : undefined;
     const clout = typeof cloutMap?.[adv.name] === 'number' ? cloutMap[adv.name] : undefined;
     const tags = Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : [];
-    // D20Radio.com is fan-forum content — exclude it from the index entirely.
-    if (tags.some((t) => /^source:\s*D20Radio\.com$/i.test(t))) {
+    // Drop entries from excluded sources (see EXCLUDED_SOURCE_RE) entirely.
+    if (tags.some((t) => EXCLUDED_SOURCE_RE.test(t))) {
       excluded++;
       continue;
     }
@@ -90,6 +129,11 @@ function buildAdversaries(rawList, cloutMap) {
     // boolean so the query language and the Spotlight header can filter on it
     // the same way they do `named`.
     const fromAdventure = tags.some((t) => /^adventure:/i.test(t));
+    // One-line rationale for the v4.2 coreArchetype, when this adversary was
+    // part of that classification pass. Many entries (named characters, newer
+    // additions) won't have one — that's expected; the UI shows an empty state.
+    const classificationReason = reasonMap?.get(adv.name);
+    if (classificationReason) withReason++;
     pushUnique(
       results,
       entry('adversary', adv.name, {
@@ -115,12 +159,14 @@ function buildAdversaries(rawList, cloutMap) {
           archetypes: adv.archetypes,
           coreArchetype: adv.coreArchetype,
           traits: adv.traits,
+          classificationReason,
         },
       }),
     );
   }
   if (skipped) console.warn(`[spotlight] Skipped ${skipped} malformed adversary entries.`);
-  if (excluded) console.log(`[spotlight] Excluded ${excluded} D20Radio.com adversary entries.`);
+  if (excluded) console.log(`[spotlight] Excluded ${excluded} adversary entries from excluded sources (D20Radio.com, For Light and Life).`);
+  console.log(`[spotlight] ${withReason}/${results.length} adversaries have a v4.2 classification rationale.`);
   return results;
 }
 
@@ -308,7 +354,7 @@ async function main() {
     return;
   }
 
-  const [adversariesRaw, talentsRaw, weaponsRaw, eoteVehicles, aorVehicles, fadVehicles, cloutMap, vehicleDescriptions] = await Promise.all([
+  const [adversariesRaw, talentsRaw, weaponsRaw, eoteVehicles, aorVehicles, fadVehicles, cloutMap, classificationReasons, vehicleDescriptions] = await Promise.all([
     readJson('adversaries.json'),
     readJson('talents.json'),
     readJson('weapons.json'),
@@ -322,11 +368,12 @@ async function main() {
         console.warn(`[spotlight] No clout map at ${path.relative(projectRoot, cloutFile)}: ${e.message}`);
         return null;
       }),
+    loadClassificationReasons(),
     loadVehicleDescriptions(),
   ]);
 
   const results = [
-    ...buildAdversaries(adversariesRaw, cloutMap),
+    ...buildAdversaries(adversariesRaw, cloutMap, classificationReasons),
     ...buildTalents(talentsRaw),
     ...buildWeapons(weaponsRaw),
     ...buildVehicles(eoteVehicles, 'eote', vehicleDescriptions),

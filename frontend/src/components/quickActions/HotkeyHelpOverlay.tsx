@@ -34,13 +34,13 @@ const SECTIONS: { title: string; rows: HotkeyRow[] }[] = [
   {
     title: 'Target actions',
     rows: [
+      { keys: <K>A</K>, label: 'Active — make the targeted character active (double-tap to override)' },
       { keys: <K>D</K>, label: 'Damage — raw input, soak applied automatically' },
       { keys: <K>S</K>, label: 'Strain — raw input (PC / Nemesis only)' },
       { keys: <K>P</K>, label: 'Pouch — add symbols (e.g. 3a, 1 triumph)' },
       { keys: <K>C</K>, label: 'Crit — roll a critical injury on the target' },
       { keys: <K>E</K>, label: 'Effects — open the apply-effects modal' },
       { keys: <K>W</K>, label: 'Weapon roll — for the ACTIVE participant (picker if multiple)' },
-      { keys: <K>A</K>, label: 'Set target as the active participant' },
       { keys: <K>F</K>, label: 'Full sheet — open the targeted character\'s full sheet' },
     ],
   },
@@ -57,6 +57,7 @@ const SECTIONS: { title: string; rows: HotkeyRow[] }[] = [
     rows: [
       { keys: <K>R</K>, label: 'Symbol Spends — Advantage / Threat / Triumph / Despair tables' },
       { keys: <K>J</K>, label: 'Juice — roll a scene of narrative juice' },
+      { keys: <K>G</K>, label: 'Galaxy map — interactive map of the galaxy' },
     ],
   },
   {

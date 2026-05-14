@@ -34,7 +34,7 @@ const TurnActionsHint = () => {
   return (
     <Box w="86px" flexShrink={0} px={2}>
       {displayedId && (
-        <VStack spacing="1px" align="stretch">
+        <VStack spacing="0" align="stretch">
           {ROWS.map((row) => {
             const isDone = !!done[row.key];
             return (
@@ -61,7 +61,7 @@ const TurnActionsHint = () => {
                   textDecoration={isDone ? "line-through" : "none"}
                   _hover={{color: isDone ? "whiteAlpha.600" : "whiteAlpha.900"}}
                   transition="color 0.1s ease"
-                  lineHeight="1.25"
+                  lineHeight="1.1"
                   opacity={isSelecting ? 0.7 : 1}
                 >
                   {row.label}

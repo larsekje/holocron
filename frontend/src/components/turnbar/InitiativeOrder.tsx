@@ -1,37 +1,36 @@
 import React from "react";
 import {Box, HStack, Text, Tooltip} from "@chakra-ui/react";
 import useGameplayStore from "@/state/newGameplayStore";
-import useParticipantStore, {isParticipantDead} from "@/state/participantsStore";
+import useParticipantStore from "@/state/participantsStore";
+import {disabledSlotIndices} from "@/utils/initiativeSlots";
 
 const InitiativeOrder: React.FC = () => {
   const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
   const currentTurnIndex = useGameplayStore((state) => state.context.currentTurnIndex);
   const participants = useParticipantStore((state) => state.participants);
 
-  // Dead detection by participantId (slot.name kept for tooltip display only —
-  // duplicate names would otherwise collide).
-  const deadIds = React.useMemo(() => {
-    const set = new Set<string>();
-    for (const p of participants) {
-      if (isParticipantDead(p)) set.add(p.id);
-    }
-    return set;
-  }, [participants]);
+  // Which slots are disabled (a team's trailing slots go dark as it loses
+  // members — see disabledSlotIndices). Same helper drives the FSM's
+  // turn-advance skip, so what's greyed here is exactly what gets skipped.
+  const disabledSlots = React.useMemo(
+    () => disabledSlotIndices(initiativeOrder, participants),
+    [initiativeOrder, participants],
+  );
 
   if (initiativeOrder.length === 0) return null;
 
   return (
-    <HStack spacing="3px" align="stretch" px={1} maxW="520px" overflowX="auto">
+    <HStack spacing="3px" align="stretch" px={1} maxW="min(70vw, 1100px)" overflowX="auto">
       {initiativeOrder.map((slot, index) => {
         const isActive = currentTurnIndex === index;
         const isPast = index < currentTurnIndex;
         const isPC = slot.team === "PC";
         const teamColor = isPC ? "#3a7e57" : "#b03030";
-        const slotDead = !!slot.participantId && deadIds.has(slot.participantId);
-        // Only past + dead slots reveal the participant's name on hover (chronicling who took
-        // the slot). Future slots show the team only and the tooltip just states the team.
-        const tooltipText = slotDead && slot.name
-          ? `${slot.name} — down`
+        const slotDead = disabledSlots.has(index);
+        // A dead slot just reads as a downed team slot — it's no longer tied
+        // to one participant. Past (used) slots still chronicle who took them.
+        const tooltipText = slotDead
+          ? `${slot.team} slot — down`
           : isPast && slot.name
           ? `${slot.team} slot — ${slot.name}`
           : `${slot.team} slot ${index + 1}`;

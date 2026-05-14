@@ -24,9 +24,16 @@ const SkillChallengeStartButton: React.FC = () => {
       >
         <Button
           size="sm"
-          colorScheme="purple"
           variant="outline"
+          bg="transparent"
+          color="whiteAlpha.700"
+          fontWeight="medium"
+          borderColor="whiteAlpha.300"
+          borderRadius="md"
           leftIcon={<CheckIcon boxSize={3} />}
+          transition="all 0.15s ease"
+          _hover={{ bg: "whiteAlpha.100", color: "white", borderColor: "whiteAlpha.400" }}
+          _active={{ bg: "whiteAlpha.50" }}
           onClick={startModal.onOpen}
         >
           Skill Challenge

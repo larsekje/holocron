@@ -33,6 +33,7 @@ import StatSheetModal from './StatSheetModal';
 import DicePouch from './DicePouch';
 import ApplyEffectsModal from "@components/effects/ApplyEffectsModal";
 import {useEffectStore} from "@/state/effectStore";
+import {talentNames} from "@/utils/talents";
 
 interface Props {
   participant: Participant;
@@ -336,15 +337,17 @@ function findTalent(talent: string, talents: string[]) {
 /**
  * Get talents that should be highlighted in the participant status
  */
-function getTalentsToHighlight(talents: string[] | undefined): string[] {
-  if (!talents) return [];
-  
+function getTalentsToHighlight(talents: unknown): string[] {
+  // Normalise first — talent entries aren't always bare strings.
+  const normalized = talentNames(talents);
+  if (normalized.length === 0) return [];
+
   // These are talents we consider most important to show
   const importantTalents = ['adversary', 'parry', 'reflect', 'dodge', 'durable'];
-  
+
   // Find all important talents that match
   return importantTalents
-    .map(talent => findTalent(talent, talents))
+    .map(talent => findTalent(talent, normalized))
     .filter(Boolean) as string[];
 }
 

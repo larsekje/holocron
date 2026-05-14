@@ -1,5 +1,5 @@
-import React from 'react';
-import {Box, Flex, Text, VStack} from "@chakra-ui/react";
+import React, {useEffect, useRef, useState} from 'react';
+import {Box, Collapse, Flex, Text, VStack} from "@chakra-ui/react";
 import TargetCardOld from "@components/target/TargetCardOld";
 import VehicleTargetCardOld from "@components/target/VehicleTargetCardOld";
 import useParticipantStore, {Participant} from "@/state/participantsStore";
@@ -16,6 +16,12 @@ function isParticipantDead(p: Participant): boolean {
   }
   return wounds >= wt;
 }
+
+// Graveyard expand/collapse timing — quick, but not instant. The
+// scroll-into-view waits out the enter duration so it lands on the final,
+// full-height position rather than a half-open one.
+const GRAVEYARD_ENTER_S = 0.22;
+const GRAVEYARD_EXIT_S = 0.16;
 
 const TargetListOld = () => {
   const participants = useParticipantStore((state) => state.participants);
@@ -34,10 +40,29 @@ const TargetListOld = () => {
   const isStructured = useGameplayStore((state) => state.context.mode === "structured");
   const setActiveParticipantId = useGameplayStore((state) => state.setActiveParticipantId);
 
-  const initiativeByName: Record<string, number> = {};
-  for (const slot of initiativeOrder ?? []) {
-    if (slot?.name != null) initiativeByName[slot.name] = slot.initiative ?? 0;
-  }
+  // Graveyard starts collapsed — downed combatants are reference, not the
+  // GM's working set. Click the header to expand.
+  const [graveyardOpen, setGraveyardOpen] = useState(false);
+  const graveyardRef = useRef<HTMLDivElement | null>(null);
+
+  // On expand, keep the graveyard's bottom pinned to the viewport as it
+  // slides open — re-aligning every animation frame for the duration of the
+  // enter animation. The scroll then tracks the expansion in lockstep, so
+  // the two read as one continuous motion rather than expand-then-jump.
+  useEffect(() => {
+    if (!graveyardOpen) return;
+    let raf = 0;
+    const start = performance.now();
+    // Small buffer past the enter duration so the final frame lands after
+    // Collapse has fully settled at its auto height.
+    const runFor = GRAVEYARD_ENTER_S * 1000 + 60;
+    const tick = (now: number) => {
+      graveyardRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+      if (now - start < runFor) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [graveyardOpen]);
 
   const currentSlot = initiativeOrder?.[currentTurnIndex];
   const currentSlotTeam = currentSlot?.team;
@@ -70,6 +95,46 @@ const TargetListOld = () => {
   const isPickingActiveForSlot = inSelectingMode && !activeParticipantId;
   const isPickingTarget = isStructured && !!activeParticipantId;
 
+  // While a slot is open and unclaimed (structured play, no active
+  // participant yet), the slot's-team eligible-and-not-yet-acted rows get a
+  // digit hotkey (render order) — a single press claims the slot. Once
+  // someone is active, `pickable` is empty so the digits disappear and the
+  // keys go inert; overriding the active character is done with the A verb
+  // (see GlobalCombatHotkeys), which double-taps to confirm so a stray
+  // keypress can't yank the active mid-turn.
+  const pickable: Participant[] = inSelectingMode && !activeParticipantId
+    ? (currentSlotTeam === "PC" ? livePCs : liveNPCs).filter(
+        (p) => !actedParticipants.includes(p.id),
+      )
+    : [];
+  const slotHotkeyById = new Map<string, number>();
+  pickable.forEach((p, i) => {
+    if (i < 9) slotHotkeyById.set(p.id, i + 1);
+  });
+
+  // Bound once per selecting-mode toggle; reads the latest pickable list via
+  // a ref so it doesn't re-bind on every render.
+  const pickableRef = useRef<Participant[]>([]);
+  pickableRef.current = pickable;
+  useEffect(() => {
+    if (!inSelectingMode) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = (document.activeElement as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
+      if (!/^[1-9]$/.test(e.key)) return;
+      const picked = pickableRef.current[parseInt(e.key, 10) - 1];
+      if (!picked) return;
+      e.preventDefault();
+      // A single press claims the open slot. There's no override path here:
+      // once someone is active, `pickable` is empty so this never fires.
+      setActiveParticipantId(picked.id);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [inSelectingMode, setActiveParticipantId]);
+
   const renderRow = (participant: Participant) => {
     const hasActed = actedParticipants.includes(participant.id);
     const eligible = eligibleFor(participant.isPC);
@@ -88,14 +153,12 @@ const TargetListOld = () => {
         selectVehicle(null);
       }
     };
-    // Highlighting/dimming flips with phase:
-    //  - picking-active (slot unclaimed) → dim ineligible (wrong team for slot)
-    //  - picking-target (active claimed) → dim allies of the active so the
-    //    GM's eye lands on the opposing side
-    const dimmedForSelection = !isActive && (
-      (isPickingActiveForSlot && !eligible) ||
-      (isPickingTarget && participant.isPC === activeIsPC)
-    );
+    // Dimming is reserved for one case only: while picking the actor for an
+    // open slot, the wrong-team rows are dimmed. The old "dim allies during
+    // target-picking" behavior was removed — GMs found the team-based fade
+    // confusing.
+    const dimmedForSelection =
+      !isActive && isPickingActiveForSlot && !eligible;
     // While picking a target, opposing-team rows are valid candidates even
     // if they already acted this round. Suppress the "has acted" opacity dim
     // for them so they don't fade out.
@@ -107,10 +170,9 @@ const TargetListOld = () => {
         isSelected={participant.id === selectedParticipantId}
         isActive={isActive}
         hasActed={hasActed}
-        isEligible={eligible}
         dimmedForSelection={dimmedForSelection}
         suppressActedDim={suppressActedDim}
-        initiative={initiativeByName[participant.name]}
+        slotHotkey={slotHotkeyById.get(participant.id)}
         onClick={handleClick}
       />
     );
@@ -175,8 +237,17 @@ const TargetListOld = () => {
 
       {graveyardCount > 0 && (
         // mt="auto" pins this section to the bottom of the available column space.
-        <Box mt="auto">
-          <Flex align="center" gap={2} mt={2} mb={1}>
+        <Box mt="auto" ref={graveyardRef}>
+          <Flex
+            align="center"
+            gap={2}
+            mt={2}
+            mb={1}
+            cursor="pointer"
+            role="button"
+            aria-expanded={graveyardOpen}
+            onClick={() => setGraveyardOpen((open) => !open)}
+          >
             <Box flex="1" h="1px" bg="whiteAlpha.150"/>
             <Text
               as="b"
@@ -185,24 +256,42 @@ const TargetListOld = () => {
               textTransform="uppercase"
               color="whiteAlpha.500"
             >
+              <Box
+                as="span"
+                display="inline-block"
+                mr="3px"
+                transform={graveyardOpen ? "rotate(90deg)" : "rotate(0deg)"}
+                transition="transform 0.18s ease"
+              >
+                ▸
+              </Box>
               Graveyard ({graveyardCount})
             </Text>
             <Box flex="1" h="1px" bg="whiteAlpha.150"/>
           </Flex>
-          <VStack align="stretch" spacing="6px" opacity={0.55}>
-            {dead.map(renderRow)}
-            {deadVehicles.map((v) => (
-              <VehicleTargetCardOld
-                key={v.id}
-                vehicle={v}
-                isSelected={selectedVehicleId === v.id}
-                onClick={() => {
-                  selectVehicle(v.id);
-                  selectParticipant(null);
-                }}
-              />
-            ))}
-          </VStack>
+          <Collapse
+            in={graveyardOpen}
+            animateOpacity
+            transition={{
+              enter: { duration: GRAVEYARD_ENTER_S },
+              exit: { duration: GRAVEYARD_EXIT_S },
+            }}
+          >
+            <VStack align="stretch" spacing="6px" opacity={0.55}>
+              {dead.map(renderRow)}
+              {deadVehicles.map((v) => (
+                <VehicleTargetCardOld
+                  key={v.id}
+                  vehicle={v}
+                  isSelected={selectedVehicleId === v.id}
+                  onClick={() => {
+                    selectVehicle(v.id);
+                    selectParticipant(null);
+                  }}
+                />
+              ))}
+            </VStack>
+          </Collapse>
         </Box>
       )}
     </Flex>

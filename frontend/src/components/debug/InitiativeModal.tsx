@@ -452,6 +452,15 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
         e.target.select();
     };
 
+    // PCs first — the GM only ever types values for PCs, so keep them above
+    // the fold; the auto-rolled NPCs follow under their own label. Display
+    // order only; handleSubmit and the FSM re-sort by initiative anyway.
+    const orderedParticipants = React.useMemo(
+        () => [...participants].sort((a, b) => Number(b.isPC) - Number(a.isPC)),
+        [participants],
+    );
+    const firstPcIndex = orderedParticipants.findIndex((p) => p.isPC);
+
     // Handler for keyboard shortcuts within the modal.
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // Cmd/Ctrl+Enter submits from any focus, so the GM can confirm without
@@ -494,9 +503,9 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered scrollBehavior="inside" size="lg">
             <ModalOverlay backdropFilter="blur(10px)" />
-            <ModalContent bg={modalBg} color={textColor} borderRadius="lg" boxShadow="dark-lg" onKeyDown={handleKeyDown}>
+            <ModalContent bg={modalBg} color={textColor} borderRadius="lg" boxShadow="dark-lg" onKeyDown={handleKeyDown} my={6}>
                 <ModalHeader borderBottomWidth="1px" borderColor="gray.600">
                     <Flex justify="space-between" align="center" width="100%">
                         <Text fontWeight="bold">Roll for Initiative</Text>
@@ -534,12 +543,12 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                 </ModalHeader>
 
                 <ModalBody>
-                    <Stack spacing={4} pt={3}>
+                    <Stack spacing={2} pt={1}>
                         {/* Explanatory text about skills */}
-                        <Box 
-                            mb={4} 
-                            p={3} 
-                            borderWidth="1px" 
+                        <Box
+                            mb={0}
+                            p={2.5}
+                            borderWidth="1px"
                             borderRadius="md" 
                             backgroundColor={infoBg}
                             borderColor="gray.600"
@@ -565,13 +574,31 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                             </Text>
                         </Box>
 
-                        {/* Iterate over all participants to display their initiative details */}
-                        {participants.map((participant, index) => (
+                        {/* PCs first (the GM only inputs PC values); the
+                          * auto-rolled NPCs follow under their own label. */}
+                        {orderedParticipants.map((participant, index) => {
+                            const showPcHeader = participant.isPC && index === firstPcIndex;
+                            const showNpcHeader =
+                                !participant.isPC &&
+                                (index === 0 || orderedParticipants[index - 1].isPC);
+                            return (
+                            <React.Fragment key={participant.id}>
+                            {showPcHeader && (
+                                <Text fontSize="xs" fontWeight="bold" letterSpacing="0.08em"
+                                    textTransform="uppercase" color={secondaryTextColor} mt={1}>
+                                    Player Characters
+                                </Text>
+                            )}
+                            {showNpcHeader && (
+                                <Text fontSize="xs" fontWeight="bold" letterSpacing="0.08em"
+                                    textTransform="uppercase" color={secondaryTextColor} mt={2}>
+                                    NPCs
+                                </Text>
+                            )}
                             <Flex
-                                key={participant.id}
                                 justify="space-between"
                                 align="center"
-                                p={3}
+                                p={2}
                                 borderWidth="1px"
                                 borderRadius="md"
                                 boxShadow="sm"
@@ -648,7 +675,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                                         bg: inputBg,
                                                     }}
                                                     // Add ref to the first PC's input field
-                                                    ref={participant.isPC && index === participants.findIndex(p => p.isPC) ? firstPCInputRef : undefined}
+                                                    ref={index === firstPcIndex ? firstPCInputRef : undefined}
                                                     tabIndex={participant.isPC ? (index * 2) + 1 : undefined}
                                                     onFocus={handleInputFocus}
                                                 />
@@ -696,7 +723,9 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                     </Flex>
                                 )}
                             </Flex>
-                        ))}
+                            </React.Fragment>
+                            );
+                        })}
                     </Stack>
                 </ModalBody>
 

@@ -4,7 +4,9 @@ import {
     Button,
     Flex,
     HStack,
+    IconButton,
 } from "@chakra-ui/react";
+import {ChevronLeftIcon, ChevronRightIcon, CloseIcon} from "@chakra-ui/icons";
 import InitiativeOrder from "@components/turnbar/InitiativeOrder";
 import useGameplayStore from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
@@ -31,11 +33,16 @@ const ToolBarStructured = ({ }: Props) => {
             <HStack>
                 <Button
                     size="sm"
-                    bg="#3a1c1c"
-                    color="#ffd2d2"
+                    leftIcon={<CloseIcon boxSize="2" />}
+                    bg="#26292d"
+                    color="whiteAlpha.700"
+                    fontWeight="medium"
                     borderWidth="1px"
-                    borderColor="#7a3535"
-                    _hover={{bg: "#5a2a2a", color: "white"}}
+                    borderColor="whiteAlpha.200"
+                    borderRadius="md"
+                    transition="all 0.15s ease"
+                    _hover={{bg: "#33363c", color: "white", borderColor: "whiteAlpha.300"}}
+                    _active={{bg: "#1f2125"}}
                     onClick={openModal}
                     isDisabled={state !== 'inProgress'}
                 >
@@ -64,26 +71,29 @@ const ToolBarStructured = ({ }: Props) => {
                     spacing={2}
                     zIndex={2}
                 >
-                    <Button
-                        size="sm"
-                        bg="#26292d"
-                        color="whiteAlpha.800"
-                        borderWidth="1px"
-                        borderColor="whiteAlpha.150"
-                        _hover={{bg: "#33363c", color: "white"}}
+                    <IconButton
+                        aria-label="Previous turn"
+                        icon={<ChevronLeftIcon boxSize="4" />}
+                        size="xs"
+                        variant="ghost"
+                        color="whiteAlpha.500"
+                        transition="all 0.15s ease"
+                        _hover={{bg: "whiteAlpha.100", color: "whiteAlpha.800"}}
+                        _active={{bg: "whiteAlpha.50"}}
                         onClick={() => transition('PREV_TURN')}
                         isDisabled={!canTransition('PREV_TURN')}
-                    >
-                        Previous
-                    </Button>
+                    />
                     <InitiativeOrder/>
                     <Button
-                        size="sm"
+                        size="xs"
+                        rightIcon={<ChevronRightIcon boxSize="3.5" />}
                         bg="#d39939"
                         color="#1a1d24"
-                        fontWeight="bold"
-                        letterSpacing="0.04em"
-                        _hover={{bg: "yellow.400"}}
+                        fontWeight="semibold"
+                        borderRadius="md"
+                        transition="all 0.15s ease"
+                        _hover={{bg: "#e3a948"}}
+                        _active={{bg: "#c08a30"}}
                         onClick={() => transition('NEXT_TURN')}
                         isDisabled={!canTransition('NEXT_TURN')}
                     >

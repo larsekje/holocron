@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Card, CardBody, Flex, HStack, Text, Tooltip, VStack, Wrap, WrapItem} from "@chakra-ui/react";
+import {Box, Card, CardBody, Flex, HStack, Kbd, Text, Tooltip, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import DicePoolOld, {DicePool} from "./DicePoolOld";
 import type {WeaponLike} from "@/utils/diceSnapshots";
 import {finalWeaponDamage} from "@/utils/diceSnapshots";
@@ -15,6 +15,9 @@ interface Props {
   // callers don't break; without it melee weapons fall back to their raw
   // damage value (which for plusDamage entries is 0).
   wielderBrawn?: number;
+  // 1-based hotkey shown (overlaid, top-left) while the GM is in weapon-pick
+  // mode (W). Pressing the number rolls this weapon.
+  hotkey?: number;
   onClick?: () => void;
 }
 
@@ -45,7 +48,7 @@ function lookupQualityDescription(quality: string): {label: string; description?
   return {label, description};
 }
 
-const WeaponCardOld = ({weapon, pool, wielderBrawn, onClick}: Props) => {
+const WeaponCardOld = ({weapon, pool, wielderBrawn, hotkey, onClick}: Props) => {
   const displayDamage = finalWeaponDamage(weapon, wielderBrawn ?? 0);
   return (
     <Card
@@ -55,7 +58,30 @@ const WeaponCardOld = ({weapon, pool, wielderBrawn, onClick}: Props) => {
       onClick={onClick}
       role={onClick ? "button" : undefined}
       transition="background 0.1s ease"
+      position="relative"
+      // `outline` (not `border`) marks a pickable weapon — it draws on top
+      // of the card edge without taking layout space, so toggling it on for
+      // weapon-pick mode never shifts the surrounding cards.
+      outline={hotkey != null ? "1px solid #5fa3ff" : undefined}
+      outlineOffset="-1px"
     >
+      {/* Weapon-pick hotkey — overlaid top-left so it never shifts the
+          card's contents. Only present in weapon-pick mode (W). */}
+      {hotkey != null && (
+        <Kbd
+          position="absolute"
+          top="2px"
+          left="2px"
+          zIndex={2}
+          bg="gray.700"
+          color="gray.100"
+          borderColor="whiteAlpha.300"
+          fontSize="2xs"
+          px="6px"
+        >
+          {hotkey}
+        </Kbd>
+      )}
       <CardBody padding="2">
         <Flex align="center" gap={3}>
           <VStack spacing={0} minW="60px" align="center">

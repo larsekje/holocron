@@ -221,93 +221,6 @@ const CharacterRow: React.FC<{
   );
 };
 
-// Apply button: save injury to participant and apply a mapped effect (reusing addEffect flow)
-const ApplyButton: React.FC<{
-  isVehicle: boolean;
-  selectedIndex: number | null;
-  table: CritEntry[];
-  total: number;
-  selectedParticipantId: string;
-}> = ({ isVehicle, selectedIndex, table, total, selectedParticipantId }) => {
-  const toast = useToast();
-  const { participants, addCriticalInjury } = useParticipantStore();
-  const { addEffect } = useEffectStore();
-  const wrapEffect = useEffectReminder();
-
-  const selected = participants.find(p => p.id === selectedParticipantId);
-
-  // Resolve entry by selected row or current total
-  const resolvedIndex =
-    selectedIndex !== null && table[selectedIndex]
-      ? selectedIndex
-      : table.findIndex(e => total >= e.min && total <= e.max);
-  const entry = resolvedIndex >= 0 ? table[resolvedIndex] : undefined;
-  const canApply = !!selected && !!entry;
-
-  const handleApply = () => {
-    if (!canApply || !selected || !entry) return;
-
-    // Persist critical injury
-    const injury: CritInjury = {
-      id: nanoid(),
-      title: entry.title,
-      severity: entry.severity,
-      summary: entry.summary,
-      rollTotal: total,
-      source: isVehicle ? "vehicle" : "personal",
-      appliedAt: Date.now(),
-    };
-    addCriticalInjury(selected.id, injury);
-
-    // Drop a timeline entry for the Sidebar so the GM has a record of which
-    // crit landed on whom and at what roll total.
-    useSessionLogStore.getState().log({
-      kind: "crit-applied",
-      participantId: selected.id,
-      participantName: selected.name,
-      summary: `Crit ${total}: ${entry.title} (${entry.severity}) → ${selected.name}`,
-      tone: "bad",
-      meta: { title: entry.title, severity: entry.severity, rollTotal: total, isVehicle },
-    });
-
-    // Vehicle crit table doesn't yet map to character-targeted effects; the
-    // injury record is enough for now. Personal crits flow through the shared
-    // buildCritEffect mapping. The reminder hook attaches an Apply/Skip toast
-    // that fires on the effect's behavior trigger (turn-start / etc.).
-    if (!isVehicle) {
-      const target: EffectTarget = { type: "character", participantId: selected.id };
-      const raw = buildCritEffect(entry, target);
-      if (raw) {
-        addEffect(wrapEffect(raw, selected.name), target);
-      }
-    }
-
-    toast({
-      title: "Critical Applied",
-      description: `${entry.title} → ${selected.name}`,
-      status: "success",
-      duration: 2500,
-      isClosable: true,
-    });
-  };
-
-  return (
-    <Button
-      size="sm"
-      bg="#d39939"
-      color="#1a1d24"
-      fontWeight="bold"
-      letterSpacing="0.04em"
-      _hover={{bg: "yellow.400"}}
-      _disabled={{bg: "whiteAlpha.200", color: "whiteAlpha.500", cursor: "not-allowed"}}
-      onClick={handleApply}
-      isDisabled={!canApply}
-    >
-      Apply
-    </Button>
-  );
-};
-
 // Preview label for the "Will apply" line, derived from buildCritEffect so the
 // preview never drifts from what the Apply button actually does.
 function previewCritEffect(entry?: CritEntry): { label: string; willApply: boolean } {
@@ -393,7 +306,10 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) =>
   // Shared participant selection. When the caller passes a participantId, that participant
   // is the target and the in-modal selector is hidden. Otherwise we fall back to the active
   // participant or the first in the store.
-  const { participants } = useParticipantStore();
+  const { participants, addCriticalInjury } = useParticipantStore();
+  const toast = useToast();
+  const { addEffect } = useEffectStore();
+  const wrapEffect = useEffectReminder();
   const [selectedParticipantId, setSelectedParticipantId] = useState<string>(
     participantId ?? participants[0]?.id ?? "",
   );
@@ -448,24 +364,105 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) =>
   const rowsRef = useRef<HTMLDivElement[]>([]);
   const scrollBoxRef = useRef<HTMLDivElement>(null);
 
+  const scrollRowIntoView = (idx: number) => {
+    const el = rowsRef.current[idx];
+    const container = scrollBoxRef.current;
+    if (el && container) {
+      // Center the selected row within the inner scroll box without moving the whole modal
+      const target = el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2;
+      container.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     if (base > 0) {
       const idx = findIndexFor(total);
       if (idx >= 0) {
         setSelectedIndex(idx);
-        const el = rowsRef.current[idx];
-        const container = scrollBoxRef.current;
-        if (el && container) {
-          // Center the selected row within the inner scroll box without moving the whole modal
-          const target =
-            el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2;
-          container.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
-        }
+        scrollRowIntoView(idx);
       }
     }
   }, [base, total, isVehicle]);
 
   const doRoll = () => setRoll(Math.floor(Math.random() * 100) + 1);
+
+  // Resolve the entry the Apply action acts on — the explicitly selected
+  // row, else the row the current total falls into.
+  const resolvedIndex =
+    selectedIndex !== null && table[selectedIndex]
+      ? selectedIndex
+      : findIndexFor(total);
+  const appliedEntry = resolvedIndex >= 0 ? table[resolvedIndex] : undefined;
+  const selectedParticipant = participants.find((p) => p.id === selectedParticipantId);
+  const canApply = !isVehicle && !!selectedParticipant && !!appliedEntry;
+
+  const handleApply = () => {
+    if (!canApply || !selectedParticipant || !appliedEntry) return;
+    const injury: CritInjury = {
+      id: nanoid(),
+      title: appliedEntry.title,
+      severity: appliedEntry.severity,
+      summary: appliedEntry.summary,
+      rollTotal: total,
+      source: isVehicle ? "vehicle" : "personal",
+      appliedAt: Date.now(),
+    };
+    addCriticalInjury(selectedParticipant.id, injury);
+    useSessionLogStore.getState().log({
+      kind: "crit-applied",
+      participantId: selectedParticipant.id,
+      participantName: selectedParticipant.name,
+      summary: `Crit ${total}: ${appliedEntry.title} (${appliedEntry.severity}) → ${selectedParticipant.name}`,
+      tone: "bad",
+      meta: { title: appliedEntry.title, severity: appliedEntry.severity, rollTotal: total, isVehicle },
+    });
+    const effTarget: EffectTarget = { type: "character", participantId: selectedParticipant.id };
+    const raw = buildCritEffect(appliedEntry, effTarget);
+    if (raw) addEffect(wrapEffect(raw, selectedParticipant.name), effTarget);
+    toast({
+      title: "Critical Applied",
+      description: `${appliedEntry.title} → ${selectedParticipant.name}`,
+      status: "success",
+      duration: 2500,
+      isClosable: true,
+    });
+  };
+
+  // Keyboard control while open: ↑/↓ walk the crit table, Enter applies the
+  // highlighted row, R re-rolls. Skipped when a form control (the target
+  // <select>) holds focus so it keeps native behaviour. The handler is
+  // bound once per open and reads the latest handleApply through a ref.
+  const liveRef = useRef({ handleApply });
+  liveRef.current = { handleApply };
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      const tag = (document.activeElement as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        const dir = e.key === "ArrowDown" ? 1 : -1;
+        setSelectedIndex((cur) => {
+          const next =
+            cur === null
+              ? dir === 1
+                ? 0
+                : table.length - 1
+              : Math.max(0, Math.min(table.length - 1, cur + dir));
+          scrollRowIntoView(next);
+          return next;
+        });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        liveRef.current.handleApply();
+      } else if (e.key === "r" || e.key === "R") {
+        e.preventDefault();
+        doRoll();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, table]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="4xl">
@@ -614,13 +611,19 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) =>
                   )}
                 </VStack>
                 {!isVehicle && (
-                  <ApplyButton
-                    isVehicle={isVehicle}
-                    selectedIndex={selectedIndex}
-                    table={table}
-                    total={total}
-                    selectedParticipantId={selectedParticipantId}
-                  />
+                  <Button
+                    size="sm"
+                    bg="#d39939"
+                    color="#1a1d24"
+                    fontWeight="bold"
+                    letterSpacing="0.04em"
+                    _hover={{ bg: "yellow.400" }}
+                    _disabled={{ bg: "whiteAlpha.200", color: "whiteAlpha.500", cursor: "not-allowed" }}
+                    onClick={handleApply}
+                    isDisabled={!canApply}
+                  >
+                    Apply
+                  </Button>
                 )}
             </HStack>
           </Box>

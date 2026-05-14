@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Box,
+  Button,
   Flex,
   HStack,
   IconButton,
@@ -12,6 +13,7 @@ import {
   Wrap,
   WrapItem,
 } from '@chakra-ui/react';
+import useGameplayStore from '@/state/newGameplayStore';
 import { AddIcon, ExternalLinkIcon, MinusIcon, TimeIcon } from '@chakra-ui/icons';
 import HotkeyHint from '@components/quickActions/HotkeyHint';
 import useParticipantStore, {
@@ -29,6 +31,8 @@ import { ReactComponent as ChallengeSvg } from '@/assets/dice/challenge.svg';
 import { getDetail } from '@/data/spotlightIndex';
 import { statify } from '@/utils/statify';
 import { renderSwrpgText } from '@/utils/swrpgText';
+import { talentNames } from '@/utils/talents';
+import WoundBar from '@components/target/WoundBar';
 
 // Talents are stored as bare names ("Quick Strike 2"). The spotlight index
 // keys talents by a slug; strip the trailing rank-number then kebab-case
@@ -103,7 +107,7 @@ function BigStat({ label, value, color = 'whiteAlpha.900' }: { label: string; va
       <Text fontSize="2xs" color="whiteAlpha.500" textTransform="uppercase" letterSpacing="wider" lineHeight="1">
         {label}
       </Text>
-      <Text fontSize="lg" fontWeight="bold" color={color} fontVariantNumeric="tabular-nums" lineHeight="1.1">
+      <Text fontSize="lg" fontWeight="bold" color={color} sx={{ fontVariantNumeric: 'tabular-nums' }} lineHeight="1.1">
         {value}
       </Text>
     </VStack>
@@ -123,6 +127,8 @@ const MiniStatCard: React.FC = () => {
   const removeStrain = useParticipantStore((s) => s.removeStrain);
   const effects = useEffectStore((s) => s.effects);
   const removeEffect = useEffectStore((s) => s.removeEffect);
+  const activeParticipantId = useGameplayStore((s) => s.context.activeParticipantId);
+  const setActiveParticipantId = useGameplayStore((s) => s.setActiveParticipantId);
 
   const participant = participants.find((p) => p.id === selectedId) ?? null;
 
@@ -156,6 +162,7 @@ const MiniStatCard: React.FC = () => {
   const type = stats.type ?? (participant.isPC ? 'PC' : 'Minion');
   const isMinionGroup = stats.minions !== undefined;
   const tracksStrain = participant.isPC || type === 'Nemesis';
+  const selectedIsActive = participant.id === activeParticipantId;
 
   const wt = stats.woundThreshold ?? (participant.isPC ? 12 : 8);
   const wounds = stats.wounds ?? 0;
@@ -172,7 +179,10 @@ const MiniStatCard: React.FC = () => {
     ? Math.max(initialMinions - Math.floor(wounds / Math.max(wt, 1)), 0)
     : 0;
 
-  const woundPct = wt > 0 ? Math.min(100, (wounds / wt) * 100) : 0;
+  // Total wound capacity — per-minion threshold × group size for minion
+  // groups, else just the threshold. The wound bar + the n/total readout
+  // both work off this so a minion group reads correctly.
+  const groupTotal = isMinionGroup ? wt * initialMinions : wt;
   const strainPct = strainThreshold > 0 ? Math.min(100, (strain / strainThreshold) * 100) : 0;
 
   const pouch = participant.dicePouch;
@@ -184,7 +194,7 @@ const MiniStatCard: React.FC = () => {
     : [];
 
   const crits = participant.criticalInjuries ?? [];
-  const talents: string[] = stats.talents ?? [];
+  const talents: string[] = talentNames(stats.talents);
 
   // Effects targeting this participant. Shown as a separate chip row with
   // hover-tooltip descriptions and click-to-dispel — the row badges on
@@ -215,28 +225,47 @@ const MiniStatCard: React.FC = () => {
           <Tooltip label={type} hasArrow openDelay={400}>
             <Box flexShrink={0}><TierIcon participant={participant} /></Box>
           </Tooltip>
-          <Text fontWeight="semibold" color="whiteAlpha.900" fontSize="md" noOfLines={2} lineHeight="1.15">
-            {participant.name}
-          </Text>
+          <VStack align="start" spacing={0} minW={0}>
+            <Text fontWeight="semibold" color="whiteAlpha.900" fontSize="md" noOfLines={2} lineHeight="1.15">
+              {participant.name}
+            </Text>
+            {participant.originalName &&
+              participant.originalName !== participant.name && (
+                <Text fontSize="2xs" color="whiteAlpha.500" noOfLines={1} lineHeight="1">
+                  {participant.originalName}
+                </Text>
+              )}
+          </VStack>
           {dead && (
             <Text fontSize="2xs" color="red.300" textTransform="uppercase" letterSpacing="wider" flexShrink={0}>
               down
             </Text>
           )}
         </HStack>
-        <Tooltip label="Open full character sheet (F)" hasArrow openDelay={400}>
-          <Box position="relative" flexShrink={0}>
-            <IconButton
-              aria-label="Open full character sheet"
-              icon={<ExternalLinkIcon/>}
-              size="xs"
-              variant="ghost"
-              colorScheme="whiteAlpha"
-              onClick={() => openFullSheet()}
-            />
-            <HotkeyHint>F</HotkeyHint>
-          </Box>
-        </Tooltip>
+        <HStack spacing={1} flexShrink={0}>
+          <Button
+            size="xs"
+            colorScheme={selectedIsActive ? 'yellow' : 'blue'}
+            variant={selectedIsActive ? 'solid' : 'outline'}
+            isDisabled={selectedIsActive}
+            onClick={() => setActiveParticipantId(participant.id)}
+          >
+            {selectedIsActive ? 'Active' : 'Set Active'}
+          </Button>
+          <Tooltip label="Open full character sheet (F)" hasArrow openDelay={400}>
+            <Box position="relative">
+              <IconButton
+                aria-label="Open full character sheet"
+                icon={<ExternalLinkIcon/>}
+                size="xs"
+                variant="ghost"
+                colorScheme="whiteAlpha"
+                onClick={() => openFullSheet()}
+              />
+              <HotkeyHint>F</HotkeyHint>
+            </Box>
+          </Tooltip>
+        </HStack>
       </Flex>
 
       {/* Row 2: prominent stat block — soak / m-def / r-def / minions */}
@@ -261,17 +290,22 @@ const MiniStatCard: React.FC = () => {
       <HStack spacing={3} align="center">
         <HStack spacing={1.5} flex="1" minW={0}>
           <Text fontSize="2xs" color="whiteAlpha.500" w="14px" flexShrink={0}>W</Text>
-          <Box flex="1">
-            <Progress
-              value={woundPct}
-              size="xs"
-              colorScheme={wounds >= wt ? 'red' : woundPct > 66 ? 'orange' : 'red'}
-              bg="whiteAlpha.100"
-              borderRadius="full"
+          <Box flex="1" h="8px" borderRadius="full" overflow="hidden">
+            <WoundBar
+              wounds={wounds}
+              total={groupTotal}
+              minions={isMinionGroup ? initialMinions : undefined}
             />
           </Box>
-          <Text fontSize="2xs" color="whiteAlpha.800" fontVariantNumeric="tabular-nums" flexShrink={0}>
-            {wounds}/{wt}
+          <Text
+            fontSize="2xs"
+            color="whiteAlpha.800"
+            sx={{ fontVariantNumeric: 'tabular-nums' }}
+            flexShrink={0}
+            minW="46px"
+            textAlign="right"
+          >
+            {wounds}/{groupTotal}
           </Text>
           <HStack spacing={0.5} flexShrink={0}>
             <Box position="relative">
@@ -307,7 +341,14 @@ const MiniStatCard: React.FC = () => {
             <Box flex="1">
               <Progress value={strainPct} size="xs" colorScheme="purple" bg="whiteAlpha.100" borderRadius="full" />
             </Box>
-            <Text fontSize="2xs" color="whiteAlpha.800" fontVariantNumeric="tabular-nums" flexShrink={0}>
+            <Text
+              fontSize="2xs"
+              color="whiteAlpha.800"
+              sx={{ fontVariantNumeric: 'tabular-nums' }}
+              flexShrink={0}
+              minW="46px"
+              textAlign="right"
+            >
               {strain}/{strainThreshold}
             </Text>
             <HStack spacing={0.5} flexShrink={0}>
@@ -373,7 +414,7 @@ const MiniStatCard: React.FC = () => {
                     }}
                   >
                     <Text as="span" color={p.color} fontWeight="bold" fontSize="2xs" mr={1}>{p.label}</Text>
-                    <Text as="span" color="whiteAlpha.900" fontSize="2xs" fontVariantNumeric="tabular-nums">{p.count}</Text>
+                    <Text as="span" color="whiteAlpha.900" fontSize="2xs" sx={{ fontVariantNumeric: 'tabular-nums' }}>{p.count}</Text>
                   </Tag>
                 </Tooltip>
               </WrapItem>
@@ -475,7 +516,7 @@ const MiniStatCard: React.FC = () => {
                     {typeof ae.remainingDuration === 'number' && (
                       <HStack spacing="2px" align="center" color="orange.200">
                         <TimeIcon boxSize="9px"/>
-                        <Text fontSize="2xs" fontVariantNumeric="tabular-nums">
+                        <Text fontSize="2xs" sx={{ fontVariantNumeric: 'tabular-nums' }}>
                           {ae.remainingDuration}
                         </Text>
                       </HStack>

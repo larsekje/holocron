@@ -51,6 +51,10 @@ export type VehicleRole = 'pilot' | 'gunner' | 'astromech' | 'passenger';
 export interface Participant {
     id: string;
     name: string;
+    // The name the participant had before the GM first renamed it. Set once,
+    // on the first rename, and kept thereafter so the original stays
+    // visible as a subtle subtitle. Undefined = never renamed.
+    originalName?: string;
     isPC: boolean;
     initiative?: number | null; // Can be number | undefined OR number | null
     stats?: {

@@ -1,12 +1,21 @@
 import React, { useEffect, useRef } from 'react';
-import { Box, Button, HStack, Input, Kbd, Text, Tooltip, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  HStack,
+  Input,
+  Kbd,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import useParticipantStore from '@/state/participantsStore';
 import useGameplayStore from '@/state/newGameplayStore';
 import useActiveVehicleStore from '@/state/activeVehicleStore';
 import { useQuickActionsStore } from '@/state/quickActionsStore';
-import HotkeyHint from '@components/quickActions/HotkeyHint';
-import { resolveWeapon } from '@components/statblock/WeaponListOld';
-import { finalWeaponDamage } from '@/utils/diceSnapshots';
 
 const PROMPT: Record<'damage' | 'strain' | 'pouch', { label: string; placeholder: string; help: string }> = {
   damage: {
@@ -26,27 +35,48 @@ const PROMPT: Record<'damage' | 'strain' | 'pouch', { label: string; placeholder
   },
 };
 
+// Key-hint chip with explicit colors — Chakra's default Kbd collapses to
+// white-on-white on the dark modal.
+const HintKey: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <Kbd
+    bg="gray.700"
+    color="gray.100"
+    borderColor="whiteAlpha.300"
+    fontSize="2xs"
+    px="6px"
+    flexShrink={0}
+  >
+    {children}
+  </Kbd>
+);
+
+/**
+ * QuickActionsBar — the keyboard-driven quick-action surface for the
+ * selected target. Despite the legacy name it's a *popup* now: a centered
+ * modal that overlays rather than an inline block that shifts the
+ * surrounding layout. Consistent with the Crit / Effects modals.
+ *
+ * It opens whenever the quickActions store leaves `idle` (D/S/P/W). The
+ * body switches on mode: a damage/strain/pouch input field, or the weapon
+ * picker list. Closing (Esc / overlay click / submit) returns to idle.
+ */
 const QuickActionsBar: React.FC = () => {
   const selectedParticipantId = useParticipantStore((s) => s.selectedParticipantId);
+  const selectedName = useParticipantStore(
+    (s) => s.participants.find((p) => p.id === s.selectedParticipantId)?.name ?? 'Target',
+  );
   const mode = useQuickActionsStore((s) => s.mode);
-  const lastResult = useQuickActionsStore((s) => s.lastResult);
-  const enterDamage = useQuickActionsStore((s) => s.enterDamage);
-  const enterStrain = useQuickActionsStore((s) => s.enterStrain);
-  const enterPouch = useQuickActionsStore((s) => s.enterPouch);
-  const openCrit = useQuickActionsStore((s) => s.openCrit);
   const cancel = useQuickActionsStore((s) => s.cancel);
   const submit = useQuickActionsStore((s) => s.submit);
-
   const pickWeapon = useQuickActionsStore((s) => s.pickWeapon);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = React.useState('');
 
-  // Focus the input whenever we enter an input mode. Clear value on enter.
+  // Clear the field whenever we enter an input mode.
   useEffect(() => {
     if (mode === 'damage' || mode === 'strain' || mode === 'pouch') {
       setValue('');
-      // Defer focus to next tick so the input has mounted.
-      requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [mode]);
 
@@ -56,119 +86,83 @@ const QuickActionsBar: React.FC = () => {
   const activeParticipant = useParticipantStore((s) =>
     s.participants.find((p) => p.id === activeParticipantId) ?? null,
   );
+  const vehicles = useActiveVehicleStore((s) => s.vehicles);
 
-  if (!selectedParticipantId) return null;
+  // Personal weapon-pick is handled by the Kbd overlay on the Active card's
+  // weapon list (see WeaponListOld) — no modal. The *vehicle* weapon case
+  // still uses this modal: a vehicle's guns aren't otherwise overlay-able.
+  const activeVehicle = activeParticipant?.equippedVehicleId
+    ? vehicles[activeParticipant.equippedVehicleId]
+    : undefined;
+  const weaponModeInVehicle = mode === 'weapon' && !!activeVehicle;
 
-  const disabled = !selectedParticipantId;
+  const isOpen =
+    mode === 'damage' || mode === 'strain' || mode === 'pouch' || weaponModeInVehicle;
 
-  if (mode === 'weapon') {
-    // Mirror the store's branching: if the active participant is aboard a
-    // vehicle, list the vehicle's weapons instead of their personal ones.
-    const equippedVehicleId = activeParticipant?.equippedVehicleId;
-    const vehicle = useActiveVehicleStore.getState().vehicles[equippedVehicleId ?? ''];
-    const inVehicle = !!vehicle;
-    const rawWeapons = inVehicle
-      ? (vehicle.weapons ?? [])
-      : (((activeParticipant?.stats as any)?.weapons ?? []) as any[]);
-    const subjectName = inVehicle ? vehicle.name : (activeParticipant?.name ?? 'Active');
-    return (
-      <Box mb={2}>
-        <HStack spacing={2} align="center" mb={1.5}>
-          <Text fontSize="xs" color="blue.200" fontWeight="semibold" minW="58px">
-            {subjectName}'s weapon:
-          </Text>
-          <Text fontSize="2xs" color="whiteAlpha.500">
-            Press 1–{Math.min(9, rawWeapons.length)} or click to roll. <Kbd fontSize="2xs">Esc</Kbd> cancels.
-          </Text>
-        </HStack>
+  let title = '';
+  let body: React.ReactNode = null;
+
+  if (weaponModeInVehicle && activeVehicle) {
+    const rawWeapons = activeVehicle.weapons ?? [];
+    title = `${activeVehicle.name}'s weapon`;
+    body = (
+      <Box>
+        <Text fontSize="2xs" color="whiteAlpha.500" mb={2}>
+          Press 1–{Math.min(9, rawWeapons.length)} or click to roll.{' '}
+          <HintKey>Esc</HintKey> cancels.
+        </Text>
         <VStack align="stretch" spacing={1}>
           {rawWeapons.map((raw: any, i: number) => {
-            // Vehicle weapons are already objects with name/damage/range/etc;
-            // personal weapons are either strings (catalog lookups) or objects.
-            const w = inVehicle ? null : resolveWeapon(raw);
-            const name = inVehicle ? raw.name : (w?.name ?? (typeof raw === 'string' ? raw : `Weapon ${i + 1}`));
-            const brawn = (activeParticipant?.stats as any)?.brawn ?? 2;
-            const finalDmg = inVehicle
-              ? (raw.damage ?? '—')
-              : (w ? finalWeaponDamage(w, brawn) : '—');
-            const skill = inVehicle ? 'Gunnery' : w?.skill;
-            const range = inVehicle ? raw.range : w?.range;
-            const detail = [skill, range, finalDmg !== '—' ? `Dmg ${finalDmg}` : null]
+            const detail = [
+              'Gunnery',
+              raw.range,
+              raw.damage != null ? `Dmg ${raw.damage}` : null,
+            ]
               .filter(Boolean)
               .join(' · ');
             return (
-              <Button
+              <Box
+                as="button"
                 key={i}
-                size="xs"
-                variant="outline"
-                justifyContent="flex-start"
                 onClick={() => pickWeapon(i)}
-                isDisabled={i >= 9 ? false : false /* always enabled; numbers above 9 are click-only */}
-                position="relative"
+                w="100%"
+                textAlign="left"
+                bg="#26292d"
+                borderWidth="1px"
+                borderColor="whiteAlpha.150"
+                borderRadius="md"
+                px={2}
+                py={1.5}
+                _hover={{ bg: '#2c2f34', borderColor: 'whiteAlpha.300' }}
+                transition="background-color 100ms, border-color 100ms"
               >
-                <Kbd mr={2} fontSize="2xs">{i < 9 ? String(i + 1) : '·'}</Kbd>
-                <Text as="span" fontWeight="semibold">{name}</Text>
-                {detail && (
-                  <Text as="span" ml={2} fontSize="2xs" color="whiteAlpha.500">
-                    {detail}
-                  </Text>
-                )}
-              </Button>
+                <HStack spacing={2} w="100%">
+                  <HintKey>{i < 9 ? String(i + 1) : '·'}</HintKey>
+                  <VStack align="start" spacing={0} flex="1" minW={0}>
+                    <Text fontWeight="semibold" fontSize="sm" color="whiteAlpha.900" noOfLines={1}>
+                      {raw.name ?? `Weapon ${i + 1}`}
+                    </Text>
+                    {detail && (
+                      <Text fontSize="2xs" color="whiteAlpha.500" noOfLines={1}>
+                        {detail}
+                      </Text>
+                    )}
+                  </VStack>
+                </HStack>
+              </Box>
             );
           })}
         </VStack>
       </Box>
     );
-  }
-
-  if (mode === 'idle') {
-    return (
-      <Box mb={2}>
-        <HStack spacing={1.5}>
-          <Tooltip label="Apply damage (auto-soak)" hasArrow openDelay={500} placement="top">
-            <Button size="xs" variant="outline" onClick={enterDamage} isDisabled={disabled} position="relative">
-              Damage
-              <HotkeyHint>D</HotkeyHint>
-            </Button>
-          </Tooltip>
-          <Tooltip label="Apply strain (PC / Nemesis only)" hasArrow openDelay={500} placement="top">
-            <Button size="xs" variant="outline" onClick={enterStrain} isDisabled={disabled} position="relative">
-              Strain
-              <HotkeyHint>S</HotkeyHint>
-            </Button>
-          </Tooltip>
-          <Tooltip label="Add dice / symbols to target's pouch" hasArrow openDelay={500} placement="top">
-            <Button size="xs" variant="outline" onClick={enterPouch} isDisabled={disabled} position="relative">
-              Pouch
-              <HotkeyHint>P</HotkeyHint>
-            </Button>
-          </Tooltip>
-          <Tooltip label="Roll a critical injury on the target" hasArrow openDelay={500} placement="top">
-            <Button size="xs" variant="outline" onClick={openCrit} isDisabled={disabled} position="relative">
-              Crit
-              <HotkeyHint>C</HotkeyHint>
-            </Button>
-          </Tooltip>
-        </HStack>
-        {lastResult && (
-          <Text mt={1.5} fontSize="xs" color={lastResult.ok ? 'green.300' : 'orange.300'}>
-            {lastResult.message}
-          </Text>
-        )}
-      </Box>
-    );
-  }
-
-  const prompt = PROMPT[mode];
-  return (
-    <Box mb={2}>
-      <HStack spacing={2} align="center">
-        <Text fontSize="xs" color="blue.200" fontWeight="semibold" minW="58px">
-          {prompt.label}:
-        </Text>
+  } else if (mode === 'damage' || mode === 'strain' || mode === 'pouch') {
+    const prompt = PROMPT[mode];
+    title = `${prompt.label} — ${selectedName}`;
+    body = (
+      <Box>
         <Input
           ref={inputRef}
-          size="sm"
+          size="md"
           variant="filled"
           placeholder={prompt.placeholder}
           value={value}
@@ -183,17 +177,68 @@ const QuickActionsBar: React.FC = () => {
               cancel();
             }
           }}
-          autoFocus
-          flex="1"
         />
-        <Button size="xs" variant="ghost" onClick={cancel}>
-          <Kbd fontSize="2xs">Esc</Kbd>
-        </Button>
-      </HStack>
-      <Text mt={1} fontSize="2xs" color="whiteAlpha.500">
-        {prompt.help}
-      </Text>
-    </Box>
+        <Text mt={2} fontSize="2xs" color="whiteAlpha.500">
+          {prompt.help}
+        </Text>
+        <HStack mt={3} justify="flex-end" spacing={2}>
+          <Button size="xs" variant="ghost" onClick={cancel}>
+            <HStack spacing={1}>
+              <HintKey>Esc</HintKey>
+              <Text>Cancel</Text>
+            </HStack>
+          </Button>
+          <Button
+            size="xs"
+            colorScheme="blue"
+            onClick={() => {
+              submit(value);
+              setValue('');
+            }}
+          >
+            <HStack spacing={1}>
+              <HintKey>↵</HintKey>
+              <Text>Apply</Text>
+            </HStack>
+          </Button>
+        </HStack>
+      </Box>
+    );
+  }
+
+  // Nothing to act on without a selected target.
+  if (!selectedParticipantId) return null;
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={cancel}
+      isCentered
+      // The vehicle weapon list has name + detail rows — give it more room
+      // than the single-field input modes.
+      size={weaponModeInVehicle ? 'md' : 'sm'}
+      // Land focus straight on the input for the damage/strain/pouch modes
+      // so the GM can type immediately. Weapon mode has no inputRef — Chakra
+      // falls back to its default focus target, which is fine for the list.
+      initialFocusRef={inputRef}
+    >
+      <ModalOverlay bg="blackAlpha.600" />
+      <ModalContent bg="#2A2C30" color="whiteAlpha.900" borderWidth="1px" borderColor="whiteAlpha.100">
+        <ModalBody py={4}>
+          <Text
+            fontSize="2xs"
+            color="whiteAlpha.500"
+            letterSpacing="0.16em"
+            textTransform="uppercase"
+            fontWeight="bold"
+            mb={2}
+          >
+            {title}
+          </Text>
+          {body}
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   );
 };
 

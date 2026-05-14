@@ -1,6 +1,7 @@
 import {Box, Grid, GridItem, HStack, Heading, IconButton, Kbd, Text, Tooltip} from "@chakra-ui/react";
 import {SearchIcon} from "@chakra-ui/icons";
-import {GiMartini} from "react-icons/gi";
+import {GiGalaxy, GiMartini} from "react-icons/gi";
+import {FiTag} from "react-icons/fi";
 import React from "react";
 
 import "./assets/sass/dice.sass"
@@ -14,17 +15,22 @@ import NarrativeJuicePanel from "@components/narrativeJuice/NarrativeJuicePanel"
 import GlobalCombatHotkeys from "@components/quickActions/GlobalCombatHotkeys";
 import HotkeyHelpOverlay from "@components/quickActions/HotkeyHelpOverlay";
 import HotkeyHint from "@components/quickActions/HotkeyHint";
+import QuickActionsBar from "@components/quickActions/QuickActionsBar";
 import TargetSheetModal from "@components/target/TargetSheetModal";
 import SymbolSpendsModal from "@components/reference/SymbolSpendsModal";
+import GalaxyMapOverlay from "@components/galaxyMap/GalaxyMapOverlay";
 import useDiceRollerStore from "@/state/diceRollerStore";
 import "@/state/sessionLogStore";
 import {useSpotlightStore} from "@/state/spotlightStore";
 import {useNarrativeJuiceStore} from "@/state/narrativeJuiceStore";
 import {useSymbolSpendsStore} from "@/state/symbolSpendsStore";
+import {useGalaxyMapStore} from "@/state/galaxyMapStore";
 import {buildFreestandingSnapshot} from "@/utils/diceSnapshots";
 import {ReactComponent as ProficiencySvg} from "@/assets/dice/proficiency.svg";
 import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
-import ContentCardTargetedOld from "@/ContentCardTargetedOld";
+import SessionPrepPanel from "@components/sessionPrep/SessionPrepPanel";
+import ClassificationReviewModal from "@components/classificationReview/ClassificationReviewModal";
+import {useClassificationReviewStore} from "@/state/classificationReviewStore";
 
 function App() {
   const snapshot = useDiceRollerStore((s) => s.snapshot);
@@ -33,6 +39,8 @@ function App() {
   const openSpotlight = useSpotlightStore((s) => s.open);
   const openNarrativeJuice = useNarrativeJuiceStore((s) => s.open);
   const openSymbolSpends = useSymbolSpendsStore((s) => s.open);
+  const openGalaxyMap = useGalaxyMapStore((s) => s.open);
+  const openClassificationReview = useClassificationReviewStore((s) => s.open);
 
   const templateAreas = `"turn   turn    turn     log"
                          "active targets targeted log"`
@@ -108,6 +116,25 @@ function App() {
                 <HotkeyHint>R</HotkeyHint>
               </Box>
             </Tooltip>
+            <Tooltip
+              label={<HStack spacing={2}><Box>Galaxy map</Box><Kbd bg="gray.700" color="gray.200" borderColor="gray.500">G</Kbd></HStack>}
+              placement="bottom"
+              hasArrow
+              openDelay={300}
+            >
+              <Box position="relative">
+                <IconButton
+                  size="sm"
+                  variant="ghost"
+                  aria-label="Galaxy map"
+                  icon={<GiGalaxy size={20}/>}
+                  color="whiteAlpha.800"
+                  onClick={openGalaxyMap}
+                  _hover={{ bg: 'whiteAlpha.200', color: 'whiteAlpha.900' }}
+                />
+                <HotkeyHint>G</HotkeyHint>
+              </Box>
+            </Tooltip>
             <Tooltip label="Open a freestanding dice roller" placement="bottom" hasArrow openDelay={300}>
               <IconButton
                 size="sm"
@@ -116,6 +143,19 @@ function App() {
                 icon={<ProficiencySvg width={22}/>}
                 onClick={() => openDiceRoller(buildFreestandingSnapshot())}
                 _hover={{ bg: 'whiteAlpha.200' }}
+              />
+            </Tooltip>
+            {/* Utility tools — set apart from the play verbs above. */}
+            <Box w="1px" h="24px" bg="whiteAlpha.300"/>
+            <Tooltip label="Classification review — flag wrong adversary classifications" placement="bottom" hasArrow openDelay={300}>
+              <IconButton
+                size="sm"
+                variant="ghost"
+                aria-label="Classification review"
+                icon={<FiTag size={18}/>}
+                color="whiteAlpha.700"
+                onClick={openClassificationReview}
+                _hover={{ bg: 'whiteAlpha.200', color: 'whiteAlpha.900' }}
               />
             </Tooltip>
           </HStack>
@@ -142,7 +182,7 @@ function App() {
         </GridItem>
 
         <GridItem area='targeted' overflow="hidden" minH={0}>
-          <ContentCardTargetedOld/>
+          <SessionPrepPanel/>
         </GridItem>
 
         <GridItem area='log' overflow="hidden" minH={0} rowSpan={2}>
@@ -154,8 +194,11 @@ function App() {
       <NarrativeJuicePanel/>
       <GlobalCombatHotkeys/>
       <HotkeyHelpOverlay/>
+      <QuickActionsBar/>
       <TargetSheetModal/>
       <SymbolSpendsModal/>
+      <GalaxyMapOverlay/>
+      <ClassificationReviewModal/>
     </>
   )
 }

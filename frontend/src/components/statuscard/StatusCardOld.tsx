@@ -5,6 +5,7 @@ import InlineNumber from "@components/common/InlineNumber";
 import EffectChipRow from "@components/effects/EffectChipRow";
 import {Participant} from "@/state/participantsStore";
 import useParticipantStore from "@/state/participantsStore";
+import {talentNames} from "@/utils/talents";
 
 interface Props {
   participant: Participant;
@@ -44,7 +45,7 @@ const StatusCardOld = ({participant}: Props) => {
   const rangedDefense = stats.rangedDefense ?? 0;
   const soak = stats.soak ?? (participant.isPC ? 3 : 2);
 
-  const highlightedTalents = findHighlightedTalents(stats.talents ?? []);
+  const highlightedTalents = findHighlightedTalents(talentNames(stats.talents));
 
   return (
     <Card

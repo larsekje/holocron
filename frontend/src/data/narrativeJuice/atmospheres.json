@@ -1,0 +1,2824 @@
+[
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "spaceport_dive",
+    "text": "Low ceiling, scarred plasteel bar, a single flickering glowpanel over the door. The air smells of fryer grease and engine coolant. A server thumps two mugs down without breaking stride.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "spaceport_dive",
+    "text": "The bar is a long sheet of riveted metal, stools bolted to the deck. Recycled air whines through a wall vent. A dockworker drains his mug and slides it back across the bar without a word.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "spaceport_dive",
+    "text": "Booths line the back wall, the upholstery patched with mismatched tape. Cheap ale and old sweat hang in the air. Two pilots argue over a star chart spread across their table, jabbing fingers at the route.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "spaceport_dive",
+    "text": "A bank of departure displays flickers behind the bar, half the entries reading DELAYED. The room hums with the dull throb of a generator below the deck. A patron checks the boards, swears softly, orders another.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "spaceport_dive",
+    "text": "Bottles lined three-deep behind the bar, half of them homebrew with hand-written labels. The room smells of fuel and fried protein. The bartender wipes down a glass with a rag that's seen better decades.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "backwater_hole",
+    "text": "The bar is a single warped plank laid across two empty crates. Dust hangs in the slats of light coming through the shutters. A farmer in patched coveralls nurses a clay cup with both hands.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "backwater_hole",
+    "text": "Four mismatched tables, a packed-dirt floor, an oil lamp on every surface that needs one. The air is thick with woodsmoke from a stove in the corner. The proprietor pulls a tap that gurgles before it pours.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "backwater_hole",
+    "text": "A low room with a sloping ceiling and one curtained doorway to the back. Smells of fermented grain and animal hide. An old hand at the bar pushes a coin across with one finger and waits to be served.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "backwater_hole",
+    "text": "The roof is corrugated metal that pings as it cools. The only decoration is a row of dried herbs hung over the bar. A trapper drops a bundle of pelts beside his stool, orders without looking up.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "backwater_hole",
+    "text": "Three locals at the bar, no one else. The kettle on the stove ticks in the quiet. The bartender refills cups without being asked and goes back to whittling a piece of meersh-wood.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "The long bar runs the length of the room in polished durasteel, glass shelves stacked four high behind it, lit from below. The bartender pours a tall green cocktail and slides it down to a waiting patron without looking up.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Low-set tables of dark transparisteel, each lit by a single warm bulb. The room hums with overlapping conversation, none of it loud. A server lowers a tray to a booth and withdraws three paces before turning away.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "A spiral staircase rises through the center of the room to a private mezzanine. The air carries citrus and warm beeswax from polished wood panels. The sommelier presents a bottle with a slight bow and waits for the nod.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Floor-to-ceiling windows look out on streams of skyline traffic. A quartet plays in the far corner at a volume that asks to be ignored. A server pulls back a chair, waits the half-second for the patron to settle, then pushes it in.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "coruscant_club",
+    "text": "Velvet banquettes, brass rails, every surface in a different shade of black. The room smells faintly of imported tobacco and something herbal. A server lights a tableside dessert and steps back as the flame catches blue.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "hutt_parlor",
+    "text": "The chamber is broad and low, lit by oil-fed sconces throwing shadows up carved stone. The air is thick with incense and the wet warmth of a heated pool out of sight. A server kneels to pour wine and rises without spilling a drop.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "hutt_parlor",
+    "text": "Heavy curtains of dyed bantha-wool drape every doorway. The room smells of melted spice and roasted meat. A serving droid wheels a tray of jeweled goblets between cushioned alcoves, soft chime announcing each stop.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "hutt_parlor",
+    "text": "Mosaic floors in faded geometric patterns, the grout dark with age. Drums and pipes play from a recessed gallery overhead. A Niktan attendant fans a cushioned alcove with a long-handled feather, eyes on the floor.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "hutt_parlor",
+    "text": "Cushions piled along the walls, no chairs in sight. The damp air smells of overripe fruit and resin smoke. Two guards in lacquered armor flank an inner archway, hands resting on the pommels of curved blades.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "hutt_parlor",
+    "text": "Tiered platforms ring a central pit where dancers move to a slow drum. The room smells of perfumed oil and old wine. A server in beaded silks refills cups along the platform's edge without breaking the rhythm of the music.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "sabacc_den",
+    "text": "Six round tables under bright low-hung lamps, the rest of the room in shadow. The air smells of cigarra smoke and recycled cooling. A dealer shuffles a deck with the dry rasp of cards over felt.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "sabacc_den",
+    "text": "Tables set among support pillars wrapped in black cloth. The room is loud at the edges and quiet at the tables. A server delivers drinks to a game and pulls the empty glass away without a word.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "sabacc_den",
+    "text": "The cashier's cage sits at the back behind durasteel mesh, credits stacked in plain view. The air carries the smell of stim-caf and someone's cologne. A pit boss walks the perimeter slowly, hands clasped behind his back.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "sabacc_den",
+    "text": "Holographic odds flicker over each table, updating between hands. The room hums with the low murmur of a dozen separate games. A dealer fans cards across the felt in one smooth arc and waits for the table to settle.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "sabacc_den",
+    "text": "Booths along one wall, gaming tables down the middle, no windows anywhere. The lighting is low except over the felt. A bouncer in dark armor stands near the entrance, datapad in hand, checking faces as they come in.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "smugglers_haunt",
+    "text": "The wall behind the bar is covered in pinned cargo manifests from a dozen worlds. The air smells of ozone and engine grease. A pilot pulls a fresh manifest from her jacket and pins it up before sitting down.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld",
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "smugglers_haunt",
+    "text": "Hull plating riveted to the walls, the bar made from a salvaged escape pod door. A refurbished coolant unit hums in the back room. The bartender pours two shots and slides one to an empty stool, then waits.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "smugglers_haunt",
+    "text": "A holomap of the local hyperlanes turns slowly in the center of the room, marked with hand-scrawled notes only the regulars understand. The air carries spilled drink and propellant. Two crews trade nods across the room and go back to their tables.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "smugglers_haunt",
+    "text": "Deep high-backed booths arranged so no one in one can see into another. The room smells of fryer oil and gun-cleaning solvent. A server sets a plate in a booth and walks away without checking if it was wanted.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "smugglers_haunt",
+    "text": "A back door labeled CREW ONLY swings open as servers pass through with crates. A freighter rumbles in dock overhead. The bartender taps a coded knock on the door before opening it.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "nightclub",
+    "text": "The sunken dance floor pulses under shifting color panels, the music loud enough to feel in the chest. The air is warm with bodies and synthetic mist. A bartender works three drinks at once and lines them up on the rail.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "nightclub",
+    "text": "Bass thumps hard enough to vibrate the glassware on the bar. Lasers cut through artificial fog above the dance floor. A server weaves between bodies with a tray of glowing shots held high.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "nightclub",
+    "text": "Private balconies ring the upper level, each curtained in shifting light. The room smells of sweat and sweet vapor. A bouncer at a velvet rope thumbs his datapad and waves the next pair up.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "nightclub",
+    "text": "The bar wraps a central column lit from inside in shifting magenta. The music shifts faster and a wave of patrons moves toward the floor. A bartender pours a row of identical drinks down the rail in one sweep.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "drinking_establishment",
+    "skin": "nightclub",
+    "text": "Catwalks crisscross overhead, dancers moving between them in time with the beat. The room smells of perfume and warm bodies. A server pushes through the crowd with a tray held above her head, calling drink names ahead of her.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "market_bazaar",
+    "text": "Stalls jammed shoulder to shoulder along a covered avenue, awnings dyed in stripes. The air carries fryer smoke and the sharp sweetness of cut fruit. A vendor calls a price, shakes her head at the reply, and waves the buyer on laughing.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "market_bazaar",
+    "text": "Narrow aisles, goods stacked higher than head height on either side. The murmur of haggling overlaps with the squawks of caged poultry. A boy pushes a hover-cart of empty crates past a row of spice merchants.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "market_bazaar",
+    "text": "Three streets meet under a vaulted glass roof, light slanting down in dusty columns. The air smells of grilled meat and warm bread. A vendor sets out a tray of pastries and slaps the hand of a child reaching for one.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "market_bazaar",
+    "text": "Stalls of glittering scrap line the aisle, parts hung from twine in clattering bunches. The air carries sharp ozone from ungrounded power cells. A buyer holds a part up to the light, squints, shakes his head, passes it back.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": [
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "market_bazaar",
+    "text": "Rugs and tapestries hang as walls between stalls, the colors faded by sun. The air carries smoke from a dozen small braziers. A vendor pours steaming tea into clay cups and hands them up to passing customers without slowing the line.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "concourse_terminal",
+    "text": "A vast vaulted hall in pale plasteel, departure boards glowing along the far wall. The air smells of recycled coolant and warm electronics. An announcement chimes overhead and a wave of travelers stands and starts moving toward the gates.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "concourse_terminal",
+    "text": "Rows of seating, half occupied, the rest claimed by bags and slumped bodies. The hum of climate control underlies everything. A cleaning droid trundles down the aisle, pausing to scoop up an empty cup.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "concourse_terminal",
+    "text": "Food stalls and shops run the length of the terminal in a single line. The air carries instant noodles, perfume, and duty-free liquor. A vendor calls out a special as travelers stream past her stall.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "concourse_terminal",
+    "text": "Floor-to-ceiling windows look out onto a docking pad where a freighter is unloading. The voice of the announcement system overlaps with itself in three languages. A porter steers a luggage cart through the crowd, calling clearance ahead of him.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "concourse_terminal",
+    "text": "A security checkpoint between concourse and gates, travelers shuffling forward at the pace of bag scans. The air is warm with crowd and machine heat. An officer waves a passenger through with a half-glance at the readout.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "festival",
+    "text": "Paper lanterns crisscross the square, swaying in the wind. The air carries fried dough, woodsmoke, and a band somewhere out of sight. A reveler in a painted mask dances past, laughing, dragging two friends behind her.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "festival",
+    "text": "Food stalls run both sides of the avenue, each with its own cooking smoke rising. The air is warm with crowd heat and roasting meat. A vendor flips skewers over a flame, calling prices without looking up.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "festival",
+    "text": "Drummers in matched robes process down the center of the avenue, the crowd parting and reforming behind them. The drums echo off the walls of close-set buildings. A child rides her father's shoulders and points at the banners overhead.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "festival",
+    "text": "Fireworks burst in color above the rooftops, the booms arriving a half-second behind the light. The air is sweet with spilled wine and powder smoke. A reveler raises a cup and shouts something the next firework drowns.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "festival",
+    "text": "Dancers in bright silks move on a stage at the far end of the square. The crowd packs the square shoulder to shoulder. A vendor weaves through with a tray of frozen sweets above her head, calling the flavor again and again.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "slum_street",
+    "text": "Tenement blocks lean inward over a narrow street, laundry strung between the upper floors. The air carries cooking oil and the damp of standing water. A vendor sells protein cakes from a battered cart, calling the price to every passerby.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "slum_street",
+    "text": "Rain runs down corrugated awnings into puddles that never dry. Steam rises from a grating in the middle of the street. A child crouches by the grate to warm her hands, watching the foot traffic without expression.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "slum_street",
+    "text": "Hand-painted signs in three languages hang above doorways, half of them advertising businesses long closed. The air smells of fried offal and damp ferrocrete. A street vendor stirs a vat of soup over a salvaged plasma burner.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "slum_street",
+    "text": "Cables run in tangled bundles along the walls, spliced at every junction. The air carries cheap incense and the whine of overloaded conduits. A scavenger pushes a cart of stripped components past shuttered storefronts.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "slum_street",
+    "text": "Constant foot traffic in both directions, workers between shift change. The air is warm with bodies and speeder exhaust. A vendor wraps a bowl of noodles in flimsi and passes it down to a waiting hand without breaking conversation.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "arena",
+    "text": "Tiered stone seating rises around an oval pit of packed sand. The roar of the crowd rolls in waves from one side to the other. A vendor climbs the aisles with a tray of skewers, calling out the price between cheers.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "arena",
+    "text": "Holoscreens replay highlights above the pit at half speed between matches. The air carries fryer oil and the metallic tang of blood. A betting attendant works the rail, taking chits and printing slips faster than the bettors can count their change.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "arena",
+    "text": "The seats nearest the pit are caged in transparisteel, splatter still visible on the lower panels. Drums build the crowd toward the next match. Two attendants drag a rake across the sand, smoothing it for whatever comes next.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "arena",
+    "text": "The upper gallery is shaded by an awning, the lower rows in full sun. The crowd noise dips between matches and the announcer's voice fills the gap. A vendor passes plastoid cups of cold water down the row, hand over hand.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "arena",
+    "text": "Private boxes line the highest tier behind tinted transparisteel. The crowd's roar reaches them muted, as if through water. A box attendant in black livery brings a tray of cocktails up the back stair and disappears through a side door.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "pilgrimage_site",
+    "text": "A vast plaza of weathered stone, the great gate of the shrine at the far end. The air carries incense and the murmur of overlapping prayers in a dozen tongues. A pilgrim kneels on the worn pavement and presses her forehead to the stone.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "pilgrimage_site",
+    "text": "A long staircase climbs to the shrine, pilgrims moving up it in slow procession. The wind carries chimes from somewhere above. An attendant offers cups of blessed water to those resting on the landings.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "pilgrimage_site",
+    "text": "Banners of prayer flags strung between stone pillars snap in the cold wind. The air smells of beeswax candles and woodsmoke. A vendor sells carved tokens from a low table, accepting whatever the pilgrim offers without bargaining.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "pilgrimage_site",
+    "text": "The shrine courtyard is paved in pale stone worn smooth by countless feet. The murmur of devotion never quite stops. A pilgrim lights a small lamp and sets it in a niche already crowded with hundreds of others.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "public_crowd_space",
+    "skin": "pilgrimage_site",
+    "text": "Pilgrims line the road to the gate, many walking the last stretch barefoot. A marching choir's chant carries down from above. An attendant blesses each pilgrim at the gate, a hand briefly on the shoulder.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "imperial",
+    "text": "Polished black floors, white walls, a corridor that runs longer than the eye can comfortably follow. Bootheels click in measured rhythm from somewhere out of sight. A junior officer passes a senior, snaps a salute, and continues without breaking pace.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "imperial",
+    "text": "Wide stairs descend into an operations pit, consoles in concentric arcs around a central holotable. The air carries faint ozone. A naval rating delivers a datapad to an officer at a console and steps back exactly two paces.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "imperial",
+    "text": "A guard checkpoint splits the corridor, two stormtroopers flanking a credential scanner. The hum of the scanner is the loudest sound in the hall. An officer presents his cylinder, the light turns green, and he passes through without slowing.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "imperial",
+    "text": "The viewing deck looks out on a landing field where a shuttle is settling onto its struts. The room is silent but for the climate system. An aide in dress greys sets a tray of caf at the desk's corner and withdraws.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "imperial",
+    "text": "Banners of the Empire hang at intervals down the gallery, perfectly aligned. The corridor light is even, shadowless. A patrol of four stormtroopers crosses the far end in step and disappears down a side passage.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "hutt_crimelord",
+    "text": "The throne dais rises above a sunken audience floor, draped in patterned tapestry. The air is heavy with incense and the wet warmth of a heated chamber. A herald in beaded silks waves the next petitioner forward with a flick of a feathered fan.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 2,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "hutt_crimelord",
+    "text": "The chamber's ceiling vanishes into shadow above oil-fed torches. Music plays from a recessed gallery, drums and pipes. A serving droid wheels a covered platter between the throne and a side door, the wheels squeaking on stone.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "hutt_crimelord",
+    "text": "The walls are hung with trophies \u2014 a Wookiee pelt, a Mandalorian helmet, a Jedi-style hilt mounted under glass. The air carries spice smoke and stewed meat. Two guards in lacquered armor flank the throne, motionless as carvings.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 2,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "hutt_crimelord",
+    "text": "Cushions and low tables fill the perimeter; the center is cleared from the throne to the door. The room smells of fermented fruit and bantha tallow. An attendant kneels at the foot of the dais and refills a great brass cup.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 2,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "hutt_crimelord",
+    "text": "A sunken pool of dark water sits before the throne, its surface still. The damp air smells of incense and stone. A protocol droid translates a petitioner's words into Huttese in a flat, even tone, hands folded at its waist.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "corporate",
+    "text": "Floor-to-ceiling windows on three sides, the executive level looking out over the city. The hush of climate control is the only sound. An assistant in corporate livery sets a sealed folio on a glass desk and withdraws three paces before turning.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "corporate",
+    "text": "The lobby is a vault of polished stone, the company sigil etched into the floor. Footsteps echo against the high ceiling. A receptionist behind a long counter directs a visitor to a waiting bank with a small, practiced gesture.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "corporate",
+    "text": "Identical office pods stretch in a grid as far as the eye carries. The air carries faint ozone and recycled caf. An employee adjusts her display, glances at a passing supervisor, and resumes typing without breaking her stride.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "corporate",
+    "text": "The boardroom occupies a corner of the tower, two walls of transparisteel. A silver pitcher sits at the head of a long table. An aide arranges datapads at each setting with a ruler, adjusts one by a fraction, steps back.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "corporate",
+    "text": "Glass-walled lifts run silently along the central shaft, ferrying staff between levels. Soft music plays at a volume just above conscious notice. A security officer checks a visitor's credential and waves him through with a curt nod.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "corporate"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "noble_royal",
+    "text": "A vaulted hall of carved stone, banners of the house at measured intervals. Tall windows throw long colored shafts of light. A retainer in the house's sash escorts a visitor down the center of the hall at a deliberate pace.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "noble_royal",
+    "text": "Portraits of past lords line the gallery, each frame heavier than the last. The carpet underfoot is so old it gives like moss. A servant in livery pauses to dust the most recent frame and moves on.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "noble_royal",
+    "text": "A great audience chamber, the dais at the far end under embroidered cloth. The air smells of beeswax and faint perfume. A page in the house's colors crosses the marble floor on silent slippers, scroll in hand.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "noble_royal",
+    "text": "A library two stories tall, books bound in colored leather on every wall. The air is cool and dry, the silence almost total. A steward in the house's sash carries a folio down a sliding ladder, careful with the dust.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "noble_royal",
+    "text": "Stained-glass windows throw colored light across a long dining hall. The table is set for thirty though only a few seats are occupied. A servant adjusts a goblet's placement by a hair and withdraws to stand against the wall.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "religious_sacred",
+    "text": "A high-vaulted sanctuary, light spilling through narrow upper windows in pale columns. The air smells of incense and old stone. A robed initiate refills the oil in a hanging lamp, careful not to let the flame catch the wick.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "religious_sacred",
+    "text": "A cloister wraps around a quiet inner garden, its arches carved with sacred glyphs. The murmur of distant chant carries from somewhere deeper in the complex. A robed brother walks the colonnade with measured steps, hands folded into his sleeves.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "religious_sacred",
+    "text": "Stone benches line a long meditation hall, each with a candle at its head. The air is cool, the silence dense. An acolyte lights the candles down the row in order, pausing a breath at each one before moving on.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "religious_sacred",
+    "text": "The sanctum's inner door is worked bronze, two priests in pale robes at either jamb. The air carries beeswax and dried herbs. A senior cleric crosses the threshold and the priests bow their heads at the same depth.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "religious_sacred",
+    "text": "A circular library, scrolls stacked in carved niches floor to ceiling. The light is amber, kept low to spare the parchment. An archivist in white gloves carries a sealed tube along the curved shelves and slides it into its slot.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": -1,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "mystical"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "warlord_pirate",
+    "text": "A converted hangar, the warlord's banner hung from the gantry crane overhead. The air smells of fuel and welded metal. A guard in mismatched armor leans on a heavy blaster and tracks the visitors with his eyes alone.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld",
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "warlord_pirate",
+    "text": "Trophies of stripped ship hulls hang from the rafters like banners. The grinding of a fabrication line never quite stops. Two crewers haul a crate of munitions past on a hover-pallet, calling clearance ahead of them.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "warlord_pirate",
+    "text": "The throne is a captain's chair welded to a salvage platform, banners of taken ships strung behind it. The air is warm with bodies and machine heat. A lieutenant in cobbled half-armor approaches and waits, head lowered.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld",
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "warlord_pirate",
+    "text": "Long tables crowded with crew, food and weapons set out together. The room is loud with arguments and the thump of mugs on plasteel. A galley hand drops a cauldron of stew between two tables and ladles without asking.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "stronghold_of_power",
+    "skin": "warlord_pirate",
+    "text": "Holoscreens show the warlord's territory in shifting tactical overlays, half the maps marked with new claims in red. The hangar's space carries every sound. A runner sprints across the deck with a datapad held high.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld",
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "desert",
+    "text": "Dunes roll to the horizon in long parallel ridges, each crest sharp against a colorless sky. The air is dry enough to crack the lips. A hawkbat banks high overhead and slides out of sight beyond a ridge.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "desert",
+    "text": "A flat hardpan stretches in every direction, the only break a line of weathered rock to the east. The wind carries fine grit that stings the eyes. A small lizard scurries from one rock shadow to the next.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "desert",
+    "text": "A narrow canyon cuts through layered sandstone, the walls striped in red and ochre. The wind funnels through with a low whistle. A column of fine dust rises from the canyon floor and trails away on the wind.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "desert",
+    "text": "Salt flats stretch white to a heat-shimmered horizon. The air smells faintly of mineral dust. A small whirlwind kicks up at the edge of vision, gathers strength for a moment, then collapses.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "desert",
+    "text": "Twin suns hang in the sky, the shorter shadows pointing in subtly different directions. The heat presses down with weight. A patch of scrub at the foot of a dune trembles as a small rodent breaks cover and bolts.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "swamp_jungle",
+    "text": "Roots arch out of black water in cathedral curves, moss hanging in long curtains. The air is thick, warm, alive with insect noise. A heavy frog drops from a branch into the water with a soft, definite plop.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "swamp_jungle",
+    "text": "The canopy is so dense the light below is permanent dusk. The air carries wet earth, rot, and the sweet edge of unseen flowers. A monkey-lizard calls from a branch overhead and is answered from somewhere deeper in.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "swamp_jungle",
+    "text": "A narrow game trail winds between trunks thicker than freighters. The understory hums with insect wings. A swarm of biting flies lifts from a puddle as boots disturb the still water.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "swamp_jungle",
+    "text": "Mangrove-like roots stand in standing water along a slow channel. The smell of methane bubbles up from the muck. A long-necked wading bird lifts one leg, holds it, sets it down with no sound.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "swamp_jungle",
+    "text": "Liana vines drape from the canopy in tangled curtains. Steam rises off the water as the morning sun finds gaps in the leaves. A troop of small primates passes through the upper branches, the limbs swaying in their wake.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "ice_tundra",
+    "text": "A flat plain of wind-scoured ice stretches to a low grey horizon. The wind carries crystals of snow that sting bare skin. A herd of tundra-deer crosses in the middle distance at a steady walk.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "ice_tundra",
+    "text": "Wind-carved snow drifts pile against the leeward side of every rock. The cold is dry, biting, total. A lone snow-fox crests a drift, scans the open ground, and drops back out of sight.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "ice_tundra",
+    "text": "A frozen lake stretches out from a stony shore, the surface scoured into wind-rippled patterns. The air carries the faint mineral smell of cold stone. A crack runs across the ice with a deep, single thunderclap, then settles into silence.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "ice_tundra",
+    "text": "A range of glacial peaks fills the horizon, their faces blue in the low sun. The wind comes off them with a knife edge. A skua circles once on a thermal and beats its way back inland.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "ice_tundra",
+    "text": "Hot springs steam at the foot of a snowfield, the runoff cutting dark channels through the ice. The air shifts between sulfur warmth and bitter cold with each step. A flock of crested birds wades in the warmest pool, unhurried.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "mountain_rocky",
+    "text": "A talus slope falls away from the ridge, broken stone underfoot as far as the eye carries. The wind comes hard off the peak above. A mountain goat picks its way across the scree at an angle no creature should manage.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "mountain_rocky",
+    "text": "A narrow trail switchbacks up a granite face, the drop on one side disappearing into mist. The air is thin and cold and smells of stone. A small avalanche of pebbles rattles down the slope where something passed unseen.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "mountain_rocky",
+    "text": "A high meadow opens between two peaks, dotted with hardy yellow flowers. Clouds drift through at head height. A marmot whistles a warning from a rock pile and vanishes into its burrow.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "mountain_rocky",
+    "text": "A bowl-shaped cirque holds a single cold lake at its base. The walls catch and return every sound. A nesting pair of cliff-hawks circles the upper rim, screaming at one another in turn.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "mountain_rocky",
+    "text": "A pass cuts between two summits, the wind funneling through with a constant low howl. Patches of old snow cling in the shadowed cracks. A range cat crosses the pass at distance, head low, and is gone.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "aquatic_coastal",
+    "text": "A pebbled beach stretches between rocky headlands, surf folding onto it in long even rows. The air carries salt and kelp. A flock of shorebirds runs together up the tide line and back as each wave retreats.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "aquatic_coastal",
+    "text": "Tide pools fill the shelf at the base of the cliffs, each a small bright world. The surf is constant, lower than conversation. A small armored crustacean scuttles across one pool and tucks itself under a ledge.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "aquatic_coastal",
+    "text": "A shallow lagoon spreads behind a coral reef, the water clear to the sand fifteen meters down. The breeze carries the warm wet smell of the reef. A school of silver fish turns as one beneath the surface.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": -1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "aquatic_coastal",
+    "text": "Sea cliffs rise sheer from a deep harbor, seabirds in every crevice. The wind carries salt and guano. A cliff-bird launches into the wind, hangs motionless, slides away on the updraft.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "aquatic_coastal",
+    "text": "An estuary opens between low banks of tall grass, freshwater meeting tide. The air smells of brackish mud and crushed reeds. A long-legged wading bird stands perfectly still in the shallows, then strikes the water once.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "volcanic",
+    "text": "Black basalt fields stretch toward a cone smoking on the horizon. The air carries sulfur and the faint metallic tang of cooling lava. A small geyser of steam vents from a crack underfoot, hisses, and dies back.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "volcanic",
+    "text": "A lava tube opens into the hillside, the air pouring out cold and dry. The walls catch every footstep and return it doubled. A swarm of bats peels off the ceiling and pours out the entrance overhead.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "volcanic",
+    "text": "Pools of bubbling mud spread between low ridges, each one a different color. The air is hot, sulfurous, hard to breathe deeply. A bubble of mud the size of a head rises slowly, holds, and bursts with a wet pop.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "volcanic",
+    "text": "A river of slow lava grinds down a wide channel, its surface black crust over orange. The heat presses against skin like a wall. A piece of crust breaks free and slides downstream, exposing molten rock below.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "volcanic",
+    "text": "Steam vents line the rim of a wide crater, each plume rising straight before bending east. The ground vibrates at the edge of feeling. A flock of fire-tolerant birds wheels through one of the plumes and rides it upward.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "toxic_dead",
+    "text": "A flat plain of cracked grey earth stretches to a yellow-tinged sky. The air is dry, metallic, sour in the back of the throat. A skeletal tree creaks in a wind that carries nothing living.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "toxic_dead",
+    "text": "Acid pools fill the low ground between dead ridges, their surfaces shifting colors. The air burns slightly with each breath. A fine mist drifts off the largest pool and settles on stone, leaving pale stains.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "toxic_dead",
+    "text": "A dead forest stretches in every direction, every tree bleached white and snapped at the same height. The wind carries only the rattle of dead branches. A scrap of cloth, faded past color, flutters from a low limb.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "toxic_dead",
+    "text": "A wide riverbed runs without water, its bottom cracked into hexagonal plates. The air smells faintly of ammonia. A small scuttling thing crosses the riverbed in a hurry and vanishes into a crack.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "wilderness",
+    "skin": "toxic_dead",
+    "text": "Rust-colored dunes ripple to the horizon under a sky the color of old bruising. The wind carries fine particulate that catches in the teeth. A small thermal lifts a dead leaf from a depression and carries it away.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "starship_interior",
+    "text": "A long curving corridor of beige plasteel, recessed lighting in continuous strips along the floor. The hum of the sublight drive is a constant low presence. A maintenance droid trundles past, paying no attention to anyone.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "starship_interior",
+    "text": "The crew lounge is shabby but kept clean \u2014 galley nook, holochess board, worn acceleration couches. The ventilation rattles on its mount. A crewer ladles caf from a battered urn and goes back to a datapad.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "starship_interior",
+    "text": "The cargo bay is open to the overhead, lashing points down both walls. The air is colder here than in the rest of the ship. A loadmaster tugs a strap, checks the tension, and moves to the next crate.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "starship_interior",
+    "text": "The bridge is small, three couches arranged before a curved viewport. Indicator lights flicker in low constellations. The pilot checks a readout, adjusts a control, and settles back without ever taking her eyes off the stars.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "starship_interior",
+    "text": "An access corridor runs along the ship's spine, pipes and conduits exposed overhead. The air smells of warm machine oil. A technician on his back slides out from a panel, wipes his hands, slides back in.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "space_dogfight",
+    "text": "Through the canopy, stars are streaked by the cockpit's rotation. The cockpit hums with the steady throb of repulsors trimming. The pilot's wingman calls in over the comm in clipped, calm code-words.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "rebel"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "space_dogfight",
+    "text": "The squadron flies in loose formation against the curve of the planet below. The cockpit air is cool, recycled, sharp with ozone. A pilot's voice on the squadron channel calls a slow course correction, two ships drift to comply.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "rebel"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "space_dogfight",
+    "text": "The patrol sector is empty in every direction, stars steady on the viewport. Life-support hum is the only sound in the cockpit. A wingman calls in a routine status report and is answered by silence from the rest of the flight.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "space_dogfight",
+    "text": "Two fighters fly escort on either flank of a transport, holding station at a precise distance. Targeting reticles drift across an empty sky. A pilot keys the comm, asks for a position update, and gets it in three crisp words.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "space_dogfight",
+    "text": "The fighter sweeps over the dorsal hull of a capital ship, gun emplacements rolling past below. The astromech chitters status into the cockpit speaker. Flight control calls the next vector and clears the channel.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "speeder_chase",
+    "text": "The speeder banks through a canyon of skyscraper, the lanes packed with traffic on every level. The wind whips through the open cockpit. A traffic-control droid hails them on the safety channel and is ignored.",
+    "tone": {
+      "pulpy": 2,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "speeder_chase",
+    "text": "Heavy traffic on a coastal highway, speeders three abreast moving fast in both directions. The repulsor noise is constant. A delivery van weaves between lanes ahead and clips a guard rail in a spray of sparks.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "speeder_chase",
+    "text": "Desert hardpan unrolls beneath the speeder, the sky cloudless overhead. The repulsor draft kicks dust up behind in a long pale tail. A flock of large desert birds scatters from a cluster of scrub as the speeder roars past.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "speeder_chase",
+    "text": "The skylane runs between rows of factory towers, vents pouring orange smoke into the sky. The cockpit air smells of solvent and propellant. A traffic patrol speeder cruises past on the opposite lane, its sensor lights idle.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 1,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "speeder_chase",
+    "text": "A narrow mountain road snakes along the side of a gorge, the drop on one side disappearing into cloud. The repulsor hum echoes back off the rock wall. A cargo-hauler ahead drifts into the oncoming lane, corrects, drifts back.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "magnatrain",
+    "text": "The carriage runs sleek on its magnetic rail, the landscape outside a smooth blur. Recessed lighting glows along the ceiling in continuous strips. An attendant moves down the aisle with a tray of pastries, offering them in turn.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "magnatrain",
+    "text": "A first-class lounge car, armchairs facing floor-to-ceiling windows. The rail's hum is felt rather than heard. A steward in dark livery pours tea from a silver pot exactly to the rim.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "magnatrain",
+    "text": "Standard-class seating, packed for the morning commute, every armrest claimed. The carriage smells of caf and crowded warmth. A passenger sleeps with her forehead against the window, breath fogging the transparisteel.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "magnatrain",
+    "text": "The dining car, white-clothed tables set with mismatched silver. The countryside outside slides past at three hundred kilometers per hour. A waiter sets a soup plate down without spilling a drop and adjusts the spoon's angle by a fraction.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "magnatrain",
+    "text": "A connecting vestibule between cars, the windows showing track rushing away behind. The wind noise through the seals is constant and high. A conductor steps through the door, pauses to check his datapad, and continues into the next car.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "convoy",
+    "text": "Six hover-trucks roll in a staggered column down a rutted road. The lead vehicle's dust hangs long after it passes. A driver leans an elbow out his window and calls something to the next truck back.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "convoy",
+    "text": "Cargo crawlers grind across open scrubland, each one twice the size of the last. The diesel exhaust drifts low between them. A spotter on the lead crawler waves a circle and the column adjusts its pace.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "convoy",
+    "text": "Three armored transports under escort by two combat speeders, all in matched colors. The escorts run a slow zig-zag pattern between the transports. A driver radios in a routine position report and is answered with two clicks.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "convoy",
+    "text": "A water-tanker convoy on a desert track, repulsors kicking up walls of dust. The sun beats down on the chassis. A rider in the lead vehicle's roof hatch scans the horizon, a long rifle across his forearm.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": -1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "convoy",
+    "text": "The convoy strings out along a forest road, the canopy nearly closing overhead. The whine of repulsors is muted by the trees. A scout speeder drops back from the lead, paces the column for a stretch, and accelerates forward again.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "hyperspace",
+    "text": "The viewport is filled with the streaming tunnel of hyperspace, lines of pale light running past. The drive's hum settles into the deck plates. The pilot pulls off her gloves and sets them on the console, eyes still on the readouts.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "hyperspace",
+    "text": "The bridge is dim, lit mostly by the viewport's streaming blue. The crew speak low, more by habit than need. A junior officer makes the rounds with a fresh pot of caf, refilling each cup in turn.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "hyperspace",
+    "text": "The crew lounge in mid-jump \u2014 off-duty crew at a holochess table, the viewport streaming behind them. The drive's hum is the lowest note in the room. A crewer moves a piece and his opponent groans.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "hyperspace",
+    "text": "A passenger cabin on a liner mid-jump, the viewport showing the steady blue tunnel. The carriage hum is felt through the deck. A steward delivers a sealed meal tray to the cabin door, knocks twice, and slides it inside.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "vehicle_transit",
+    "skin": "hyperspace",
+    "text": "The engineering deck is loud with the harmonic note of the hyperdrive at full bore. The air carries warm ozone. A crewer in protective gear walks slowly down the row of converters, datapad in hand, checking each readout in turn.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "back_room",
+    "text": "A small windowless room, a single round table, four chairs. The air smells of stale caf and someone's cologne. A server sets a pitcher of water and four glasses in the center of the table and withdraws without a word.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "back_room",
+    "text": "A cantina back office, a desk pushed against one wall to make room for chairs. The room is lit by a single low lamp. A staffer brings a tray of glasses, sets it down, and pulls the door closed behind him.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "back_room",
+    "text": "A storeroom converted for the meeting, crates pushed to the walls, a cleared table in the middle. The air carries dust and the sweetness of stored fruit. The back door is closed and locked from the inside.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 1,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "underworld"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "back_room",
+    "text": "A private dining room above the main floor, the door's privacy field already engaged. The kitchen sounds below carry up but blur into noise. A server brings the first course on a covered platter and uncovers it before withdrawing.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "back_room",
+    "text": "An interior office, no windows, a single door. The ventilation hums steadily, just loud enough to defeat a parabolic mic. A staffer sets a sealed envelope at the center of the table and closes the door behind her.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "audience_chamber",
+    "text": "A high vaulted room, a single dais at the far end with a heavy throne. The chamber's silence is the kind that absorbs footsteps. A herald steps forward, raps the floor twice with a staff, and announces the next petitioner.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "audience_chamber",
+    "text": "Galleries run along the upper walls, courtiers in matched livery watching the floor below. The air carries beeswax and old incense. A page in the house's colors crosses the marble floor on silent slippers, scroll in hand.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "audience_chamber",
+    "text": "The chamber is long, the throne raised on three shallow steps. High windows throw long colored shafts of light. A protocol officer in pressed greys directs an arriving party to a marked spot on the floor.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "audience_chamber",
+    "text": "Two ranks of household guards line the path to the dais, polearms held precisely vertical. The hush is total but for the rustle of robes. An attendant kneels at the foot of the throne, accepts a sealed document, rises, withdraws.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "audience_chamber",
+    "text": "The chamber is circular, the floor inlaid with the seal of the house in dark stone. A petitioner's footsteps carry to every corner. A clerk at a side podium dips a stylus and begins recording unprompted.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "diplomatic_suite",
+    "text": "A long table of dark transparisteel, the chairs in the host world's colors. A carafe and matched glasses at each place. An aide adjusts a name placard by a fraction and steps back to confirm the line.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "diplomatic_suite",
+    "text": "Floor-to-ceiling windows look out over the diplomatic quarter. The hush of climate control is the loudest sound in the room. A protocol officer arranges sealed folios at each setting and confirms each name against her list.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "diplomatic_suite",
+    "text": "A wide reception room, three sets of flags hung along the back wall in matched height. The air carries the faint sweetness of fresh-cut flowers. A waiter circulates with a tray of glasses, offering them with a small practiced bow.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "diplomatic_suite",
+    "text": "The negotiation chamber has two doors, each opening into its own separate antechamber. A holoprojector at the center of the table displays a slowly rotating treaty draft. A clerk in neutral grey livery starts the recording with a soft chime.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "diplomatic_suite",
+    "text": "A semicircular table with seating for both delegations arranged exactly symmetrically. A translator droid stands at the apex, swiveling its head between speakers. An attach\u00e9 slides into a chair, places a datapad face-down on the table, and folds his hands.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 2,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "high_society_function",
+    "text": "A ballroom with polished marble, chandeliers throwing soft light onto upturned faces. A string quartet plays from a discreet alcove. A server in tailcoats glides between groups with a tray of champagne, a small bow at each pause.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "high_society_function",
+    "text": "The gallery has been opened for the reception, art on every wall, guests in tailored finery between. The murmur of conversation hovers at a controlled volume. A waiter offers a tray of canap\u00e9s to a small circle, waiting for each to take one.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "high_society_function",
+    "text": "A garden terrace strung with lanterns, the city skyline beyond the balustrade. The breeze carries night-blooming jasmine. A footman in white gloves opens a bottle of sparkling wine with no audible pop and pours into raised glasses.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "high_society_function",
+    "text": "A grand staircase descends into the reception hall, each arrival announced by a herald at the top. The polished floor reflects the guests as a fainter crowd below. A footman steps forward to take a fur from an arriving guest's shoulders.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "high_society_function",
+    "text": "Fifty at a single table, candlesticks down the center reflecting in the silver. Servants move in coordinated pairs, one plate to each side. A sommelier presents a bottle to the head of the table with a slight bow.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "noble"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "tribunal",
+    "text": "A raised bench of dark wood, three high-backed seats behind it, the gallery rising in tiers. The room is silent but for the rustle of robes. A bailiff raps a staff on the floor and the gallery rises.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "tribunal",
+    "text": "Two long tables face the bench, one for each side, separated by an aisle. A clerk's stylus on the side podium is the only sound. A bailiff brings a sealed evidence folio to the bench and sets it precisely centered.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "tribunal",
+    "text": "The judiciary's seal is set into the floor before the bench, polished smooth by generations of feet stopping at its edge. A holorecorder hovers near the ceiling, indicator light steady red. A clerk announces the case number in a clear formal tone.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "tribunal",
+    "text": "The witness stand sits beside the bench, screened on three sides. The gallery murmur quiets at a single rap of the bailiff's staff. A clerk leads the witness in, indicates the seat, steps back to her station.",
+    "tone": {
+      "pulpy": 0,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 2
+    },
+    "heat": 1,
+    "bias": [
+      "imperial"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "tribunal",
+    "text": "An adjudication chamber for civil disputes, smaller than a criminal court, a single magistrate's seat. The air carries dust from old datafiles along the walls. A clerk hands the magistrate the next file and steps back.",
+    "tone": {
+      "pulpy": -1,
+      "seedy": 0,
+      "intrigue": 0,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": []
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "parley_field",
+    "text": "Open ground between two encamped forces, a single table under a striped canopy in the middle. The wind carries grass and woodsmoke from both camps. A standard-bearer plants a flag of truce at each end of the table.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "parley_field",
+    "text": "A ruined courtyard between the lines, half the walls fallen, a canopy pitched in the cleared center. An aide brings a sealed jug of water and breaks the seal in plain view of both sides before pouring.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 0
+    },
+    "heat": 1,
+    "bias": [
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "parley_field",
+    "text": "A neutral observer's tent flanks the table, a third standard staked at its entrance. The grass between the camps is trampled flat. A herald reads the agreed terms aloud before either side sits.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "parley_field",
+    "text": "A frozen river between the armies, a circle marked in pine boughs on the ice. The cold air carries the muffled sound of two camps. An attendant brings a brazier of coals and sets it precisely in the circle's middle.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "frontier"
+    ]
+  },
+  {
+    "slot": "atmosphere",
+    "archetype": "negotiation_room",
+    "skin": "parley_field",
+    "text": "The table sits at the foot of a watchtower visible to both armies, the flags of both sides at matched height. A neutral envoy pours water into matched cups and sets one before each empty chair before either party arrives.",
+    "tone": {
+      "pulpy": 1,
+      "seedy": 0,
+      "intrigue": 1,
+      "refined": 1
+    },
+    "heat": 1,
+    "bias": [
+      "frontier"
+    ]
+  }
+]

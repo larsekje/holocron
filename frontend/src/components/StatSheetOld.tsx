@@ -13,6 +13,7 @@ import {isSourceTag} from "@/utils/statify";
 import useParticipantStore from "@/state/participantsStore";
 import {Participant} from "@/state/participantsStore";
 import {statify} from "@/utils/statify";
+import {talentNames} from "@/utils/talents";
 import {getDetail} from "@/data/spotlightIndex";
 import {describeArchetype, describeCoreArchetype, describeFaction} from "@/data/archetypeDescriptions";
 import SwrpgTooltip from "@components/common/SwrpgTooltip";
@@ -77,7 +78,7 @@ const StatSheetOld = ({participant}: Props) => {
 
   const tags: string[] = (stats as any).tags ?? [];
   const type = stats.type ?? (participant.isPC ? "PC" : "Minion");
-  const talents: string[] = stats.talents ?? [];
+  const talents: string[] = talentNames(stats.talents);
   const gear: string[] = (stats as any).gear ?? (stats as any).weapons ?? [];
   const description: string = (stats as any).description ?? "";
   const skills: Record<string, number> = stats.skills ?? {};

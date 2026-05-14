@@ -74,6 +74,43 @@ export function describeCoreArchetype(name: string): string | undefined {
   return CORE_ARCHETYPE_DESCRIPTIONS[lower];
 }
 
+// The 30 canonical coreArchetype names, in taxonomy order — the `### ` headers
+// of references/archetypes.md (19 combat/action then 11 social/noncombat).
+// Display-cased; the single source for the Classification Review suggestion
+// dropdown. Keep in sync with archetypes.md if the taxonomy changes.
+export const CORE_ARCHETYPE_NAMES: string[] = [
+  'Gunslinger',
+  'Marksman',
+  'Heavy Hitter',
+  'Melee Bruiser',
+  'Ace Pilot',
+  'Soldier',
+  'Enforcer',
+  'Grunt',
+  'Guns for Hire',
+  'Persistent Pest',
+  'Critter',
+  'Nasty Beast',
+  'Mount / Beast of Burden',
+  'Technician',
+  'Commander',
+  'Shadow Operative',
+  'Force Duelist',
+  'Force Savant',
+  'Force Adept',
+  'Sycophant',
+  'Smooth Talker',
+  'Bureaucrat',
+  'Fixer',
+  'Schemer',
+  'Power Broker',
+  'Kingpin',
+  'Socialite',
+  'Mentor',
+  'Mystic',
+  'Civilian',
+];
+
 // Faction descriptions for the closed set used in adversaries.json.
 export const FACTION_DESCRIPTIONS: Record<string, string> = {
   imperial: "Galactic Empire and its security/military apparatus.",

@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Box, Text, useToast } from '@chakra-ui/react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import useParticipantStore, { isParticipantDead } from '@/state/participantsStore';
 import useGameplayStore from '@/state/newGameplayStore';
 import { useQuickActionsStore } from '@/state/quickActionsStore';
 import { useSymbolSpendsStore } from '@/state/symbolSpendsStore';
 import { useNarrativeJuiceStore } from '@/state/narrativeJuiceStore';
+import { useGalaxyMapStore } from '@/state/galaxyMapStore';
 import CritRollerModal from '@components/crit/CritRollerModal';
 import ApplyEffectsModal from '@components/effects/ApplyEffectsModal';
 
@@ -36,14 +38,55 @@ function shouldHandleKeystroke(): boolean {
   return true;
 }
 
+// How long the A verb stays "armed" after the first tap. A second tap of A
+// on the same target within this window confirms the override; otherwise the
+// arm lapses. Matches the muscle-memory of the old digit double-tap.
+const ACTIVE_OVERRIDE_WINDOW_MS = 1200;
+
+// Compact, low-key toast for the A verb — Chakra's default status toasts are
+// too bright and bulky for this dark, hand-styled surface. A small dark pill
+// with one accent dot: gold (the active-participant colour) on confirm, a
+// muted dot while armed. Returns a `render` function for the toast options.
+const activeToast =
+  (message: string, tone: 'confirm' | 'arm') => () => (
+    <Box
+      bg="#2A2C30"
+      color="whiteAlpha.900"
+      border="1px solid"
+      borderColor="whiteAlpha.200"
+      borderRadius="md"
+      boxShadow="0 6px 16px rgba(0,0,0,0.45)"
+      px={3}
+      py={1.5}
+      fontSize="xs"
+      display="flex"
+      alignItems="center"
+      gap={2}
+    >
+      <Box
+        w="6px"
+        h="6px"
+        borderRadius="full"
+        flexShrink={0}
+        bg={tone === 'confirm' ? '#f1c043' : 'whiteAlpha.400'}
+      />
+      <Text>{message}</Text>
+    </Box>
+  );
+
 const GlobalCombatHotkeys: React.FC = () => {
   const participants = useParticipantStore((s) => s.participants);
   const selectedId = useParticipantStore((s) => s.selectedParticipantId);
   const selectParticipant = useParticipantStore((s) => s.selectParticipant);
-  const setActiveParticipantId = useGameplayStore((s) => s.setActiveParticipantId);
   const transition = useGameplayStore((s) => s.transition);
   const canTransition = useGameplayStore((s) => s.canTransition);
   const setInitiativeModalOpen = useGameplayStore((s) => s.setInitiativeModalOpen);
+  const setActiveParticipantId = useGameplayStore((s) => s.setActiveParticipantId);
+  const toast = useToast();
+  // A verb arm-state: the target staged by the first tap of A, plus its
+  // auto-clear timer. Held in a ref so it survives re-renders and the
+  // keydown listener can read/update it without re-binding.
+  const activeArmRef = useRef<{ id: string; timer: number } | null>(null);
   const enterDamage = useQuickActionsStore((s) => s.enterDamage);
   const enterPouch = useQuickActionsStore((s) => s.enterPouch);
   const openCrit = useQuickActionsStore((s) => s.openCrit);
@@ -122,6 +165,14 @@ const GlobalCombatHotkeys: React.FC = () => {
       if (k === 'j' || k === 'J') {
         e.preventDefault();
         useNarrativeJuiceStore.getState().open();
+        return;
+      }
+      // G opens the interactive galaxy map. No target required; pure
+      // reference, and it won't re-trigger while open — shouldHandleKeystroke
+      // bails on any open dialog.
+      if (k === 'g' || k === 'G') {
+        e.preventDefault();
+        useGalaxyMapStore.getState().open();
         return;
       }
 
@@ -218,16 +269,82 @@ const GlobalCombatHotkeys: React.FC = () => {
           e.preventDefault();
           useQuickActionsStore.getState().enterStrain();
           return;
-        case 'a':
-        case 'A':
-          e.preventDefault();
-          setActiveParticipantId(liveSelectedId);
-          return;
         case 'f':
         case 'F':
           e.preventDefault();
           useQuickActionsStore.getState().openFullSheet();
           return;
+        case 'a':
+        case 'A': {
+          // A makes the currently selected target the active character.
+          // With no active character yet, a single press claims it. Once
+          // someone is already active, overriding needs a confirming second
+          // tap of A on the same target (the digit hotkeys no longer
+          // override) so a stray keypress can't yank the active mid-turn.
+          e.preventDefault();
+          const liveActiveId =
+            useGameplayStore.getState().context.activeParticipantId ?? null;
+          const targetName =
+            liveParticipants.find((p) => p.id === liveSelectedId)?.name ?? 'Target';
+          const arm = activeArmRef.current;
+          const clearArm = () => {
+            if (arm) window.clearTimeout(arm.timer);
+            activeArmRef.current = null;
+          };
+          const makeActive = () => {
+            clearArm();
+            toast.close('active-override-arm');
+            setActiveParticipantId(liveSelectedId);
+            toast({
+              duration: 1800,
+              render: activeToast(
+                `${targetName} is now the active character.`,
+                'confirm',
+              ),
+            });
+          };
+
+          // Already the active character — nothing to confirm.
+          if (liveActiveId === liveSelectedId) {
+            clearArm();
+            return;
+          }
+          // Open, unclaimed slot — a single press claims it.
+          if (!liveActiveId) {
+            makeActive();
+            return;
+          }
+          // Override: a confirming second tap of A on the same target.
+          if (arm?.id === liveSelectedId) {
+            makeActive();
+            return;
+          }
+          // First tap on a new target — arm and prompt for confirmation.
+          if (arm) window.clearTimeout(arm.timer);
+          activeArmRef.current = {
+            id: liveSelectedId,
+            timer: window.setTimeout(() => {
+              activeArmRef.current = null;
+            }, ACTIVE_OVERRIDE_WINDOW_MS),
+          };
+          const armRender = activeToast(
+            `Tap A again to make ${targetName} the active character`,
+            'arm',
+          );
+          if (toast.isActive('active-override-arm')) {
+            toast.update('active-override-arm', {
+              duration: ACTIVE_OVERRIDE_WINDOW_MS,
+              render: armRender,
+            });
+          } else {
+            toast({
+              id: 'active-override-arm',
+              duration: ACTIVE_OVERRIDE_WINDOW_MS,
+              render: armRender,
+            });
+          }
+          return;
+        }
       }
     };
     // Capture phase: run before bubble-phase listeners registered elsewhere
@@ -244,11 +361,58 @@ const GlobalCombatHotkeys: React.FC = () => {
     enterPouch,
     openCrit,
     openEffects,
-    setActiveParticipantId,
     transition,
     canTransition,
     setInitiativeModalOpen,
+    setActiveParticipantId,
+    toast,
   ]);
+
+  // A focused text input swallows every global verb (the isEditingText gate
+  // in shouldHandleKeystroke). The session-prep running-notes textarea is
+  // the first persistent *ambient* text input that lives next to the Targets
+  // column — and target rows are plain onClick divs that don't take focus,
+  // so a GM who types a note and then clicks a target leaves the textarea
+  // focused, silently killing arrow-cycling and the rest. Drop focus out of
+  // an ambient text input the moment the GM presses down on a non-form
+  // surface.
+  //
+  // Crucially this must NOT touch mode-driving inputs: the quick-action
+  // damage/pouch/strain field and the crit / initiative / spotlight modals
+  // own focus on purpose. Blurring those would orphan their mode — the
+  // input loses focus but `mode` stays non-idle, so `liveMode !== 'idle'`
+  // keeps gating every hotkey with no visible cause. So: only blur while
+  // the app is otherwise idle.
+  useEffect(() => {
+    const isFormElement = (el: Element | null): boolean => {
+      if (!el) return false;
+      const tag = el.tagName;
+      return (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        (el as HTMLElement).isContentEditable
+      );
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      // A modal or a quick-action mode owns focus deliberately — leave it.
+      if (isAnyDialogOpen()) return;
+      const { mode: qMode, critModalOpen } = useQuickActionsStore.getState();
+      if (qMode !== 'idle' || critModalOpen) return;
+
+      const active = document.activeElement;
+      if (!isFormElement(active)) return;
+      const target = e.target as Node | null;
+      // Clicking inside the same field, or onto another form field, should
+      // keep / move focus naturally — only blur when landing elsewhere.
+      if (target && active!.contains(target)) return;
+      if (isFormElement(target as Element | null)) return;
+      (active as HTMLElement).blur();
+    };
+    document.addEventListener('pointerdown', onPointerDown, true);
+    return () =>
+      document.removeEventListener('pointerdown', onPointerDown, true);
+  }, []);
 
   // Escape always cancels an open quick-action input — independent of focus
   // gating because the input is the focused element while in damage/pouch

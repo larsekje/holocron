@@ -58,7 +58,13 @@ const DestinyPoolInline: React.FC = () => {
               <Box
                 as="button"
                 type="button"
-                onClick={() => flipDestinyPoint(i)}
+                // Blur after flipping so the pip doesn't keep keyboard focus —
+                // a focused <button> swallows Space, stealing it from the
+                // next-turn hotkey.
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  flipDestinyPoint(i);
+                  e.currentTarget.blur();
+                }}
                 w="14px"
                 h="14px"
                 borderRadius="full"

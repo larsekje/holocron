@@ -295,6 +295,17 @@ export function getDetail(type: SpotlightEntityType, id: string): SpotlightDetai
   return detailByKey.get(`${type}:${id}`) ?? null;
 }
 
+// Every adversary's full `detail` (the classification fields, stats, and
+// classificationReason live here). Used by the Classification Review tool,
+// which needs the detail for every entry up front — unlike browseIndex, which
+// returns lightweight rows without `detail`. Sorted by name.
+export function getAllAdversaries(): SpotlightDetail[] {
+  return index
+    .filter((e) => e.type === 'adversary' && !!e.detail)
+    .map((e) => e.detail)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 // Browse raw index entries (no search), optionally filtered by types, limited to N
 export function browseIndex(limit: number = 100, types?: SpotlightEntityType[]): SpotlightResult[] {
   const typeSet = types && types.length > 0 ? new Set(types) : null;

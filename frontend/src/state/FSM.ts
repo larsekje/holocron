@@ -1,5 +1,6 @@
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import useParticipantStore, {Participant, isParticipantDead} from "./participantsStore";
+import {disabledSlotIndices} from "@/utils/initiativeSlots";
 import * as eventSystem from './eventSystem';
 import { GameEvent } from './eventSystem';
 import {useEffectStore} from "@/state/effectStore";
@@ -271,48 +272,54 @@ export function createEncounterFSM(): FSM {
     const isSlotValidForParticipant = (_currentInitiativeSlot: InitiativeSlot, _activeParticipant: Participant): boolean => true;
 
     /**
-     * A slot is "fillable" if there's at least one living participant whose
-     * team matches the slot AND who hasn't already acted this round. Dead
-     * participants are treated as having already acted, so their slot gets
-     * skipped — per house rule: "5 slots, 3 dead → 2 act per round".
-     */
-    const slotHasEligibleParticipant = (
-        context: EncounterContext,
-        participants: Participant[],
-    ): boolean => {
-        const slot = context.initiativeOrder[context.currentTurnIndex];
-        if (!slot) return false;
-        return participants.some(
-            (p) =>
-                !isParticipantDead(p) &&
-                !context.actedParticipants.includes(p.id) &&
-                isSlotValidForParticipant(slot, p),
-        );
-    };
-
-    /**
-     * After the turn advances, loop forward past any slot that has no
-     * eligible participant. Wraps rounds via advanceTurnIndex (which already
-     * clears actedParticipants on wrap). Bounded by 2× initiativeOrder length
-     * to defend against pathological cases (e.g. all participants dead).
+     * After the turn advances, loop forward past any slot that's been
+     * disabled — a team's trailing slots go dark as it loses members (see
+     * disabledSlotIndices), so a downed team doesn't get phantom turns. These
+     * are exactly the slots the GM sees greyed out in InitiativeOrder. Wraps
+     * rounds via advanceTurnIndex (which clears actedParticipants on wrap);
+     * bounded by 2× initiativeOrder length against pathological cases.
      */
     const skipUnfillableSlots = (context: EncounterContext): void => {
         const participants = useParticipantStore.getState().participants;
+        // Nothing to land on if literally everyone is down — bail rather than
+        // spin to the iteration cap.
         if (!participants.some((p) => !isParticipantDead(p))) {
-            console.log("[FSM] All participants dead; not auto-skipping");
+            console.log("[FSM] All participants down; not auto-skipping");
             return;
         }
+        const disabled = disabledSlotIndices(context.initiativeOrder, participants);
         const maxIters = (context.initiativeOrder.length || 1) * 2 + 1;
         let iter = 0;
-        while (!slotHasEligibleParticipant(context, participants) && iter++ < maxIters) {
-            console.log(
-                `[FSM] Auto-skipping slot ${context.currentTurnIndex} — no eligible participant`,
-            );
+        while (disabled.has(context.currentTurnIndex) && iter++ < maxIters) {
+            console.log(`[FSM] Auto-skipping disabled slot ${context.currentTurnIndex}`);
             const next = advanceTurnIndex(context);
             context.currentTurnIndex = next.currentTurnIndex;
             if (next.round !== context.round) {
                 context.round = next.round;
                 context.actedParticipants = [];
+            }
+        }
+    };
+
+    /**
+     * PREV_TURN counterpart — walk *backwards* past disabled slots so
+     * stepping back never parks the GM on a dark slot either. Mirrors
+     * PREV_TURN's own wrap (index 0 → last slot, round--), floored at round 1.
+     */
+    const skipDisabledSlotsBackward = (context: EncounterContext): void => {
+        const participants = useParticipantStore.getState().participants;
+        if (!participants.some((p) => !isParticipantDead(p))) return;
+        const order = context.initiativeOrder;
+        if (order.length === 0) return;
+        const disabled = disabledSlotIndices(order, participants);
+        const maxIters = order.length * 2 + 1;
+        let iter = 0;
+        while (disabled.has(context.currentTurnIndex) && iter++ < maxIters) {
+            if (context.currentTurnIndex === 0) {
+                context.round = Math.max(1, context.round - 1);
+                context.currentTurnIndex = order.length - 1;
+            } else {
+                context.currentTurnIndex--;
             }
         }
     };
@@ -471,6 +478,9 @@ export function createEncounterFSM(): FSM {
                             } else {
                                 context.currentTurnIndex--;
                             }
+                            // Step back past any disabled slots too, so a
+                            // rewind never parks on a dark slot.
+                            skipDisabledSlotsBackward(context);
                             context.turnState = null;
                         },
                     },

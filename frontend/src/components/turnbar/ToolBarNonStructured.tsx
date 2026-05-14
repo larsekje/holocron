@@ -1,10 +1,9 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
     AccordionButton,
     Box,
     Button,
     Center,
-    Flex,
     HStack,
     Menu, MenuButton,
     MenuItem,
@@ -21,7 +20,6 @@ import InitiativeModal from "@components/debug/InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
-import CritRollerModal from "@components/crit/CritRollerModal";
 import SkillChallengeStartButton from "@components/skillChallenge/SkillChallengeStartButton";
 
 interface Props { }
@@ -45,7 +43,6 @@ const ToolBarNonStructured = ({ }: Props) => {
     };
 
     const {setInitiativeOrder} = useGameplayStoreNew();
-    const [isCritOpen, setCritOpen] = useState(false);
     const participants = useParticipantsStore((state) => state.participants);
     const participantCount = useParticipantsStore((state) => state.participants.length);
 
@@ -132,10 +129,19 @@ const ToolBarNonStructured = ({ }: Props) => {
               * modes of structured play are mutually exclusive. */}
             <HStack spacing={2}>
                 <Button
-                    colorScheme="purple"
+                    size="sm"
+                    bg="#d39939"
+                    color="#1a1d24"
+                    fontWeight="semibold"
+                    borderRadius="md"
+                    transition="all 0.15s ease"
+                    _hover={{ bg: "#e3a948" }}
+                    _active={{ bg: "#c08a30" }}
+                    _disabled={{ opacity: 0.4, cursor: "not-allowed", _hover: { bg: "#d39939" } }}
                     onClick={handleRollInitiative}
                     isDisabled={participantCount === 0 || state === 'inProgress'}
-                > Roll Initiative
+                >
+                    Roll Initiative
                 </Button>
                 <SkillChallengeStartButton/>
             </HStack>
@@ -171,16 +177,6 @@ const ToolBarNonStructured = ({ }: Props) => {
               onClose={handleCloseModal}
               onSubmit={handleSetInitiative} // Handle initiative updates
           />
-
-          {/* Right Area */}
-          <Flex gap={4} align="center" pr={4}>
-            <Button size="sm" colorScheme="purple" onClick={() => setCritOpen(true)}>
-              Crit Roller
-            </Button>
-          </Flex>
-
-          {/* Crit Roller Modal */}
-          <CritRollerModal isOpen={isCritOpen} onClose={() => setCritOpen(false)} />
       </>
     );
 }

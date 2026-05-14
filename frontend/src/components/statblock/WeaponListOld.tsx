@@ -1,10 +1,12 @@
-import React from 'react';
-import {Flex, Text, VStack} from "@chakra-ui/react";
+import React, {useEffect, useRef} from 'react';
+import {Box, Flex, Text, VStack} from "@chakra-ui/react";
 import WeaponCardOld from "./WeaponCardOld";
 import {DicePool} from "./DicePoolOld";
 import type {Participant} from "@/state/participantsStore";
 import type {CharacteristicSet} from "./CharacteristicsOld";
 import useDiceRollerStore from "@/state/diceRollerStore";
+import useGameplayStore from "@/state/newGameplayStore";
+import {useQuickActionsStore} from "@/state/quickActionsStore";
 import {buildAttackSnapshot, type WeaponLike} from "@/utils/diceSnapshots";
 import {getDetail} from "@/data/spotlightIndex";
 
@@ -106,6 +108,24 @@ export function resolveSkillForWeapon(
 
 const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
   const openDiceRoller = useDiceRollerStore((s) => s.open);
+  // When the GM presses W, weapon-pick mode targets the ACTIVE participant.
+  // If this list is that participant's, each card gets a 1-based hotkey
+  // overlay and clicking (or pressing the digit) rolls it via pickWeapon.
+  const quickMode = useQuickActionsStore((s) => s.mode);
+  const pickWeapon = useQuickActionsStore((s) => s.pickWeapon);
+  const activeParticipantId = useGameplayStore((s) => s.context.activeParticipantId);
+  const isWeaponPick = quickMode === "weapon" && participant.id === activeParticipantId;
+
+  // When weapon-pick mode opens, scroll the weapon list into view — it's
+  // often below the fold in the Active card, so the GM wouldn't otherwise
+  // see the Kbd-overlaid cards.
+  const listRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (isWeaponPick) {
+      listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isWeaponPick]);
+
   const rawWeapons = (participant.stats as any)?.weapons as Array<any> | undefined;
   if (!rawWeapons || rawWeapons.length === 0) return null;
 
@@ -128,15 +148,22 @@ const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
         weapon={w}
         pool={pool}
         wielderBrawn={characteristics.brawn}
-        onClick={() =>
-          openDiceRoller(buildAttackSnapshot(participant, w, rank, characteristicName, charValue))
+        hotkey={isWeaponPick && i < 9 ? i + 1 : undefined}
+        onClick={
+          isWeaponPick
+            // pickWeapon rolls the weapon AND clears weapon-pick mode.
+            ? () => pickWeapon(i)
+            : () =>
+                openDiceRoller(
+                  buildAttackSnapshot(participant, w, rank, characteristicName, charValue),
+                )
         }
       />
     );
   });
 
   return (
-    <>
+    <Box ref={listRef}>
       <Flex align="center" justify="space-between" mt={4} mb={1}>
         <Text
           as="b"
@@ -151,7 +178,7 @@ const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
       <VStack align="stretch" spacing={2}>
         {items.length > 0 ? items : <Text fontSize="sm" color="whiteAlpha.700">None</Text>}
       </VStack>
-    </>
+    </Box>
   );
 };
 

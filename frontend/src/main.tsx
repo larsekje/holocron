@@ -9,6 +9,15 @@ const theme = extendTheme({
     global: () => ({
       body: {
         bg: "#191A1C",
+        // Kill the stray blinking text caret app-wide — it shows up on
+        // plain text and clickable surfaces alike (and is amplified by the
+        // browser's "caret browsing" mode). caret-color is inherited, so
+        // this cascades to everything; real text-entry elements opt back
+        // in via the rule below.
+        caretColor: 'transparent',
+      },
+      'input, textarea, [contenteditable="true"]': {
+        caretColor: 'auto',
       },
       // Suppress text-selection on anything button-shaped — double-tapping
       // a clickable card was leaving a selection range behind. Custom
