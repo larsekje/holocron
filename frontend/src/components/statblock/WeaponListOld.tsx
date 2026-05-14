@@ -138,9 +138,7 @@ const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
       characteristics,
       aliveMinions,
     );
-    const yellow = Math.min(rank, charValue);
-    const green = Math.max(rank, charValue) - yellow;
-    const pool = new DicePool(green, yellow);
+    const pool = new DicePool(rank, charValue);
 
     return (
       <WeaponCardOld

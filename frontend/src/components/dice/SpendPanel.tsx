@@ -167,7 +167,7 @@ const ACTIVE_QUALITY_SPECS: Record<string, ActiveQualitySpec> = {
     effectSummary: () => 'on a miss, re-roll attack at end of round',
   },
   knockdown: {
-    cost: { advantage: 1 },
+    cost: { advantage: 2 },
     effectSummary: () => 'knock target prone (+1 [AD] per silhouette beyond 1)',
     repeatable: true,
     buildStatus: (target) => StatusFactories.prone(nanoid(), target),
@@ -191,6 +191,19 @@ const ACTIVE_QUALITY_SPECS: Record<string, ActiveQualitySpec> = {
 function quirkOptionsForWeapon(weapon?: SnapshotWeapon): SpendOption[] {
   if (!weapon) return [];
   const out: SpendOption[] = [];
+  // Inflict a Critical Injury by spending Advantage equal to the weapon's
+  // Crit Rating (SWRPG CRB p. 220). The Triumph route — cost 1, regardless of
+  // the weapon's rating — lives in BASE_OPTIONS; this is its Advantage-priced
+  // sibling, so it only surfaces once net Advantage reaches the Crit Rating.
+  if (weapon.crit && weapon.crit > 0) {
+    out.push({
+      id: 'crit-advantage',
+      label: `Inflict a Critical Injury (Crit ${weapon.crit})`,
+      cost: { advantage: weapon.crit },
+      modes: ['combat'],
+      target: 'target',
+    });
+  }
   for (const q of weapon.qualities) {
     const spec = ACTIVE_QUALITY_SPECS[q.name.toLowerCase()];
     if (!spec) continue; // passive or unknown — not a spend

@@ -7,9 +7,12 @@ export class DicePool {
   green: number;
   yellow: number;
 
+  // SWRPG pool construction: the higher of (rank, characteristic) sets the
+  // number of dice; the lower of the two upgrades that many Ability dice to
+  // Proficiency. So yellow = min(rank, char), green = max(rank, char) − yellow.
   constructor(skillRank: number, characteristic: number) {
-    this.green = skillRank;
-    this.yellow = characteristic;
+    this.yellow = Math.min(skillRank, characteristic);
+    this.green = Math.max(skillRank, characteristic) - this.yellow;
   }
 }
 

@@ -40,6 +40,24 @@ const Chip: React.FC<{ tip: string; children: React.ReactNode; color?: string }>
   </Tooltip>
 );
 
+// Pierce / Breach are passive soak-ignoring qualities — no activation, they
+// just apply. Pierce N ignores N points of soak; Breach N ignores N points of
+// vehicle armor, or 10 N points of soak against a personal-scale target.
+// Pierce is a personal-scale quality, so it contributes nothing vs a vehicle.
+function soakIgnoredByQualities(
+  qualities: { name: string; rank?: number }[] | undefined,
+  isVehicleTarget: boolean,
+): number {
+  let ignored = 0;
+  for (const q of qualities ?? []) {
+    const name = q.name.toLowerCase();
+    const rank = q.rank ?? 1;
+    if (name === 'pierce') ignored += isVehicleTarget ? 0 : rank;
+    else if (name === 'breach') ignored += isVehicleTarget ? rank : rank * 10;
+  }
+  return ignored;
+}
+
 // Single-line damage breakdown: weapon damage chip + net successes chip −
 // soak chip = total. The chip strip + Apply button render the same in pre-
 // and post-roll states (just with em-dashes pre-roll) so the modal height
@@ -82,7 +100,10 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const netSuccess = result?.net.netSuccess ?? 0;
   const succeeded = result?.net.succeeded ?? false;
   // Vehicle "soak" comes from `armor`; characters use the existing target.soak.
-  const soak = isVehicleTarget ? (targetVehicle?.armor ?? 0) : (target?.soak ?? 0);
+  // Pierce / Breach on the weapon shave that down before damage is applied.
+  const rawSoak = isVehicleTarget ? (targetVehicle?.armor ?? 0) : (target?.soak ?? 0);
+  const soakIgnored = soakIgnoredByQualities(weapon.qualities, isVehicleTarget);
+  const soak = Math.max(0, rawSoak - soakIgnored);
   const baseDamage = scaledWeaponDamage + Math.max(0, netSuccess);
   const finalDamage = result ? Math.max(0, baseDamage - soak) : 0;
 
@@ -121,7 +142,15 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const targetName = isVehicleTarget
     ? (targetVehicle?.name ?? snapshot.targetVehicleName ?? 'Vehicle')
     : (target?.name ?? null);
-  const soakLabel = isVehicleTarget ? `${targetName} armor` : (target ? `${target.name} soak` : 'Target soak');
+  const soakBaseLabel = isVehicleTarget ? `${targetName} armor` : (target ? `${target.name} soak` : 'Target soak');
+  const soakLabel = soakIgnored > 0
+    ? `${soakBaseLabel}: ${rawSoak} − ${soakIgnored} ignored (${
+        (weapon.qualities ?? [])
+          .filter((q) => ['pierce', 'breach'].includes(q.name.toLowerCase()))
+          .map((q) => (q.rank ? `${q.name} ${q.rank}` : q.name))
+          .join(', ')
+      })`
+    : soakBaseLabel;
   const damageBucketLabel = isVehicleTarget
     ? (vehicleDestination === 'system' ? 'System strain' : 'Hull damage')
     : 'Wounds dealt';
