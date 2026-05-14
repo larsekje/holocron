@@ -18,7 +18,7 @@ import type { SpotlightDetail } from '@/state/spotlightStore';
 import { Interweave } from 'interweave';
 import { oggToHtml, oggInlineToHtml } from '@/utils/oggMarkup';
 import DetailStat from './DetailStat';
-import AdversaryBookSheet from './AdversaryBookSheet';
+import StatSheetOld from '@components/StatSheetOld';
 import VehiclePreview from './VehiclePreview';
 import useParticipantStore from '@/state/participantsStore';
 import adversaryService from '@/services/adversaryService';
@@ -147,10 +147,16 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
           Select a result to see details.
         </Text>
       )}
-      {!detailLoading && detail && (
+      {/* Adversaries render the shared encounter character sheet (StatSheetOld)
+          so the catalog preview matches the in-encounter view exactly. It
+          carries its own header + description, so the generic header/description
+          blocks below are skipped for adversaries. */}
+      {!detailLoading && detail && (((detail as any).__kind ?? detail.type) === 'adversary' ? (
+        <AdversaryPreview detail={detail} />
+      ) : (
         <VStack align="stretch" spacing={4}>
           <HStack justify="space-between" align="center">
-            <Text fontSize="xl" fontWeight="bold" color="gray.100">
+            <Text fontSize="lg" fontWeight="bold" color="gray.100">
               {detail.name}
             </Text>
             <HStack spacing={3} align="center">
@@ -179,7 +185,7 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
                   </HStack>
                 </HStack>
               )}
-            <Badge colorScheme="purple" variant="solid" borderRadius="md" px={2}>
+            <Badge colorScheme="purple" variant="subtle" borderRadius="md" px={2}>
                 {detail.type}
             </Badge>
             </HStack>
@@ -207,10 +213,6 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
                 return parts.join(' • ');
               })()}
             </Text>
-          )}
-
-          {(((detail as any).__kind ?? detail.type) === 'adversary') && (
-            <AdversaryPreview detail={detail}/>
           )}
 
           {(((detail as any).__kind ?? detail.type) === 'vehicle') && (
@@ -410,7 +412,7 @@ const SpotlightDetailPane: React.FC<SpotlightDetailPaneProps> = ({ detail, detai
 
           </Box>
         </VStack>
-      )}
+      ))}
     </Box>
   );
 };
@@ -422,19 +424,33 @@ const AdversaryPreview: React.FC<{detail: SpotlightDetail}> = ({detail}) => {
   const closeSpotlight = useSpotlightStore((s) => s.close);
   const toast = useToast();
 
+  const buildAdversary = (): Adversary => ({
+    name: (detail as any).name,
+    type: (detail as any).adversaryType ?? 'Rival',
+    characteristics: (detail as any).characteristics ?? {},
+    derived: (detail as any).derived ?? {soak: 2, wounds: 8},
+    skills: (detail as any).skills ?? {},
+    talents: (detail as any).talents,
+    abilities: (detail as any).abilities,
+    weapons: (detail as any).weapons,
+    gear: (detail as any).gear,
+    tags: (detail as any).tags,
+  } as Adversary);
+
+  // Detached preview participant: convertToParticipant mints a fresh id that
+  // never enters the store, so StatSheetOld's inline edit / wound controls are
+  // inert here. Memoised on the entry id so the id stays stable while the user
+  // looks at the same adversary.
+  const previewParticipant = React.useMemo(
+    () => adversaryService.convertToParticipant(buildAdversary()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [(detail as any).id],
+  );
+
   const handleAdd = () => {
-    const participant = adversaryService.convertToParticipant({
-      name: (detail as any).name,
-      type: (detail as any).adversaryType ?? 'Rival',
-      characteristics: (detail as any).characteristics ?? {},
-      derived: (detail as any).derived ?? {soak: 2, wounds: 8},
-      skills: (detail as any).skills ?? {},
-      talents: (detail as any).talents,
-      abilities: (detail as any).abilities,
-      weapons: (detail as any).weapons,
-      gear: (detail as any).gear,
-      tags: (detail as any).tags,
-    } as Adversary);
+    // Fresh participant (new id) so the encounter copy is independent of the
+    // preview shown here.
+    const participant = adversaryService.convertToParticipant(buildAdversary());
     addParticipant(participant);
     closeSpotlight();
     toast({
@@ -461,7 +477,7 @@ const AdversaryPreview: React.FC<{detail: SpotlightDetail}> = ({detail}) => {
       >
         Add to encounter
       </Button>
-      <AdversaryBookSheet detail={detail}/>
+      <StatSheetOld participant={previewParticipant}/>
     </VStack>
   );
 };

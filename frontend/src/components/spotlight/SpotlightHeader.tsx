@@ -24,6 +24,8 @@ interface SpotlightHeaderProps {
   onSetNone: () => void;
   hideNamedAdversaries: boolean;
   onToggleHideNamed: () => void;
+  hideAdventureAdversaries: boolean;
+  onToggleHideAdventure: () => void;
 }
 
 const typeOrder: SpotlightEntityType[] = [
@@ -93,6 +95,8 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
   onSetNone,
   hideNamedAdversaries,
   onToggleHideNamed,
+  hideAdventureAdversaries,
+  onToggleHideAdventure,
 }) => {
   const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.platform || '');
   const headerBg = '#1f2226';
@@ -100,8 +104,8 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
 
   return (
     <Box borderBottom="1px solid" borderColor={borderCol} bg={headerBg}>
-      <HStack px={4} height="50px" spacing={3}>
-        <Icon as={FiSearch} color="gray.300" boxSize={5} />
+      <HStack px={4} height="44px" spacing={3}>
+        <Icon as={FiSearch} color="gray.400" boxSize={4} />
         {chipTokens.length > 0 && (
           <HStack spacing={1.5} flexShrink={0}>
             {chipTokens.map((t, i) => {
@@ -152,6 +156,7 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
           }}
           onKeyDown={onInputKeyDown}
           color="gray.100"
+          fontSize="sm"
           _placeholder={{ color: 'gray.500' }}
         />
         <HStack spacing={1} color="gray.400">
@@ -178,7 +183,7 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
               <Tag
                 size="sm"
                 colorScheme={isActive ? 'purple' : 'gray'}
-                variant={isActive ? 'solid' : 'outline'}
+                variant={isActive ? 'subtle' : 'outline'}
                 cursor="pointer"
                 onClick={() => onToggleType(t)}
               >
@@ -192,12 +197,26 @@ const SpotlightHeader: React.FC<SpotlightHeaderProps> = ({
             <Tag
               size="sm"
               colorScheme={hideNamedAdversaries ? 'orange' : 'gray'}
-              variant={hideNamedAdversaries ? 'solid' : 'outline'}
+              variant={hideNamedAdversaries ? 'subtle' : 'outline'}
               cursor="pointer"
               onClick={onToggleHideNamed}
               title="Hide named characters (e.g. Darth Vader) from adversary results"
             >
               Hide Named
+            </Tag>
+          </WrapItem>
+        )}
+        {includedTypes.has('adversary') && (
+          <WrapItem>
+            <Tag
+              size="sm"
+              colorScheme={hideAdventureAdversaries ? 'orange' : 'gray'}
+              variant={hideAdventureAdversaries ? 'subtle' : 'outline'}
+              cursor="pointer"
+              onClick={onToggleHideAdventure}
+              title="Hide characters that appear in a pre-written adventure, leaving sourcebook/generic profiles"
+            >
+              Hide Adventure NPCs
             </Tag>
           </WrapItem>
         )}

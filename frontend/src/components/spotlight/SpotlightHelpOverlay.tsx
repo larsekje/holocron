@@ -93,6 +93,7 @@ const SpotlightHelpOverlay: React.FC<Props> = ({ onClose }) => {
               ['adv: type:minion hp:<6 brawl:>=3', 'Minions with low HP but high Brawl'],
               ['adv: talent:adversary chew', 'Anyone with the Adversary talent matching "chew"'],
               ['adv: tag:imperial named:false', 'Generic Imperial NPCs'],
+              ['adv: named:false adventure:false', 'Reusable profiles — no named or adventure-specific NPCs'],
               ['t: grit', 'Talents matching "grit"'],
             ].map(([q, hint]) => (
               <HStack key={q} spacing={3}>

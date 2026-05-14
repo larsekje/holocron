@@ -169,6 +169,7 @@ function toResult(e: Augmented, matches?: number[]): SpotlightResult {
     subtitle: e.subtitle,
     tags: e.tags,
     named: (e as any).named,
+    fromAdventure: (e as any).fromAdventure,
     matches,
   };
 }
@@ -305,6 +306,6 @@ export function browseIndex(limit: number = 100, types?: SpotlightEntityType[]):
       if (a.type === b.type) return a.name.localeCompare(b.name);
       return a.type.localeCompare(b.type);
     })
-    .map((e) => ({ id: e.id, type: e.type, name: e.name, subtitle: e.subtitle, tags: e.tags, named: (e as any).named }));
+    .map((e) => ({ id: e.id, type: e.type, name: e.name, subtitle: e.subtitle, tags: e.tags, named: (e as any).named, fromAdventure: (e as any).fromAdventure }));
   return items.slice(0, Math.max(0, limit | 0));
 }

@@ -36,7 +36,7 @@ import SpotlightStatusBar from './spotlight/SpotlightStatusBar';
 import SpotlightSuggestPopup from './spotlight/SpotlightSuggestPopup';
 import SpotlightHelpOverlay from './spotlight/SpotlightHelpOverlay';
 
-const RESULT_ROW_HEIGHT = 48;
+const RESULT_ROW_HEIGHT = 42;
 
 const Spotlight: React.FC = () => {
   const { isOpen, open, close } = useSpotlightStore();
@@ -63,6 +63,7 @@ const Spotlight: React.FC = () => {
   ];
   const [includedTypes, setIncludedTypes] = useState<Set<SpotlightEntityType>>(new Set(allTypes));
   const [hideNamedAdversaries, setHideNamedAdversaries] = useState<boolean>(true);
+  const [hideAdventureAdversaries, setHideAdventureAdversaries] = useState<boolean>(true);
 
   // Autocomplete popup
   const [suggest, setSuggest] = useState<SuggestResult | null>(null);
@@ -201,14 +202,15 @@ const Spotlight: React.FC = () => {
     return set;
   }, [parsed.tokens]);
 
-  // Displayed results after applying type filters and the named-adversary toggle
+  // Displayed results after applying type filters and the adversary toggles
   const displayedResults = useMemo(() => {
     return results.filter((r) => {
       if (!hasTypeScope && !includedTypes.has(r.type)) return false;
       if (hideNamedAdversaries && r.type === 'adversary' && r.named) return false;
+      if (hideAdventureAdversaries && r.type === 'adversary' && r.fromAdventure) return false;
       return true;
     });
-  }, [results, includedTypes, hideNamedAdversaries, hasTypeScope]);
+  }, [results, includedTypes, hideNamedAdversaries, hideAdventureAdversaries, hasTypeScope]);
 
   // When displayed results change (new search or filters), reset selection and auto-load first detail
   useEffect(() => {
@@ -570,7 +572,7 @@ const Spotlight: React.FC = () => {
   const rowSelectedBg = 'gray.700';
 
   return (
-    <Modal isOpen={isOpen} onClose={close} size="6xl" isCentered>
+    <Modal isOpen={isOpen} onClose={close} size="5xl" isCentered>
       <ModalOverlay backdropFilter="blur(6px)" bg="rgba(0,0,0,0.6)" />
       <ModalContent
         bg={cardBg}
@@ -605,6 +607,8 @@ const Spotlight: React.FC = () => {
               onSetNone={() => setIncludedTypes(new Set())}
               hideNamedAdversaries={hideNamedAdversaries}
               onToggleHideNamed={() => setHideNamedAdversaries((v) => !v)}
+              hideAdventureAdversaries={hideAdventureAdversaries}
+              onToggleHideAdventure={() => setHideAdventureAdversaries((v) => !v)}
             />
 
             <Box position="relative">

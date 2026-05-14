@@ -16,7 +16,7 @@ type SpotlightResultsProps = {
   highlightedFields?: Set<string>;
 };
 
-const RESULT_ROW_HEIGHT = 48;
+const RESULT_ROW_HEIGHT = 42;
 const headerBg = '#1f2226';
 const borderCol = 'gray.700';
 

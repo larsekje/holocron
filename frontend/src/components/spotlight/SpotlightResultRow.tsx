@@ -10,6 +10,8 @@ import {
   FiTarget,
 } from 'react-icons/fi';
 import { ReactComponent as SetbackDie } from '@/assets/dice/setback.svg';
+import { ReactComponent as DifficultyDie } from '@/assets/dice/difficulty.svg';
+import { ReactComponent as ChallengeDie } from '@/assets/dice/challenge.svg';
 import type { SpotlightResult } from '@/state/spotlightStore';
 import { getDetail } from '@/data/spotlightIndex';
 import { lookupField } from '@/data/spotlightQuery';
@@ -174,26 +176,17 @@ const FIELD_ICON: Record<string, IconType> = {
   crit: FiAlertTriangle,
 };
 
-// Adversary tier badge — coloured by tier so Minion / Rival / Nemesis pop
-// visually. Fixed width so it lines up vertically with type badges from
-// other entity rows.
+// Fixed width for the trailing type badge so adversary / weapon / rule rows
+// line their badges up vertically.
 const TYPE_BADGE_WIDTH = '72px';
-const TierBadge: React.FC<{ tier?: string }> = ({ tier }) => {
-  if (!tier) return null;
-  const color =
-    tier === 'Minion' ? 'gray' : tier === 'Rival' ? 'blue' : tier === 'Nemesis' ? 'red' : 'purple';
-  return (
-    <Badge
-      colorScheme={color}
-      variant="solid"
-      fontSize="0.65rem"
-      textTransform="uppercase"
-      minW={TYPE_BADGE_WIDTH}
-      textAlign="center"
-    >
-      {tier}
-    </Badge>
-  );
+
+// Adversary tier → narrative die, mirroring AdversaryTypeBadge: Minion →
+// Setback, Rival → Difficulty, Nemesis → Challenge. The leading-slot die
+// carries the tier now, so adversary rows no longer need a separate tier chip.
+const TIER_DIE: Record<string, typeof SetbackDie> = {
+  Minion: SetbackDie,
+  Rival: DifficultyDie,
+  Nemesis: ChallengeDie,
 };
 
 // Walk a dotted-or-array field path on an object.
@@ -241,18 +234,22 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
   const hl = highlightedFields ?? new Set<string>();
 
   // Clout sits in a leading slot (before the name) on every adversary row, so
-  // we hoist it out of the per-type branch below.
+  // we hoist it out of the per-type branch below. The slot's die also encodes
+  // the tier (Minion/Rival/Nemesis), which is why there's no separate tier chip.
   const clout =
     r.type === 'adversary' && typeof (detail as any)?.clout === 'number'
       ? ((detail as any).clout as number)
       : null;
+  const tier: string | undefined =
+    r.type === 'adversary' ? ((detail as any)?.adversaryType ?? r.subtitle) : undefined;
+  const tierDie =
+    r.type === 'adversary' ? TIER_DIE[tier ?? ''] ?? SetbackDie : null;
 
   let trailing: React.ReactNode = null;
   let subtitleLine: React.ReactNode = null;
 
   if (r.type === 'adversary') {
     const derived = (detail as any)?.derived || {};
-    const tier = (detail as any)?.adversaryType ?? r.subtitle;
     // Default rows show "tier · archetype" — gives the GM a quick read of
     // role + tier without numeric noise. When the user has any numeric
     // filter/sort active, those specific stats appear after the badges so the
@@ -335,7 +332,12 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
       <HStack spacing={1.5} align="center">
         {archetypeLabel && (
           <Tooltip label={archetypeTooltip} placement="top" hasArrow openDelay={200} bg="gray.900" color="gray.100">
-            <Badge colorScheme="cyan" variant="subtle" fontSize="0.65rem" textTransform="uppercase">
+            <Badge
+              bg="whiteAlpha.100"
+              color="gray.400"
+              fontSize="0.65rem"
+              textTransform="uppercase"
+            >
               {archetypeLabel}
             </Badge>
           </Tooltip>
@@ -344,7 +346,6 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
         {extras.map((e) => (
           <StatPill key={e.key} icon={e.icon} value={e.value} highlighted title={e.key} />
         ))}
-        <TierBadge tier={tier} />
       </HStack>
     );
   } else if (r.type === 'weapon') {
@@ -367,7 +368,7 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     );
     if (r.subtitle) {
       subtitleLine = (
-        <Text fontSize="sm" color="gray.400" noOfLines={1}>
+        <Text fontSize="xs" color="gray.400" noOfLines={1}>
           {r.subtitle}
         </Text>
       );
@@ -387,13 +388,13 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     );
     if (r.subtitle) {
       subtitleLine = (
-        <Text fontSize="sm" color="gray.400" noOfLines={1}>
+        <Text fontSize="xs" color="gray.400" noOfLines={1}>
           {r.subtitle}
         </Text>
       );
     } else if (detail?.category) {
       subtitleLine = (
-        <Text fontSize="sm" color="gray.400" noOfLines={1}>
+        <Text fontSize="xs" color="gray.400" noOfLines={1}>
           {detail.category}
         </Text>
       );
@@ -405,9 +406,9 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
       key={`${r.type}:${r.id}`}
       onMouseEnter={() => onHoverIndex(idx)}
       onClick={() => onClickResult(r)}
-      px={4}
+      px={3}
       height={`${rowHeight}px`}
-      spacing={3}
+      spacing={2.5}
       cursor="pointer"
       bg={isSelected ? rowSelectedBg : 'transparent'}
       _hover={{ bg: rowHoverBg }}
@@ -415,36 +416,36 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
       borderLeftColor={isSelected ? 'purple.400' : 'transparent'}
       transition="background 120ms ease, border-color 120ms ease"
     >
-      {clout != null ? (
+      {tierDie ? (
         <Box
           position="relative"
           w="24px"
           h="24px"
           flexShrink={0}
           opacity={0.85}
-          title={`Clout ${clout}`}
-          aria-label={`Clout ${clout}`}
+          title={clout != null ? `${tier} · Clout ${clout}` : tier}
+          aria-label={clout != null ? `${tier}, Clout ${clout}` : tier}
         >
-          <Icon as={SetbackDie} boxSize="24px" display="block" aria-hidden />
-          <Text
-            position="absolute"
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -55%)"
-            color="white"
-            fontWeight="semibold"
-            fontSize="0.7rem"
-            lineHeight="1"
-            userSelect="none"
-          >
-            {clout}
-          </Text>
+          <Icon as={tierDie} boxSize="24px" display="block" aria-hidden />
+          {clout != null && (
+            <Text
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -55%)"
+              color="white"
+              fontWeight="semibold"
+              fontSize="0.7rem"
+              lineHeight="1"
+              userSelect="none"
+            >
+              {clout}
+            </Text>
+          )}
         </Box>
-      ) : r.type === 'adversary' ? (
-        <Box w="24px" h="24px" flexShrink={0} />
       ) : null}
       <Box flex="1" minW={0}>
-        <Text fontWeight="semibold" color="gray.100" noOfLines={1}>
+        <Text fontSize="sm" fontWeight="semibold" color="gray.100" noOfLines={1}>
           {renderHighlighted(r.name, r.matches)}
         </Text>
         {subtitleLine}

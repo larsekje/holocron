@@ -37,7 +37,7 @@ async function readJson(filename) {
   }
 }
 
-function entry(type, name, { subtitle, tags = [], description, extra = {}, named, clout } = {}) {
+function entry(type, name, { subtitle, tags = [], description, extra = {}, named, fromAdventure, clout } = {}) {
   const id = `${type}_${slugify(name)}`;
   const result = {
     id,
@@ -48,6 +48,7 @@ function entry(type, name, { subtitle, tags = [], description, extra = {}, named
   if (subtitle) result.subtitle = subtitle;
   if (tags && tags.length) result.tags = tags;
   if (typeof named === 'boolean') result.named = named;
+  if (typeof fromAdventure === 'boolean') result.fromAdventure = fromAdventure;
   if (typeof clout === 'number') result.clout = clout;
   return result;
 }
@@ -62,6 +63,7 @@ function buildAdversaries(rawList, cloutMap) {
   const results = [];
   if (!Array.isArray(rawList)) return results;
   let skipped = 0;
+  let excluded = 0;
   for (const adv of rawList) {
     if (!adv || typeof adv !== 'object') {
       skipped++;
@@ -77,17 +79,30 @@ function buildAdversaries(rawList, cloutMap) {
         ? adv.description
         : undefined;
     const clout = typeof cloutMap?.[adv.name] === 'number' ? cloutMap[adv.name] : undefined;
+    const tags = Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : [];
+    // D20Radio.com is fan-forum content — exclude it from the index entirely.
+    if (tags.some((t) => /^source:\s*D20Radio\.com$/i.test(t))) {
+      excluded++;
+      continue;
+    }
+    // Characters that appear in a pre-written adventure carry an
+    // `adventure:<Adventure Name>` tag in the source data. Hoist that into a
+    // boolean so the query language and the Spotlight header can filter on it
+    // the same way they do `named`.
+    const fromAdventure = tags.some((t) => /^adventure:/i.test(t));
     pushUnique(
       results,
       entry('adversary', adv.name, {
         subtitle: adv.type,
-        tags: Array.isArray(adv.tags) ? adv.tags.filter(Boolean).map(String) : undefined,
+        tags: tags.length ? tags : undefined,
         description,
         named: adv.named === true,
+        fromAdventure,
         clout,
         extra: {
           adversaryType: adv.type,
           named: adv.named === true,
+          fromAdventure,
           clout,
           characteristics: adv.characteristics,
           derived: adv.derived,
@@ -105,6 +120,7 @@ function buildAdversaries(rawList, cloutMap) {
     );
   }
   if (skipped) console.warn(`[spotlight] Skipped ${skipped} malformed adversary entries.`);
+  if (excluded) console.log(`[spotlight] Excluded ${excluded} D20Radio.com adversary entries.`);
   return results;
 }
 
@@ -322,9 +338,10 @@ async function main() {
   await fs.writeFile(outFile, JSON.stringify(results, null, 2), 'utf-8');
   const adversaryCount = results.filter((r) => r.type === 'adversary').length;
   const cloutCount = results.filter((r) => r.type === 'adversary' && typeof r.clout === 'number').length;
+  const adventureCount = results.filter((r) => r.type === 'adversary' && r.fromAdventure === true).length;
   const vehicleCount = results.filter((r) => r.type === 'vehicle').length;
   console.log(
-    `[spotlight] Wrote ${results.length} entries (${adversaryCount} adversaries [${cloutCount} with clout], ${results.filter((r) => r.type === 'talent').length} talents, ${results.filter((r) => r.type === 'weapon').length} weapons, ${vehicleCount} vehicles) to ${path.relative(projectRoot, outFile)}.`,
+    `[spotlight] Wrote ${results.length} entries (${adversaryCount} adversaries [${cloutCount} with clout, ${adventureCount} from adventures], ${results.filter((r) => r.type === 'talent').length} talents, ${results.filter((r) => r.type === 'weapon').length} weapons, ${vehicleCount} vehicles) to ${path.relative(projectRoot, outFile)}.`,
   );
 }
 
