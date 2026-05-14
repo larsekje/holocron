@@ -4,7 +4,7 @@ import useParticipantStore from '@/state/participantsStore';
 import useActiveVehicleStore, {type ActiveVehicle} from '@/state/activeVehicleStore';
 import {speedBandFor} from '@/data/vehicleActions';
 import type {ModalSnapshot, SnapshotAttacker, SnapshotTarget, SnapshotWeapon} from '@components/dice/mockSnapshots';
-import type {DicePool, DieType} from '@/engine/diceEngine';
+import type {DicePool, DieType, SymbolTotals} from '@/engine/diceEngine';
 
 /** Labels written by `applyVehicleTargetModifiers` that *upgrade* difficulty
  * dice into challenge dice. Reversing these on a target flip means
@@ -25,6 +25,9 @@ const VEHICLE_TARGET_ADD_SETBACK_LABELS = new Set<string>(['Boost Shields']);
 
 export function snapshotTargetFromParticipant(p: Participant): SnapshotTarget {
   const stats = (p.stats ?? {}) as Record<string, any>;
+  // Only PCs and Nemeses keep a strain pool; Minions/Rivals fold strain into
+  // wounds (see Stun routing in CombatDamagePanel).
+  const tracksStrain = p.isPC || stats.type === 'Nemesis';
   return {
     name: p.name,
     soak: stats.soak ?? 0,
@@ -32,6 +35,9 @@ export function snapshotTargetFromParticipant(p: Participant): SnapshotTarget {
     rangedDef: stats.rangedDefense ?? 0,
     wounds: stats.wounds ?? 0,
     woundThreshold: stats.woundThreshold ?? (p.isPC ? 12 : 8),
+    strain: stats.strain ?? 0,
+    strainThreshold: stats.strainThreshold ?? (p.isPC ? 12 : 10),
+    tracksStrain,
   };
 }
 
@@ -272,6 +278,18 @@ function addBoostToPool(
   sources.boost = [...(sources.boost ?? []), ...Array(count).fill(label)];
 }
 
+// Add N difficulty dice to the pool with the given source label.
+function addDifficultyToPool(
+  pool: DicePool,
+  sources: Partial<Record<string, string[]>>,
+  count: number,
+  label: string,
+): void {
+  if (count <= 0) return;
+  pool.difficulty = (pool.difficulty ?? 0) + count;
+  sources.difficulty = [...(sources.difficulty ?? []), ...Array(count).fill(label)];
+}
+
 // Add N setback dice to the pool with the given source label.
 function addSetbackToPool(
   pool: DicePool,
@@ -509,6 +527,44 @@ function reverseAddBy(
   else pool[dieKey] = next;
 }
 
+/** Fold automatic weapon-quality effects into the attack pool (SWRPG CRB
+ * Ch. 5). These are the passive/always-on qualities the GM would otherwise
+ * have to remember to apply by hand:
+ *   - Accurate N   → +N Boost dice
+ *   - Inaccurate N → +N Setback dice
+ *   - Auto-fire    → +1 Difficulty die (the attack is harder to land)
+ *   - Superior     → an auto-Advantage and +1 damage
+ *   - Inferior     → an auto-Threat and -1 damage
+ * Pierce / Breach are handled later, at the damage step. Active qualities
+ * (Stun, Blast, Knockdown, …) stay in the SpendPanel — they cost symbols.
+ * Mutates `pool` / `sources`; returns the damage shift and any auto-symbols. */
+function applyWeaponQualityModifiers(
+  pool: DicePool,
+  sources: Partial<Record<string, string[]>>,
+  qualities: SnapshotWeapon['qualities'],
+): {damageDelta: number; bonusSymbols: Partial<SymbolTotals>} {
+  let damageDelta = 0;
+  const bonusSymbols: Partial<SymbolTotals> = {};
+  for (const q of qualities) {
+    const name = q.name.toLowerCase();
+    const rank = q.rank ?? 1;
+    if (name === 'accurate') {
+      addBoostToPool(pool, sources, rank, `Accurate ${rank}`);
+    } else if (name === 'inaccurate') {
+      addSetbackToPool(pool, sources, rank, `Inaccurate ${rank}`);
+    } else if (name === 'auto-fire') {
+      addDifficultyToPool(pool, sources, 1, 'Auto-fire');
+    } else if (name === 'superior') {
+      bonusSymbols.advantage = (bonusSymbols.advantage ?? 0) + 1;
+      damageDelta += 1;
+    } else if (name === 'inferior') {
+      bonusSymbols.threat = (bonusSymbols.threat ?? 0) + 1;
+      damageDelta -= 1;
+    }
+  }
+  return {damageDelta, bonusSymbols};
+}
+
 export function buildAttackSnapshot(
   participant: Participant,
   weapon: WeaponLike,
@@ -536,6 +592,15 @@ export function buildAttackSnapshot(
     ...skillSources(weapon.skill || 'weapon', resolvedSkillRank, resolvedCharValue),
     difficulty: Array(diff.count).fill('Difficulty'),
   };
+
+  // Fold the weapon's automatic qualities into the pool before target-side
+  // modifiers — they're properties of the weapon itself.
+  const parsedQualities = parseQualities(weapon.qualities);
+  const {damageDelta, bonusSymbols} = applyWeaponQualityModifiers(
+    pool,
+    poolSources,
+    parsedQualities,
+  );
 
   // Target-side modifiers depend on which kind of target we resolved to.
   // Adversary upgrade reads talents, so it only fires for character targets.
@@ -584,14 +649,17 @@ export function buildAttackSnapshot(
     weapon: {
       name: weapon.name,
       skill: weapon.skill,
-      damage: Number.isFinite(damageValue) ? (damageValue as number) : 0,
+      damage: Number.isFinite(damageValue)
+        ? Math.max(0, (damageValue as number) + damageDelta)
+        : 0,
       crit: Number.isFinite(critValue as number) ? (critValue as number) : 0,
       range,
       baseRange: range,
-      qualities: parseQualities(weapon.qualities),
+      qualities: parsedQualities,
     },
     pool,
     poolSources: poolSources as ModalSnapshot['poolSources'],
+    ...(Object.keys(bonusSymbols).length > 0 ? {bonusSymbols} : {}),
     appliedPresets: [diff.presetId],
     appliedModifiers: [],
     result: null,

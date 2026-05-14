@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   HStack,
+  Switch,
   Text,
   Tooltip,
   useToast,
@@ -58,6 +59,41 @@ function soakIgnoredByQualities(
   return ignored;
 }
 
+// Stun routing control. Stun Damage is always-on (the weapon only deals
+// strain); Stun Setting is a free-action toggle between wounds and strain.
+// Either way, a Minion/Rival target takes the strain as wounds, so the
+// control shows where the damage will actually land.
+const StunControl: React.FC<{
+  isStunDamage: boolean;
+  stunModeOn: boolean;
+  setStunModeOn: (v: boolean) => void;
+  routesToStrain: boolean;
+  blockedByTier: boolean;
+}> = ({ isStunDamage, stunModeOn, setStunModeOn, routesToStrain, blockedByTier }) => {
+  const tip = blockedByTier
+    ? 'Target is a Minion/Rival — strain is taken as wounds'
+    : isStunDamage
+      ? 'Stun Damage: this weapon always deals strain'
+      : 'Stun Setting: toggle to deal strain instead of wounds';
+  return (
+    <Tooltip label={tip} placement="top" hasArrow openDelay={400}>
+      <HStack spacing={1.5} px={2} py={0.5} bg="gray.700" borderRadius="md" fontSize="sm">
+        <Text fontSize="xs" color="gray.300">Stun</Text>
+        {!isStunDamage && (
+          <Switch
+            size="sm"
+            isChecked={stunModeOn}
+            onChange={(e) => setStunModeOn(e.target.checked)}
+          />
+        )}
+        <Text fontSize="xs" color={routesToStrain ? 'cyan.300' : 'gray.500'}>
+          {routesToStrain ? '→ strain' : '→ wounds'}
+        </Text>
+      </HStack>
+    </Tooltip>
+  );
+};
+
 // Single-line damage breakdown: weapon damage chip + net successes chip −
 // soak chip = total. The chip strip + Apply button render the same in pre-
 // and post-roll states (just with em-dashes pre-roll) so the modal height
@@ -68,6 +104,8 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   const toast = useToast();
   const update = useDiceRollerStore((s) => s.update);
   const addWounds = useParticipantStore((s) => s.addWounds);
+  const addStrain = useParticipantStore((s) => s.addStrain);
+  const [stunModeOn, setStunModeOn] = React.useState(false);
   const addHull = useActiveVehicleStore((s) => s.addHull);
   const addSystemStrain = useActiveVehicleStore((s) => s.addSystemStrain);
   const targetVehicle = useActiveVehicleStore((s) =>
@@ -85,6 +123,17 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
     (q) => q.name.toLowerCase() === 'ion',
   );
   const vehicleDestination: 'hull' | 'system' = isIonWeapon ? 'system' : 'hull';
+
+  // Stun routing. Stun Damage always deals strain; Stun Setting is a toggle.
+  // Either way the strain only lands as strain on a target that tracks it
+  // (PC / Nemesis) — Minions and Rivals take it as wounds.
+  const qualityNames = (weapon.qualities ?? []).map((q) => q.name.toLowerCase());
+  const isStunDamage = qualityNames.includes('stun damage');
+  const hasStunSetting = qualityNames.includes('stun setting');
+  const attackDealsStrain = isStunDamage || (hasStunSetting && stunModeOn);
+  const targetTracksStrain = target?.tracksStrain ?? false;
+  const characterDamageGoesToStrain =
+    attackDealsStrain && !isVehicleTarget && !!target && targetTracksStrain;
 
   // Cross-scale damage: a vehicle/starship weapon hitting a personal-scale
   // target deals 10× its base damage (FFG SWRPG core: each point of higher-
@@ -112,8 +161,14 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
   // systemThreshold for Ion) → Vehicle Critical Hit. Either way the same
   // amber alert slot is reused.
   const newWounds = (target?.wounds ?? 0) + finalDamage;
-  const characterExceeds =
-    !!result && succeeded && !!target && newWounds > target.woundThreshold;
+  const newStrain = (target?.strain ?? 0) + finalDamage;
+  const characterWoundsExceed =
+    !!result && succeeded && !!target && !characterDamageGoesToStrain
+    && newWounds > target.woundThreshold;
+  const characterStrainExceeds =
+    !!result && succeeded && !!target && characterDamageGoesToStrain
+    && newStrain > (target.strainThreshold ?? Infinity);
+  const characterExceeds = characterWoundsExceed || characterStrainExceeds;
   const newHull =
     (targetVehicle?.hullCurrent ?? 0)
     + (vehicleDestination === 'hull' ? finalDamage : 0);
@@ -153,7 +208,7 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
     : soakBaseLabel;
   const damageBucketLabel = isVehicleTarget
     ? (vehicleDestination === 'system' ? 'System strain' : 'Hull damage')
-    : 'Wounds dealt';
+    : characterDamageGoesToStrain ? 'Strain dealt' : 'Wounds dealt';
   const hasTarget = isVehicleTarget ? !!targetVehicle : !!target;
 
   const damageDisplay = !result ? '—' : succeeded ? String(finalDamage) : '—';
@@ -165,7 +220,7 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
         ? `Apply ${finalDamage} system strain to ${targetName}`
         : `Apply ${finalDamage} to ${targetName} hull`
       : target
-        ? `Apply ${finalDamage} to ${target.name}`
+        ? `Apply ${finalDamage} ${characterDamageGoesToStrain ? 'strain ' : ''}to ${target.name}`
         : 'Apply';
 
   return (
@@ -205,6 +260,15 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
         >
           <Text fontWeight="bold">{damageDisplay}</Text>
         </Chip>
+        {(isStunDamage || hasStunSetting) && !isVehicleTarget && (
+          <StunControl
+            isStunDamage={isStunDamage}
+            stunModeOn={stunModeOn}
+            setStunModeOn={setStunModeOn}
+            routesToStrain={characterDamageGoesToStrain}
+            blockedByTier={attackDealsStrain && !!target && !targetTracksStrain}
+          />
+        )}
         <Box flex="1" />
         <Button
           size="sm"
@@ -244,6 +308,23 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
             }
 
             if (!target || !snapshot.targetParticipantId) return;
+
+            if (characterDamageGoesToStrain) {
+              // Stun routing: this hit lands as strain, not wounds.
+              addStrain(snapshot.targetParticipantId, finalDamage);
+              update({ target: { ...target, strain: (target.strain ?? 0) + finalDamage } });
+              log.rewriteLastDamageForRoll(
+                snapshot.id,
+                `${attackerName} — ${weapon.name} → ${target.name}: ${finalDamage} strain${symbolText}`,
+              );
+              toast({
+                title: `${finalDamage} strain applied to ${target.name}`,
+                status: 'success',
+                duration: 2500,
+              });
+              return;
+            }
+
             // Suppress the auto wound delta so we don't double-log the hit;
             // we replace the existing roll entry with a combined line that
             // names attacker, weapon, and the dice symbols.
@@ -286,8 +367,10 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
       >
         <AlertIcon color="#ffb454" />
         <Text fontWeight="semibold">
-          {characterExceeds && target
+          {characterWoundsExceed && target
             ? `Wounds exceed threshold (${newWounds}/${target.woundThreshold}) — Critical Injury.`
+            : characterStrainExceeds && target
+            ? `Strain exceeds threshold (${newStrain}/${target.strainThreshold}) — incapacitated.`
             : vehicleExceeds && targetVehicle
               ? vehicleDestination === 'system'
                 ? `System strain exceeds threshold (${newSystem}/${targetVehicle.systemThreshold}) — Vehicle Critical Hit.`

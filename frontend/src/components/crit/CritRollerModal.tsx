@@ -20,6 +20,7 @@ import {
     Switch, useToast,
   Tag,
   Select,
+  Tooltip,
 } from "@chakra-ui/react";
 import {CritEntry, CritInjury, CritSeverity, critTable, vehicleCritTable} from "@/data/critTable";
 import {CheckCircleIcon, AddIcon, MinusIcon, TriangleUpIcon, TriangleDownIcon} from "@chakra-ui/icons";
@@ -30,6 +31,7 @@ import {useEffectReminder} from "@/hooks/useEffectReminder";
 import useSessionLogStore from "@/state/sessionLogStore";
 import {nanoid} from "nanoid";
 import useGameplayStore from "@/state/newGameplayStore";
+import useDiceRollerStore from "@/state/diceRollerStore";
 
 /**
  * Map a personal-scale crit table entry to a real Effect (or null for purely
@@ -343,8 +345,26 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) =>
   const [roll, setRoll] = useState<number | null>(null);
   const [prevCrits, setPrevCrits] = useState<number>(0);  // +10 each
   const [vicious, setVicious] = useState<number>(0);      // +10 each
+  const [viciousSource, setViciousSource] = useState<string | null>(null); // weapon it was seeded from
   const [lethal, setLethal] = useState<number>(0);        // +10 each
   const [miscMod, setMiscMod] = useState<number>(0);      // free modifier
+
+  // Hands-off Vicious: seed the modifier from the weapon of the most recent
+  // combat roll, when that roll was aimed at the participant we're critting.
+  // Re-seeds on open and on target change; the GM can still adjust it (which
+  // clears the "from weapon" hint). Vicious adds 10 per rank to the roll.
+  useEffect(() => {
+    if (!isOpen) return;
+    const snap = useDiceRollerStore.getState().snapshot;
+    const matches =
+      !!snap && snap.mode === "combat" && !!snap.weapon &&
+      snap.targetParticipantId === selectedParticipantId;
+    const viciousQuality = matches
+      ? snap!.weapon!.qualities.find((q) => q.name.toLowerCase() === "vicious")
+      : undefined;
+    setVicious(viciousQuality?.rank ?? 0);
+    setViciousSource(viciousQuality ? (snap!.weapon!.name) : null);
+  }, [isOpen, selectedParticipantId]);
 
   // Keep Prev Crits in sync with the selected character’s existing injuries
   useEffect(() => {
@@ -568,8 +588,22 @@ const CritRollerModal: React.FC<Props> = ({ isOpen, onClose, participantId }) =>
                   <MiniStepper value={prevCrits} onChange={setPrevCrits} min={0} step={1} />
               </HStack>
               <HStack spacing={2}>
-                <Text color={textDim}>Vicious x10</Text>
-                  <MiniStepper value={vicious} onChange={setVicious} min={0} step={1} />
+                <Tooltip
+                  label={viciousSource
+                    ? `Vicious from ${viciousSource} — adds 10 per rank`
+                    : "Vicious adds 10 per rank to the crit roll"}
+                  placement="top"
+                  hasArrow
+                  openDelay={300}
+                >
+                  <Text color={viciousSource ? accentColor : textDim}>Vicious x10</Text>
+                </Tooltip>
+                  <MiniStepper
+                    value={vicious}
+                    onChange={(v) => { setVicious(v); setViciousSource(null); }}
+                    min={0}
+                    step={1}
+                  />
               </HStack>
               <HStack spacing={2}>
                 <Text color={textDim}>Lethal x10</Text>

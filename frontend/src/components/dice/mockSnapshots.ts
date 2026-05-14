@@ -15,6 +15,12 @@ export interface SnapshotTarget {
   rangedDef: number;
   wounds: number;
   woundThreshold: number;
+  strain?: number;
+  strainThreshold?: number;
+  /** PCs and Nemeses track a separate strain pool; Minions and Rivals take
+   * strain damage as wounds instead — so a Stun weapon hitting them still
+   * deals wounds. Drives Stun-quality damage routing in CombatDamagePanel. */
+  tracksStrain?: boolean;
 }
 
 export interface SnapshotWeapon {
