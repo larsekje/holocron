@@ -530,11 +530,12 @@ function reverseAddBy(
 /** Fold automatic weapon-quality effects into the attack pool (SWRPG CRB
  * Ch. 5). These are the passive/always-on qualities the GM would otherwise
  * have to remember to apply by hand:
- *   - Accurate N   → +N Boost dice
- *   - Inaccurate N → +N Setback dice
- *   - Auto-fire    → +1 Difficulty die (the attack is harder to land)
- *   - Superior     → an auto-Advantage and +1 damage
- *   - Inferior     → an auto-Threat and -1 damage
+ *   - Accurate N    → +N Boost dice
+ *   - Inaccurate N  → +N Setback dice
+ *   - Auto-fire     → +1 Difficulty die (the attack is harder to land)
+ *   - Cumbersome N  → +(N − wielder Brawn) Setback when underbrawned
+ *   - Superior      → an auto-Advantage and +1 damage
+ *   - Inferior      → an auto-Threat and -1 damage
  * Pierce / Breach are handled later, at the damage step. Active qualities
  * (Stun, Blast, Knockdown, …) stay in the SpendPanel — they cost symbols.
  * Mutates `pool` / `sources`; returns the damage shift and any auto-symbols. */
@@ -542,6 +543,7 @@ function applyWeaponQualityModifiers(
   pool: DicePool,
   sources: Partial<Record<string, string[]>>,
   qualities: SnapshotWeapon['qualities'],
+  wielderBrawn: number,
 ): {damageDelta: number; bonusSymbols: Partial<SymbolTotals>} {
   let damageDelta = 0;
   const bonusSymbols: Partial<SymbolTotals> = {};
@@ -554,6 +556,11 @@ function applyWeaponQualityModifiers(
       addSetbackToPool(pool, sources, rank, `Inaccurate ${rank}`);
     } else if (name === 'auto-fire') {
       addDifficultyToPool(pool, sources, 1, 'Auto-fire');
+    } else if (name === 'cumbersome') {
+      const shortfall = Math.max(0, rank - wielderBrawn);
+      if (shortfall > 0) {
+        addSetbackToPool(pool, sources, shortfall, `Cumbersome ${rank} (Brawn ${wielderBrawn})`);
+      }
     } else if (name === 'superior') {
       bonusSymbols.advantage = (bonusSymbols.advantage ?? 0) + 1;
       damageDelta += 1;
@@ -594,12 +601,14 @@ export function buildAttackSnapshot(
   };
 
   // Fold the weapon's automatic qualities into the pool before target-side
-  // modifiers — they're properties of the weapon itself.
+  // modifiers — they're properties of the weapon itself. Cumbersome reads
+  // the wielder's Brawn, so pass it through.
   const parsedQualities = parseQualities(weapon.qualities);
   const {damageDelta, bonusSymbols} = applyWeaponQualityModifiers(
     pool,
     poolSources,
     parsedQualities,
+    wielderBrawn,
   );
 
   // Target-side modifiers depend on which kind of target we resolved to.
