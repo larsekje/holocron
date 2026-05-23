@@ -66,7 +66,7 @@ State is split across small zustand stores in `src/state/`: `participantsStore`,
 
 Transitions in `inProgress` mutate `turnState` directly inside their `action` rather than transitioning between top-level states. There is also a parallel event bus (`state/eventSystem.ts`) — FSM transitions emit `TURN_START` / `TURN_ACTION` / `TURN_END` / `ROUND_*` events that effect-related stores subscribe to. Several `eventSystem.emitGameEvent('ROUND_*')` calls inside `FSM.ts` are intentionally commented out because `gameplayStore` is the source of truth for round events — keep that split in mind before re-emitting from the FSM.
 
-There are duplicate-looking files: `ContentCardActive.tsx` vs `ContentCardActiveOld.tsx`, `gameplayStore` vs `newGameplayStore`. `App.tsx` currently renders the `Old` variant — both are live; do not assume the non-`Old` one is the only one in use.
+The `ContentCard` family now has a single (`Old`-suffixed) implementation — the non-`Old` siblings were dead code and have been removed, so the `Old` suffix on what remains is vestigial (`App.tsx` renders e.g. `ContentCardActiveOld`). The one real store duplication left is `gameplayStore` vs `newGameplayStore`: both are live (`ToolBarNonStructured` imports both; `useGameplayStore` aliases the *new* store in some files and the *old* one in others), so do not assume either is unused.
 
 ### Spotlight (in-app search)
 

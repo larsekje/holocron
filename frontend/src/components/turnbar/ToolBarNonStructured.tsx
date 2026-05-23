@@ -16,7 +16,7 @@ import useGameplayStore from "@/state/gameplayStore";
 import useGameplayStoreNew from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import {useMachine} from "@xstate/react";
-import InitiativeModal from "@components/debug/InitiativeModal";
+import InitiativeModal from "@components/turnbar/InitiativeModal";
 import useParticipantsStore, {Participant} from "@/state/participantsStore";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
