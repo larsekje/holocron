@@ -30,6 +30,10 @@ export interface GameplayStore {
     removeActedParticipant: (participantId: string) => void;
     toggleActedParticipant: (participantId: string) => void;
     clearActedParticipants: () => void;
+    /** Wipe per-encounter scratch (initiative order, active participant,
+     * acted list) so it doesn't linger into the next prep. Called on End
+     * Encounter. Does not touch participants — that's participantsStore. */
+    clearEncounterState: () => void;
 
     // Shortcuts
     enterStructured: () => void;
@@ -165,6 +169,16 @@ const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
             set({
                 context: {...encounterFSM.context},
             })
+        },
+
+        clearEncounterState: () => {
+            encounterFSM.context.initiativeOrder = [];
+            encounterFSM.context.activeParticipantId = null;
+            encounterFSM.context.actedParticipants = [];
+            encounterFSM.context.currentTurnIndex = 0;
+            set({
+                context: {...encounterFSM.context},
+            });
         },
 
         enterStructured: () => encounterFSM.transition("ENTER_STRUCTURED"),

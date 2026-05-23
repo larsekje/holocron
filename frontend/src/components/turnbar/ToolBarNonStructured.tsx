@@ -52,9 +52,14 @@ const ToolBarNonStructured = ({ }: Props) => {
             return null;
         }
         
-        // Get the current initiative slot
+        // Get the current initiative slot. currentTurnIndex can point past the
+        // end of the order (e.g. after the order was cleared/shrunk), so guard
+        // against an out-of-bounds (undefined) slot, not just an empty array.
         const currentSlot = context.initiativeOrder[context.currentTurnIndex];
-        
+        if (!currentSlot) {
+            return null;
+        }
+
         // Find all participants that match this initiative
         const slotParticipants = participants.filter(p => 
             p.initiative === currentSlot.initiative && 

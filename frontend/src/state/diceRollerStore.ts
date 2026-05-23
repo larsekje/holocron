@@ -5,6 +5,7 @@ import type { ModifierEntry } from '@components/dice/modifiers';
 import useParticipantStore from '@/state/participantsStore';
 import useSessionLogStore from '@/state/sessionLogStore';
 import { flipAttackTarget as computeFlippedSnapshot } from '@/utils/diceSnapshots';
+import { rollPolyPool, POLY_DICE, type PolyDie, type PolyPool, type PolyRollResult } from '@/engine/polyDice';
 
 export type BonusSymbolKind = keyof SymbolTotals;
 
@@ -30,6 +31,10 @@ interface DiceRollerState {
    * the new one; preserves manual additions. */
   flipAttackTarget: (newKind: 'vehicle' | 'character') => void;
   roll: () => void;
+  /** Polyhedral (numbered-dice) mode — separate from the narrative pool. */
+  addPolyDie: (die: PolyDie) => void;
+  removePolyDie: (die: PolyDie) => void;
+  rollPoly: () => void;
   recordSpend: (optionId: string, label?: string, recipientId?: string) => void;
   undoSpend: (spendIndex: number) => void;
   close: () => void;
@@ -49,6 +54,15 @@ function summariseRoll(snap: ModalSnapshot): string {
   if (r.net.triumph > 0) bits.push(`${r.net.triumph}[TR]`);
   if (r.net.despair > 0) bits.push(`${r.net.despair}[DE]`);
   return `${snap.label}: ${bits.join(' ')}`;
+}
+
+function summarisePolyRoll(pool: PolyPool, result: PolyRollResult): string {
+  const poolStr = POLY_DICE
+    .filter((d) => (pool[d] ?? 0) > 0)
+    .map((d) => `${pool[d]}${d}`)
+    .join(' + ');
+  const values = result.rolls.map((r) => r.value).join(', ');
+  return `Dice — ${poolStr} = ${result.total} (${values})`;
 }
 
 const ROLL_ANIMATION_MS = 700;
@@ -306,6 +320,41 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
       summary: summariseRoll(next),
       tone: result.net.succeeded ? 'good' : 'bad',
       meta: { rollId: snap.id, mode: snap.mode },
+    });
+  },
+  addPolyDie: (die) =>
+    set((state) => {
+      if (!state.snapshot) return state;
+      const cur = state.snapshot.polyPool?.[die] ?? 0;
+      return {
+        snapshot: {
+          ...state.snapshot,
+          polyPool: { ...state.snapshot.polyPool, [die]: cur + 1 },
+          polyResult: null,
+        },
+      };
+    }),
+  removePolyDie: (die) =>
+    set((state) => {
+      if (!state.snapshot) return state;
+      const cur = state.snapshot.polyPool?.[die] ?? 0;
+      if (cur <= 0) return state;
+      const next = { ...state.snapshot.polyPool };
+      if (cur - 1 === 0) delete next[die];
+      else next[die] = cur - 1;
+      return { snapshot: { ...state.snapshot, polyPool: next, polyResult: null } };
+    }),
+  rollPoly: () => {
+    const snap = get().snapshot;
+    if (!snap || !snap.polyPool) return;
+    const result = rollPolyPool(snap.polyPool);
+    set({ snapshot: { ...snap, polyResult: result }, rolling: true });
+    setTimeout(() => set({ rolling: false }), ROLL_ANIMATION_MS);
+    useSessionLogStore.getState().log({
+      kind: 'reminder-resolved',
+      summary: summarisePolyRoll(snap.polyPool, result),
+      tone: 'info',
+      meta: { rollId: snap.id, mode: 'polyhedral' },
     });
   },
   recordSpend: (optionId, label, recipientId) => {

@@ -9,6 +9,7 @@ import {
 import {ChevronLeftIcon, ChevronRightIcon, CloseIcon} from "@chakra-ui/icons";
 import InitiativeOrder from "@components/turnbar/InitiativeOrder";
 import useGameplayStore from "@/state/newGameplayStore";
+import useParticipantsStore, {isParticipantDead} from "@/state/participantsStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
 import TurnActionsHint from "@components/turnbar/TurnActionsHint";
@@ -21,6 +22,7 @@ const ToolBarStructured = ({ }: Props) => {
     const { canTransition }  = useGameplayStore();
     const round = useGameplayStore((state) => state.context.round);
     const state = useGameplayStore((state) => state.state);
+    const clearEncounterState = useGameplayStore((state) => state.clearEncounterState);
 
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -51,7 +53,17 @@ const ToolBarStructured = ({ }: Props) => {
                 <EndEncounterModal
                     isOpen={isModalOpen}
                     onClose={closeModal}
-                    onConfirm={() => console.log("Confirmed")}
+                    onConfirm={({removeDeadNpcs, removeAllNpcs}) => {
+                        const {participants, updateParticipants} = useParticipantsStore.getState();
+                        if (removeAllNpcs) {
+                            updateParticipants(participants.filter((p) => p.isPC));
+                        } else if (removeDeadNpcs) {
+                            updateParticipants(participants.filter((p) => p.isPC || !isParticipantDead(p)));
+                        }
+                        // Wipe initiative / active-participant scratch so it
+                        // doesn't bleed into the next encounter's prep.
+                        clearEncounterState();
+                    }}
                 />
             </HStack>
 

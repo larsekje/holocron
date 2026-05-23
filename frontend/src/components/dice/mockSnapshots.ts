@@ -1,6 +1,7 @@
 import type { DicePool, RollResult, NetResult, SymbolTotals, DieType } from '@/engine/diceEngine';
+import type { PolyPool, PolyRollResult } from '@/engine/polyDice';
 
-export type DiceRollMode = 'basic' | 'opposed' | 'combat' | 'skillChallenge';
+export type DiceRollMode = 'basic' | 'opposed' | 'combat' | 'skillChallenge' | 'polyhedral';
 
 export interface SnapshotAttacker {
   name: string;
@@ -94,6 +95,11 @@ export interface ModalSnapshot {
   appliedModifiers: string[];
   result: RollResult | null;
   spent: { optionId: string; recipientId?: string }[];
+  /** Polyhedral (plain numbered) dice — only used when mode === 'polyhedral'.
+   * Kept separate from `pool`/`result` so the narrative symbol engine stays
+   * untouched. */
+  polyPool?: PolyPool;
+  polyResult?: PolyRollResult | null;
 }
 
 const EMPTY: SymbolTotals = {
@@ -367,4 +373,5 @@ export const SNAPSHOTS_BY_MODE: Record<DiceRollMode, ModalSnapshot[]> = {
   opposed: SNAPSHOTS.filter((s) => s.mode === 'opposed'),
   combat: SNAPSHOTS.filter((s) => s.mode === 'combat'),
   skillChallenge: SNAPSHOTS.filter((s) => s.mode === 'skillChallenge'),
+  polyhedral: SNAPSHOTS.filter((s) => s.mode === 'polyhedral'),
 };

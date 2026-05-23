@@ -15,6 +15,9 @@ import { TAG_COLOR, TAG_ICON, primaryTag } from './encounterVisuals';
 
 interface Props {
   template: EncounterTemplate;
+  /** When provided (GM-authored encounters), show Edit / Delete actions. */
+  onEdit?: (template: EncounterTemplate) => void;
+  onDelete?: (id: string) => void;
 }
 
 /**
@@ -22,7 +25,7 @@ interface Props {
  * tooltip shows the full blurb; expand for description + NPCs + beats +
  * Start action.
  */
-const EncounterTemplateCard: React.FC<Props> = ({ template }) => {
+const EncounterTemplateCard: React.FC<Props> = ({ template, onEdit, onDelete }) => {
   const startFromTemplate = useSessionPrepStore((s) => s.startFromTemplate);
   const activeFromThis = useSessionPrepStore(
     (s) => s.activeScene?.fromTemplateId === template.id,
@@ -158,6 +161,38 @@ const EncounterTemplateCard: React.FC<Props> = ({ template }) => {
             >
               {activeFromThis ? 'Active' : 'Start scene'}
             </Button>
+            {onEdit && (
+              <Button
+                size="xs"
+                h="22px"
+                fontSize="2xs"
+                variant="ghost"
+                color="whiteAlpha.600"
+                _hover={{ bg: 'whiteAlpha.150', color: 'white' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(template);
+                }}
+              >
+                Edit
+              </Button>
+            )}
+            {onDelete && (
+              <Button
+                size="xs"
+                h="22px"
+                fontSize="2xs"
+                variant="ghost"
+                color="whiteAlpha.600"
+                _hover={{ bg: 'rgba(176,48,48,0.18)', color: '#e08080' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(template.id);
+                }}
+              >
+                Delete
+              </Button>
+            )}
           </HStack>
         </Box>
       }
