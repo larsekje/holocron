@@ -1,0 +1,22 @@
+/* SWRPG narrative-dice symbol font for the player view. Mirrors the @font-face
+   in src/assets/sass/dice.sass so the player bundle can render success /
+   advantage / triumph / etc. glyphs without pulling in the whole GM stylesheet. */
+@font-face {
+  font-family: "sw-rpg-icons";
+  src: url(../assets/fonts/sw-rpg-icons.woff) format("woff"),
+    url(../assets/fonts/sw-rpg-icons.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.swrpg-symbol {
+  font-family: "sw-rpg-icons" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -31,6 +31,8 @@ import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
 import SessionPrepPanel from "@components/sessionPrep/SessionPrepPanel";
 import ClassificationReviewModal from "@components/classificationReview/ClassificationReviewModal";
 import {useClassificationReviewStore} from "@/state/classificationReviewStore";
+import ShareButton from "@components/share/ShareButton";
+import {initAutoResume} from "@/state/shareStore";
 
 function App() {
   const snapshot = useDiceRollerStore((s) => s.snapshot);
@@ -41,6 +43,9 @@ function App() {
   const openSymbolSpends = useSymbolSpendsStore((s) => s.open);
   const openGalaxyMap = useGalaxyMapStore((s) => s.open);
   const openClassificationReview = useClassificationReviewStore((s) => s.open);
+
+  // Auto-resume player sharing if it was active before a reload/crash.
+  React.useEffect(() => { initAutoResume(); }, []);
 
   const templateAreas = `"turn   turn    turn     log"
                          "active targets targeted log"`
@@ -158,6 +163,7 @@ function App() {
                 _hover={{ bg: 'whiteAlpha.200', color: 'whiteAlpha.900' }}
               />
             </Tooltip>
+            <ShareButton/>
           </HStack>
         </HStack>
       </Box>

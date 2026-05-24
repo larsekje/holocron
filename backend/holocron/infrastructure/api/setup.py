@@ -6,12 +6,15 @@ from fastapi.responses import RedirectResponse
 from fastapi.routing import APIRoute
 
 from holocron.container import ApplicationContainer
-from holocron.infrastructure.api import data_controller
+from holocron.infrastructure.api import data_controller, sync_controller
 
 
 def setup(app: FastAPI, container: ApplicationContainer) -> None:
     # Add other controllers here
     app.include_router(data_controller.router)
+    # In-memory relay for the player-facing synced view. Uses no DI, so it is
+    # NOT added to container.wire below.
+    app.include_router(sync_controller.router)
 
     # Change operationId to something more readable (https://fastapi.tiangolo.com/advanced/path-operation-advanced-configuration/)
     use_route_names_as_operation_ids(app)

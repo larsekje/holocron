@@ -40,6 +40,7 @@
     "leaflet": "^1.9.4",
     "nanoid": "^4.0.2",
     "prettier": "^2.8.6",
+    "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hotkeys-hook": "^4.3.8",

@@ -14,6 +14,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import type { DicePool } from '@/engine/diceEngine';
 import useDiceRollerStore from '@/state/diceRollerStore';
 import useParticipantStore from '@/state/participantsStore';
+import RevealRollButton from './RevealRollButton';
 
 interface RollButtonProps {
   pool: DicePool;
@@ -82,6 +83,7 @@ export const RollButton: React.FC<RollButtonProps> = ({ pool, hasResult }) => {
           )}
         </MenuList>
       </Menu>
+      <RevealRollButton />
     </HStack>
   );
 };

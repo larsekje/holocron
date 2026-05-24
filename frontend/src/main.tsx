@@ -31,10 +31,29 @@ const theme = extendTheme({
   },
 });
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <App/>
-    </ChakraProvider>
-  </React.StrictMode>,
-)
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+
+// Player-facing synced view: ?pcview=<roomId> renders a read-only initiative
+// view instead of the GM app. Dynamic-import so the heavy GM bundle (and its
+// stores / localStorage side effects) never load on a player device.
+const pcRoom = new URLSearchParams(window.location.search).get('pcview')
+
+if (pcRoom) {
+  import('./player/PlayerView').then(({default: PlayerView}) => {
+    root.render(
+      <React.StrictMode>
+        <ChakraProvider theme={theme}>
+          <PlayerView roomId={pcRoom}/>
+        </ChakraProvider>
+      </React.StrictMode>,
+    )
+  })
+} else {
+  root.render(
+    <React.StrictMode>
+      <ChakraProvider theme={theme}>
+        <App/>
+      </ChakraProvider>
+    </React.StrictMode>,
+  )
+}
