@@ -255,9 +255,8 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     // filter/sort active, those specific stats appear after the badges so the
     // relevant value stays visible. Pure characteristics/skills (brawn, brawl)
     // still stack on as extras when the user has filtered on them.
-    const archetypes: string[] = Array.isArray((detail as any)?.archetypes)
-      ? (detail as any).archetypes
-      : [];
+    const archetype: string | undefined =
+      typeof (detail as any)?.archetype === 'string' ? (detail as any).archetype : undefined;
     const factions: string[] = Array.isArray((detail as any)?.factions)
       ? (detail as any).factions
       : [];
@@ -271,31 +270,23 @@ const SpotlightResultRow: React.FC<SpotlightResultRowProps> = ({
     // The badge displays the v4.2 coreArchetype (single canonical role) when
     // present; falls back to the source archetype list's first entry. The
     // tooltip lists both so the GM can compare role vs source classification.
-    const archetypeLabel = coreArchetype ?? archetypes[0];
+    const archetypeLabel = coreArchetype ?? archetype;
     const coreDesc = coreArchetype
       ? CORE_ARCHETYPE_DESCRIPTOR[archetypeKey(coreArchetype)]
       : undefined;
     const archetypeTooltip = (
       <Box>
         {coreArchetype && (
-          <Text fontSize="xs" mb={(archetypes.length > 0 || factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
+          <Text fontSize="xs" mb={(!!archetype || factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
             <Text as="span" fontWeight="bold" color="cyan.200">{coreArchetype}</Text>
             {coreDesc && <Text as="span" color="gray.400"> — {coreDesc}</Text>}
           </Text>
         )}
-        {archetypes.length > 0 && (
-          <Box mb={(factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
-            <Text fontSize="xs" color="gray.500" mb={0.5}>Source archetypes</Text>
-            {archetypes.map((a) => {
-              const desc = ARCHETYPE_DESCRIPTOR[archetypeKey(a)];
-              return (
-                <Text key={a} fontSize="xs">
-                  <Text as="span" color="gray.300">{a}</Text>
-                  {desc && <Text as="span" color="gray.500"> — {desc}</Text>}
-                </Text>
-              );
-            })}
-          </Box>
+        {archetype && (
+          <Text fontSize="xs" mb={(factions.length > 0 || traits.length > 0) ? 1.5 : 0}>
+            <Text as="span" color="gray.500">Archetype: </Text>
+            <Text as="span" color="gray.300">{archetype}</Text>
+          </Text>
         )}
         {factions.length > 0 && (
           <Text fontSize="xs">

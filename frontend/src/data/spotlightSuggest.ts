@@ -99,7 +99,7 @@ for (const e of indexEntries) {
       for (const k of Object.keys(d.skills)) skillNamesAll.add(k);
     }
     if (typeof d.coreArchetype === 'string' && d.coreArchetype) bumpMap(archetypeCounts, d.coreArchetype);
-    for (const r of (d.archetypes || []) as string[]) bumpMap(roleCounts, String(r));
+    if (typeof d.archetype === 'string' && d.archetype) bumpMap(roleCounts, d.archetype);
     for (const f of (d.factions || []) as string[]) bumpMap(factionCounts, String(f));
     for (const t of (d.traits || []) as string[]) bumpMap(traitCounts, String(t));
   }
