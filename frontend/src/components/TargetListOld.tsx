@@ -69,10 +69,6 @@ const TargetListOld = () => {
   const eligibleFor = (isPC: boolean) =>
     isStructured && currentSlotTeam !== undefined && (isPC ? currentSlotTeam === "PC" : currentSlotTeam === "NPC");
 
-  if (participants.length === 0 && vehicleList.length === 0) {
-    return <Text color="gray.400">No targets — add adversaries from the header.</Text>;
-  }
-
   const livePCs: Participant[] = [];
   const liveNPCs: Participant[] = [];
   const dead: Participant[] = [];
@@ -134,6 +130,13 @@ const TargetListOld = () => {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [inSelectingMode, setActiveParticipantId]);
+
+  // Empty state. Must come AFTER every hook above: returning earlier would skip
+  // the hooks below it (pickableRef / keyboard handler) and break the Rules of
+  // Hooks the moment the first participant is added.
+  if (participants.length === 0 && vehicleList.length === 0) {
+    return <Text color="gray.400">No targets — add adversaries from the header.</Text>;
+  }
 
   const renderRow = (participant: Participant) => {
     const hasActed = actedParticipants.includes(participant.id);
