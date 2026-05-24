@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import L from 'leaflet';
 import { CircleMarker, ImageOverlay, MapContainer, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -88,12 +88,47 @@ function planetFor(systemName: string): Planet | undefined {
 const regionOf = (planet?: Planet): string | undefined =>
   planet?.astronav?.match(/,\s*([^,]+?)\s+region\b/i)?.[1];
 
-// Flies the map to the focused system whenever it changes. Lives inside
-// MapContainer so it can reach the Leaflet map instance via useMap().
-const FlyToFocus: React.FC<{ focus: GalaxySystem | null }> = ({ focus }) => {
+// On a search pick, pan the system into view (keeping the current zoom — no
+// hard zoom) and play a sonar-style ping on it. Lives inside MapContainer so
+// it can reach the Leaflet map instance via useMap().
+const PingFocus: React.FC<{ focus: GalaxySystem | null }> = ({ focus }) => {
   const map = useMap();
   useEffect(() => {
-    if (focus) map.flyTo(toLatLng(focus), 1, { duration: 0.6 });
+    if (!focus) return;
+    const latlng = toLatLng(focus);
+    map.panTo(latlng, { duration: 0.4 });
+
+    // An expanding, fading ring — on its own SVG renderer so the per-frame
+    // animation doesn't repaint the canvas full of system markers.
+    const ring = L.circleMarker(latlng, {
+      renderer: L.svg(),
+      color: '#f1c043',
+      weight: 2.5,
+      fill: false,
+      interactive: false,
+    }).addTo(map);
+
+    const PULSE_MS = 850;
+    const PULSES = 3;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const t = (elapsed % PULSE_MS) / PULSE_MS; // 0..1 within one pulse
+      ring.setRadius(7 + t * 33);
+      ring.setStyle({ opacity: 0.9 * (1 - t) });
+      if (elapsed < PULSE_MS * PULSES) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        map.removeLayer(ring);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (map.hasLayer(ring)) map.removeLayer(ring);
+    };
   }, [focus, map]);
   return null;
 };
@@ -174,7 +209,6 @@ const SystemPopup: React.FC<{ system: GalaxySystem }> = ({ system }) => {
 const GalaxyMap: React.FC = () => {
   const [query, setQuery] = useState('');
   const [focus, setFocus] = useState<GalaxySystem | null>(null);
-  const focusMarkerRef = useRef<L.CircleMarker | null>(null);
 
   const results = useMemo(() => {
     const q = query.trim();
@@ -183,13 +217,6 @@ const GalaxyMap: React.FC = () => {
       .go(q, DATA.systems, { key: 'name', limit: 8 })
       .map((r) => r.obj);
   }, [query]);
-
-  // Pop the focused system's label once it has flown into view.
-  useEffect(() => {
-    if (!focus) return;
-    const t = window.setTimeout(() => focusMarkerRef.current?.openPopup(), 650);
-    return () => window.clearTimeout(t);
-  }, [focus]);
 
   return (
     <Box position="relative" h="100%" w="100%" bg="#05070d">
@@ -231,7 +258,6 @@ const GalaxyMap: React.FC = () => {
                 fillOpacity: baseOpacity,
                 weight: isFocus ? 2 : 1,
               }}
-              ref={isFocus ? focusMarkerRef : undefined}
               eventHandlers={{
                 mouseover: (e) =>
                   (e.target as L.CircleMarker).setStyle({ fillOpacity: 0.85 }),
@@ -247,7 +273,7 @@ const GalaxyMap: React.FC = () => {
             </CircleMarker>
           );
         })}
-        <FlyToFocus focus={focus} />
+        <PingFocus focus={focus} />
         <ZoomFloor />
       </MapContainer>
 
