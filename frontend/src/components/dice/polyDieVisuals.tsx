@@ -37,20 +37,23 @@ function faceFor(die: PolyDie, value?: number): string {
   return String(value);
 }
 
-/** A numbered die — the local SVG with the number already drawn on it. Pass
- * `value` for a rolled result; omit it for the die's type face. */
-export const PolyDieShape: React.FC<{ die: PolyDie; size: number; value?: number }> = ({
-  die,
-  size,
-  value,
-}) => {
-  const src = urlFor(die, faceFor(die, value)) ?? urlFor(die, TYPE_FACE[die]);
+/** A numbered die. Pass `value` for a rolled result, omit it for the die's
+ * type face, or set `blank` for the numberless body (used while a pooled die
+ * is unrolled / mid-tumble, so the number only appears once it lands). */
+export const PolyDieShape: React.FC<{
+  die: PolyDie;
+  size: number;
+  value?: number;
+  blank?: boolean;
+}> = ({ die, size, value, blank }) => {
+  const face = blank ? 'blank' : faceFor(die, value);
+  const src = urlFor(die, face) ?? urlFor(die, TYPE_FACE[die]);
   return (
     <img
       src={src}
       width={size}
       height={Math.round(size * 1.045)}
-      alt={value != null ? `${die}: ${value}` : die}
+      alt={blank ? die : value != null ? `${die}: ${value}` : die}
       draggable={false}
       style={{ display: 'block' }}
     />

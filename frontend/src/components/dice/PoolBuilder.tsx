@@ -234,6 +234,9 @@ const PolyPaletteDie: React.FC<{ die: PolyDie }> = ({ die }) => {
 const PolyPoolDie: React.FC<{ die: PolyDie; value?: number; rolling: boolean }> = ({ die, value, rolling }) => {
   const removePolyDie = useDiceRollerStore((s) => s.removePolyDie);
   const isRolled = value != null;
+  // Show the number only once the die has landed; blank while unrolled or
+  // tumbling so the result "appears" on the settle.
+  const showFace = isRolled && !rolling;
   return (
     <Tooltip label={isRolled ? `${die}: ${value}` : die} placement="top" hasArrow openDelay={400}>
       <Box
@@ -249,7 +252,7 @@ const PolyPoolDie: React.FC<{ die: PolyDie; value?: number; rolling: boolean }> 
           if (!isRolled) removePolyDie(die);
         }}
       >
-        <PolyDieShape die={die} size={50} value={isRolled && !rolling ? value : undefined} />
+        <PolyDieShape die={die} size={50} value={showFace ? value : undefined} blank={!showFace} />
       </Box>
     </Tooltip>
   );
