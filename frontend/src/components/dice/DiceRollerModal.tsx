@@ -21,7 +21,6 @@ import { CombatPanel } from './CombatPanel';
 import { CombatDamagePanel } from './CombatDamagePanel';
 import { OpposedPanel } from './OpposedPanel';
 import { SkillChallengePlaceholder } from './SkillChallengePlaceholder';
-import { PolyhedralPanel } from './PolyhedralPanel';
 import { ModifiersPopover } from './ModifiersPopover';
 import { SegmentedToggle } from '@/components/ParticipantSheetView';
 import useDiceRollerStore from '@/state/diceRollerStore';
@@ -85,7 +84,6 @@ const TargetToggle: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
 export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onClose }) => {
   const isOpen = snapshot !== null;
   const mode = snapshot?.mode ?? 'basic';
-  const update = useDiceRollerStore((s) => s.update);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
@@ -111,23 +109,7 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
         <ModalBody p={4}>
           {snapshot && (
             <VStack align="stretch" spacing={3}>
-              {/* Freestanding rolls flip between narrative symbol dice and
-                  plain numbered (polyhedral) dice. */}
-              {!snapshot.attacker && !snapshot.weapon && (mode === 'basic' || mode === 'polyhedral') && (
-                <HStack justify="flex-end">
-                  <SegmentedToggle
-                    options={[
-                      { value: 'basic', label: 'Symbols' },
-                      { value: 'polyhedral', label: 'Numbers' },
-                    ]}
-                    value={mode === 'polyhedral' ? 'polyhedral' : 'basic'}
-                    onChange={(v) => update({ mode: v as ModalSnapshot['mode'], result: null, polyResult: null })}
-                  />
-                </HStack>
-              )}
-              {mode === 'polyhedral' ? (
-                <PolyhedralPanel snapshot={snapshot} />
-              ) : mode === 'skillChallenge' ? (
+              {mode === 'skillChallenge' ? (
                 <SkillChallengePlaceholder />
               ) : (
                 <>

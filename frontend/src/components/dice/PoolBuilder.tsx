@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
+  Center,
+  Collapse,
   Grid,
   GridItem,
   HStack,
@@ -8,10 +10,9 @@ import {
   Text,
   Tooltip,
   VStack,
-  Wrap,
-  WrapItem,
   keyframes,
 } from '@chakra-ui/react';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import type {
   DicePool,
   DieRoll,
@@ -30,6 +31,8 @@ import { ReactComponent as ForceSvg } from '@/assets/dice/force.svg';
 import useDiceRollerStore, { type BonusSymbolKind } from '@/state/diceRollerStore';
 import useParticipantStore, { type DicePouch } from '@/state/participantsStore';
 import { DifficultyRangeList } from './DifficultyRangeList';
+import { POLY_DICE, type PolyDie } from '@/engine/polyDice';
+import { PolyDieShape } from './polyDieVisuals';
 
 interface PoolBuilderProps {
   pool: DicePool;
@@ -129,7 +132,7 @@ const PoolDie: React.FC<{ die: DieType; roll?: DieRoll; rolling: boolean; source
       <Box
         position="relative"
         w="56px"
-        h="56px"
+        minH="56px"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -196,6 +199,71 @@ const PaletteDie: React.FC<{ die: DieType }> = ({ die }) => {
   );
 };
 
+// Plain numbered dice share the pool with the narrative dice. Palette die adds
+// one; right-click removes one. Smaller than narrative dice so they read as a
+// secondary row.
+const PolyPaletteDie: React.FC<{ die: PolyDie }> = ({ die }) => {
+  const addPolyDie = useDiceRollerStore((s) => s.addPolyDie);
+  const removePolyDie = useDiceRollerStore((s) => s.removePolyDie);
+  return (
+    <Tooltip label={`Add ${die}`} placement="top" hasArrow openDelay={400}>
+      <Box
+        as="button"
+        w="40px"
+        minH="42px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius="md"
+        _hover={{ bg: 'whiteAlpha.100', transform: 'translateY(-1px)' }}
+        transition="transform 80ms ease-out, background 120ms ease-out"
+        onClick={() => addPolyDie(die)}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          removePolyDie(die);
+        }}
+      >
+        <PolyDieShape die={die} size={30} />
+      </Box>
+    </Tooltip>
+  );
+};
+
+// A numbered die in the shared pool — tumbles with the same rollAnim as the
+// narrative dice, hiding its value until it settles.
+const PolyPoolDie: React.FC<{ die: PolyDie; value?: number; rolling: boolean }> = ({ die, value, rolling }) => {
+  const removePolyDie = useDiceRollerStore((s) => s.removePolyDie);
+  const isRolled = value != null;
+  return (
+    <Tooltip label={isRolled ? `${die}: ${value}` : die} placement="top" hasArrow openDelay={400}>
+      <Box
+        position="relative"
+        w="56px"
+        minH="56px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        animation={rolling ? `${rollAnim} 700ms cubic-bezier(0.2, 0.6, 0.3, 1)` : undefined}
+        cursor={isRolled ? 'default' : 'pointer'}
+        onClick={() => {
+          if (!isRolled) removePolyDie(die);
+        }}
+      >
+        <PolyDieShape die={die} size={50} value={isRolled && !rolling ? value : undefined} />
+      </Box>
+    </Tooltip>
+  );
+};
+
+function expandPolyPool(pool?: Partial<Record<PolyDie, number>>): PolyDie[] {
+  const out: PolyDie[] = [];
+  for (const d of POLY_DICE) {
+    const n = pool?.[d] ?? 0;
+    for (let i = 0; i < n; i++) out.push(d);
+  }
+  return out;
+}
+
 function expandPool(pool: DicePool): DieType[] {
   const out: DieType[] = [];
   for (const die of DIE_ORDER) {
@@ -235,14 +303,31 @@ function pairRolls(dice: DieType[], rolls: DieRoll[]): (DieRoll | undefined)[] {
 // Always rendered so the modal doesn't grow when a roll lands. Pre-roll
 // shows a muted placeholder of the same vertical footprint; post-roll
 // shows the real Succeeded/Failed + symbol counts.
-const ResultStrip: React.FC<{ result: RollResult | null }> = ({ result }) => {
-  if (!result) {
+const ResultStrip: React.FC<{ result: RollResult | null; polyTotal?: number | null }> = ({ result, polyTotal }) => {
+  const hasPoly = polyTotal != null;
+  if (!result && !hasPoly) {
     return (
       <HStack spacing={4} align="baseline" wrap="wrap" minH="28px" opacity={0.4}>
         <Text fontSize="lg" fontWeight="bold" color="gray.500" letterSpacing="0.04em">
           Pending
         </Text>
         <Text fontSize="sm" color="gray.500">Roll to resolve</Text>
+      </HStack>
+    );
+  }
+
+  const polyChip = hasPoly ? (
+    <HStack spacing={1} align="baseline">
+      <Text fontSize="md" color="orange.300" fontWeight="bold">{polyTotal}</Text>
+      <Text fontSize="sm" color="gray.400">dice total</Text>
+    </HStack>
+  ) : null;
+
+  // Numbered-dice-only roll: just the total.
+  if (!result) {
+    return (
+      <HStack spacing={4} align="baseline" wrap="wrap" minH="28px">
+        {polyChip}
       </HStack>
     );
   }
@@ -283,6 +368,7 @@ const ResultStrip: React.FC<{ result: RollResult | null }> = ({ result }) => {
           ))}
         </HStack>
       )}
+      {polyChip}
     </HStack>
   );
 };
@@ -606,6 +692,13 @@ export const PoolBuilder: React.FC<PoolBuilderPropsExt> = ({
   const sources = expandSources(pool, poolSources);
   const totalDice = dice.length;
   const pairedRolls = result ? pairRolls(dice, result.rolls) : [];
+  const polyPool = useDiceRollerStore((s) => s.snapshot?.polyPool);
+  const polyResult = useDiceRollerStore((s) => s.snapshot?.polyResult);
+  const polyDiceList = expandPolyPool(polyPool);
+  const polyValues = polyResult ? polyResult.rolls.map((r) => r.value) : [];
+  // Numbered dice palette is hidden behind a reveal — open it if some are
+  // already pooled, otherwise it stays tucked away.
+  const [polyOpen, setPolyOpen] = useState(polyDiceList.length > 0);
 
   // Fixed-column grid so the palette doesn't slide left/right when the pouch
   // empties or the difficulty list changes mode. Empty columns reserve their
@@ -634,6 +727,39 @@ export const PoolBuilder: React.FC<PoolBuilderPropsExt> = ({
                 <BonusSymbolButton key={b.storeKey} kind={b.kind} storeKey={b.storeKey} label={b.label} />
               ))}
             </HStack>
+            {/* Numbered dice (d4–d100) live behind a small reveal beneath the
+                status symbols — out of the way until wanted; added dice still
+                join this pool. */}
+            {mode === 'basic' && (
+              <VStack spacing={0} align="stretch">
+                <Center>
+                  <Tooltip
+                    label={polyOpen ? 'Hide numbered dice' : 'Numbered dice (d4–d100)'}
+                    placement="top"
+                    openDelay={400}
+                  >
+                    <IconButton
+                      aria-label="Toggle numbered dice"
+                      size="xs"
+                      variant="ghost"
+                      h="14px"
+                      minW="32px"
+                      color="whiteAlpha.400"
+                      _hover={{ color: 'whiteAlpha.700', bg: 'whiteAlpha.100' }}
+                      icon={polyOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                      onClick={() => setPolyOpen((v) => !v)}
+                    />
+                  </Tooltip>
+                </Center>
+                <Collapse in={polyOpen} animateOpacity>
+                  <HStack spacing={0.5} justify="center" wrap="wrap" pt={0.5} pb={0.5}>
+                    {POLY_DICE.map((d) => (
+                      <PolyPaletteDie key={d} die={d} />
+                    ))}
+                  </HStack>
+                </Collapse>
+              </VStack>
+            )}
           </VStack>
         </GridItem>
         <GridItem bg="gray.700" minH="100px" alignSelf="stretch" />
@@ -661,31 +787,32 @@ export const PoolBuilder: React.FC<PoolBuilderPropsExt> = ({
       >
         {(() => {
           const bonusPips = expandBonusPips(bonusSymbols);
-          if (totalDice === 0 && bonusPips.length === 0) {
+          if (totalDice === 0 && bonusPips.length === 0 && polyDiceList.length === 0) {
             return (
               <Text fontSize="sm" color="gray.500" textAlign="center">
                 Click a die or symbol above to add to the pool.
               </Text>
             );
           }
+          // Plain flex (not Chakra <Wrap>, which clips overflow) so the dice
+          // can bounce up during the roll animation without being cut off.
           return (
-            <Wrap spacing={3}>
+            <Box display="flex" flexWrap="wrap" gap={3}>
               {dice.map((die, i) => (
-                <WrapItem key={`d-${i}`}>
-                  <PoolDie die={die} roll={pairedRolls[i]} rolling={rolling} source={sources[i]} />
-                </WrapItem>
+                <PoolDie key={`d-${i}`} die={die} roll={pairedRolls[i]} rolling={rolling} source={sources[i]} />
+              ))}
+              {polyDiceList.map((d, i) => (
+                <PolyPoolDie key={`p-${i}`} die={d} value={polyValues[i]} rolling={rolling} />
               ))}
               {bonusPips.map((b, i) => (
-                <WrapItem key={`b-${i}`}>
-                  <BonusSymbolPip kind={b.kind} storeKey={b.storeKey} label={b.label} />
-                </WrapItem>
+                <BonusSymbolPip key={`b-${i}`} kind={b.kind} storeKey={b.storeKey} label={b.label} />
               ))}
-            </Wrap>
+            </Box>
           );
         })()}
       </Box>
 
-      <ResultStrip result={result} />
+      <ResultStrip result={result} polyTotal={polyResult ? polyResult.total : null} />
     </VStack>
   );
 };

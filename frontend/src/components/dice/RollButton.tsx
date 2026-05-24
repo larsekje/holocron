@@ -22,13 +22,17 @@ interface RollButtonProps {
 
 export const RollButton: React.FC<RollButtonProps> = ({ pool, hasResult }) => {
   const total = Object.values(pool).reduce<number>((sum, n) => sum + (n ?? 0), 0);
-  const disabled = total === 0;
   const roll = useDiceRollerStore((s) => s.roll);
   const rolling = useDiceRollerStore((s) => s.rolling);
   const passPoolTo = useDiceRollerStore((s) => s.passPoolTo);
   const attackerId = useDiceRollerStore((s) => s.snapshot?.attackerParticipantId);
+  const polyPool = useDiceRollerStore((s) => s.snapshot?.polyPool);
+  const polyResult = useDiceRollerStore((s) => s.snapshot?.polyResult);
+  const polyCount = Object.values(polyPool ?? {}).reduce<number>((n, v) => n + (v ?? 0), 0);
   const participants = useParticipantStore((s) => s.participants);
   const candidates = participants.filter((p) => p.id !== attackerId);
+  // Enable the roll when either pool (narrative or numbered) has dice.
+  const disabled = total === 0 && polyCount === 0;
 
   return (
     <HStack spacing={2} width="100%">
@@ -43,7 +47,7 @@ export const RollButton: React.FC<RollButtonProps> = ({ pool, hasResult }) => {
         loadingText="Rolling…"
         onClick={() => roll()}
       >
-        {hasResult ? 'Re-roll' : 'Roll'}
+        {hasResult || polyResult ? 'Re-roll' : 'Roll'}
       </Button>
       <Menu placement="top-end" isLazy>
         <Tooltip label="Hand the prepared pool to another character to roll" placement="top" hasArrow openDelay={400}>
@@ -52,7 +56,7 @@ export const RollButton: React.FC<RollButtonProps> = ({ pool, hasResult }) => {
             size="md"
             colorScheme="purple"
             variant="outline"
-            isDisabled={disabled || candidates.length === 0}
+            isDisabled={total === 0 || candidates.length === 0}
             rightIcon={<ChevronDownIcon />}
           >
             Pass

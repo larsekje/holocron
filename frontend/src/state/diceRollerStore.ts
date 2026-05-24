@@ -31,10 +31,9 @@ interface DiceRollerState {
    * the new one; preserves manual additions. */
   flipAttackTarget: (newKind: 'vehicle' | 'character') => void;
   roll: () => void;
-  /** Polyhedral (numbered-dice) mode — separate from the narrative pool. */
+  /** Plain numbered dice share the narrative pool; the main roll() rolls both. */
   addPolyDie: (die: PolyDie) => void;
   removePolyDie: (die: PolyDie) => void;
-  rollPoly: () => void;
   recordSpend: (optionId: string, label?: string, recipientId?: string) => void;
   undoSpend: (spendIndex: number) => void;
   close: () => void;
@@ -90,6 +89,7 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           },
           // Editing the pool invalidates the previous roll.
           result: null,
+          polyResult: null,
           spent: [],
         },
       };
@@ -112,6 +112,7 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           pool: next,
           poolSources: nextSources,
           result: null,
+          polyResult: null,
           spent: [],
         },
       };
@@ -125,6 +126,7 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           ...state.snapshot,
           bonusSymbols: { ...cur, [kind]: (cur[kind] ?? 0) + count },
           result: null,
+          polyResult: null,
           spent: [],
         },
       };
@@ -142,6 +144,7 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           ...state.snapshot,
           bonusSymbols: nextBonus,
           result: null,
+          polyResult: null,
           spent: [],
         },
       };
@@ -202,6 +205,7 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           appliedModifiers: nextModifiers,
           // Editing the pool invalidates the previous roll.
           result: null,
+          polyResult: null,
           spent: [],
         },
       };
@@ -227,6 +231,7 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           poolSources: nextSources,
           appliedPresets: [...otherPresets, presetId],
           result: null,
+          polyResult: null,
           spent: [],
         },
       };
@@ -303,8 +308,18 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
   roll: () => {
     const snap = get().snapshot;
     if (!snap) return;
-    const result = rollPool(snap.pool, undefined, snap.bonusSymbols ?? {});
-    const next = { ...snap, result, spent: [] };
+    const narrativeCount = Object.values(snap.pool).reduce<number>((n, v) => n + (v ?? 0), 0);
+    const bonusCount = Object.values(snap.bonusSymbols ?? {}).reduce<number>((n, v) => n + (v ?? 0), 0);
+    const polyCount = Object.values(snap.polyPool ?? {}).reduce<number>((n, v) => n + (v ?? 0), 0);
+    if (narrativeCount === 0 && bonusCount === 0 && polyCount === 0) return;
+
+    // Narrative symbols and plain numbered dice live in one pool and roll
+    // together; either side may be empty.
+    const result = narrativeCount > 0 || bonusCount > 0
+      ? rollPool(snap.pool, undefined, snap.bonusSymbols ?? {})
+      : null;
+    const polyResult = polyCount > 0 ? rollPolyPool(snap.polyPool ?? {}) : null;
+    const next = { ...snap, result, polyResult, spent: [] };
     set({ snapshot: next, rolling: true });
 
     // Always clear rolling after the animation window. Earlier we gated this
@@ -313,14 +328,24 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
     // permanently true and the symbols never appeared on the dice.
     setTimeout(() => set({ rolling: false }), ROLL_ANIMATION_MS);
 
-    useSessionLogStore.getState().log({
-      kind: 'damage',
-      participantId: snap.attackerParticipantId,
-      participantName: snap.attacker?.name,
-      summary: summariseRoll(next),
-      tone: result.net.succeeded ? 'good' : 'bad',
-      meta: { rollId: snap.id, mode: snap.mode },
-    });
+    if (result) {
+      useSessionLogStore.getState().log({
+        kind: 'damage',
+        participantId: snap.attackerParticipantId,
+        participantName: snap.attacker?.name,
+        summary: summariseRoll(next),
+        tone: result.net.succeeded ? 'good' : 'bad',
+        meta: { rollId: snap.id, mode: snap.mode },
+      });
+    }
+    if (polyResult) {
+      useSessionLogStore.getState().log({
+        kind: 'reminder-resolved',
+        summary: summarisePolyRoll(snap.polyPool ?? {}, polyResult),
+        tone: 'info',
+        meta: { rollId: snap.id, mode: 'polyhedral' },
+      });
+    }
   },
   addPolyDie: (die) =>
     set((state) => {
@@ -331,6 +356,8 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           ...state.snapshot,
           polyPool: { ...state.snapshot.polyPool, [die]: cur + 1 },
           polyResult: null,
+          result: null,
+          spent: [],
         },
       };
     }),
@@ -342,21 +369,8 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
       const next = { ...state.snapshot.polyPool };
       if (cur - 1 === 0) delete next[die];
       else next[die] = cur - 1;
-      return { snapshot: { ...state.snapshot, polyPool: next, polyResult: null } };
+      return { snapshot: { ...state.snapshot, polyPool: next, polyResult: null, result: null, spent: [] } };
     }),
-  rollPoly: () => {
-    const snap = get().snapshot;
-    if (!snap || !snap.polyPool) return;
-    const result = rollPolyPool(snap.polyPool);
-    set({ snapshot: { ...snap, polyResult: result }, rolling: true });
-    setTimeout(() => set({ rolling: false }), ROLL_ANIMATION_MS);
-    useSessionLogStore.getState().log({
-      kind: 'reminder-resolved',
-      summary: summarisePolyRoll(snap.polyPool, result),
-      tone: 'info',
-      meta: { rollId: snap.id, mode: 'polyhedral' },
-    });
-  },
   recordSpend: (optionId, label, recipientId) => {
     const snap = get().snapshot;
     if (!snap) return;

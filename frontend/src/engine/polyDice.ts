@@ -30,8 +30,10 @@ export interface PolyRollResult {
   total: number;
 }
 
-/** Roll one die: a uniform integer in [1, sides]. */
+/** Roll one die: a uniform integer in [1, sides]. The "d100" is a percentile
+ * (tens) d10 — its faces are 00, 10, … 90, so it rolls a multiple of ten. */
 export function rollPolyDie(die: PolyDie, rng: RNG = Math.random): number {
+  if (die === 'd100') return Math.floor(rng() * 10) * 10;
   return Math.floor(rng() * POLY_SIDES[die]) + 1;
 }
 
