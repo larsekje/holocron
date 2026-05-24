@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Text, Textarea, VStack } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import useSessionLogStore, {
   LogEntry,
   Reminder,
 } from "@/state/sessionLogStore";
 import { nukeAndReload } from "@/state/persist";
+import usePlaytestNotesStore from "@/state/playtestNotesStore";
 import { renderSwrpgText } from "@/utils/swrpgText";
 
 const toneBorder: Record<NonNullable<LogEntry["tone"]>, string> = {
@@ -502,6 +503,8 @@ const Sidebar: React.FC = () => {
         )}
       </Box>
 
+      {import.meta.env.DEV && <PlaytestNotes />}
+
       {/* Dev-only escape hatch — wipes all persisted holocron state and
           reloads. Survives prod-build by being dropped at build time when
           import.meta.env.DEV is false. Console-equivalent:
@@ -532,5 +535,41 @@ const Sidebar: React.FC = () => {
     </Box>
   );
 };
+
+/** Freeform playtest notes pinned in the Sidebar footer. Persisted outside the
+ * holocron:v1: namespace so "Nuke saved state" doesn't wipe them. */
+function PlaytestNotes() {
+  const notes = usePlaytestNotesStore((s) => s.notes);
+  const setNotes = usePlaytestNotesStore((s) => s.setNotes);
+  return (
+    <Box px={2} py={2} borderTopWidth="1px" borderColor="whiteAlpha.150">
+      <Text
+        fontSize="2xs"
+        color="whiteAlpha.500"
+        letterSpacing="0.16em"
+        textTransform="uppercase"
+        fontWeight="bold"
+        mb={1}
+      >
+        Playtest notes
+      </Text>
+      <Textarea
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        placeholder="What works, what to fix…"
+        size="sm"
+        rows={4}
+        bg="#1f2225"
+        borderColor="whiteAlpha.200"
+        color="whiteAlpha.900"
+        fontSize="xs"
+        lineHeight="1.4"
+        resize="vertical"
+        _placeholder={{ color: "whiteAlpha.400" }}
+        _focus={{ borderColor: "whiteAlpha.400", boxShadow: "none" }}
+      />
+    </Box>
+  );
+}
 
 export default Sidebar;
