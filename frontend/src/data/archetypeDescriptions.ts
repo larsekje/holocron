@@ -32,7 +32,8 @@ export function describeArchetype(name: string): string | undefined {
 // These describe a *playstyle pattern*, not a single talent — coreArchetype is what kind of
 // scene the NPC tends to drive (combatant flavour, info-broker, lieutenant, etc.).
 export const CORE_ARCHETYPE_DESCRIPTIONS: Record<string, string> = {
-  "ace pilot": "Vehicle/starship specialist. Strongest contribution is in chases and dogfights.",
+  "pilot": "Vehicle/starship operator — shuttle drivers through to aces. Contribution is in chases and dogfights.",
+  "medic": "Healer / field support. Medicine skill and healing abilities; keeps allies alive.",
   bureaucrat: "Information-broker / official. Drives social encounters, holds keys to other scenes.",
   "bureaucrat / enforcer": "Mid-tier authority figure. Mix of social pressure and decisive use of force.",
   civilian: "Non-combatant baseline. Use as colour, hostage, or witness — not a threat alone.",
@@ -51,7 +52,7 @@ export const CORE_ARCHETYPE_DESCRIPTIONS: Record<string, string> = {
   "marksman": "Long-range shooter. Patient, accurate, bad to ignore.",
   "melee bruiser": "Pure close-combat threat. Wades in, soaks hits, swings hard.",
   mentor: "Veteran teacher. Source of wisdom + occasional intervention; high soft power.",
-  "mount / beast of burden": "Riding/transport animal. Defines a scene through mobility, not threat.",
+  "beast of burden": "Riding/transport animal. Defines a scene through mobility, not threat.",
   mystic: "Force or quasi-Force adept who relies on knowledge, divination, or ritual.",
   "nasty beast": "Dangerous creature. Significant combat threat with claws, teeth, or worse.",
   "persistent pest": "Recurring antagonist. Never the boss; never quite gone.",
@@ -83,7 +84,7 @@ export const CORE_ARCHETYPE_NAMES: string[] = [
   'Marksman',
   'Heavy Hitter',
   'Melee Bruiser',
-  'Ace Pilot',
+  'Pilot',
   'Soldier',
   'Enforcer',
   'Grunt',
@@ -91,8 +92,9 @@ export const CORE_ARCHETYPE_NAMES: string[] = [
   'Persistent Pest',
   'Critter',
   'Nasty Beast',
-  'Mount / Beast of Burden',
+  'Beast of Burden',
   'Technician',
+  'Medic',
   'Commander',
   'Shadow Operative',
   'Force Duelist',
@@ -111,17 +113,60 @@ export const CORE_ARCHETYPE_NAMES: string[] = [
   'Civilian',
 ];
 
-// Faction descriptions for the closed set used in adversaries.json.
+// One-liners for the 6 derived Archetype buckets — the broad roll-up over the
+// 31 Roles. Used for the Archetype chip tooltip.
+export const ARCHETYPE_BUCKET_DESCRIPTIONS: Record<string, string> = {
+  creature: "Non-sentient beasts and animals — instinct, not gear or talents.",
+  combatant: "General-purpose violence — soldiers, brawlers, shooters, leaders.",
+  specialist: "A precision tool deployed for a specific skilled job — pilots, techs, medics.",
+  force: "Force-sensitives whose defining trait is the Force.",
+  social: "Power through people and politics — talkers, brokers, bosses.",
+  civilian: "Non-combatant background — bystanders, hostages, witnesses.",
+};
+
+export function describeArchetypeBucket(name: string): string | undefined {
+  if (!name) return undefined;
+  return ARCHETYPE_BUCKET_DESCRIPTIONS[name.toLowerCase()];
+}
+
+// One-liners for the 12 Profile values — behavioural flavors. Profile fires
+// on a multi-signal pattern as a defining flavor (not deviation, not threshold).
+// Used for the Profile chip tooltips.
+export const PROFILE_DESCRIPTIONS: Record<string, string> = {
+  "glass cannon": "Hits hard, folds fast — high offense + low durability as a defining tradeoff.",
+  tough: "Primarily durable — soaks punishment, modest offense; built to endure.",
+  elite: "A cut above its kind — stats/kit a clear step above the norm for its tier and Role.",
+  terrifying: "A morale threat — Terrifying/Fearsome abilities; can break a scene without a hit.",
+  ambusher: "Front-loaded — dangerous on the opening, stealth + opening-strike kit.",
+  stealthy: "Operates undetected — sneaks, hides, infiltrates; stealth as a defining tool.",
+  controller: "Shuts you down rather than damaging — built on Ensnare/Disorient/Stun/Knockdown.",
+  swarm: "A numbers threat — individually weak, deployed in combat groups (Minion tier).",
+  charismatic: "Wins hearts — persuasion is the defining tool; multi-signal social pattern.",
+  "iron-fisted": "Wins by fear — intimidation is the defining tool; Coercion-dominant.",
+  manipulative: "Wins by deceit — guile is the defining tool; Deception/Skulduggery + Cunning.",
+  "force-sensitive": "Force-touched, regardless of Role — Force Rating, powers, or Force-flavored talents.",
+};
+
+export function describeProfile(name: string): string | undefined {
+  if (!name) return undefined;
+  return PROFILE_DESCRIPTIONS[name.toLowerCase()];
+}
+
+// Faction descriptions for the closed set used in adversaries.json (v5: 14 values).
 export const FACTION_DESCRIPTIONS: Record<string, string> = {
   imperial: "Galactic Empire and its security/military apparatus.",
   rebel: "Rebel Alliance and affiliated cells working against the Empire.",
+  "galactic republic": "The Old/Clone Wars Republic — clones, Republic military and officials.",
   "separatist/cis": "Confederacy of Independent Systems forces (Clone Wars era).",
+  "first order": "Successor military state to the Empire (sequel era).",
+  resistance: "Resistance cells opposing the First Order (sequel era).",
+  "jedi order": "The Jedi — as an organisation, across eras.",
+  sith: "Sith order/lineage and unaligned dark-side adepts.",
   underworld: "Criminal syndicates, smugglers, bounty hunters, and pirates.",
-  corporate: "Megacorps and their private security — profit-driven, often above the law.",
-  civilian: "Non-affiliated populace. Bystanders, shopkeepers, settlers.",
   "local law": "Planetary or station police; works for whoever holds the local writ.",
-  droid: "Independent or autonomous droids without a clear allegiance to organics.",
-  creature: "Non-sentient species — environmental threats and beasts.",
+  corporate: "Megacorps and their private security — profit-driven, often above the law.",
+  independent: "Unaffiliated people and groups — villagers, free agents, the local populace.",
+  nature: "Wild creatures — no allegiance; part of the ecosystem.",
   other: "Doesn't fit the standard factions cleanly.",
 };
 

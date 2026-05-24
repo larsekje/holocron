@@ -15,7 +15,8 @@ import {Participant} from "@/state/participantsStore";
 import {statify} from "@/utils/statify";
 import {talentNames} from "@/utils/talents";
 import {getDetail} from "@/data/spotlightIndex";
-import {describeArchetype, describeCoreArchetype, describeFaction} from "@/data/archetypeDescriptions";
+import abilitiesData from "@/assets/data/talents/abilities.json";
+import {describeArchetypeBucket, describeCoreArchetype, describeFaction} from "@/data/archetypeDescriptions";
 import SwrpgTooltip from "@components/common/SwrpgTooltip";
 import {renderSwrpgText} from "@/utils/swrpgText";
 
@@ -38,6 +39,49 @@ function lookupTalentDescription(name: string): string | undefined {
   const id = talentSlugFromName(name);
   const detail = getDetail("talent", id);
   return (detail as any)?.description;
+}
+
+// Adversary "abilities" reach the UI in two shapes: a bare string, or an
+// object ({ name, description }) — d20radio.json and similar carry the rules
+// text inline. Curated descriptions for the bare-string form live only in this
+// hand-curated file. Match case-insensitively, falling back to a rank-digit-
+// stripped key so "Silhouette 3" finds "Silhouette".
+const abilityDescByName: Map<string, string> = new Map(
+  (abilitiesData as Array<{name: string; description: string}>).map((a) => [
+    a.name.trim().toLowerCase(),
+    a.description,
+  ]),
+);
+
+function lookupAbilityDescription(name: string): string | undefined {
+  const key = name.trim().toLowerCase();
+  const stripped = key.replace(/\s+\d+$/, "");
+  return abilityDescByName.get(key) ?? abilityDescByName.get(stripped);
+}
+
+// Normalise a (possibly mixed) abilities array to { name, description } —
+// preferring an inline description, then the curated lookup.
+function normaliseAbilities(raw: unknown): Array<{name: string; description?: string}> {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((entry): {name: string; description?: string} | null => {
+      if (typeof entry === 'string') {
+        const name = entry.trim();
+        return name ? {name, description: lookupAbilityDescription(name)} : null;
+      }
+      if (entry && typeof entry === 'object') {
+        const o = entry as Record<string, unknown>;
+        const name = typeof o.name === 'string' ? o.name.trim() : '';
+        if (!name) return null;
+        const description =
+          typeof o.description === 'string' && o.description.trim()
+            ? o.description
+            : lookupAbilityDescription(name);
+        return {name, description};
+      }
+      return null;
+    })
+    .filter((a): a is {name: string; description?: string} => a !== null);
 }
 
 function adversarySlug(name: string): string {
@@ -79,8 +123,13 @@ const StatSheetOld = ({participant}: Props) => {
   const tags: string[] = (stats as any).tags ?? [];
   const type = stats.type ?? (participant.isPC ? "PC" : "Minion");
   const talents: string[] = talentNames(stats.talents);
+  const abilities = normaliseAbilities((stats as any).abilities);
   const gear: string[] = (stats as any).gear ?? (stats as any).weapons ?? [];
-  const description: string = (stats as any).description ?? "";
+  const adversaryDetail = lookupAdversaryDetail(participant);
+  // Description: prefer the participant's own stats, fall back to the indexed
+  // adversary detail so the sheet still shows flavour text for participants
+  // whose stats predate the description being carried.
+  const description: string = (stats as any).description ?? adversaryDetail?.description ?? "";
   const skills: Record<string, number> = stats.skills ?? {};
 
   // Minion group accounting (per SWRPG rules):
@@ -94,15 +143,14 @@ const StatSheetOld = ({participant}: Props) => {
       ? Math.max(initialMinions - Math.floor(woundsTaken / perMinionThreshold), 0)
       : undefined;
 
-  // Subtitle: prefer the Spotlight-derived archetype info (coreArchetype + archetypes).
-  // Fall back to type + non-provenance tags if no detail is found.
-  const adversaryDetail = lookupAdversaryDetail(participant);
+  // Subtitle: Spotlight-derived classification — Role (coreArchetype) + the
+  // derived Archetype bucket. Fall back to type + non-provenance tags if no detail.
   const coreArchetype = adversaryDetail?.coreArchetype as string | undefined;
-  const archetypes = (adversaryDetail?.archetypes as string[] | undefined) ?? [];
+  const archetype = adversaryDetail?.archetype as string | undefined;
   const factions = (adversaryDetail?.factions as string[] | undefined) ?? [];
 
   const fallbackTags = tags.filter((t) => !isSourceTag(t));
-  const hasArchetypeData = !!coreArchetype || archetypes.length > 0;
+  const hasArchetypeData = !!coreArchetype || !!archetype;
   // Inline label that opens a SWRPG tooltip when a description is available.
   const renderTooltipChip = (
     label: string,
@@ -147,15 +195,10 @@ const StatSheetOld = ({participant}: Props) => {
                 coreArchetype,
                 describeCoreArchetype(coreArchetype) ?? lookupTalentDescription(coreArchetype),
               )}
-              {coreArchetype && archetypes.length > 0 && (
+              {coreArchetype && archetype && (
                 <Text color="whiteAlpha.400" fontSize="xs">·</Text>
               )}
-              {archetypes.map((a, i) => (
-                <React.Fragment key={a}>
-                  {i > 0 && <Text color="whiteAlpha.300" fontSize="xs">·</Text>}
-                  {renderTooltipChip(a, describeArchetype(a), {italic: false, dim: true})}
-                </React.Fragment>
-              ))}
+              {archetype && renderTooltipChip(archetype, describeArchetypeBucket(archetype), {italic: false, dim: true})}
             </HStack>
           ) : (
             <Text color="whiteAlpha.800" as="i" fontSize="sm" noOfLines={1}>
@@ -228,6 +271,35 @@ const StatSheetOld = ({participant}: Props) => {
                     <>
                       <Text as="span" color="whiteAlpha.500">{": "}</Text>
                       <Text as="span" color="whiteAlpha.800">{renderSwrpgText(talentDesc)}</Text>
+                    </>
+                  )}
+                </Text>
+              );
+            })}
+          </VStack>
+        </>
+      )}
+
+      {abilities.length > 0 && (
+        <>
+          <SectionHeading>Special Abilities</SectionHeading>
+          <VStack align="stretch" spacing={1.5}>
+            {abilities.map((ability, i) => {
+              const abilityDesc = ability.description
+                ? statify(ability.description, "", 1)
+                : "";
+              return (
+                <Text
+                  key={`${ability.name}-${i}`}
+                  fontSize="sm"
+                  color="whiteAlpha.900"
+                  lineHeight="1.45"
+                >
+                  <Text as="span" fontWeight="bold">{ability.name}</Text>
+                  {abilityDesc && (
+                    <>
+                      <Text as="span" color="whiteAlpha.500">{": "}</Text>
+                      <Text as="span" color="whiteAlpha.800">{renderSwrpgText(abilityDesc)}</Text>
                     </>
                   )}
                 </Text>
