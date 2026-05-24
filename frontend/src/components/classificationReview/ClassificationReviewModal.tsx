@@ -57,7 +57,7 @@ const ClassificationReviewModal: React.FC = () => {
       const d = a as any;
       if (d.coreArchetype) core.add(String(d.coreArchetype));
       for (const f of d.factions ?? []) if (f) fac.add(String(f));
-      for (const r of d.archetypes ?? []) if (r) role.add(String(r));
+      if (d.archetype) role.add(String(d.archetype));
     }
     return {
       coreArchetypes: [...core].sort(),
@@ -75,9 +75,8 @@ const ClassificationReviewModal: React.FC = () => {
       if (filters.hideAdventure && d.fromAdventure) return false;
       if (filters.coreArchetype && d.coreArchetype !== filters.coreArchetype) return false;
       if (filters.faction && !(d.factions ?? []).includes(filters.faction)) return false;
-      if (filters.role && !(d.archetypes ?? []).includes(filters.role)) return false;
+      if (filters.role && d.archetype !== filters.role) return false;
       if (filters.flaggedOnly && !flags[a.id]) return false;
-      if (filters.missingRoles && Array.isArray(d.archetypes) && d.archetypes.length > 0) return false;
       if (filters.noRationale && d.classificationReason) return false;
       return true;
     });

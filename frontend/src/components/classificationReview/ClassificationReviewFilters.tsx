@@ -8,13 +8,12 @@ export type GroupBy = 'none' | 'coreArchetype' | 'faction';
 
 export interface ReviewFilters {
   text: string;
-  coreArchetype: string; // '' = any
+  coreArchetype: string; // '' = any — the Role
   faction: string; // '' = any
-  role: string; // '' = any (the OggDude `archetypes` field)
+  role: string; // '' = any — the derived Archetype bucket
   hideNamed: boolean; // hide unique/named characters
   hideAdventure: boolean; // hide pre-written-adventure NPCs
   flaggedOnly: boolean;
-  missingRoles: boolean; // `archetypes` empty/missing
   noRationale: boolean; // no v4.2 classificationReason
 }
 
@@ -29,7 +28,6 @@ export const DEFAULT_FILTERS: ReviewFilters = {
   hideNamed: true,
   hideAdventure: true,
   flaggedOnly: false,
-  missingRoles: false,
   noRationale: false,
 };
 
@@ -95,7 +93,7 @@ const ClassificationReviewFilters: React.FC<Props> = ({
           color="gray.100"
           sx={{ option: { background: '#1f2226', color: '#e2e8f0' } }}
         >
-          <option value="">Any archetype</option>
+          <option value="">Any role</option>
           {options.coreArchetypes.map((v) => (
             <option key={v} value={v}>
               {v}
@@ -129,7 +127,7 @@ const ClassificationReviewFilters: React.FC<Props> = ({
           color="gray.100"
           sx={{ option: { background: '#1f2226', color: '#e2e8f0' } }}
         >
-          <option value="">Any role</option>
+          <option value="">Any archetype</option>
           {options.roles.map((v) => (
             <option key={v} value={v}>
               {v}
@@ -155,12 +153,6 @@ const ClassificationReviewFilters: React.FC<Props> = ({
             onClick={() => set({ flaggedOnly: !filters.flaggedOnly })}
             label="Flagged only"
             title="Show only adversaries you've flagged"
-          />
-          <Toggle
-            active={filters.missingRoles}
-            onClick={() => set({ missingRoles: !filters.missingRoles })}
-            label="Missing roles"
-            title="Show only adversaries with no OggDude role tags"
           />
           <Toggle
             active={filters.noRationale}

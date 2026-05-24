@@ -10,7 +10,7 @@ import type { SpotlightDetail } from '@/state/spotlightStore';
 import type { ClassificationFlag } from '@/state/classificationReviewStore';
 import { downloadJSON } from '@/utils/exportJson';
 
-const TAXONOMY_VERSION = 'v4.2';
+const TAXONOMY_VERSION = 'v5';
 
 export interface ExportedFlagEntry {
   id: string;
@@ -18,7 +18,7 @@ export interface ExportedFlagEntry {
   type: string;
   current: {
     coreArchetype?: string;
-    archetypes?: string[];
+    archetype?: string;
     factions?: string[];
     traits?: string[];
   };
@@ -55,7 +55,7 @@ export function buildFlagExport(
         type: d.adversaryType ?? 'Unknown',
         current: {
           coreArchetype: d.coreArchetype,
-          archetypes: d.archetypes,
+          archetype: d.archetype,
           factions: d.factions,
           traits: d.traits,
         },

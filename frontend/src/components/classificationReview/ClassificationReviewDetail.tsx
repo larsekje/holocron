@@ -24,9 +24,10 @@ import {
 } from '@/state/classificationReviewStore';
 import {
   CORE_ARCHETYPE_NAMES,
-  describeArchetype,
+  describeArchetypeBucket,
   describeCoreArchetype,
   describeFaction,
+  describeProfile,
 } from '@/data/archetypeDescriptions';
 
 // Right pane: the full picture for one adversary — its four classification
@@ -43,10 +44,9 @@ interface Props {
 const borderCol = 'gray.700';
 
 const FIELD_LABEL: Record<ClassificationField, string> = {
-  coreArchetype: 'Core archetype',
-  archetypes: 'Roles',
-  factions: 'Factions',
-  traits: 'Traits',
+  coreArchetype: 'Role',
+  factions: 'Faction',
+  traits: 'Profile',
 };
 
 function asNameList(v: any): string[] {
@@ -225,13 +225,9 @@ const ClassificationReviewDetail: React.FC<Props> = ({ adversary, flag, onSetFla
             describe={describeCoreArchetype}
             warnUnknown
           />
-          <FieldRow
-            label={FIELD_LABEL.archetypes}
-            values={asNameList(d.archetypes)}
-            describe={describeArchetype}
-          />
+          <FieldRow label="Archetype" values={d.archetype ? [d.archetype] : []} describe={describeArchetypeBucket} />
           <FieldRow label={FIELD_LABEL.factions} values={asNameList(d.factions)} describe={describeFaction} />
-          <FieldRow label={FIELD_LABEL.traits} values={asNameList(d.traits)} />
+          <FieldRow label={FIELD_LABEL.traits} values={asNameList(d.traits)} describe={describeProfile} />
         </VStack>
 
         {/* v4.2 rationale */}

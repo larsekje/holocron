@@ -8,12 +8,12 @@ import { holocronPersist } from './persist';
 // exports the flags as JSON. That export later feeds an out-of-band LLM pass
 // that revises the taxonomy rules and re-classifies — not part of this store.
 
-/** The four classification fields a flag can point at. */
-export type ClassificationField = 'factions' | 'archetypes' | 'coreArchetype' | 'traits';
+/** The classification fields a flag can point at. The derived Archetype is not
+ * flaggable — it's computed from the Role, so a wrong Archetype means a wrong Role. */
+export type ClassificationField = 'factions' | 'coreArchetype' | 'traits';
 
 export const CLASSIFICATION_FIELDS: ClassificationField[] = [
   'coreArchetype',
-  'archetypes',
   'factions',
   'traits',
 ];
