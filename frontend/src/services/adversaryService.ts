@@ -56,7 +56,12 @@ class AdversaryService {
   convertToParticipant(adversary: Adversary): Participant {
     // Get characteristics with proper capitalization
     const characteristics = adversary.characteristics || {};
-    
+
+    // Tier (Minion/Rival/Nemesis). Raw adversaries carry it on `type`; Spotlight
+    // details put the entity type ('adversary') on `type` and the tier on
+    // `adversaryType` — read that first or every dropped NPC lands as the wrong tier.
+    const tier = (adversary as any).adversaryType ?? adversary.type;
+
     // Create a participant from the adversary data
     const participant: Participant = {
       id: nanoid(),
@@ -64,7 +69,7 @@ class AdversaryService {
       isPC: false,
       stats: {
         // Basic stats
-        type: adversary.type,
+        type: tier,
         adversaryId: adversary.name, // Store the adversary name as a reference
         
         // Characteristics
@@ -77,7 +82,7 @@ class AdversaryService {
         
         // Derived stats
         soak: adversary.derived?.soak || characteristics.Brawn || 2,
-        woundThreshold: adversary.derived?.wounds || (adversary.type === 'Minion' ? 5 : 12),
+        woundThreshold: adversary.derived?.wounds || (tier === 'Minion' ? 5 : 12),
         wounds: 0,
         strainThreshold: adversary.derived?.strain || 0,
         strain: 0,
@@ -87,7 +92,7 @@ class AdversaryService {
         rangedDefense: adversary.derived?.defense?.[1] || 0,
         
         // Set minion count if this is a minion
-        minions: adversary.type === 'Minion' ? 4 : undefined,
+        minions: tier === 'Minion' ? 4 : undefined,
         
         // Skills, weapons and talents
         skills: adversary.skills || {},

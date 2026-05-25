@@ -10,7 +10,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { holocronPersist } from './persist';
-import type { EncounterTemplate, NpcEntry } from '@/data/encounterTemplates';
+import type { EncounterTemplate, NpcEntry, RollTable } from '@/data/encounterTemplates';
 
 export interface ActiveScene {
   /** Snapshot id — independent of any source template id, so re-starting
@@ -23,6 +23,8 @@ export interface ActiveScene {
   description: string;
   npcs?: NpcEntry[];
   beats?: string[];
+  /** Roll tables carried from the encounter — rollable during play. */
+  tables?: RollTable[];
   /** Free-form GM notes the GM types in during play. Starts blank when a
    * template is started — the template description goes in `description`,
    * this is the running scratch. */
@@ -50,9 +52,10 @@ const useSessionPrepStore = create<SessionPrepStore>()(persist((set) => ({
         id: randomId(),
         fromTemplateId: template.id,
         title: template.title,
-        description: template.description,
+        description: template.body ?? template.description ?? '',
         npcs: template.npcs ? [...template.npcs] : undefined,
         beats: template.beats ? [...template.beats] : undefined,
+        tables: template.tables ? [...template.tables] : undefined,
         notes: '',
         startedAt: Date.now(),
       },

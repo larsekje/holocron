@@ -14,9 +14,9 @@ export type EncounterTag =
   | 'combat'
   | 'social'
   | 'chase'
-  | 'skill-challenge'
-  | 'transit'
-  | 'investigation';
+  | 'investigation'
+  | 'travel'
+  | 'downtime';
 
 /**
  * NPC entry. Plain strings still work for narrative-only NPCs ("The dead man
@@ -39,20 +39,40 @@ export interface NpcRef {
 
 export type NpcEntry = string | NpcRef;
 
+export interface RollTableRow {
+  id: string;
+  /** Matched against a roll — a single number ("3") or a range ("1-2"). */
+  key: string;
+  text: string;
+}
+
+export interface RollTable {
+  id: string;
+  title: string;
+  /** PolyDie string ('d6', 'd20', …). When set the table is rollable and a
+   * roll highlights the matching row; without it it's a static reference. */
+  die?: string;
+  rows: RollTableRow[];
+}
+
 export interface EncounterTemplate {
   id: string;
   title: string;
-  /** One-line hook shown on the collapsed card. */
-  blurb: string;
-  /** Long-form body shown when the card is expanded. Plain text for now;
-   * we can graduate to markdown if it earns it. */
-  description: string;
+  /** Free-form body. Its first paragraph doubles as the collapsed hook, so
+   * authored encounters have no separate hook field. */
+  body?: string;
+  /** Chosen accent-icon key (see encounterVisuals ICON_CHOICES); overrides the
+   * tag-derived icon when set. */
+  icon?: string;
+  /** Legacy bundled-sample fields — still rendered when present. */
+  blurb?: string;
+  description?: string;
   tags?: EncounterTag[];
-  /** NPC roster — mix of plain strings (narrative NPCs) and NpcRef objects
-   *  (linked to spotlight, quick-addable). */
+  /** NPC roster — plain strings (narrative NPCs) or NpcRef (linked to a
+   *  Spotlight profile, quick-addable). */
   npcs?: NpcEntry[];
-  /** Optional ordered beats for the fleshed-out tier. */
   beats?: string[];
+  tables?: RollTable[];
 }
 
 export const ENCOUNTER_TEMPLATES: EncounterTemplate[] = [

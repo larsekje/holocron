@@ -45,7 +45,7 @@ const SkillItemOld = ({
     >
       <HStack>
         {!abbreviated && <ListedSkillOld listedSkill={isListedSkill}/>}
-        <Text as={hover ? "u" : undefined} userSelect="none" color={color}>
+        <Text as={hover ? "u" : undefined} userSelect="none" color={color} fontSize="sm" lineHeight="1.1">
           {name}{rank > 0 ? ` ${rank}` : ""}
         </Text>
       </HStack>

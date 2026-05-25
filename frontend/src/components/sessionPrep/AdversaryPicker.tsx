@@ -26,7 +26,11 @@ const AdversaryPicker: React.FC<Props> = ({ onPick, placeholder }) => {
   const results = useMemo(() => {
     const t = term.trim();
     if (t.length < 2) return [];
-    return searchIndex(`type:adversary ${t}`).slice(0, 8);
+    // `adv:` is the entity-type scope token; the trailing space keeps `t` as the
+    // residual search term (no space → the value-less scope token swallows it and
+    // returns every adversary). `type:` is a different field (the Minion/Rival/
+    // Nemesis tier), which is why `type:adversary` always came back empty.
+    return searchIndex(`adv: ${t}`).slice(0, 8);
   }, [term]);
 
   return (

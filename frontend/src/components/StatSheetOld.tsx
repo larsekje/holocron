@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Box, Button, Collapse, Divider, Flex, Heading, HStack, IconButton, Text, Tooltip, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import {FaRocket} from "react-icons/fa";
+import {FiLink} from "react-icons/fi";
 import {ChevronDownIcon, ChevronUpIcon} from "@chakra-ui/icons";
 import type {CharacteristicSet} from "@components/statblock/CharacteristicsOld";
 import SkillListOld from "@components/statblock/SkillListOld";
@@ -126,6 +127,9 @@ const StatSheetOld = ({participant}: Props) => {
   const abilities = normaliseAbilities((stats as any).abilities);
   const gear: string[] = (stats as any).gear ?? (stats as any).weapons ?? [];
   const adversaryDetail = lookupAdversaryDetail(participant);
+  // The stat block this character is built on — shown beside a custom name so the
+  // GM can see e.g. "Captain Vree Sall" *is* a Gang leader.
+  const sourceName = participant.originalName ?? (adversaryDetail?.name as string | undefined);
   // Description: prefer the participant's own stats, fall back to the indexed
   // adversary detail so the sheet still shows flavour text for participants
   // whose stats predate the description being carried.
@@ -185,8 +189,14 @@ const StatSheetOld = ({participant}: Props) => {
           <AdversaryTypeBadgeOld type={type} isPC={participant.isPC} clout={adversaryDetail?.clout}/>
         </Box>
         <VStack alignItems="flex-start" spacing={0} flex="1" minW={0} mr={2}>
-          <HStack spacing={2} align="center">
+          <HStack spacing={2} align="baseline" wrap="wrap">
             <Heading size="md" color="white">{participant.name}</Heading>
+            {sourceName && sourceName !== participant.name && (
+              <HStack spacing={1} color="whiteAlpha.500" align="center" minW={0}>
+                <Box as="span" display="inline-flex" flexShrink={0}><FiLink size={11} /></Box>
+                <Text fontSize="sm" fontStyle="italic" noOfLines={1}>{sourceName}</Text>
+              </HStack>
+            )}
             <SourcesOld tags={tags}/>
           </HStack>
           {hasArchetypeData ? (

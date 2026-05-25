@@ -10,7 +10,13 @@ import type { SkillChallengeState } from "@/state/skillChallengeStore";
  * round, any active skill challenge, and an optional GM-pushed image. No combat
  * stats (soak, defenses, wound numbers) ever cross — just names and status.
  */
-export const SNAPSHOT_VERSION = 2;
+export const SNAPSHOT_VERSION = 4;
+
+/** Coarse, GM-narration-style condition for an individual — a reminder of what
+ * the GM says aloud ("definitely hurt but still in the fight"), never a number.
+ * Bands map to remaining wounds: unhurt ≥50% (minor damage isn't telegraphed),
+ * hurt ≥25%, badly ≥10%, critical <10%. Minion groups use the ×N count. */
+export type HealthState = "unhurt" | "hurt" | "badly" | "critical";
 
 export interface PlayerSlot {
   team: "PC" | "NPC";
@@ -27,6 +33,13 @@ export interface PlayerParticipant {
   acted: boolean; // has acted this round
   active: boolean; // currently acting
   down: boolean; // downed / defeated
+  // Minion groups only: living members and original group size, so the table
+  // sees the group thin out (e.g. "×4" → "×2"). Undefined for individuals.
+  groupAlive?: number;
+  groupTotal?: number;
+  // Individuals only (Rivals/Nemeses/PCs): coarse condition band. Undefined for
+  // minion groups (they read condition off the ×N count).
+  health?: HealthState;
 }
 
 export interface PlayerSkillChallenge {
@@ -92,6 +105,16 @@ export interface SnapshotInputs {
   slotActors: Record<number, string>;
 }
 
+/** Map wounds vs threshold to a coarse, narration-style condition band. The
+ * exact ratio is computed and discarded here; only the band leaves the GM. */
+function coarseHealth(wounds: number, woundThreshold: number): HealthState {
+  const remaining = Math.max(0, 1 - wounds / Math.max(woundThreshold, 1));
+  if (remaining >= 0.5) return "unhurt"; // minor damage isn't telegraphed
+  if (remaining >= 0.25) return "hurt"; // definitely hurt, still in the fight
+  if (remaining >= 0.1) return "badly"; // badly injured
+  return "critical"; // on its last leg
+}
+
 /**
  * Build a player snapshot from the GM's live state. `down` is computed here,
  * GM-side, via the same disabledSlotIndices helper the GM initiative bar uses.
@@ -126,14 +149,33 @@ export function buildPlayerSnapshot(inputs: SnapshotInputs): PlayerSnapshot {
       // History: who acted in this slot this round (active + past).
       actorName: slotActors[i],
     })),
-    participants: participants.map((p) => ({
-      id: p.id,
-      name: p.name,
-      team: p.isPC ? "PC" : "NPC",
-      acted: acted.includes(p.id),
-      active: p.id === activeParticipantId,
-      down: isParticipantDead(p),
-    })),
+    participants: participants.map((p) => {
+      const stats = p.stats ?? {};
+      // Minion group: surface living / total so the table sees it thin out.
+      let groupAlive: number | undefined;
+      let groupTotal: number | undefined;
+      let health: HealthState | undefined;
+      if (stats.minions !== undefined) {
+        const wt = stats.woundThreshold ?? 8;
+        const wounds = stats.wounds ?? 0;
+        groupTotal = stats.minions;
+        groupAlive = Math.max(stats.minions - Math.floor(wounds / Math.max(wt, 1)), 0);
+      } else {
+        const wt = stats.woundThreshold ?? (p.isPC ? 12 : 8);
+        health = coarseHealth(stats.wounds ?? 0, wt);
+      }
+      return {
+        id: p.id,
+        name: p.name,
+        team: (p.isPC ? "PC" : "NPC") as "PC" | "NPC",
+        acted: acted.includes(p.id),
+        active: p.id === activeParticipantId,
+        down: isParticipantDead(p),
+        groupAlive,
+        groupTotal,
+        health,
+      };
+    }),
     skillChallenge: skillChallenge
       ? {
           name: skillChallenge.name,

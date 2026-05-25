@@ -12,6 +12,7 @@ import { FaPlay } from 'react-icons/fa';
 import useSessionPrepStore from '@/state/sessionPrepStore';
 import DenseRow from './DenseRow';
 import NPCList from './NPCList';
+import RollTableBlock from './RollTableBlock';
 import { ENCOUNTER_TEMPLATES } from '@/data/encounterTemplates';
 import { TAG_COLOR, TAG_ICON, primaryTag } from './encounterVisuals';
 
@@ -39,7 +40,7 @@ const ActiveSceneCard: React.FC = () => {
         py={1}
       >
         <Text color="whiteAlpha.500" fontSize="2xs" fontStyle="italic">
-          No active scene. Start one from a template below.
+          No active scene. Start one from an encounter below.
         </Text>
       </Box>
     );
@@ -157,6 +158,19 @@ const ActiveSceneCard: React.FC = () => {
                       {b}
                     </Text>
                   </HStack>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+          {activeScene.tables && activeScene.tables.length > 0 && (
+            <Box mt={2} onClick={(e) => e.stopPropagation()}>
+              <Text fontSize="2xs" color="whiteAlpha.500" letterSpacing="0.16em" textTransform="uppercase" mb={1}>
+                Roll tables
+              </Text>
+              <VStack align="stretch" spacing={1.5}>
+                {activeScene.tables.map((t) => (
+                  <RollTableBlock key={t.id} table={t} editable={false} />
                 ))}
               </VStack>
             </Box>

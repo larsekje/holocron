@@ -12,25 +12,13 @@
     }
   },
   {
-    "id": "rule_personal-scale",
+    "id": "rule_incapacitated",
     "type": "rule",
     "name": "Incapacitated",
     "detail": {
       "type": "rule",
       "name": "Incapacitated",
       "markdown": "A character is Incapacitated once they have suffered more Wounds than their Wound Threshold or more Strain than their Strain Threshold. Incapacitation means that a character is unconscious and no longer able to act until the number of Wounds/Strain they are suffering are decreased below their Wound/Strain Threshold.\n\nSince exceeding a character's Wound Threshold triggers a Critical Injury check, it is possible for an already Incapacitated character to suffer further Critical Injuries.",
-      "category": "Rules",
-      "source": "CRB"
-    }
-  },
-  {
-    "id": "rule_critical-injuries",
-    "type": "rule",
-    "name": "Critical Injuries",
-    "detail": {
-      "type": "rule",
-      "name": "Critical Injuries",
-      "markdown": "When a character suffers a Critical Injury, roll d100 on the Critical Injury table, adding modifiers as appropriate.",
       "category": "Rules",
       "source": "CRB"
     }
@@ -48,60 +36,418 @@
       "source": "CRB"
     }
   },
-
-  { "id": "quality_autofire",
+  {
+    "id": "quality_autofire",
     "type": "quality",
     "name": "Autofire",
-    "detail": { "id": "quality_autofire", "type": "quality", "name": "Autofire", "markdown": "Attack is made at +1 difficulty. On a hit, may spend [AD][AD] to hit the same or another target within range an additional time (repeatable). GM may apply increased ammo usage.", "category": "Active", "ranked": false, "source": "SRD" } },
-  { "id": "quality_stun-setting", "type": "quality", "name": "Stun Setting",
-    "detail": { "id": "quality_stun-setting", "type": "quality", "name": "Stun Setting", "markdown": "Weapon can switch to non-lethal mode, dealing strain damage instead of wounds.", "category": "Passive", "ranked": false, "source": "SRD" } },
-  { "id": "quality_stun-damage", "type": "quality", "name": "Stun Damage",
-    "detail": { "id": "quality_stun-damage", "type": "quality", "name": "Stun Damage", "markdown": "All damage from this weapon is applied as strain rather than wounds. The weapon's damage is otherwise unchanged (soak still reduces it; qualities still apply).", "category": "Passive", "ranked": false, "source": "SRD" } },
-  { "id": "quality_blast", "type": "quality", "name": "Blast",
-    "detail": { "id": "quality_blast", "type": "quality", "name": "Blast", "markdown": "On a hit (or with sufficient [TR]), nearby targets suffer X damage (at GM's discretion for minions).", "category": "Active", "ranked": true, "source": "SRD" } },
-  { "id": "quality_pierce", "type": "quality", "name": "Pierce",
-    "detail": { "id": "quality_pierce", "type": "quality", "name": "Pierce", "markdown": "Ignore X points of soak when determining damage.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_breach", "type": "quality", "name": "Breach",
-    "detail": { "id": "quality_breach", "type": "quality", "name": "Breach", "markdown": "Ignore X points of vehicle armor, and 10 × X points of soak against personal-scale targets.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_vicious", "type": "quality", "name": "Vicious",
-    "detail": { "id": "quality_vicious", "type": "quality", "name": "Vicious", "markdown": "Increase Critical Injury rolls by X.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_concussive", "type": "quality", "name": "Concussive",
-    "detail": { "id": "quality_concussive", "type": "quality", "name": "Concussive", "markdown": "On a hit (or with [TR]), target is staggered for X rounds.", "category": "Active", "ranked": true, "source": "SRD" } },
-  { "id": "quality_cumbersome", "type": "quality", "name": "Cumbersome",
-    "detail": { "id": "quality_cumbersome", "type": "quality", "name": "Cumbersome", "markdown": "Requires Brawn X to use without penalty; otherwise add [SE] to checks.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_defensive", "type": "quality", "name": "Defensive",
-    "detail": { "id": "quality_defensive", "type": "quality", "name": "Defensive", "markdown": "While wielded, add +X to melee defense.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_deflection", "type": "quality", "name": "Deflection",
-    "detail": { "id": "quality_deflection", "type": "quality", "name": "Deflection", "markdown": "While wielded, add +X to ranged defense.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_disorient", "type": "quality", "name": "Disorient",
-    "detail": { "id": "quality_disorient", "type": "quality", "name": "Disorient", "markdown": "On a hit, may spend [AD][AD] to inflict Disoriented for X rounds.", "category": "Active", "ranked": true, "source": "SRD" } },
-  { "id": "quality_ensnare", "type": "quality", "name": "Ensnare",
-    "detail": { "id": "quality_ensnare", "type": "quality", "name": "Ensnare", "markdown": "On a hit (or with [TR]), target is immobilized for X rounds.", "category": "Active", "ranked": true, "source": "SRD" } },
-  { "id": "quality_guided", "type": "quality", "name": "Guided",
-    "detail": { "id": "quality_guided", "type": "quality", "name": "Guided", "markdown": "On a miss, may spend [AD][AD][AD] to launch a homing attack at the end of the round: roll Ability dice equal to the Guided rating (X) against a difficulty set by the target's silhouette.", "category": "Active", "ranked": true, "source": "SRD" } },
-  { "id": "quality_ion", "type": "quality", "name": "Ion",
-    "detail": { "id": "quality_ion", "type": "quality", "name": "Ion", "markdown": "Primarily affects electronics, droids, and vehicles; typically inflicts strain or system strain.", "category": "Passive", "ranked": false, "source": "SRD" } },
-  { "id": "quality_knockdown", "type": "quality", "name": "Knockdown",
-    "detail": { "id": "quality_knockdown", "type": "quality", "name": "Knockdown", "markdown": "On a hit, may spend [AD][AD] to knock the target prone (+1 [AD] per silhouette beyond 1).", "category": "Active", "ranked": false, "source": "SRD" } },
-  { "id": "quality_linked", "type": "quality", "name": "Linked",
-    "detail": { "id": "quality_linked", "type": "quality", "name": "Linked", "markdown": "On a hit, may spend [AD][AD] to hit an additional time, up to X times total.", "category": "Active", "ranked": true, "source": "SRD" } },
-  { "id": "quality_prepared", "type": "quality", "name": "Prepared",
-    "detail": { "id": "quality_prepared", "type": "quality", "name": "Prepared", "markdown": "Requires X maneuvers to ready before it can be used.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_accurate", "type": "quality", "name": "Accurate",
-    "detail": { "id": "quality_accurate", "type": "quality", "name": "Accurate", "markdown": "Add [BO] per rating to attacks made with this weapon.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_inaccurate", "type": "quality", "name": "Inaccurate",
-    "detail": { "id": "quality_inaccurate", "type": "quality", "name": "Inaccurate", "markdown": "Add [SE] per rating to attacks made with this weapon.", "category": "Passive", "ranked": true, "source": "SRD" } },
-  { "id": "quality_superior", "type": "quality", "name": "Superior",
-    "detail": { "id": "quality_superior", "type": "quality", "name": "Superior", "markdown": "Well-crafted; often provides a small bonus such as +1 damage and improved reliability.", "category": "Passive", "ranked": false, "source": "SRD" } },
-  { "id": "quality_inferior", "type": "quality", "name": "Inferior",
-    "detail": { "id": "quality_inferior", "type": "quality", "name": "Inferior", "markdown": "Poorly made; often imposes a small penalty such as -1 damage or [SE] on checks.", "category": "Passive", "ranked": false, "source": "SRD" } },
-  { "id": "quality_sunder", "type": "quality", "name": "Sunder",
-    "detail": { "id": "quality_sunder", "type": "quality", "name": "Sunder", "markdown": "May spend [AD] to damage an opponent's item or weapon.", "category": "Active", "ranked": false, "source": "SRD" } },
-  { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo",
-    "detail": { "id": "quality_limited-ammo", "type": "quality", "name": "Limited Ammo", "markdown": "Weapon has restricted shots; [TH] may deplete remaining ammo at the GM's discretion.", "category": "Passive", "ranked": true, "source": "SRD" } },
-
-  { "id": "rule_range-bands", "type": "rule", "name": "Range Bands",
-    "detail": { "id": "rule_range-bands", "type": "rule", "name": "Range Bands",
+    "detail": {
+      "id": "quality_autofire",
+      "type": "quality",
+      "name": "Autofire",
+      "markdown": "Attack is made at +1 difficulty. On a hit, may spend [AD][AD] to hit the same or another target within range an additional time (repeatable). GM may apply increased ammo usage.",
+      "category": "Active",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_stun-setting",
+    "type": "quality",
+    "name": "Stun Setting",
+    "detail": {
+      "id": "quality_stun-setting",
+      "type": "quality",
+      "name": "Stun Setting",
+      "markdown": "Weapon can switch to non-lethal mode, dealing strain damage instead of wounds.",
+      "category": "Passive",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_stun-damage",
+    "type": "quality",
+    "name": "Stun Damage",
+    "detail": {
+      "id": "quality_stun-damage",
+      "type": "quality",
+      "name": "Stun Damage",
+      "markdown": "All damage from this weapon is applied as strain rather than wounds. The weapon's damage is otherwise unchanged (soak still reduces it; qualities still apply).",
+      "category": "Passive",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_blast",
+    "type": "quality",
+    "name": "Blast",
+    "detail": {
+      "id": "quality_blast",
+      "type": "quality",
+      "name": "Blast",
+      "markdown": "On a hit (or with sufficient [TR]), nearby targets suffer X damage (at GM's discretion for minions).",
+      "category": "Active",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_pierce",
+    "type": "quality",
+    "name": "Pierce",
+    "detail": {
+      "id": "quality_pierce",
+      "type": "quality",
+      "name": "Pierce",
+      "markdown": "Ignore X points of soak when determining damage.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_breach",
+    "type": "quality",
+    "name": "Breach",
+    "detail": {
+      "id": "quality_breach",
+      "type": "quality",
+      "name": "Breach",
+      "markdown": "Ignore X points of vehicle armor, and 10 × X points of soak against personal-scale targets.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_vicious",
+    "type": "quality",
+    "name": "Vicious",
+    "detail": {
+      "id": "quality_vicious",
+      "type": "quality",
+      "name": "Vicious",
+      "markdown": "Increase Critical Injury rolls by X.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_concussive",
+    "type": "quality",
+    "name": "Concussive",
+    "detail": {
+      "id": "quality_concussive",
+      "type": "quality",
+      "name": "Concussive",
+      "markdown": "On a hit (or with [TR]), target is staggered for X rounds.",
+      "category": "Active",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_cumbersome",
+    "type": "quality",
+    "name": "Cumbersome",
+    "detail": {
+      "id": "quality_cumbersome",
+      "type": "quality",
+      "name": "Cumbersome",
+      "markdown": "Requires Brawn X to use without penalty; otherwise add [SE] to checks.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_defensive",
+    "type": "quality",
+    "name": "Defensive",
+    "detail": {
+      "id": "quality_defensive",
+      "type": "quality",
+      "name": "Defensive",
+      "markdown": "While wielded, add +X to melee defense.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_deflection",
+    "type": "quality",
+    "name": "Deflection",
+    "detail": {
+      "id": "quality_deflection",
+      "type": "quality",
+      "name": "Deflection",
+      "markdown": "While wielded, add +X to ranged defense.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_disorient",
+    "type": "quality",
+    "name": "Disorient",
+    "detail": {
+      "id": "quality_disorient",
+      "type": "quality",
+      "name": "Disorient",
+      "markdown": "On a hit, may spend [AD][AD] to inflict Disoriented for X rounds.",
+      "category": "Active",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_ensnare",
+    "type": "quality",
+    "name": "Ensnare",
+    "detail": {
+      "id": "quality_ensnare",
+      "type": "quality",
+      "name": "Ensnare",
+      "markdown": "On a hit (or with [TR]), target is immobilized for X rounds.",
+      "category": "Active",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_guided",
+    "type": "quality",
+    "name": "Guided",
+    "detail": {
+      "id": "quality_guided",
+      "type": "quality",
+      "name": "Guided",
+      "markdown": "On a miss, may spend [AD][AD][AD] to launch a homing attack at the end of the round: roll Ability dice equal to the Guided rating (X) against a difficulty set by the target's silhouette.",
+      "category": "Active",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_ion",
+    "type": "quality",
+    "name": "Ion",
+    "detail": {
+      "id": "quality_ion",
+      "type": "quality",
+      "name": "Ion",
+      "markdown": "Primarily affects electronics, droids, and vehicles; typically inflicts strain or system strain.",
+      "category": "Passive",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_knockdown",
+    "type": "quality",
+    "name": "Knockdown",
+    "detail": {
+      "id": "quality_knockdown",
+      "type": "quality",
+      "name": "Knockdown",
+      "markdown": "On a hit, may spend [AD][AD] to knock the target prone (+1 [AD] per silhouette beyond 1).",
+      "category": "Active",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_linked",
+    "type": "quality",
+    "name": "Linked",
+    "detail": {
+      "id": "quality_linked",
+      "type": "quality",
+      "name": "Linked",
+      "markdown": "On a hit, may spend [AD][AD] to hit an additional time, up to X times total.",
+      "category": "Active",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_prepared",
+    "type": "quality",
+    "name": "Prepared",
+    "detail": {
+      "id": "quality_prepared",
+      "type": "quality",
+      "name": "Prepared",
+      "markdown": "Requires X maneuvers to ready before it can be used.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_accurate",
+    "type": "quality",
+    "name": "Accurate",
+    "detail": {
+      "id": "quality_accurate",
+      "type": "quality",
+      "name": "Accurate",
+      "markdown": "Add [BO] per rating to attacks made with this weapon.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_inaccurate",
+    "type": "quality",
+    "name": "Inaccurate",
+    "detail": {
+      "id": "quality_inaccurate",
+      "type": "quality",
+      "name": "Inaccurate",
+      "markdown": "Add [SE] per rating to attacks made with this weapon.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_superior",
+    "type": "quality",
+    "name": "Superior",
+    "detail": {
+      "id": "quality_superior",
+      "type": "quality",
+      "name": "Superior",
+      "markdown": "Well-crafted; often provides a small bonus such as +1 damage and improved reliability.",
+      "category": "Passive",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_inferior",
+    "type": "quality",
+    "name": "Inferior",
+    "detail": {
+      "id": "quality_inferior",
+      "type": "quality",
+      "name": "Inferior",
+      "markdown": "Poorly made; often imposes a small penalty such as -1 damage or [SE] on checks.",
+      "category": "Passive",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_sunder",
+    "type": "quality",
+    "name": "Sunder",
+    "detail": {
+      "id": "quality_sunder",
+      "type": "quality",
+      "name": "Sunder",
+      "markdown": "May spend [AD] to damage an opponent's item or weapon.",
+      "category": "Active",
+      "ranked": false,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "quality_limited-ammo",
+    "type": "quality",
+    "name": "Limited Ammo",
+    "detail": {
+      "id": "quality_limited-ammo",
+      "type": "quality",
+      "name": "Limited Ammo",
+      "markdown": "Weapon has restricted shots; [TH] may deplete remaining ammo at the GM's discretion.",
+      "category": "Passive",
+      "ranked": true,
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "rule_range-bands",
+    "type": "rule",
+    "name": "Range Bands",
+    "detail": {
+      "id": "rule_range-bands",
+      "type": "rule",
+      "name": "Range Bands",
       "markdown": "Distance is abstracted into five bands — a shared mental ruler, not metres on a map.[P][B]Engaged[b] — touching, hand-to-hand. Melee/Brawl/Lightsaber range. Ranged (Light) adds [DI], Ranged (Heavy) adds [DI][DI], Gunnery cannot fire. 1 maneuver to disengage.[P][B]Short[b] — same room, normal conversation. Difficulty [DI]. 1 maneuver to Engaged or Medium.[P][B]Medium[b] — across the street, raised voice. Difficulty [DI][DI]. 1 maneuver to Short, 2 to Long.[P][B]Long[b] — across a courtyard, ~100 m. Difficulty [DI][DI][DI]. 2 maneuvers to Medium or Extreme.[P][B]Extreme[b] — edge of perception, ~500 m. Difficulty [DI][DI][DI][DI]. 2 maneuvers to Long.",
-      "category": "Range Bands", "source": "CRB" } }
+      "category": "Range Bands",
+      "source": "CRB"
+    }
+  },
+  {
+    "id": "rule_crafting",
+    "type": "rule",
+    "name": "Crafting",
+    "detail": {
+      "id": "rule_crafting",
+      "type": "rule",
+      "name": "Crafting",
+      "markdown": "[B]How to Craft[b][P]There are three steps to Crafting:[P]• Template Selection[BR]• Material Acquisition[BR]• Construction[P][B]Templates[b][P](GM:) Templates should cover most items, but if there's an item not listed, we can figure something out! For now, most Vehicles will be out of reach to be completely scratch built.[P][B]Materials[b][P](GM:) Crafting Materials (scrap, wires, power packs, etc.) will have a credit value and possibly a Type (ex: gadget, ranged weapon, droid, etc.). Items with higher rarity may need a specific rare part in addition to basic Materials.[P][B]Construction[b][P]During [B]Construction[b], if the character succeeds, the item is fully functional and has the profile listed in its Template.[P]If the character fails on the check, the product that comes out of the attempt is unusable, and the Materials are lost.[P]Crafters can use [AD] and [TR] results to make improvements to the item. Then, the GM can spend [TH] and [DE] to add flaws. Unless a limit is specified, an option from these tables may be selected any number of times, and its effects stack.[P]The amount of time [B]Construction[b] takes is determined by the estimate of working hours listed in the template under [B]Time[b]. Every [SU] the character scores on the check beyond the first reduces the time by 2 hours (to a minimum of 1 hour). Other factors can also affect the time required, at the GM's discretion.[P][B]Droid Crafting[b][P]Droid crafting includes a 4th step:[P]• Program Directives[P][B]Droid Programming[b][P]While Programming a new droid, if the character succeeds, the droid is brought online.[P]If the character fails, the only thing lost is the crafter's time. The character can attempt to [B]Program Directives[b] at the next available opportunity.[P]Crafters can use [AD] and [TR] results to make improvements to the droid's mind and personality. Then, the GM can spend [TH] and [DE] to add flaws to its programming.[P]The amount of time [B]Program Directives[b] takes is determined by the estimate of working hours listed in the template under [B]Time[b]. Every [SU] the character scores on the check beyond the first reduces the time by 2 hours (to a minimum of 1 hour). Other factors can also affect the time required, at the GM's discretion.[P][B]Attachment Crafting[b][P](GM:) There are no specific rules or tables for crafting Attachments from scratch, but someone could build a basic attachment, with no additional bonuses or qualities, with logical materials and appropriate cost. For example, a Comlink Armor Attachment could easily be built by breaking down a Comlink (long-range).[P]The Filed Front Sight attachment already has this built in to the rules, but attachments like Serrated Edge, Custom Fit, etc. could also fall into DIY territory.[P]The difficulty of the mechanics, computer, or survival check will depend on the complexity of the attachment.[P][B]Crafts[b][P]• Gadget Crafting[BR]• Brawl and Melee Weapon Crafting[BR]• Ranged Weapon Crafting[BR]• Droid Crafting[BR]• Cybernetic Crafting",
+      "category": "Crafting",
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "rule_attachments",
+    "type": "rule",
+    "name": "Customization & Mods",
+    "detail": {
+      "id": "rule_attachments",
+      "type": "rule",
+      "name": "Customization & Mods",
+      "markdown": "[B]About Customization[b][P]The look of your character's gear can be tailored both cosmetically (meaning it has no game effect) and mechanically (which changes its basic rules or statistics).[P][B]About Attachments[b][P][B]Attachments[b] are physical items that slot into the hard points listed in a piece of equipment's stat block to add capabilities or improve performance. Attachments have a set of base modifiers that they automatically grant when installed.[P][B]Installing Attachments[b][P]Installing an attachment is a fairly simple process (as they are designed for easy installation) and simply requires a few minutes of uninterrupted work.[P][B]Attachments[b][P]• Weapon Attachments[BR]• Armor Attachments[P][B]See also[b]: Attachment Crafting[P][B]About Modding[b][P]Most attachments have a listed series of [B]Mods[b]. These are additional modifications that a skilled mechanic can make to the attachment to further improve the weapon or item's performance. These are listed under each attachment's modification options.[P][B]Installing Mods[b][P]Some of the modification options have a number listed before them, indicating that the option can be installed multiple times. Otherwise, each option can only be installed once.[P]To install a mod, the user selects one uninstalled modification option. The PC then spends [B]100 credits[b] on components and supplies, makes sure they have a toolkit, spends a couple hours at a work bench, and makes a [B]Hard ([DI][DI][DI]) Mechanics check[b].[P]If they succeed, they successfully install the mod on their gear, and the item now benefits from the bonus provided by the mod.[P]If they fail, however, the mod is not installed, and they may not attempt to install that mod again. If they fail and their check generates at least one [DE], the attachment is also rendered useless by their tinkering.[P]Each additional mod installed in an attachment beyond the first [B]increases the difficulty of the Mechanics check by one[b] (in addition to costing [B]100 credits[b] in components).[P][B]Types of Mods[b][P]• [B]Damage mods:[b] This mod increases the Damage dealt by a weapon.[BR]• [B]Quality mods:[b] This mod adds a listed Quality to the item. Some qualities have values that can increase; if this is the case, then the mod lists it as \"Quality (+1)\" indicating that it can increase an existing quality if it is already present or adds the quality at rating 1 if it's not there.[P]• For example, if a blaster had the Innate Talent (Quick Draw), the user would be able to use Quick Draw to draw or stow their blaster, but none of their other gear.",
+      "category": "Equipment",
+      "source": "SRD"
+    }
+  },
+  {
+    "id": "rule_recovery",
+    "type": "rule",
+    "name": "Recovery - Organics",
+    "detail": {
+      "id": "rule_recovery",
+      "type": "rule",
+      "name": "Recovery - Organics",
+      "markdown": "~[I]p. 219[i][P][B]Recovering from Wounds[b][P][B]Natural Rest (Wound)[b][P]For each full night's rest, the character recovers one Wound, regardless of the character's current state of health.[P][B]Medicine Skill (Wound)[b][P]Any character may attempt a Medicine check to help a character heal Wounds.[P]Each character may only receive [B]one Medicine check each encounter[b], as there is only so much good first aid can do to help a character.[P]The difficulty of the check is based on the target's current state of health.[P]State of Health — Medicine Check[BR]Current wounds equal half or less of wound threshold — Easy ([DI])[BR]Current wounds equal more than half of wound threshold — Average ([DI][DI])[BR]Current wounds exceed wound threshold — Hard ([DI][DI][DI])[BR]Recover Critical Injury — Critical Injury Severity Rating*[P]On a successful check, the target recovers a [B]number of Wounds[b] equal to the number of [SU] generated by the Medicine roll, and an [B]amount of Strain[b] equal to the number of [AD] generated.[P][B]Healing Bonus Symbols[b][P]• Success: Each [SU] on a Medicine check normally heals a single Wound, up to the maximum number of Wounds the target is currently suffering. Beyond that, additional [SU] have no mechanical effect but may represent particularly competent medical aid.[BR]• Advantage: [AD] generated during a Medicine check may be spent to eliminate one Strain from the target.[BR]• Triumph: [TR] generated during a Medicine check to heal a Critical Injury may also heal additional Wounds, or vice versa.[BR]• Threat: A GM may use [TH] during a Medicine check to inflict Strain on the target to represent the shock of the procedure or to increase the amount of time the procedure takes.[BR]• Despair: [DE] represents a truly terrible accident, perhaps the character unintentionally inflicting further Wounds on a target whom they were attempting to heal of a Critical Injury.[P][B]Self Care[b][P]Characters attempting to treat their own injuries [B]increase the difficulty of the Medicine check by [DI][DI][b].[P]In addition, attempting a Medicine check without the proper equipment further increases the difficulty of the check by [DI].[P][B]Bacta Tank (Wound)[b][P]Characters can also recover using a bacta tank. The rate of recovery depends on the character's state of health.[P]A [B]Wounded[b] character recovers at a rate of one Wound per two hours.[P]An [B]Incapacitated[b] character recovers at a rate of one Wound per six hours.[P][B]Stimpack (Wound)[b][P]Stimpacks are auto-injection tubes filled with medicine, bacta, and painkillers. They are field-ready emergency health recovery products.[P]Stimpacks heal a fixed amount with no roll necessary. The first stimpack used on a character automatically recovers five Wounds. The second stimpack only recovers four Wounds, the third stimpack recovers three Wounds, and so on. This means that a sixth stimpack will have no effect, as the target's body is too over-saturated with the medicine to be effective.[P]It requires one Maneuver to inject a stimpack.[P]The character administering the stimpack must be Engaged with the target to treat them.[P][B]Stimpack Saturation[b][P]Characters must spend a full night's rest or wait at least 24 hours before stimpacks can be used at their full effectiveness again.[P][B]Stimpack Self Care[b][P]A character with a free appendage may apply a stimpack to themself with one Maneuver as well.[P][B]Recovering from Strain[b][P]Recovering from Strain is fairly easy. Taking a moment to catch their breath, eating a good meal, or spending time relaxing with friends are all ways a Player Character might recover from Strain.[P][B]Natural Rest (Strain)[b][P]A good night's rest generally removes all Strain a character has suffered.[P][B]Encounter End (Strain)[b][P]At the end of an encounter, each player can make a [B]Simple (—) Discipline[b] or [B]Cool check[b]. Each Success [SU] recovers one Strain.[P][B]The Force (Strain)[b][P]It is also rumored that some Jedi have mastered a technique that allows them to ignore the effects of Strain, or ease the minds of others to help them recover more quickly.[P][B]Recovering from Critical Injuries[b][P]Since lingering Critical Injuries make subsequent injury more and more dangerous, they should be treated as quickly and efficiently as possible.[P][B]Critical Injury Status[b][P]It is important to note that even if the effect of a Critical Injury has expired, the Critical Injury status still persists until treated.[P]• For example, with a Critical result of \"23,\" which indicates the Off-Balance Critical Injury, the character adds [SE] to their next Skill check.[BR]• Even after this effect has been applied, the Off-Balance Critical Injury still exists, and will linger until treated, making subsequent Critical Injury rolls against the character that much more dangerous (+10 each).[P][B]Natural Rest (Critical Injury)[b][P]At the end of each full week of rest, the character may attempt a [B]Resilience check[b] to recover from one Critical Injury. The difficulty is equal to the Critical Injury's severity rating. On a successful check, the character recovers from the Critical Injury and is no longer affected.[P]On a failed check, the character retains the Critical Injury effect, but still recovers one Wound. A [TR] result means the character can heal one additional Critical Injury.[P][B]Medicine Skill (Critical Injury)[b][P]Any character may also attempt to help someone recover from a Critical Injury by making a Medicine check with a difficulty equal to the severity rating of the Critical Injury.[P]A character may attempt [B]one Medicine check per week[b], per Critical Injury.[P][B]Self Care[b][P]Characters attempting to treat their own injuries [B]increase the difficulty of the Medicine check by [DI][DI][b].[P]In addition, attempting a Medicine check without the proper equipment further increases the difficulty of the check by one.[P][B]Bacta Tank (Critical Injury)[b][P]At the end of each 24-hour period, the character may attempt one [B]Resilience check[b] to remove one Critical Injury. The difficulty is equal to the Critical Injury's severity rating. On a successful check, the character recovers from the Critical Injury and is no longer affected.[P]On a failed check, the character retains the Critical Injury effect, but still recovers one Wound.",
+      "category": "Recovery",
+      "source": "SRD p.219"
+    }
+  },
+  {
+    "id": "rule_droid-repair",
+    "type": "rule",
+    "name": "Recovery - Droids",
+    "detail": {
+      "id": "rule_droid-repair",
+      "type": "rule",
+      "name": "Recovery - Droids",
+      "markdown": "~[I]p. 219[i][P][B]Recovering from Wounds (Droid)[b][P][B]Natural Rest (Wound)[b][P]Droids benefit from natural rest like any other character, as their subroutines and automated systems attempt self-repairs.[P]For each full night's rest, the droid recovers one Wound, regardless of the droids's current state of health.[P][B]Mechanics Skill (Wound)[b][P]Any character may attempt a [B]Mechanics check[b] to help a droid heal Wounds.[P]Each droid may only receive [B]one Mechanics check each encounter[b], as there is only so much good spot repairs can do to help a droid.[P]The difficulty of the check is based on the droid's current state of health.[P]State of Health — Mechanics Check[BR]Current wounds equal half or less of wound threshold — Easy ([DI])[BR]Current wounds equal more than half of wound threshold — Average ([DI][DI])[BR]Current wounds exceed wound threshold — Hard ([DI][DI][DI])[BR]Recover Critical Injury — Critical Injury Severity Rating*[P]On a successful check, the droid recovers a [B]number of Wounds[b] equal to the number of [SU] generated by the Mechanics roll, and an [B]amount of Strain[b] equal to the number of [AD] generated.[P][B]Repairing Bonus Symbols[b][P]• Success: Each [SU] on a Mechanics check normally heals a single Wound, up to the maximum number of Wounds the droid is currently suffering. Beyond that, additional [SU] have no mechanical effect but may represent particularly competent repair work.[BR]• Advantage: [AD] generated during a Mechanics check may be spent to eliminate one Strain from the droid.[BR]• Triumph: [TR] generated during a Mechanics check to heal a Critical Injury may also heal additional Wounds, or vice versa.[BR]• Threat: A GM may use [TH] during a Mechanics check to inflict Strain on the target to represent the shock of the procedure or to increase the amount of time the procedure takes.[BR]• Despair: [DE] represents a truly terrible accident, perhaps the character unintentionally inflicting further Wounds on a target whom they were attempting to fix a Critical Injury.[P][B]Self Care[b][P]Droids attempting to treat their own injuries [B]increase the difficulty of the Mechanics check by [DI][b], rather than two.[P]In addition, attempting a Mechanics check without the proper equipment further increases the difficulty of the check by one.[P][B]Oil Bath (Wound)[b][P]An oil bath is specifically designed to help droids recover from damage and ill-effects. Unlike Bacta tanks, Oil baths [B]do not[b] restore Critical Injuries.[P]Every hour spent in an oil bath reduces one Wound as the lubricant helps facilitate the droid's self-diagnostic systems.[P][B]Emergency Repair Patch (Wound)[b][P]Droids benefit from repair patches at a limit of [B]five per day[b].[P]Emergency repair patches only heal [B]three Wounds[b] per use, although their viability [B]does not[b] reduce over time.[P]It requires one Maneuver to apply a repair patch.[P]The character administering the repair patch must be Engaged with the target to treat them.[P][B]Repair Patch Self Care[b][P]A droid with a free appendage may apply a repair patch to themself with one Maneuver as well.[P][B]Recovering from Strain (Droid)[b][P]Recovering from Strain is fairly easy. Pausing to collect themself, plugging in for a quick recharge, or spending time relaxing with friends are all ways a droid Player Character might recover from Strain.[P][B]Natural Rest (Strain)[b][P]A good night's self-diagnostic generally removes all Strain a droid has suffered.[P][B]Encounter End (Strain)[b][P]At the end of an encounter, each droid can make a [B]Simple (—) Discipline[b] or [B]Cool check[b]. Each Success [SU] recovers one Strain.[P][B]Recovering from Critical Injuries (Droid)[b][P]Since lingering Critical Injuries make subsequent injury more and more dangerous, they should be treated as quickly and efficiently as possible.[P][B]Critical Injury Status[b][P]It is important to note that even if the effect of a Critical Injury has expired, the Critical Injury status still persists until treated.[P]• For example, with a Critical result of \"23,\" which indicates the Off-Balance Critical Injury, the droid adds [SE] to their next Skill check.[BR]• Even after this effect has been applied, the Off-Balance Critical Injury still exists, and will linger until treated, making subsequent Critical Injury rolls against the droid that much more dangerous (+10 each).[P][B]Natural Rest (Critical Injury)[b][P]At the end of each full week of rest, the droid may attempt a [B]Resilience check[b] to recover from one Critical Injury. The difficulty is equal to the Critical Injury's severity rating. On a successful check, the droid recovers from the Critical Injury and is no longer affected.[P]On a failed check, the droid retains the Critical Injury effect, but still recovers one Wound. A [TR] result means the droid can heal one additional Critical Injury.[P][B]Mechanics Skill (Critical Injury)[b][P]Any character may also attempt to help a droid recover from a Critical Injury by making a [B]Mechanics check[b] with a difficulty equal to the severity rating of the Critical Injury.[P]A character may attempt [B]one Mechanics check per week[b], per Critical Injury.[P][B]Self Care[b][P]Droids attempting to treat their own injuries [B]increase the difficulty of the Mechanics check by [DI][b], rather than two.[P]In addition, attempting a Mechanics check without the proper equipment further increases the difficulty of the check by one.",
+      "category": "Recovery",
+      "source": "SRD p.219"
+    }
+  },
+  {
+    "id": "rule_critical-injuries",
+    "type": "rule",
+    "name": "Critical Injuries",
+    "detail": {
+      "id": "rule_critical-injuries",
+      "type": "rule",
+      "name": "Critical Injuries",
+      "markdown": "See also: Recovering from Critical Injuries[P]Recovering from Critical Injuries (Droid)[P]~[I]p. 216[i][P][B]About Critical Injuries[b][P]A Critical Injury is often the result of triggering a weapon's Critical Rating during combat, but characters can also suffer Critical Injuries from exceeding their Wound Threshold, or through other means.[P]Reminder, an attack's Damage also has to [B]exceed a target's Soak[b] to deal a Critical Injury.[P][B]Rolling Critical Injuries[b][P]Each time a character suffers a Critical Injury, the player [B]rolls a d100[b] on the Critical Injury Result table to determine the extent of the injury. Some weapons and talents modify this Critical Injury roll, potentially making a critical more or less effective.[P]If an attack generates enough [AD] to trigger more than one critical roll, the character makes a single roll, [B]adding +10[b] to the result for each additional time the Critical Rating is triggered.[P][B]Vehicle Weapons[b][P]Planetary Scale Weapons generally add [B]+50[b] when rolling Critical Injuries on a Personal Scale.[P][B]Critical Injury Effects[b][P]The short-term effects of some injuries are temporary, and may only disorient or afflict the character for a brief amount of time. Other injuries are more serious and represent some sort of long-term debilitation or impairment. These injuries continue to affect the character until they receive the proper medical treatment to recover from the injury.[P]Regardless, a Critical Injury [B]remains with the character until it is properly healed[b]; even if the short-term effect of the Critical Injury has passed, the status of having a Critical Injury remains.[P]Each Critical Injury a character suffers from [B]adds +10 to any subsequent Critical Injury check[b]. Essentially, Critical Injury is cumulative. Left untreated, even a number of relatively minor Critical Injuries can lead to devastating results.[P][B]Critical Injury Result[b][P][B]d100 · Severity · Result[b][P]01-05 · [B]Easy ([DI])[b][BR][B]Minor Nick:[b] The target suffers 1 Strain.[P]06-10 · [B]Easy ([DI])[b][BR][B]Slowed Down:[b] The target can only act during the last allied Initiative slot on their next turn.[P]11-15 · [B]Easy ([DI])[b][BR][B]Sudden Jolt:[b] The target drops whatever is in hand.[P]16-20 · [B]Easy ([DI])[b][BR][B]Distracted:[b] The target cannot perform a free Maneuver during their next turn.[P]21-25 · [B]Easy ([DI])[b][BR][B]Off-Balance:[b] Add [SE] to their next skill check.[P]26-30 · [B]Easy ([DI])[b][BR][B]Discouraging Wound:[b] Flip one Light side Destiny point [LI] to a Dark side Destiny Point [DA] (reverse if NPC).[P]31-35 · [B]Easy ([DI])[b][BR][B]Stunned:[b] The target is Staggered until the end of their next turn.[P]36-40 · [B]Easy ([DI])[b][BR][B]Stinger:[b] Increase difficulty of next check by one.[P]41-45 · [B]Average ([DI][DI])[b][BR][B]Bowled Over:[b] The target is knocked Prone and suffers 1 Strain.[P]46-50 · [B]Average ([DI][DI])[b][BR][B]Head Ringer:[b] The target increases the difficulty of all Intellect and Cunning checks by one until the end of the encounter.[P]51-55 · [B]Average ([DI][DI])[b][BR][B]Fearsome Wound:[b] The target increases the difficulty of all Presence and Willpower checks by one until the end of the encounter.[P]56-60 · [B]Average ([DI][DI])[b][BR][B]Agonizing Wound:[b] The target increases the difficulty of all Brawn and Agility checks by one until the end of the encounter.[P]61-65 · [B]Average ([DI][DI])[b][BR][B]Slightly Dazed:[b] The target is Disoriented until the end of the encounter.[P]66-70 · [B]Average ([DI][DI])[b][BR][B]Scattered Senses:[b] The target removes all [SE] from Skill checks until the end of the encounter.[P]71-75 · [B]Average ([DI][DI])[b][BR][B]Hamstrung:[b] The target loses their free Maneuver until the end of the encounter.[P]76-80 · [B]Average ([DI][DI])[b][BR][B]Overpowered:[b] The target leaves themself open, and the attacker may immediately attempt another free attack against them, using the exact same pool as the original attack.[P]81-85 · [B]Average ([DI][DI])[b][BR][B]Winded:[b] Until the end of the encounter, the target cannot voluntarily suffer Strain to activate any abilities or gain additional Maneuvers.[P]86-90 · [B]Average ([DI][DI])[b][BR][B]Compromised:[b] Increase difficulty of all Skill checks by one until the end of the encounter.[P]91-95 · [B]Hard ([DI][DI][DI])[b][BR][B]At the Brink:[b] The target suffers 1 Strain each time they perform an action.[P]96-100 · [B]Hard ([DI][DI][DI])[b][BR][B]Crippled:[b] One of the target's limbs (selected by the GM) is crippled until healed or replaced. Increase difficulty of all checks that require use of that limb by one.[P]101-105 · [B]Hard ([DI][DI][DI])[b][BR][B]Maimed:[b] One of the target's limbs (selected by the GM) is permanently lost. Unless the target has a Cybernetic replacement, the target cannot perform actions that would require the use of that limb. All other actions gain [SE].[P]106-110 · [B]Hard ([DI][DI][DI])[b][BR][B]Horrific Injury:[b] Randomly roll 1d10 to determine one of the target's Characteristics — 1-3 for Brawn, 4-6 for Agility, 7 for Intellect, 8 for Cunning, 9 for Presence, 10 for Willpower. Until this Critical Injury is healed, treat that Characteristic as one point lower.[P]111-115 · [B]Hard ([DI][DI][DI])[b][BR][B]Temporarily Lame:[b] Until this Critical Injury is healed, the target cannot perform more than one Maneuver during their turn.[P]116-120 · [B]Hard ([DI][DI][DI])[b][BR][B]Blinded:[b] The target can no longer see. Upgrade the difficulty of all checks twice. Upgrade the difficulty of Perception and Vigilance checks three times.[P]121-125 · [B]Hard ([DI][DI][DI])[b][BR][B]Knocked Senseless:[b] The target is Staggered for the remainder of the encounter.[P]126-130 · [B]Daunting ([DI][DI][DI][DI])[b][BR][B]Gruesome Injury:[b] Randomly roll 1d10 to determine one of the target's Characteristics — 1-3 for Brawn, 4-6 for Agility, 7 for Intellect, 8 for Cunning, 9 for Presence, 10 for Willpower. That characteristic is permanently reduced by one, to a minimum of one. (GM: While unlikely, permanent stat reduction feels bad. Probably require character to receive extended physical/mental therapy.)[P]131-140 · [B]Daunting ([DI][DI][DI][DI])[b][BR][B]Bleeding Out:[b] Every round, the target suffers 1 Wound and 1 Strain at the beginning of their turn. For every five Wounds they suffer beyond their Wound Threshold, they suffer one additional Critical Injury. Roll on the chart, suffering the injury (if they suffer this result a second time due to this, roll again).[P]141-150 · [B]Daunting ([DI][DI][DI][DI])[b][BR][B]The End is Nigh:[b] The target will die after the last Initiative slot during the next round.[P]151+ · -[BR][B]Dead:[b] Complete, obliterated death.",
+      "category": "Rules",
+      "source": "SRD p.216"
+    }
+  }
 ]
