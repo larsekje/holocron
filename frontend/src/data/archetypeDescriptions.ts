@@ -129,6 +129,16 @@ export function describeArchetypeBucket(name: string): string | undefined {
   return ARCHETYPE_BUCKET_DESCRIPTIONS[name.toLowerCase()];
 }
 
+/** The 6 derived Archetype buckets, properly cased (for suggestion dropdowns). */
+export const ARCHETYPE_BUCKET_NAMES: string[] = [
+  'Combatant',
+  'Specialist',
+  'Force',
+  'Social',
+  'Creature',
+  'Civilian',
+];
+
 // One-liners for the 12 Profile values — behavioural flavors. Profile fires
 // on a multi-signal pattern as a defining flavor (not deviation, not threshold).
 // Used for the Profile chip tooltips.
@@ -151,6 +161,22 @@ export function describeProfile(name: string): string | undefined {
   if (!name) return undefined;
   return PROFILE_DESCRIPTIONS[name.toLowerCase()];
 }
+
+/** The 12 Profile values, properly cased (for suggestion dropdowns). */
+export const PROFILE_NAMES: string[] = [
+  'Glass Cannon',
+  'Tough',
+  'Elite',
+  'Terrifying',
+  'Ambusher',
+  'Stealthy',
+  'Controller',
+  'Swarm',
+  'Charismatic',
+  'Iron-fisted',
+  'Manipulative',
+  'Force-Sensitive',
+];
 
 // Faction descriptions for the closed set used in adversaries.json (v5: 14 values).
 export const FACTION_DESCRIPTIONS: Record<string, string> = {
@@ -175,3 +201,21 @@ export function describeFaction(name: string): string | undefined {
   const lower = name.toLowerCase();
   return FACTION_DESCRIPTIONS[lower];
 }
+
+/** The 14 Faction values, properly cased (for suggestion dropdowns). */
+export const FACTION_NAMES: string[] = [
+  'Imperial',
+  'Rebel',
+  'Galactic Republic',
+  'Separatist/CIS',
+  'First Order',
+  'Resistance',
+  'Jedi Order',
+  'Sith',
+  'Underworld',
+  'Local Law',
+  'Corporate',
+  'Independent',
+  'Nature',
+  'Other',
+];

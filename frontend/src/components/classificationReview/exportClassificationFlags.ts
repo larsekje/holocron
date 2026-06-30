@@ -27,7 +27,9 @@ export interface ExportedFlagEntry {
   flag: {
     note: string;
     fields?: string[];
-    suggestedCoreArchetype?: string;
+    /** Suggested value per classification field (Role / Archetype / Faction /
+     * Profile). Supersedes the legacy single `suggestedCoreArchetype`. */
+    suggestions?: Partial<Record<string, string>>;
     flaggedAt: string;
   };
 }
@@ -63,7 +65,10 @@ export function buildFlagExport(
         flag: {
           note: flag.note,
           fields: flag.fields,
-          suggestedCoreArchetype: flag.suggestedCoreArchetype,
+          // Normalise legacy single-field suggestions into the map on export.
+          suggestions:
+            flag.suggestions ??
+            (flag.suggestedCoreArchetype ? { coreArchetype: flag.suggestedCoreArchetype } : undefined),
           flaggedAt: flag.flaggedAt,
         },
       };
@@ -99,12 +104,17 @@ export function parseFlagImport(text: string): Record<string, ClassificationFlag
   for (const e of parsed.flagged) {
     if (!e || typeof e.id !== 'string') continue;
     const flag = e.flag ?? {};
+    // Accept the new `suggestions` map and fold in the legacy single field.
+    const suggestions: Record<string, string> =
+      flag.suggestions && typeof flag.suggestions === 'object' ? { ...flag.suggestions } : {};
+    if (typeof flag.suggestedCoreArchetype === 'string' && !suggestions.coreArchetype) {
+      suggestions.coreArchetype = flag.suggestedCoreArchetype;
+    }
     out[e.id] = {
       name: typeof e.name === 'string' ? e.name : e.id,
       note: typeof flag.note === 'string' ? flag.note : '',
       fields: Array.isArray(flag.fields) ? flag.fields : undefined,
-      suggestedCoreArchetype:
-        typeof flag.suggestedCoreArchetype === 'string' ? flag.suggestedCoreArchetype : undefined,
+      suggestions: Object.keys(suggestions).length ? suggestions : undefined,
       flaggedAt: typeof flag.flaggedAt === 'string' ? flag.flaggedAt : new Date().toISOString(),
     };
   }

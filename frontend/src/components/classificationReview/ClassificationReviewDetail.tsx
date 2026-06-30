@@ -23,7 +23,10 @@ import {
   type ClassificationFlag,
 } from '@/state/classificationReviewStore';
 import {
+  ARCHETYPE_BUCKET_NAMES,
   CORE_ARCHETYPE_NAMES,
+  FACTION_NAMES,
+  PROFILE_NAMES,
   describeArchetypeBucket,
   describeCoreArchetype,
   describeFaction,
@@ -45,8 +48,17 @@ const borderCol = 'gray.700';
 
 const FIELD_LABEL: Record<ClassificationField, string> = {
   coreArchetype: 'Role',
+  archetype: 'Archetype',
   factions: 'Faction',
   traits: 'Profile',
+};
+
+/** Closed-set options offered in each field's suggestion dropdown. */
+const SUGGEST_OPTIONS: Record<ClassificationField, string[]> = {
+  coreArchetype: CORE_ARCHETYPE_NAMES,
+  archetype: ARCHETYPE_BUCKET_NAMES,
+  factions: FACTION_NAMES,
+  traits: PROFILE_NAMES,
 };
 
 function asNameList(v: any): string[] {
@@ -60,8 +72,14 @@ const FieldRow: React.FC<{
   label: string;
   values: string[];
   describe?: (name: string) => string | undefined;
-  warnUnknown?: boolean; // mark values with no descriptor (likely off-taxonomy)
-}> = ({ label, values, describe, warnUnknown }) => (
+  warnUnknown?: boolean; // mark values outside the v5 closed set (off-taxonomy)
+  /** Explicit closed set of allowed values (case-insensitive). When provided it
+   * drives the off-taxonomy check instead of the describe map — required where
+   * the describe map is a stale superset (Role still carries pre-v5 names). */
+  validValues?: string[];
+}> = ({ label, values, describe, warnUnknown, validValues }) => {
+  const validSet = validValues ? new Set(validValues.map((s) => s.toLowerCase())) : null;
+  return (
   <Box>
     <Text fontSize="xs" textTransform="uppercase" letterSpacing="0.08em" color="gray.500" mb={1}>
       {label}
@@ -74,7 +92,7 @@ const FieldRow: React.FC<{
       <Wrap spacing={1.5} shouldWrapChildren>
         {values.map((v) => {
           const desc = describe?.(v);
-          const unknown = warnUnknown && !desc;
+          const unknown = warnUnknown && (validSet ? !validSet.has(v.toLowerCase()) : !desc);
           const chip = (
             <Tag size="sm" variant="subtle" colorScheme={unknown ? 'orange' : 'gray'}>
               {v}
@@ -96,7 +114,8 @@ const FieldRow: React.FC<{
       </Wrap>
     )}
   </Box>
-);
+  );
+};
 
 const StatReadout: React.FC<{ detail: any }> = ({ detail }) => {
   const chars = detail.characteristics ?? {};
@@ -157,12 +176,16 @@ const ClassificationReviewDetail: React.FC<Props> = ({ adversary, flag, onSetFla
   // Flag-form local state, reset whenever the selected adversary changes.
   const [note, setNote] = React.useState('');
   const [fields, setFields] = React.useState<ClassificationField[]>([]);
-  const [suggested, setSuggested] = React.useState('');
+  const [suggestions, setSuggestions] = React.useState<Partial<Record<ClassificationField, string>>>({});
 
   React.useEffect(() => {
     setNote(flag?.note ?? '');
     setFields(flag?.fields ?? []);
-    setSuggested(flag?.suggestedCoreArchetype ?? '');
+    // Seed from the multi-field `suggestions`, falling back to the legacy
+    // single `suggestedCoreArchetype` so older flags still populate the Role box.
+    const seed: Partial<Record<ClassificationField, string>> = { ...(flag?.suggestions ?? {}) };
+    if (flag?.suggestedCoreArchetype && !seed.coreArchetype) seed.coreArchetype = flag.suggestedCoreArchetype;
+    setSuggestions(seed);
     // Re-sync only when the selected adversary changes (not on every flag edit).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adversary?.id]);
@@ -182,7 +205,11 @@ const ClassificationReviewDetail: React.FC<Props> = ({ adversary, flag, onSetFla
   const reason: string | undefined = d.classificationReason;
   const coreArchetype: string = d.coreArchetype ?? '';
 
-  const canSave = note.trim().length > 0 || fields.length > 0 || suggested.length > 0;
+  const cleanedSuggestions = Object.fromEntries(
+    Object.entries(suggestions).filter(([, v]) => v),
+  ) as Partial<Record<ClassificationField, string>>;
+  const hasSuggestion = Object.keys(cleanedSuggestions).length > 0;
+  const canSave = note.trim().length > 0 || fields.length > 0 || hasSuggestion;
   const isFlagged = !!flag;
 
   const handleSave = () => {
@@ -191,7 +218,7 @@ const ClassificationReviewDetail: React.FC<Props> = ({ adversary, flag, onSetFla
       name: adversary.name,
       note: note.trim(),
       fields: fields.length > 0 ? fields : undefined,
-      suggestedCoreArchetype: suggested || undefined,
+      suggestions: hasSuggestion ? cleanedSuggestions : undefined,
     });
   };
 
@@ -224,10 +251,13 @@ const ClassificationReviewDetail: React.FC<Props> = ({ adversary, flag, onSetFla
             values={coreArchetype ? [coreArchetype] : []}
             describe={describeCoreArchetype}
             warnUnknown
+            // Validate against the clean v5 Role set, not the describe map — that
+            // map is a stale superset that still includes pre-v5 role names.
+            validValues={CORE_ARCHETYPE_NAMES}
           />
-          <FieldRow label="Archetype" values={d.archetype ? [d.archetype] : []} describe={describeArchetypeBucket} />
-          <FieldRow label={FIELD_LABEL.factions} values={asNameList(d.factions)} describe={describeFaction} />
-          <FieldRow label={FIELD_LABEL.traits} values={asNameList(d.traits)} describe={describeProfile} />
+          <FieldRow label="Archetype" values={d.archetype ? [d.archetype] : []} describe={describeArchetypeBucket} warnUnknown />
+          <FieldRow label={FIELD_LABEL.factions} values={asNameList(d.factions)} describe={describeFaction} warnUnknown />
+          <FieldRow label={FIELD_LABEL.traits} values={asNameList(d.traits)} describe={describeProfile} warnUnknown />
         </VStack>
 
         {/* v4.2 rationale */}
@@ -292,26 +322,35 @@ const ClassificationReviewDetail: React.FC<Props> = ({ adversary, flag, onSetFla
             _placeholder={{ color: 'gray.500' }}
           />
           <Box>
-            <Text fontSize="xs" color="gray.500" mb={1}>
-              Suggested core archetype (optional)
+            <Text fontSize="xs" color="gray.500" mb={1.5}>
+              Suggested correction (optional)
             </Text>
-            <Select
-              size="sm"
-              maxW="240px"
-              value={suggested}
-              onChange={(e) => setSuggested(e.target.value)}
-              bg="#1f2226"
-              borderColor={borderCol}
-              color="gray.100"
-              sx={{ option: { background: '#1f2226', color: '#e2e8f0' } }}
-            >
-              <option value="">— no suggestion —</option>
-              {CORE_ARCHETYPE_NAMES.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
+            <VStack align="stretch" spacing={2}>
+              {CLASSIFICATION_FIELDS.map((f) => (
+                <HStack key={f} spacing={2}>
+                  <Text fontSize="xs" color="gray.500" w="68px" flexShrink={0}>
+                    {FIELD_LABEL[f]}
+                  </Text>
+                  <Select
+                    size="sm"
+                    maxW="240px"
+                    value={suggestions[f] ?? ''}
+                    onChange={(e) => setSuggestions((s) => ({ ...s, [f]: e.target.value }))}
+                    bg="#1f2226"
+                    borderColor={borderCol}
+                    color="gray.100"
+                    sx={{ option: { background: '#1f2226', color: '#e2e8f0' } }}
+                  >
+                    <option value="">— no suggestion —</option>
+                    {SUGGEST_OPTIONS[f].map((name) => (
+                      <option key={name} value={name}>
+                        {name}
+                      </option>
+                    ))}
+                  </Select>
+                </HStack>
               ))}
-            </Select>
+            </VStack>
           </Box>
           <HStack spacing={2}>
             <Button size="sm" colorScheme="orange" onClick={handleSave} isDisabled={!canSave}>
