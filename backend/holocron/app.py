@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 import json
 
@@ -63,11 +64,16 @@ def start() -> None:
     log_config = uvicorn.config.LOGGING_CONFIG
     log_config["formatters"]["access"]["fmt"] = "%(levelname)-7s %(message)s"
     log_config["formatters"]["default"]["fmt"] = "%(levelname)-7s %(message)s"
+    # Port is env-configurable so the dev box can move it when 8080 is taken.
+    # Must match the frontend's VITE_SYNC_PORT (see frontend/.env.local) or the
+    # player-share SSE stream can't reach the relay and the view stays stuck on
+    # "reconnecting".
+    port = int(os.environ.get("HOLOCRON_PORT", "8080"))
     uvicorn.run(
         app,
         log_config=log_config,
         host="0.0.0.0",
-        port=8080,
+        port=port,
     )
 
 

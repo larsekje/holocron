@@ -18,9 +18,16 @@ services:
     tty: true
   backend:
     container_name: holocron-rest
+    # Come back automatically after a Docker/host restart so the player-share
+    # relay doesn't silently go missing.
+    restart: unless-stopped
     build:
       dockerfile: ./backend/Dockerfile
       context: ./
+    # Host 8081 → container 8080. The container always listens on 8080; the host
+    # port is 8081 to match the frontend's VITE_SYNC_PORT (frontend/.env.local),
+    # since 8080 is taken by another project on this box. The player-share SSE
+    # relay can't connect unless these agree.
     ports:
-      - "8080:8080"
+      - "8081:8080"
 
