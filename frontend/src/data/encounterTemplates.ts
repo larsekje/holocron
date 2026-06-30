@@ -64,6 +64,9 @@ export interface EncounterTemplate {
   /** Chosen accent-icon key (see encounterVisuals ICON_CHOICES); overrides the
    * tag-derived icon when set. */
   icon?: string;
+  /** Explicit accent colour (CSS hex), overriding the tag-derived accent. Used
+   * by the Halcyon scenes to colour-code rooms by ship access zone. */
+  accentColor?: string;
   /** Legacy bundled-sample fields — still rendered when present. */
   blurb?: string;
   description?: string;

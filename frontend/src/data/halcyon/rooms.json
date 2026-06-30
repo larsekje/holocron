@@ -1,0 +1,2188 @@
+[
+  {
+    "zone": "The Ship",
+    "name": "How the Ship Moves",
+    "deck": "ORIENTATION",
+    "access": "",
+    "rhythm": "Stern tower holds D10–13 · recreation is Deck 4 · bridge at the bow · collar on the dorsal spine.",
+    "special": 1,
+    "read": "Guest lifts serve Decks 4–7 only; the suites have a keyed stop. The grand aft stair climbs the Atrium from D6 to the D8 mezzanine, with a 20-second camera blind on its upper flight. Crew lifts and twin crew stairs run D1–9 (crew doors ♦♦; Deck 8+, bridge, and officer spaces ♦♦♦). Officer ladders rise from the D9 collar into the stern tower — there is no lift to the ship's head. Service corridors hide behind every guest deck's paneling. One freight lift, D1↔D8: loud, slow, logged.",
+    "people": [],
+    "hints": [
+      {
+        "w": "ASK",
+        "t": "\"Half the doors aren't on any map — painted to vanish into the panelling. The crew flow through walls.\""
+      },
+      {
+        "w": "LINGER",
+        "t": "A steward steps through what looked like solid panelling and is gone; the seam closes without a sound."
+      },
+      {
+        "w": "PUSH",
+        "t": "\"Everything below Deck 7 needs a band. Everything above Deck 9 needs a ladder and a reason. Choose your reasons carefully.\""
+      }
+    ],
+    "slicer": [
+      "Covert: the blind stair · the ducts linking D3–D6–D8 (grates ♦, transit ♦♦ Coordination, Threat = noise) · linen chutes D5/D7 down to the D8 laundry (♦♦ Athletics, one-way, no cams).",
+      "Covert: trash chutes → D2 compactor (mind the cycle) · galley dumbwaiters to both bars — objects only, chip-sized · the creature lift, Menagerie ↔ D2 holding, watched by no one.",
+      "Covert: the bridge's emergency ladder → a D4 service passage · the Atrium well itself — three open stories and nerve."
+    ],
+    "nudge": "Pacing: a deck on foot 1–2 min · lift hop 1 min · keel to collar by crew stair ~10 min · covert routes, double it.",
+    "exits": "Tap any dot on the map, or the chips at the bottom of every room.",
+    "links": [],
+    "comps": []
+  },
+  {
+    "zone": "Deck 6 — Public Heart",
+    "name": "Atrium",
+    "deck": "D6",
+    "access": "guest",
+    "rhythm": "Surges at receptions; thin mid-afternoon.",
+    "mx": 480,
+    "my": 166,
+    "read": "You step out of the pod vestibule into a three-story well of gilt and bronzium. A chandelier hangs dead center — cut crystal set, they say, in the ship's first jump coordinates. Twin staircases climb the aft wall toward a balcony ring. To starboard, a brass cage glows around the Service Desk; archways open to the Lounge and the boutique. By the doors a gold-sashed greeter matches faces to a list you never see, and on a lectern rests the guest book: two hundred seventy-five years of signatures. Somewhere above, a cork pops, and a hundred faces lift, smiling.",
+    "people": [
+      {
+        "t": "Two Kuati shipping magnates in matching grey toast each other and don't drink, trading a glance neither smiles at.",
+        "m": "b"
+      },
+      {
+        "t": "A cluster of first-voyage debutantes in white compare captain's-table invitations, ranking them aloud.",
+        "m": "b"
+      },
+      {
+        "t": "A Givin in an actuarial robe stands utterly still at the rail, visibly doing arithmetic on the crowd.",
+        "m": "h"
+      },
+      {
+        "t": "A security chief whose whites never wrinkle walks the colonnade on the hour, amnesty pin bright. <span class='cast'>(Vask)</span>",
+        "m": "h"
+      },
+      {
+        "t": "A tour knot of first-voyagers follows the greeter, colliding gently with furniture.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "ASK",
+        "t": "The greeter, asked about a name, goes briefly blank — then recovers too smoothly. Someone aboard is travelling as someone they're not. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "LINGER",
+        "t": "Twice now, the same two stewards have crossed the floor on the same silent signal — and neither carried anything."
+      },
+      {
+        "w": "WATCH",
+        "t": "The guest book's last page has a signature in fresh ink over a name that was scratched out. The steward turns past it quickly."
+      },
+      {
+        "w": "PUSH",
+        "t": "Vask drifts closer, compliments the view, and asks — lightly — which deck your cabin is on. <span class='trail'>[heat]</span>"
+      }
+    ],
+    "cast": [
+      {
+        "n": "Bel Tannis",
+        "s": "the ship's smile; he waved the new stewards aboard and knows it."
+      },
+      {
+        "n": "Renno Vask",
+        "s": "ex-ISB security chief, hunting the one slicer he thinks is aboard."
+      },
+      {
+        "n": "Senator Dab Orrin",
+        "s": "a demilitarization senator who badly needs not to see the rifles."
+      },
+      {
+        "n": "Crown Princess Aralin Veth",
+        "s": "a Core heir, briefly unescorted, desperate for one real hour."
+      }
+    ],
+    "slicer": [
+      "Perception (♦) times the cam sweep — the aft-stair blind is learnable.",
+      "Guest terminals (+■) → Doors / Records; Computers (♦♦) skims the paging system.",
+      "Charm (♦♦) buys a glance at the greeter's arrivals list."
+    ],
+    "nudge": "<span class='trail'>[A]</span> 'Steward Vey' gets paged to decks he doesn't serve · <span class='trail'>[C]</span> once, before a name, the speaker clicks three notes.",
+    "exits": "Grand stair up · guest lifts · colonnade service panel.",
+    "links": [
+      "Sublight Lounge",
+      "Chandrila Collection",
+      "Service Desk & Strongroom",
+      "Launch Pod Docks",
+      "Atrium Mezzanine"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The welcome card carries one cabin number crossed out and rewritten in different ink."
+      },
+      {
+        "h": 2,
+        "t": "A page repeats for cabin 7-118 — listed unoccupied, if anyone checks."
+      },
+      {
+        "h": 3,
+        "t": "The chandelier's emergency ring wakes white, and every steward walks toward the same service door."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Operations",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "public status panel"
+      },
+      {
+        "sys": "Comms",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "house channels"
+      },
+      {
+        "sys": "Operations",
+        "lvl": "write",
+        "d": "Average ♦♦",
+        "n": "lighting, lifts, doors — from a maintenance panel behind the desk"
+      }
+    ]
+  },
+  {
+    "zone": "Deck 6 — Public Heart",
+    "name": "Sublight Lounge",
+    "deck": "D6",
+    "access": "guest",
+    "rhythm": "THE OPENING SCENE. Builds from 2100; serious after 2300.",
+    "mx": 548,
+    "my": 166,
+    "read": "You have a small table to yourself in a quiet oval room, and for a moment no one needs anything from you. The palette is muted and warm — oiled walnut, soft fawn leather, a stone floor the colour of sand — the kind of room that announces money by how little it raises its voice. There is no chandelier, no gilt. The only bright thing is the bar itself: a low, clean island of pale stone that seems to glow from within, a single line of light in the dimness. Behind it, where a city tower would hold a skyline, runs an unbroken band of glass, and beyond the glass is the deep nothing of hyperspace — long blue-white streaks sliding past, slow and silent, so that the few bottles on the bar’s back shelf stand in silhouette against a moving sky. A handful of other guests speak low; a steward crosses the floor without a sound and refills a glass before it was asked for. No music you can name, no edge anywhere. Just the hush, the warm dark wood, and that endless view doing all the talking — and it tells you, without a word, exactly what kind of ship you have boarded.",
+    "people": [
+      {
+        "t": "Two financiers in good suits murmur over a single glowing ledger, going quiet whenever a server drifts near.",
+        "m": "b"
+      },
+      {
+        "t": "A knot of off-duty pilots relive a sabacc hand that ruined one of them — loudly, for the third time tonight.",
+        "m": "b"
+      },
+      {
+        "t": "The Chadra-Fan behind the bar pours without looking, ears on three conversations. <span class='cast'>(Tisk — one true rumor a night, never free)</span>",
+        "m": "h"
+      },
+      {
+        "t": "An elderly Devaronian deals himself practice hands, chip towers exact to the credit. <span class='cast'>(Quarrel)</span>",
+        "m": "h"
+      },
+      {
+        "t": "A steward crosses with a tray held like a boarding pike — and Rodas’s gut knows him before his eyes do. It’s Dross. <span class='cast'>(an old crewmate; he has no idea Rodas is aboard)</span>",
+        "m": "h"
+      }
+    ],
+    "hints": [
+      {
+        "w": "OPEN",
+        "t": "<b>First sight of the ship.</b> Read the scene slowly; let the PC sit alone a beat before anything happens. The room IS the exposition — it teaches the Halcyon's register (old money, hush, the view as the prize) so you needn't explain it later. Real-world touchstone: Overstory, NYC (64th floor of 70 Pine) — a mute-toned, warm-wood room where one minimally-attired bar glows and the skyline does the talking. Restraint reads as wealth; the view is the only spectacle. When you're ready to start the plot, let an old face cross the room."
+      },
+      {
+        "w": "ASK",
+        "t": "Tisk, polishing a glass: \"Five new stewards this voyage. None of them know the ship's songs. Odd, for a crew that's meant to have sailed her before.\" <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "DRINK",
+        "t": "The bill for the booth two down routes to a consortium account — the same house whose courier keeps a box in the vault. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "LISTEN",
+        "t": "A tipsy guest mutters that the manifests \"don't add up this run,\" then is gently walked out by a steward before he finishes."
+      },
+      {
+        "w": "PUSH",
+        "t": "Dross sets down a drink no one ordered, holds your eye a beat too long, and you're no longer sure who recognised whom first."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Tisk",
+        "s": "the Chadra-Fan barkeep: one true rumor a night, never free."
+      },
+      {
+        "n": "\"Doc\" Quarrel",
+        "s": "sabacc shark who holds the purser's marker and smells the job."
+      },
+      {
+        "n": "Renka Dross",
+        "s": "a 'steward' from Rodas's pirate past, checking the manifest."
+      },
+      {
+        "n": "Siyana Vell",
+        "s": "the headliner whose set empties three decks like clockwork."
+      },
+      {
+        "n": "Maestro Ondrev Kael",
+        "s": "a composer whose ear catches every hum and footfall as a complaint."
+      },
+      {
+        "n": "The Quartet",
+        "s": "house musicians who see every deal struck under their playing."
+      },
+      {
+        "n": "Brassa Held",
+        "s": "a retired commando at the rail who'll go loud when it does."
+      },
+      {
+        "n": "Duke Castovar the Younger",
+        "s": "a faded noble who'll loudly vouch for a 'fellow' aristocrat."
+      }
+    ],
+    "slicer": [
+      "Bar terminal (Tisk's favor) → tabs: one guest's drinks bill to a consortium account that also pays a vault box fee. <span class='trail'>[B]</span>",
+      "Skulduggery (♦♦) palms a booth's field controller — a pocket gadget: ■ to anyone eavesdropping on you, anywhere.",
+      "Cool (opposed): the sabacc table is cover for a remote slice — and ■ both."
+    ],
+    "nudge": "Time anything to the set: while she sings, everyone else takes ■ to notice you.",
+    "exits": "Band door → service corridor · dumbwaiter to the galley (objects only — a chip rides it in ninety seconds).",
+    "links": [
+      "Atrium",
+      "Crown of Corellia"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A drink arrives 'from the booth that just left' — empty but for one sabacc chip."
+      },
+      {
+        "h": 2,
+        "t": "The ship's seat opens opposite Quarrel; he taps it once, looking at the player."
+      },
+      {
+        "h": 3,
+        "t": "The encore ends two verses early; the singer bows with her eyes on the service door, and the houselights stay down."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Comms",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "read the room’s feeds"
+      },
+      {
+        "sys": "Operations",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "ambient controls"
+      }
+    ]
+  },
+  {
+    "zone": "Deck 6 — Public Heart",
+    "name": "Chandrila Collection",
+    "deck": "D6",
+    "access": "guest",
+    "rhythm": "Busy mornings; staffed always.",
+    "mx": 445,
+    "my": 166,
+    "read": "A narrow jewel-box of a shop. Couture hangs down one wall; glass cases of antiquities line the other, lit like reliquaries. Nothing shows a price — asking is the tell. At the back, a consignment case holds pieces 'from the staterooms,' each tag a cabin number instead of a name, and beside the counter stands a roped-off Alderaanian sideboard that is not for sale at any figure. The clerk wraps something small with ceremonial slowness. The back wall, though nobody mentions it, is the vault cage's wall.",
+    "people": [
+      {
+        "t": "A human in auction-house grey works the antiquities with a jeweler's loupe and never glances at the clerk.",
+        "m": "h"
+      },
+      {
+        "t": "A Caamasi browses the scarves with closed eyes, choosing by touch.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "ASK",
+        "t": "\"The whole of one stateroom came through this week,\" the clerk confides. \"A guest liquidating everything, quietly. Sad, really.\" <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "TOUCH",
+        "t": "Set a hand near the back wall and you feel it — a faint six-beat pulse in the bulkhead, regular as a heart. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "LINGER",
+        "t": "A consignment tag bears only a cabin number; the clerk, asked, says some sellers prefer the buyer never know their name."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Lyn Avath",
+        "s": "an assessor whose datapad holds the vault's full schematics."
+      }
+    ],
+    "slicer": [
+      "Mechanics (♦♦) at the shared wall: the vault's power feed runs through it — its six-hour ping is measurable from here. <span class='trail'>[B]</span>",
+      "Inventory terminal (Computers ♦♦): who is quietly liquidating everything.",
+      "Charm (♦): the clerk's provenance memory is a database with a pulse."
+    ],
+    "nudge": "The politest place aboard to confirm the prize exists.",
+    "exits": "One door, to the Atrium.",
+    "links": [
+      "Atrium",
+      "Service Desk & Strongroom"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The clerk mentions the consignment case: 'discretion guaranteed both directions.'"
+      },
+      {
+        "h": 2,
+        "t": "A SOLD marker appears on the largest case; the sale is logged to the ship itself."
+      },
+      {
+        "h": 3,
+        "t": "The display lights die case by case toward the Desk wall."
+      }
+    ]
+  },
+  {
+    "zone": "Deck 6 — Public Heart",
+    "name": "Service Desk & Strongroom",
+    "deck": "D6",
+    "access": "guest at bars",
+    "rhythm": "Vault windows 0855 & 2055; Crey at every opening.",
+    "mx": 513,
+    "my": 166,
+    "read": "A brass cage set into the colonnade. At the bars, hushed transactions; behind them, clerk stations and a purser counting a drawer; and recessed at the back, the strongroom door — time-lock dial, twin key plates, a biometric pad, on a door older in pattern than the ship around it. A wall of deposit boxes flanks it; the ledger beside them is kept in ink, every box by name and hour. Above the cage hangs a small lamp, dark. Amber would mean the bridge itself is being asked to turn a key.",
+    "people": [
+      {
+        "t": "The purser's braid is immaculate, and she is counting the same drawer a third time, lips moving. <span class='cast'>(Crey — the debt shows in the recounting)</span>",
+        "m": "h"
+      },
+      {
+        "t": "A Toydarian hovers with a strongbox chained to his belt, refusing to set it down even to sign.",
+        "m": "h"
+      },
+      {
+        "t": "A Gran in a dressing gown disputes a minibar charge with infinite patience.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "One window-cycle teaches you everything: dual key, biometric, and the bridge's countersign. No one slice opens this. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "Crey recounts the same drawer a third time. Pressed gently, she mentions a 'private matter' she'd rather the company never audit."
+      },
+      {
+        "w": "LINGER",
+        "t": "A guest argues for off-window access and is refused — loudly enough that the whole queue now knows how the lock works."
+      },
+      {
+        "w": "PUSH",
+        "t": "The deposit ledger, glimpsed upside-down, lists the Muun's box and its visit hours in copperplate. <span class='trail'>[B]</span>"
+      }
+    ],
+    "cast": [
+      {
+        "n": "Purser Ovelle Crey",
+        "s": "the vault keyholder, drowning in a debt she'd never have audited."
+      },
+      {
+        "n": "Lyn Avath",
+        "s": "the vault assessor; her recertification is the way inside the cage."
+      },
+      {
+        "n": "Vanna Sue",
+        "s": "a senator's sharp chief of staff, sorting his affairs at the desk."
+      }
+    ],
+    "slicer": [
+      "THE Vault node's first slice happens here, physically (♦♦♦♦, inside the cage) — a rented deposit box is the legitimate way in.",
+      "Skulduggery (♦♦♦) reads the ink ledger upside-down: box visit hours. <span class='trail'>[B]</span>",
+      "Mechanics (♦♦): the countersign lamp can be made to lie — a false amber is a beautiful distraction."
+    ],
+    "nudge": "<span class='trail'>[A]</span> The annotated plan in the laundry cache is a drawing of this room.",
+    "exits": "Atrium bars (public) · gated side door → service corridor (staff).",
+    "links": [
+      "Atrium",
+      "Chandrila Collection",
+      "Bridge"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "Posted notice: deposit-box inspections tomorrow, 'per insurance recertification,' windows listed."
+      },
+      {
+        "h": 2,
+        "t": "A guest demands off-window access; the refusal teaches the whole queue how dual authorization works."
+      },
+      {
+        "h": 3,
+        "t": "The countersign lamp burns amber, off schedule, and stays lit."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Data Archives",
+        "lvl": "read",
+        "d": "Average ♦♦",
+        "n": "manifests, cabin lists, hiring files"
+      },
+      {
+        "sys": "Data Archives",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "scrub or plant a record — the purser’s own terminal"
+      },
+      {
+        "sys": "Vault",
+        "lvl": "read",
+        "d": "Hard ♦♦♦",
+        "n": "the lock telemetry, from inside the cage"
+      },
+      {
+        "sys": "Vault",
+        "lvl": "write",
+        "d": "Daunting ♦♦♦♦",
+        "n": "work the lock — air-gapped, physical only"
+      }
+    ]
+  },
+  {
+    "zone": "Deck 6 — Public Heart",
+    "name": "Bridge",
+    "deck": "D6 · bow",
+    "access": "officer",
+    "rhythm": "Minimum crew 0300–0600.",
+    "mx": 688,
+    "my": 165,
+    "read": "Past the officers' vestibule, a crescent deck under the prow glazing — a viewport ear to ear, hyperspace filling it like weather. Consoles tier down toward the glass; inlaid in the deck is a brass course-plotter, original equipment, still used for the nightly position ceremony guests may be invited to witness. Center on a low riser sits the captain's chair, the only worn furniture aboard. The officers speak in halves of sentences the others finish. One junior console wears a privacy hood that no other console has.",
+    "people": [
+      {
+        "t": "A captain whose calm fills the room like ballast watches her own nav board a beat too long. <span class='cast'>(Varos)</span>",
+        "m": "h"
+      },
+      {
+        "t": "Three watch officers run a checklist in soft call-and-response.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "The brass plotter shows a position that doesn't match the posted course. A small skim, toward a system two days out. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "Varos watches you a beat too long, then asks — carefully — whether you're the observant type. She is recruiting, and won't say so."
+      },
+      {
+        "w": "SLICE",
+        "t": "The course adjustment was filed with valid override codes the captain swears she never issued. <span class='trail'>[C]</span>"
+      }
+    ],
+    "cast": [
+      {
+        "n": "Captain Ilune Varos",
+        "s": "the captain, quietly recruiting eyes she can trust."
+      }
+    ],
+    "slicer": [
+      "Computers (♦♦♦, under eyes): the course history — an adjustment filed with valid overrides the captain never issued. <span class='trail'>[C → when]</span>",
+      "Flight & Power hardline lives here.",
+      "Charm (♦♦) earns the ceremony: ninety legal seconds of console sightlines."
+    ],
+    "nudge": "Varos is quietly recruiting eyes she can trust, even if she'd never call it that.",
+    "exits": "Officers' vestibule (♦♦♦) · emergency ladder down to a D4 service passage.",
+    "links": [
+      "Service Desk & Strongroom",
+      "Launch Pod Docks",
+      "Crown of Corellia"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "Select guests invited up for the ceremony, photos encouraged."
+      },
+      {
+        "h": 2,
+        "t": "An override prompt blinks unacknowledged; one officer quietly captures the screen."
+      },
+      {
+        "h": 3,
+        "t": "The bridge seals 'for drill,' and the steward posted outside was chosen by hand."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Operations",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "everything, at a glance"
+      },
+      {
+        "sys": "Comms",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "the array and the distress beacon"
+      },
+      {
+        "sys": "Defense",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "turret status"
+      },
+      {
+        "sys": "Defense",
+        "lvl": "write",
+        "d": "Daunting ♦♦♦♦",
+        "n": "safe the guns, drop deflectors — hardwired here"
+      },
+      {
+        "sys": "Defense",
+        "lvl": "write",
+        "d": "Formidable ♦♦♦♦♦",
+        "n": "seize fire-control"
+      },
+      {
+        "sys": "Security",
+        "lvl": "info",
+        "d": "Hard ♦♦♦",
+        "n": "the security overview the officers see"
+      }
+    ]
+  },
+  {
+    "zone": "Deck 6 — Public Heart",
+    "name": "Launch Pod Docks",
+    "deck": "D6 · bow flanks",
+    "access": "guest at transfer",
+    "rhythm": "Staffed only for transfer windows.",
+    "mx": 660,
+    "my": 174,
+    "read": "A carpeted gallery along the hull. Four collar gates stand in brass surrounds, each with a status board in flip-letters and a scanner pedestal showing two lamps — guest green, crew blue. Above the gates, an etched panorama of Batuu's spires: the destination, rendered as a promise. Benches face the gates beside a porter's stand, and the gallery dead-ends at a paneled crew hatch. A docking light cycles green-amber-green, patient as a harbor buoy.",
+    "people": [
+      {
+        "t": "A Duros gate attendant reads a chair-repair manual cover to cover, boots on the pedestal — bored, and bored men explain procedures.",
+        "m": "h"
+      },
+      {
+        "t": "Two porters play dejarik on a crate, bottle caps for missing pieces.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "ASK",
+        "t": "The attendant, bored into honesty: \"One pod's blocked out as a private charter. Purser's authority. First I've heard of a charter this run.\" <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "WATCH",
+        "t": "Pod 3's pre-flight lamp glows warm with no transfer scheduled, and the attendant logs nothing."
+      },
+      {
+        "w": "LINGER",
+        "t": "The crew-blue scanner lamp flickers as a steward passes — his band reads, but a half-beat slow, like a copy."
+      }
+    ],
+    "cast": [
+      {
+        "n": "The Quiet Hunter",
+        "s": "an armored guest watching the arrivals for reasons of their own."
+      }
+    ],
+    "slicer": [
+      "Computers (♦♦♦) at a pedestal clones a guest-green pass profile.",
+      "Mechanics (♦♦) learns the board glyphs — pod states at a glance, forever.",
+      "A pod releases on the bridge's word, or a Daunting slice."
+    ],
+    "nudge": "<span class='trail'>[A]</span> The 'private charter' block carries a purser's authorization code the purser doesn't recognize.",
+    "exits": "Crew hatch → service corridor · four collars to the outside.",
+    "links": [
+      "Atrium",
+      "Bridge"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "One pod blocked out as 'private charter — purser's authorization.'"
+      },
+      {
+        "h": 2,
+        "t": "A pod's pre-flight lamp runs warm, unscheduled, unlogged."
+      },
+      {
+        "h": 3,
+        "t": "The scanners refuse crew bands — all of them — while the guest lamp stays green."
+      }
+    ]
+  },
+  {
+    "zone": "Deck 4 — Recreation",
+    "name": "Crown of Corellia",
+    "deck": "D4",
+    "access": "guest",
+    "rhythm": "Two seatings; dead 1500–1700. Saalo at 1900 sharp.",
+    "mx": 430,
+    "my": 183,
+    "read": "Double doors open under a ceiling of lantern-stars. White-linen tables descend in terraces toward a viewport wall, so every seat faces the stars. Front and center behind a velvet rope stands the captain's table — eight chairs, invitations issued by hand at noon; declining one is discussed for the rest of the voyage. At the entrance a maître d' guards tonight's seating chart, calligraphed fresh: everyone checks where their name landed before they check the menu. A sommelier decants in one long arc and presents the cork to a child, solemn as a medal.",
+    "people": [
+      {
+        "t": "An elderly couple share a quiet meal, trading bites without speaking, married long past the need for words.",
+        "m": "b"
+      },
+      {
+        "t": "A table of trade-guild delegates laugh a half-second too hard at the host's joke, each watching the others for the cue.",
+        "m": "b"
+      },
+      {
+        "t": "A Muun in banker's grey counts steps, cutlery, exits — table for one, 1900 sharp. <span class='cast'>(Saalo)</span>",
+        "m": "h"
+      },
+      {
+        "t": "Two Neimoidians in trade-house collars slide one datapad between them with every course.",
+        "m": "h"
+      },
+      {
+        "t": "A long table of cousins toasts a matriarch who keeps falling asleep, beloved and ignored.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "Saalo eats at 1900 exactly, counts his cutlery, marks the exits, and the Houk holds the lift before he rises. Ritual, nightly. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "The maître d', on tonight's chart: a guest 'requested company' beside you — and the requesting guest is the nervous Muun. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "SLICE",
+        "t": "Kitchen logs show meals run to a cabin the manifest lists empty. Someone is being fed who isn't supposed to be aboard. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "LINGER",
+        "t": "A server slips a folded note into your napkin and withdraws: <i>they freeze people on this ship. don't trust the band.</i>"
+      }
+    ],
+    "cast": [
+      {
+        "n": "Veem Saalo",
+        "s": "the nervous Muun courier; dines at 1900, guards a vault box."
+      },
+      {
+        "n": "Captain Ilune Varos",
+        "s": "master of the ship, hunting a course she never filed."
+      },
+      {
+        "n": "Senator Dab Orrin",
+        "s": "the demilitarization senator, working the captain's table."
+      },
+      {
+        "n": "Crown Princess Aralin Veth",
+        "s": "a Core heir under her detail's eye at the captain's table."
+      },
+      {
+        "n": "Madame Verlaine Oss",
+        "s": "a governor's widow under a thin alias: everyone's wrong suspect."
+      },
+      {
+        "n": "Jubal Vex",
+        "s": "a holo-chef filming every room; uncontrolled cameras everywhere."
+      },
+      {
+        "n": "The Quiet Hunter",
+        "s": "an armored guest on unrelated business; pure dread, no threat."
+      },
+      {
+        "n": "The Ithorian Honeymooners",
+        "s": "newlyweds whose translator droid records absolutely everything."
+      }
+    ],
+    "slicer": [
+      "Kitchen-pass jack → Records: Computers (♦♦) pulls chart history — who requested to sit near the Muun. <span class='trail'>[B]</span>",
+      "Knowledge: Core Worlds (♦♦) decodes tonight's politics with no terminal at all.",
+      "Deception (♦♦) rides the pass as service staff."
+    ],
+    "nudge": "<span class='trail'>[A]</span> Kitchen logs show meals ordered to a cabin the manifest lists empty.",
+    "exits": "Kitchen pass → galley (service stair + dumbwaiters up to both bars).",
+    "links": [
+      "Sublight Lounge",
+      "Climate Simulator",
+      "Bridge"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "Tonight's chart seats the players beside 'a gentleman who requested company' — the Muun's table."
+      },
+      {
+        "h": 2,
+        "t": "A folded service ticket under a bread plate: a kitchen order for a cabin that doesn't exist."
+      },
+      {
+        "h": 3,
+        "t": "The captain's table empties between courses, napkins left standing in peaks."
+      }
+    ]
+  },
+  {
+    "zone": "Deck 4 — Recreation",
+    "name": "Climate Simulator",
+    "deck": "D4",
+    "access": "guest",
+    "rhythm": "Families by day; empty and humming after 2300.",
+    "mx": 505,
+    "my": 183,
+    "read": "Through a weather-lock and out under a rented noon: rolling parkland, real grass, a stream on a quiet loop, three hills running to a horizon that is a wall and admits nothing. The sun travels on rails you can't quite see. On the second hill a wedding arbor stands perpetually fresh — the light there is ten percent kinder by design — and on the footbridge, two centuries of love-locks are clipped under the rail, two of the names scratched out. Stay four minutes and the birdsong loops, and only the children notice.",
+    "people": [
+      {
+        "t": "Two children dare each other to touch the horizon wall, shrieking when their hands vanish into the painted sky.",
+        "m": "b"
+      },
+      {
+        "t": "A woman in walking clothes has held the third hill all day, facing the entrance, a picnic for two untouched.",
+        "m": "h"
+      },
+      {
+        "t": "A children's nature class counts loop-birds with a patient Ithorian minder, totals never matching.",
+        "m": "b"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>A projector tech wades waist-deep into the horizon wall and vanishes to the knees, cursing inside the sky.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "APPROACH",
+        "t": "The woman on the third hill has waited all day. Quietly: \"Can you carry something off the network? Paper doesn't ping. There's someone in the walls.\" <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "SEARCH",
+        "t": "A square of turf on the third hill has been lifted and re-laid; kneel and the seam shows. Something's buried under it."
+      },
+      {
+        "w": "LINGER",
+        "t": "The sun stutters one frame, then holds. The wedding party laughs on; only a child points up."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Crown Princess Aralin Veth",
+        "s": "a Core heir stealing a quiet hour in the meadow."
+      },
+      {
+        "n": "The Ithorian Honeymooners",
+        "s": "newlyweds at the footbridge; that droid hears it all."
+      },
+      {
+        "n": "Hssan",
+        "s": "a Gotal empath who feels the most frightened person aboard."
+      },
+      {
+        "n": "Maestro Ondrev Kael",
+        "s": "a composer at work, grumbling at the manufactured wind."
+      }
+    ],
+    "slicer": [
+      "Projector-room jack → Environment: Computers (♦♦) scripts weather to order — a rehearsable, deniable distraction.",
+      "Mechanics (♦♦) maps where surveillance dies in rain, snow, dusk (■ to Surveillance, both ways).",
+      "Coordination (♦♦): the horizon's service seam is a route."
+    ],
+    "nudge": "The woman on the hill asks whether you can carry a message off the network entirely — paper, she says, doesn't ping.",
+    "exits": "Weather-lock → promenade · service door in the third hill → service corridor.",
+    "links": [
+      "Crown of Corellia",
+      "Lightsaber Training Pod",
+      "The Menagerie"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The wedding coordinator: a guest matching the player's description booked sunrise and never confirmed."
+      },
+      {
+        "h": 2,
+        "t": "A square of turf has been lifted and re-laid; the seam shows only kneeling."
+      },
+      {
+        "h": 3,
+        "t": "The horizon wall opens a service seam and stays open, weather pouring through in one straight line."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Operations",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "environmental controls — climate AND gravity live here"
+      }
+    ]
+  },
+  {
+    "zone": "Deck 4 — Recreation",
+    "name": "Lightsaber Training Pod",
+    "deck": "D4",
+    "access": "guest · bookable",
+    "rhythm": "Half-hour slots, logged. 0400 is the ship's most private half hour.",
+    "mx": 560,
+    "my": 183,
+    "read": "A small round chamber: padded walls, one bench. A training drone rests in a ceiling boss — one eye, infinitely patient — above a rack of blades whose handles are worn smooth by generations. On the far wall, a plaque in old Aurebesh names the Jedi Knight and the Wookiee Padawan who saved this ship from pirates, centuries ago; half the guests photograph it as quaint myth. The soundproofing presses on your ears until your own heartbeat is the loudest thing in the room. The drone wakes, hums a polite little scale, and waits.",
+    "people": [
+      {
+        "t": "A Snivvian guest giggles through a beginner session, blast vest on backward.",
+        "m": "b"
+      },
+      {
+        "t": "An elderly couple takes turns; whoever waits applauds every deflection like a first step.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "The off-grid drone's log shows a remote override three nights ago — a test — and the routine carries a three-note signature. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "\"Same guest's booked the four-in-the-morning slot all week,\" the attendant shrugs. \"Can't sleep, I suppose.\""
+      },
+      {
+        "w": "INSPECT",
+        "t": "The remote's safety limiter has been quietly tampered with; on the wrong setting it would fire to wound."
+      }
+    ],
+    "slicer": [
+      "The drone's controller is OFF-GRID — the only sandbox aboard. Computers (♦♦) spars with isolated ICE: a clean session banks ☐ toward your next real Droid slice.",
+      "Computers (♦♦♦) autopsies the drone log: someone overrode this isolated controller remotely as a test — and the routine is signed. <span class='trail'>A risk-free [C] signature fragment.</span>",
+      "Mechanics (♦♦) finds the limiter tampering."
+    ],
+    "nudge": "Also the quietest meeting room aboard: one door, no cameras, no neighbors.",
+    "exits": "Promenade only.",
+    "links": [
+      "Climate Simulator",
+      "The Menagerie"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The ledger shows one name in the dead 0400 slot, four nights running."
+      },
+      {
+        "h": 2,
+        "t": "Mid-session the drone fires one bolt a setting hotter; the log calls it calibration."
+      },
+      {
+        "h": 3,
+        "t": "The pod runs occupied off-ledger — door sealed red, and through the soundproofing, nothing."
+      }
+    ]
+  },
+  {
+    "zone": "Deck 4 — Recreation",
+    "name": "The Menagerie",
+    "deck": "D4",
+    "access": "guest",
+    "rhythm": "Feeding shows 1100 & 1600.",
+    "mx": 610,
+    "my": 184,
+    "read": "A vaulted gallery of habitat vitrines, each under its own climate halo — a desert noon beside an ice dusk, a hand-span apart. Brass plaques down the central walk thank sponsor families, never sums; guests endow animals here the way other people endow operas. At the far end, behind a moat rail, paces the showpiece: Duchess, a ship-born nexu wearing her patron family's crest, owning the deck. One vitrine stands dark, its plaque removed, 'between residents.' A child presses a palm to the glass, and the nexu, unhurried, presses back.",
+    "people": [
+      {
+        "t": "A school tour in matching sashes presses to the glass, naming every animal wrong with total confidence.",
+        "m": "b"
+      },
+      {
+        "t": "Two rival sponsors greet each other warmly, then check whose family name sits higher on the plaques.",
+        "m": "b"
+      },
+      {
+        "t": "The keeper in high-collared green, feeding gauntlets at her belt, knows every animal by sound and most guests by sponsorship.",
+        "m": "h"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>The keeper coaxes something unseen in the dark vitrine with a vocoder whistle, and stops when she notices she's watched.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "Duchess goes rigid and tracks one steward the length of the glass — the same steward, every shift. Animals remember the smell of a boarding deck. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "The keeper, on the dark vitrine: 'between residents,' she says — but the climate halo over it still hums, still draws power. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "SLICE",
+        "t": "The stud-book ties each animal to a sponsor family; one sponsor's plaque was unscrewed this week, holes still bright."
+      },
+      {
+        "w": "LINGER",
+        "t": "The creature lift behind the keeper's screen is person-sized, keeper-keyed, and on no camera aboard."
+      }
+    ],
+    "cast": [
+      {
+        "n": "The Menagerie Keeper",
+        "s": "curator who knows which steward the nexu won't stop tracking."
+      }
+    ],
+    "slicer": [
+      "Habitat systems → Environment (Computers ♦♦): doors, halos, feeding clocks — and the showpiece latch, a lever you pull once, ever.",
+      "Vigilance or Survival (♦♦) reads Duchess: she bristles at exactly one steward, every shift. <span class='trail'>[A]</span> Animals remember what boarding decks smell like.",
+      "Mechanics (♦♦) calls the creature lift without the keeper."
+    ],
+    "nudge": "<span class='trail'>[B-adjacent]</span> The dark vitrine's climate feed still draws power; something below is being kept alive off the book.",
+    "exits": "Promenade · creature lift ↔ Deck 2 holding — keeper-keyed, person-sized, watched by no one.",
+    "links": [
+      "Climate Simulator",
+      "Lightsaber Training Pod",
+      "Deck 2 — Pods, Trash, Holding"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A sponsorship plaque freshly unscrewed, holes bright."
+      },
+      {
+        "h": 2,
+        "t": "Duchess tracks one specific guest along the glass — the same one, every time."
+      },
+      {
+        "h": 3,
+        "t": "The creature lift arrives from Deck 2 with its cage door open and nothing inside."
+      }
+    ]
+  },
+  {
+    "zone": "Decks 5 & 7 — Cabins",
+    "name": "Cabin Corridors",
+    "deck": "D5 & D7",
+    "access": "guest",
+    "rhythm": "Empty during dinner and the set; turn-down 1830 & 2130.",
+    "mx": 590,
+    "my": 159,
+    "read": "A long curved corridor, doors staggered so no two face each other. Brass numbers — and beneath some, family crests, returning guests generations deep. The hand-knotted runner eats footsteps whole, and the light is set to permanent gentle evening. Every twelve doors a hatch painted to vanish hides a service pantry; you find them by the warmth of fresh linen. A turn-down cart waits outside one door, mints aligned to the millimeter, and somewhere behind you a door closes that you did not hear open.",
+    "people": [
+      {
+        "t": "A human in last night's evening wear sits in an alcove, shoes off, watching one specific door.",
+        "m": "h"
+      },
+      {
+        "t": "A steward walks the row reading numbers against a flimsi list, lips moving. <span class='cast'>(Dross, if you want him here)</span>",
+        "m": "h"
+      },
+      {
+        "t": "A Mon Calamari in a robe waits out his own locked door with dignity, holding two ice buckets.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "Door logs show a master band pinging cabins it has no business near, always between 0200 and 0300. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "WATCH",
+        "t": "Your own band shows two entries tonight — and one of them happened while you watched the door from down the hall. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "LINGER",
+        "t": "A do-not-disturb has run two days on a cabin whose meal trays keep being carried in. Nobody's seen the guest."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Renka Dross",
+        "s": "a 'steward' working the row with a list, if you place him here."
+      }
+    ],
+    "slicer": [
+      "Your own terminal (+■) is the safe workshop; the Doors node reads the row.",
+      "Computers (♦♦): door history — a master band pinging doors it has no business at, always 0200–0300. <span class='trail'>[A]</span>",
+      "Stealth (opposed) shadows the turn-down sweep through twenty minutes of open doors."
+    ],
+    "nudge": "<span class='trail'>[C]</span> Your own band logged entering twice tonight — once while you watched from down the hall.",
+    "exits": "Pantry hatches → service corridor; inside each pantry, a linen chute down to the D8 laundry (♦♦ Athletics, one-way).",
+    "links": [
+      "Atrium",
+      "Grand Suites",
+      "Crew Country"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A do-not-disturb chime has run two days on a cabin whose meal trays keep being taken in."
+      },
+      {
+        "h": 2,
+        "t": "A steward's master band lies on the runner, still warm; the cams are mid-loop."
+      },
+      {
+        "h": 3,
+        "t": "Every door display flips to OCCUPIED at once — including the empty cabins."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Security",
+        "lvl": "read",
+        "d": "Average ♦♦",
+        "n": "the corridor cams, from a guest terminal (+setback in public)"
+      },
+      {
+        "sys": "Operations",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "deck status"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 5 & 7 — Cabins",
+    "name": "Grand Suites",
+    "deck": "D7",
+    "access": "invitation only",
+    "rhythm": "Brunt sleeps across Saalo's doorway. Literally.",
+    "mx": 632,
+    "my": 158,
+    "read": "A short private corridor off its own keyed lift landing. Four double doors, each crest inlaid in stone — these berths pass through wills, not bookings. Through any open door: a parlor with viewports the size of sails, the stars laid out like a purchase. A white-gloved steward keeps the post at the corridor's head, courtesy and checkpoint in one, and a discreet service lift waits at its foot. In one doorway a valet irons a single shirt to parade standard, his radio murmuring market prices.",
+    "people": [
+      {
+        "t": "A Houk in a suit one size too small stands where the corridor narrows, weight never leaving the balls of his feet. <span class='cast'>(Brunt)</span>",
+        "m": "h"
+      },
+      {
+        "t": "Two Chagrians hold a whispered conference, both pretending to admire the same viewport.",
+        "m": "h"
+      },
+      {
+        "t": "The valet sees everything on this corridor, and the valet talks. (Charm ♦)",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "Suite logs show the Muun wakes, sleeps, and twice a day stands motionless near something in the room. He's guarding, not resting. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "WATCH",
+        "t": "Brunt walks the row at odd hours, trying doors that aren't his principal's — gently, testing, like a man checking ice."
+      },
+      {
+        "w": "ASK",
+        "t": "The valet, ironing, talks freely: his gentleman 'hasn't left the suite in two days, and won't let the steward in.' <span class='trail'>[B]</span>"
+      }
+    ],
+    "cast": [
+      {
+        "n": "Brunt",
+        "s": "the Houk bodyguard you route around, never fight."
+      },
+      {
+        "n": "Veem Saalo",
+        "s": "the courier behind the sealed door, guarding his charge."
+      }
+    ],
+    "slicer": [
+      "Privacy screens kill remote work; the valet niche hides a hard jack (Mechanics ♦♦ to find).",
+      "Computers (♦♦♦ via the niche): suite logs — when the Muun sleeps, wakes, and twice daily stands very still near the case. <span class='trail'>[B]</span>",
+      "Perception (♦♦♦) finds the one forty-second seam in Brunt's rotation."
+    ],
+    "nudge": "There is exactly one clean way in: be invited.",
+    "exits": "Keyed lift stop · service lift (crew) to galley and laundry levels · nothing else, by design.",
+    "links": [
+      "Cabin Corridors"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A suite's breakfast order is set for three; the steward confirms, smiling, that it sleeps one."
+      },
+      {
+        "h": 2,
+        "t": "The Houk tries doors that aren't his principal's — gently, like a man testing ice."
+      },
+      {
+        "h": 3,
+        "t": "A suite stands open, lights full, fruit on the floor, the bodyguard's chair gone."
+      }
+    ]
+  },
+  {
+    "zone": "Decks 8–9 — The Seam",
+    "name": "Atrium Mezzanine",
+    "deck": "D8",
+    "access": "guest edge",
+    "rhythm": "Deserted during the set.",
+    "mx": 480,
+    "my": 149,
+    "read": "You come up the grand stair onto a horseshoe balcony above the Atrium. One brass rail runs the whole curve, and from it you can see every entrance below at once. Near the aft landing stands an antique chime board — thirteen brass tubes and a plaque inviting guests to try the shipwright's favorite sequence, which nobody has ever reproduced. Velvet ropes close both ends of the gallery; past them the corridor goes bare and honest. The party's music reaches you a half-second late, and a girl with a monocular is narrating the crowd to herself.",
+    "people": [
+      {
+        "t": "Two dowagers share the best nook and a pair of opera glasses, narrating the floor below like a sport.",
+        "m": "b"
+      },
+      {
+        "t": "The girl with the monocular sells 'the spies' for one credit, and she's right more often than the cameras. <span class='cast'>(Pip)</span>",
+        "m": "h"
+      },
+      {
+        "t": "Two “stewards” take every break where the rail's shadow covers the blind landing — Rodas knows both of them, and they're mapping the cameras, not resting.",
+        "m": "h"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "An hour at the rail draws the whole pattern: Vask's circuit, the steward rotations — and which cameras the new stewards quietly never cross under. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "Pip, for a credit: \"The waiters play soldiers when they think no one's watching. That one keeps a list.\" <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "INSPECT",
+        "t": "The chime board's plaque names a thirteen-tone sequence 'never reproduced.' Venn, asked kindly, knows it is no myth."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Pippa \"Pip\" Andrassy",
+        "s": "a nine-year-old who keeps seeing what you'd rather she didn't."
+      },
+      {
+        "n": "The Fake Stewards",
+        "s": "new 'staff' who take their breaks under the blind landing."
+      }
+    ],
+    "slicer": [
+      "One patient hour of Perception = the patrol map: Vask's circuit, steward rotations, which cameras the fakes avoid. <span class='trail'>[A]</span>",
+      "Ask Venn about the chime board — or Knowledge: Education (♦♦♦) — for what thirteen tubes and a superstition unlock."
+    ],
+    "nudge": "The blind stair lands here. Twenty seconds at a time.",
+    "exits": "Velvet ropes at either horn → crew country.",
+    "links": [
+      "Atrium",
+      "Crew Country"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "Pip offers 'the spies,' one credit."
+      },
+      {
+        "h": 2,
+        "t": "A drink arrives 'from the gentleman opposite' — the opposite rail is empty, the glass still sweating."
+      },
+      {
+        "h": 3,
+        "t": "From up here only: the stewards below have stopped circulating and started standing at doors."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Comms",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "a stolen PA, the house channels"
+      },
+      {
+        "sys": "Operations",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "status"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 8–9 — The Seam",
+    "name": "Crew Country",
+    "deck": "D3 / D8 / D9",
+    "access": "crew",
+    "rhythm": "Social hour 2300–0100; shifts 0800 & 2000.",
+    "mx": 300,
+    "my": 152,
+    "read": "Past the velvet rope the architecture drops its act: narrow corridors, bright honest light, hand-lettered signs. The mess is one long table with a seating order nobody explains and everybody obeys. At the junction of three corridors stands a shrine shelf — flickering holos of the war's dead, both uniforms, no captions, fresh flowers in a ration tin. The laundry's heat rolls up from the far end, and a folding race is being run down the long table for chalked wagers. Strangers here are felt before they're seen.",
+    "people": [
+      {
+        "t": "Two galley hands whisper over a flimsi list of names — one tapping it, one shaking his head.",
+        "m": "h"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>A grease-grey mechanic crosses the mess without sitting, sets a burnt component on the counter, and waits for the room to look. <span class='cast'>(Renlo)</span>",
+        "m": "n"
+      },
+      {
+        "t": "An Ugnaught cook smokes half a cigarra in the vent alcove, saving the rest behind her ear.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "LINGER",
+        "t": "Renlo drops a burnt component on the mess counter and waits. \"Someone's been splicing my ducts. I want to know who.\" <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "A galley hand nods at the shrine: that holo's new — a crewman from this very manifest who 'transferred off suddenly' at the last port."
+      },
+      {
+        "w": "SLICE",
+        "t": "The duty-swap ledger shows crew quietly trading off every Deck 9 watch after midnight. Nobody will say who started it. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "EARN",
+        "t": "Help with the real work and the room opens: from here, the crew tell you things the cameras never could."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Tobb Renlo",
+        "s": "the chief mechanic whose ducts someone's been splicing."
+      },
+      {
+        "n": "Tisk",
+        "s": "the barkeep off-shift, looser with what he's heard."
+      },
+      {
+        "n": "The Engine-Crew Regulars",
+        "s": "honest staff whose ease shows up the impostors."
+      }
+    ],
+    "slicer": [
+      "Computers (♦♦) on the mess terminal: the duty-swap ledger — who keeps trading OFF Deck 9 after midnight. <span class='trail'>[A]</span>",
+      "Skulduggery (♦♦): the laundry's uniforms — or earn one honestly. Earned trust = ☐ on shipboard Streetwise and Perception thereafter.",
+      "Streetwise (♦♦): the rumor economy runs on favors, not credits."
+    ],
+    "nudge": "<span class='trail'>[C]</span> When Renlo slams that ripped-out tap on the counter, the whole room learns the walls are inhabited — you included, for free.",
+    "exits": "Crew lifts and stairs thread it · D8 mess → cargo spine via loader alley · the laundry is the linen chutes' terminus.",
+    "links": [
+      "Atrium Mezzanine",
+      "Cargo Spine & Bays",
+      "Docking Collar",
+      "Droid Maintenance"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The shrine holds a new holo: a crewman from this voyage's manifest who 'transferred off suddenly' at the last port."
+      },
+      {
+        "h": 2,
+        "t": "The chore board lists a Deck 8 spine deep-clean tonight that no department requested."
+      },
+      {
+        "h": 3,
+        "t": "Crew trade shifts to be anywhere but Deck 9 after midnight, and nobody says who started it."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Operations",
+        "lvl": "write",
+        "d": "Average ♦♦",
+        "n": "lifts, doors, lighting — a crew terminal, clean"
+      },
+      {
+        "sys": "Data Archives",
+        "lvl": "read",
+        "d": "Average ♦♦",
+        "n": "crew-side records"
+      },
+      {
+        "sys": "Security",
+        "lvl": "read",
+        "d": "Average ♦♦",
+        "n": "watch the feeds without the guest setback"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 8–9 — The Seam",
+    "name": "Cargo Spine & Bays",
+    "deck": "D8",
+    "access": "crew",
+    "rhythm": "Loud ops 1300–1700; motion-lit silence at night.",
+    "mx": 368,
+    "my": 150,
+    "read": "One straight corridor runs the ship's length — crate ranks webbed down both sides, loader alleys crossing at intervals, bay doors A, B, and C off the port run. Under every stack a load-cell readout glows: the whole corridor is a ledger, and ledgers can disagree with their tags. The aft end stops at a sealed bulkhead stenciled AUXILIARY, humming a note lower than the engines. Ahead of anything that moves, the motion lights wake in sequence.",
+    "people": [
+      {
+        "t": "A Klatooinian loader naps upright between crates, stylus behind one ear, manifest finished early.",
+        "m": "b"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>A figure in steward's whites works crate to crate down the dark rows — and Rodas places the walk before the face: one of his old crew, casing the cargo.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "Bay 8-C is tagged 'agricultural equipment.' The load cells beneath read four hundred kilos heavy, in plain sight. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "SEARCH",
+        "t": "A crate in 8-C is webbed with a knot the cargo crews don't use — and they've noticed it, too."
+      },
+      {
+        "w": "SLICE",
+        "t": "A hardline tap rides this run, wearing a maintenance code that matches the 'recalibration' tag up on Deck 10. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "OPEN",
+        "t": "Inside the heavy crates: not fertiliser. Blaster rifles, packed for a quiet handoff. <span class='trail'>[A]</span>"
+      }
+    ],
+    "cast": [
+      {
+        "n": "The Brell Twins",
+        "s": "Corellian shipwrights opening panels 'just to look.'"
+      }
+    ],
+    "slicer": [
+      "Computers (♦♦): manifest-versus-load-cell deltas — four hundred kilos of them under 'agricultural equipment.' <span class='trail'>[A]</span>",
+      "Sliprigg's tap #3 is in this run: Perception (♦♦♦) finds it; Mechanics (♦♦) splices your own an arm's length away.",
+      "Stealth (♦♦♦) learns the motion lights' lag, and the night spine is yours."
+    ],
+    "nudge": "<span class='trail'>[C]</span> His tap wears a maintenance code matching the Deck 10 'recalibration' tag.",
+    "exits": "Loader alleys → crew corridors · freight lift ↔ hangar · the AUXILIARY bulkhead, sealed (♦♦♦) · duct panels along the run.",
+    "links": [
+      "Crew Country",
+      "Hangar & Freeze Gallery",
+      "Docking Collar",
+      "Maintenance Crawlways",
+      "Environmental Plant"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "8-C's tag versus its load cells, in plain sight."
+      },
+      {
+        "h": 2,
+        "t": "A webbing knot retied in a hitch the cargo crews don't use — and they've noticed."
+      },
+      {
+        "h": 3,
+        "t": "The work lights die section by section toward the bulkhead, and the hatch behind is already sealed."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Operations",
+        "lvl": "write",
+        "d": "Average ♦♦",
+        "n": "freight lift, blast-adjacent doors"
+      },
+      {
+        "sys": "Data Archives",
+        "lvl": "read",
+        "d": "Average ♦♦",
+        "n": "cargo manifests"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 8–9 — The Seam",
+    "name": "Docking Collar",
+    "deck": "D9 · dorsal",
+    "access": "crew",
+    "rhythm": "Checked once per watch.",
+    "mx": 430,
+    "my": 142,
+    "read": "A ring gallery around the upper airlock, up on the ship's back. Scuffed paint, grab rails worn bright, certification plates stamped back to 241 BBY — the same door, recertified for two and a half centuries. A gauge wall of needles, all resting at zero, which is all they are ever supposed to say. At the ring's twelve sits the sensor housing: the ship's one eye on this approach. Every clank travels the full circle, and the hull's cold is honest through your boots.",
+    "people": [
+      {
+        "t": "A hull tech in a half-donned vac suit eats lunch on the grab rail, helmet doubling as bowl holder.",
+        "m": "b"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>A tech runs the sensor self-test twice, frowns at the second result, reaches for the log stylus — and doesn't.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "INSPECT",
+        "t": "The sensor housing's been opened recently — its blinding is half-finished. Leave it, and the bridge sees nothing dock. <span class='trail'>[A/C]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "The visitor log records a 'certification inspection' signed in a hand that matches nobody on the duty board."
+      },
+      {
+        "w": "LINGER",
+        "t": "The pressure-differential needle ticks off zero in a slow rhythm — like something out there, testing the seal."
+      }
+    ],
+    "slicer": [
+      "Mechanics (♦♦) assesses the blinding job — PREP TARGET #2, half-finished and wreckable.",
+      "Computers (♦♦♦) rigs a silent tripwire of your own: the bridge stays deaf, but YOU feel the kiss on the hull.",
+      "Perception (♦): the inspection signature matches no hand on the duty board. <span class='trail'>[A]</span>"
+    ],
+    "nudge": "This is the Riptide's intended door. Decide what kind of welcome it gets.",
+    "exits": "Crew stair and lift landings on the ring · officer ladders up the tower · the collar itself.",
+    "links": [
+      "Crew Country",
+      "Cargo Spine & Bays",
+      "Comms Trunk & Nav Decks"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A 'certification inspection' signed by no one on the board."
+      },
+      {
+        "h": 2,
+        "t": "A maintenance tag on the sensor housing dated tomorrow."
+      },
+      {
+        "h": 3,
+        "t": "The pressure-differential needle twitches off zero in a slow rhythm — like something outside, testing the seal."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Security",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "the collar sensor and approach cams"
+      },
+      {
+        "sys": "Comms",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "traffic at the seam"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Droid Maintenance",
+    "deck": "D3 · fwd",
+    "access": "crew",
+    "rhythm": "One tech on duty after 2200.",
+    "mx": 618,
+    "my": 191,
+    "read": "Racks of half-dressed droids in rows, photoreceptors dark — a choir asleep. A parts wall sorted by limb; somewhere a diagnostics loop beeps to itself with infinite patience. At the quiet end is a tidy alcove berth, and above it a shelf of gifts from two centuries of crews: a brass whistle, a child's drawing under preservation film, a medal with its ribbon folded military-fashion. Every object up there is a story, free for the asking. Above rack three, a duct grille sits not quite seated.",
+    "people": [
+      {
+        "t": "A burnished antique droid polishes a tray it has polished twice already, waiting — hoping — to be asked something. <span class='cast'>(Venn — kindness is the price; the High Republic root is the answer)</span>",
+        "m": "h"
+      },
+      {
+        "t": "A one-armed astromech follows the duty tech like a duckling, carrying her spanner.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "KIND",
+        "t": "Treat Venn as a person and the old droid opens the ship's oldest doors to you — roots no living sysop remembers. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "Venn, dusting: \"The ship has had indigestion for three weeks, young gentle-being. Something lives in her that I cannot name.\" <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "SLICE",
+        "t": "The errand log dispatches a cleaning droid to Deck 10 every night — a deck with no carpets, no guests, and no one who asked. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "INSPECT",
+        "t": "A racked droid is warm to the touch. It ran an hour ago, while the board swears it was powered down."
+      }
+    ],
+    "cast": [
+      {
+        "n": "VN-7 \"Venn\"",
+        "s": "the vintage droid who is the master key to the ship's mind."
+      }
+    ],
+    "slicer": [
+      "The Droid node's home; Sliprigg's tap #1 lives here.",
+      "Computers (♦♦): warm-buffer autopsy on a racked unit — where it REALLY went last night. Another clean <span class='trail'>[C]</span> fragment.",
+      "Coordination (♦♦) takes the grille into the duct network. Venn knows where every duct goes; Venn has never been asked."
+    ],
+    "nudge": "The errand log's nightly Deck 10 dispatch <span class='trail'>[C]</span> is the jammer rig's supply line.",
+    "exits": "D3 crew corridor · the grille → ducts (D3–D6–D8 chases).",
+    "links": [
+      "Crew Country",
+      "Crew Offices",
+      "Deck 2 — Pods, Trash, Holding",
+      "Maintenance Crawlways"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A cleaning unit dispatched nightly to Deck 10 — no carpets, no guests, no requester."
+      },
+      {
+        "h": 2,
+        "t": "A racked droid's buffer is warm; it ran an hour ago while officially powered down."
+      },
+      {
+        "h": 3,
+        "t": "Every droid on the rack turns toward the grille at the same moment, then back, in unison."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Droids",
+        "lvl": "write",
+        "d": "Easy ♦",
+        "n": "task the whole service fleet"
+      },
+      {
+        "sys": "Droids",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "forge a droid’s logs"
+      },
+      {
+        "sys": "Operations",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "maintenance schedule"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Crew Offices",
+    "deck": "D3 · fwd",
+    "access": "crew",
+    "rhythm": "The assistant works late.",
+    "mx": 656,
+    "my": 190,
+    "read": "Doorless cubicles around a small records room. Personnel cabinets line one wall, A to Z in brass drawer-plates; a hiring board hangs by the caf urn, stale except for one crisp last-minute hire order. The best-positioned desk in the section guards the records door, and on another desk sits a case stenciled CHANDRILA STAR LINE — AUDIT, seals broken, owner absent. The air tastes of toner and long shifts, and a stamp thumps in the next room with metronome regularity.",
+    "people": [
+      {
+        "t": "The desk by the records door is occupied late — its occupant shredding receipts by hand, jumping at the chime.",
+        "m": "h"
+      },
+      {
+        "t": "A night clerk in a cardigan over uniform whispers into a personal call: 'I can't. We sail four more days.'",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "The personnel files give Rodas what recognition can't: the cover-names his old crew are travelling under — and a sixth name slipped onto the same hire order, the contractor in the walls. <span class='trail'>[A→C]</span>"
+      },
+      {
+        "w": "SEARCH",
+        "t": "The audit case on the desk is half-shredded — receipts, by the size of the strips. Someone's burning a paper trail by hand."
+      },
+      {
+        "w": "ASK",
+        "t": "The night clerk, into a comm: \"I can't. We sail four more days.\" She hangs up fast when she sees you."
+      },
+      {
+        "w": "DIG",
+        "t": "The personnel cabinet's M drawer is empty. Not thinned — empty. Someone took the whole letter."
+      }
+    ],
+    "cast": [
+      {
+        "n": "Bel Tannis",
+        "s": "the director whose rotten hiring file is filed right here."
+      }
+    ],
+    "slicer": [
+      "NO ROLL AT ALL: the hire order lists all five crew cover-names — and a sixth, the systems 'contractor.' That's how Rodas confirms Sliprigg is here. <span class='trail'>[A→C braid]</span> Skulduggery (♦♦) opens the cabinets after hours.",
+      "Deception (♦♦): the broken-sealed audit case is a borrowed identity waiting on a desk.",
+      "Computers (♦) inherits the warm logged-in terminal — a live Records session, abandoned mid-search."
+    ],
+    "nudge": "The file in hand turns the Cruise Director from obstacle into desperate ally.",
+    "exits": "D3 corridor · the records room within, one door.",
+    "links": [
+      "Droid Maintenance",
+      "Crew Country"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The hire order names five new 'stewards' and a sixth 'contractor' — all onboarded the same hour."
+      },
+      {
+        "h": 2,
+        "t": "One drawer sits a finger open, files fanned mid-search."
+      },
+      {
+        "h": 3,
+        "t": "The M drawer is empty. Not thinned — empty."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Data Archives",
+        "lvl": "read",
+        "d": "Average ♦♦",
+        "n": "the deepest, cleanest archive access aboard"
+      },
+      {
+        "sys": "Data Archives",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "scrub or plant, with room to work"
+      },
+      {
+        "sys": "Security",
+        "lvl": "info",
+        "d": "Hard ♦♦♦",
+        "n": "the security configuration"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Hangar & Freeze Gallery",
+    "deck": "D1 · stern",
+    "access": "staff · tours 1000 & 1400",
+    "rhythm": "Sealed outside tour hours.",
+    "mx": 200,
+    "my": 200,
+    "read": "The hangar floor spreads under the ventral doors, shuttle cradles to port. To starboard rises the freeze gallery: an ironwork stage, a catwalk ring above the pit, theatrical mist on a showman's timer. At the rail stands a control pulpit of brass levers worn smooth, labeled in a hand two centuries dead — and one dial among the dozens rests just off zero. Along the wall, generations of guest handprints in carbonite: several famous, one with no name at all. Between hisses of the timer, the cold of the rail finds your hand.",
+    "people": [
+      {
+        "t": "A man in tour-guest casuals lingers after the group, pacing the catwalk in measured strides — counting it.",
+        "m": "h"
+      },
+      {
+        "t": "A Quarren rigger inventories tie-downs with a grease pencil, humming against the timer.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "INSPECT",
+        "t": "Fresh tool scuffs ring the freeze chamber's main valve, and the duty log has a four-hour gap three nights back. It was used. <span class='trail'>[A]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "The guide jokes the chamber 'still works at full scale — not that anyone's tried in a century.' Her laugh lands a beat late."
+      },
+      {
+        "w": "SLICE",
+        "t": "The rehearsal three nights ago cycled the chamber around a guest-shaped mass. A plan B, for a witness who won't go quietly. <span class='trail'>[A]</span>"
+      }
+    ],
+    "slicer": [
+      "Engine access → the SECOND Flight & Power hardline (♦♦♦♦, only sane when the deck is sealed and empty).",
+      "Mechanics (♦♦) learns the chamber's controls and what 'full scale' means.",
+      "Perception (♦): the valve scuffs, and a four-hour gap in the duty log."
+    ],
+    "nudge": "<span class='trail'>[A, grim]</span> Whoever rehearsed the chamber practiced moving a guest-shaped mass. Mother Sull keeps a plan B for witnesses who won't ride quietly.",
+    "exits": "Freight lift ↔ D8 spine · stair to D2 · engine access aft · the ventral doors to open space.",
+    "links": [
+      "Cargo Spine & Bays",
+      "Deck 2 — Pods, Trash, Holding",
+      "Engine Room"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The guide's joke: it 'still works at full scale — not that anyone's tried in a century.' Her laugh comes a beat late."
+      },
+      {
+        "h": 2,
+        "t": "The duty log shows a four-hour gap three nights back, initialed by no one on the roster."
+      },
+      {
+        "h": 3,
+        "t": "The pit lights come up by themselves, stage-ready, audience absent."
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Deck 2 — Pods, Trash, Holding",
+    "deck": "D2",
+    "access": "crew",
+    "rhythm": "Feedings 0700 & 1900; otherwise visited never.",
+    "mx": 470,
+    "my": 198,
+    "read": "Numbered pod alcoves forward, glyph-stenciled, their EVAC placards printed in three alphabets with a beacon warning. Amidships, the compactor hall cycles around its pit like a slow heartbeat. Aft lie the holding bays — the Menagerie's backstage: a manifest wall of chalk and amendments, stall doors scuffed at claw height, the scuffing rising door by door toward the big one at the end. Behind it, something is breathing. Evenly. Awake. A handler in bite-proof gauntlets reads shipping reports aloud to the dark, gently, like bedtime.",
+    "people": [
+      {
+        "t": "The handler knows every animal by sound — and inventories every visitor. (Charm ♦; lonely people catalogue everything.)",
+        "m": "h"
+      },
+      {
+        "t": "Two waste techs flip a chip for who climbs into the compactor pit; the loser salutes.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "WATCH",
+        "t": "The pod placards warn it plainly: every launch broadcasts a beacon — unless someone owns the comms first."
+      },
+      {
+        "w": "READ",
+        "t": "One holding entry reads 'LIVE — DO NOT INVENTORY,' owner of record a guest cabin — the same cabin as the dark vitrine upstairs. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "ASK",
+        "t": "The handler, glad of company, mentions a 'specimen' nobody will claim and the manifest won't name."
+      }
+    ],
+    "cast": [
+      {
+        "n": "The Menagerie Keeper",
+        "s": "the curator who tends what's kept, alive and off the book, below."
+      }
+    ],
+    "slicer": [
+      "Walk the pod row free: pods auto-broadcast a beacon on launch UNLESS Comms is owned — the most important fact on this deck.",
+      "Mechanics (♦♦): the stall latches and the creature lift answer to the same Environment child as the Menagerie above.",
+      "Computers (♦): the compactor schedule, and what an unscheduled cycle would mean."
+    ],
+    "nudge": "<span class='trail'>[B-adjacent]</span> The 'LIVE — DO NOT INVENTORY' entry's owner-of-record cabin matches the dark vitrine's removed plaque upstairs.",
+    "exits": "Stairs to D1 and D3 · creature lift ↑ Menagerie · trash-chute terminus · the pod alcoves out of the ship entirely.",
+    "links": [
+      "The Menagerie",
+      "Hangar & Freeze Gallery",
+      "Droid Maintenance",
+      "Environmental Plant"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "'LIVE — DO NOT INVENTORY,' owner of record: a guest cabin number."
+      },
+      {
+        "h": 2,
+        "t": "A pod's pre-launch checklist hangs completed, dated this morning, signed by nobody."
+      },
+      {
+        "h": 3,
+        "t": "The end stall stands open, gate sprung outward, gauntlets abandoned on the rail."
+      }
+    ]
+  },
+  {
+    "zone": "Stern Tower",
+    "name": "Comms Trunk & Nav Decks",
+    "deck": "D10 / D12",
+    "access": "officer",
+    "rhythm": "One officer round per watch.",
+    "mx": 148,
+    "my": 84,
+    "read": "Ladders climb the stern tower onto cold catwalk decks threaded between cable trunks thick as wrists. Junction lights tick in patterns that almost resolve into music if you stand still long enough. At Deck 10's heart, under guard glass, sits a red module the size of a loaf — the distress beacon, the most important object aboard that nobody ever looks at. The great hum splits up here into its component voices. There is no story that explains a guest standing in this room, and the room knows it.",
+    "people": [
+      {
+        "t": "A signals officer in headset and cap braid annotates traffic one-handed, eating noodles with the other, flawlessly.",
+        "m": "b"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>An officer freezes mid-ladder, listening hard, then climbs the rest two rungs at a time.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "INSPECT",
+        "t": "A jam-rig sits wired into the comms trunk, dressed as 'recalibration.' Pull it, and the ship's distress call gets out. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "LISTEN",
+        "t": "One junction loops a three-note test tone the watch officer stopped hearing days ago. It's a signature, taunting. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "SLICE",
+        "t": "Ship-to-ship traffic transits these trunks — a countdown notation among it. This is where you learn exactly when. <span class='trail'>[C]</span>"
+      }
+    ],
+    "slicer": [
+      "Perception (♦♦) finds the jammer rig — PREP TARGET #1.",
+      "Mechanics (♦♦) un-rigs it quietly — or Computers (♦♦♦) MIRRORS it, making the shipwide blackout a switch in your pocket.",
+      "The cleanest Comms hardline aboard (♦♦♦), and the worst place to be found: Cool (♦♦♦), because you came with a uniform, a droid, or you didn't come."
+    ],
+    "nudge": "<span class='trail'>[C4]</span> His ship-to-ship traffic transits these trunks, countdown notation and all — the WHEN, readable in place.",
+    "exits": "Ladders only — down to the D9 collar, and between the tower decks. No second way out; remember that before you climb.",
+    "links": [
+      "Docking Collar",
+      "Maintenance Crawlways"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A trunk tag: 'recalibration in progress — do not interrupt,' signed with a contractor code."
+      },
+      {
+        "h": 2,
+        "t": "One junction loops a three-note test tone the watch officer stopped hearing days ago."
+      },
+      {
+        "h": 3,
+        "t": "The distress module sits unseated on the shelf beside its own socket, guard glass closed over the empty bay."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Comms",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "listen to everything"
+      },
+      {
+        "sys": "Comms",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "seize the array; silence, hold, or free the beacon"
+      },
+      {
+        "sys": "Comms",
+        "lvl": "info",
+        "d": "Hard ♦♦♦",
+        "n": "the dead Imperial channels — Sliprigg’s traffic [Imperial]"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Engine Room",
+    "deck": "D1 · stern",
+    "access": "crew · engineering",
+    "rhythm": "Two watch-engineers; busiest 0600 and 1800 at the power hand-over.",
+    "mx": 150,
+    "my": 200,
+    "read": "A cathedral of machinery at the ship's stern: thirteen sublight drives in two ranked galleries, their housings taller than a person, the deck plate trembling with a hum you feel in your teeth. Catwalks thread between them at three levels; coolant lines sweat overhead and drip into grated channels. A chief engineer in scorched coveralls walks the line with a datapad, laying a palm on each housing like checking a horse's flank, and at the far end a master console glows under a brass plaque: thirteen gauges, one per engine, all but one needle steady.",
+    "people": [
+      {
+        "t": "A chief engineer in scorched coveralls walks the drive line, palm to each housing, reading the ship by feel.",
+        "m": "h"
+      },
+      {
+        "t": "Two junior engineers argue over a vibration trace, tapping the same gauge as if it will change its mind.",
+        "m": "b"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>An oiler chases a coolant drip with a rag and a muttered curse, three catwalks up.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "The drive-control console runs on the High Republic root — ancient, elegant, and a back door into systems the modern decks can't reach. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "INSPECT",
+        "t": "Engine 7's gauge sits a hair off true; the log blames 'harmonics,' but the correction was filed under a contractor code, not the chief's."
+      },
+      {
+        "w": "ASK",
+        "t": "The chief, on the new contractor: 'Came down once, poked at my drive logs, left. Engineers don't poke. Slicers poke.' <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "WATCH",
+        "t": "At the power hand-over the whole room is busy and loud — nobody is watching a quiet figure at a side console for a good ten minutes."
+      }
+    ],
+    "slicer": [
+      "The drive-control hardline reaches Flight & Power without the bridge's eyes on you — Computers (♦♦♦♦), but here the root downgrades it one step.",
+      "Mechanics (♦♦) stages an engine 'hiccup' to order: a brownout, a lurch, a reason for every screen on the ship to blink at once.",
+      "Perception (♦♦) reads the thirteen gauges: which drive has been quietly throttled, and when, and on whose code. <span class='trail'>[C]</span>",
+      "Cool (♦♦♦) to work a console in a working engine room without an engineer asking what you're doing."
+    ],
+    "nudge": "Sliprigg came down here once to taste the drive logs. The chief noticed. The chief remembers.",
+    "exits": "Catwalk to the hangar (D1) · ladder up to the power plant · a maintenance hatch into the crawlways.",
+    "links": [
+      "Hangar & Freeze Gallery",
+      "Power Plant",
+      "Maintenance Crawlways"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A junior engineer asks the players, politely, which department they're with."
+      },
+      {
+        "h": 2,
+        "t": "Engine 7 throttles down on its own; the chief starts pulling logs to find out why, and they don't like what they show."
+      },
+      {
+        "h": 3,
+        "t": "A coolant line lets go in a scream of vapor — the catwalk fogs white, alarms strobe, and someone is between you and the only ladder."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Power",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "read the load"
+      },
+      {
+        "sys": "Power",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "re-route / divert power"
+      },
+      {
+        "sys": "Power",
+        "lvl": "write",
+        "d": "Daunting ♦♦♦♦",
+        "n": "overload a system"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Power Plant",
+    "deck": "D1 · stern keel",
+    "access": "crew · restricted",
+    "rhythm": "One reactor watch, around the clock; entry logged.",
+    "mx": 175,
+    "my": 218,
+    "read": "Below the engines, the heart: a reactor core sunk in a shielded well, its glow pulsing blue-white behind layered transparisteel, slow as a sleeping thing breathing. The room is colder than the rest of the ship and absolutely clean, every surface that mineral-sharp smell of ozone and coolant. A single watch-station faces the well, its board a wall of interlocks and breakers, and stencilled everywhere in a hand two centuries old: warnings, sequences, the names of systems that draw their life from here — grav plating, the vault's time-lock, the whole ship's lights.",
+    "people": [
+      {
+        "t": "A reactor-watch officer sits very still before the interlock board, the calmest person on the ship.",
+        "m": "h"
+      },
+      {
+        "t": "A maintenance droid polishes the well's transparisteel on an endless slow circuit, reverent as a verger.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "INSPECT",
+        "t": "The breaker board is a map of dependencies: which feeds run to grav plating, to the vault, to surveillance, to the docking collar. Cut one and you know exactly what dies. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "SLICE",
+        "t": "The vault's time-lock draws its regulated feed from this room — and its six-hour quantum-lock spike is a clean blip on the reactor log, timestamped. <span class='trail'>[B]</span>"
+      },
+      {
+        "w": "WATCH",
+        "t": "Every selective brownout the ship has ever staged routed through this board. So would the next one."
+      }
+    ],
+    "slicer": [
+      "The interlock board is the ship's circuit map made physical: a slicer reads it like a schematic — Computers or Mechanics (♦♦♦) — and learns what every selective blackout would take down.",
+      "Mechanics (♦♦♦) trips a single feed: kill grav on one deck, or the lights on Deck 6, or — the temptation — the vault wing's power, cleanly and from here.",
+      "Perception (♦♦) catches the vault's six-hour spike on the reactor log: proof the prize is alive and expensive. <span class='trail'>[B]</span>",
+      "This is the most watched room on the keel; the watch-officer logs every entry, and tampering here is the one thing that wakes the whole ship."
+    ],
+    "nudge": "Cutting power here is god-tier leverage — and the loudest thing a quiet man can do. Save it.",
+    "exits": "Ladder up to the engine room · sealed blast-door to the keel corridor (♦♦♦).",
+    "links": [
+      "Engine Room",
+      "Maintenance Crawlways"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "The watch-officer notes the players' names on a clipboard and says, mildly, that this deck is restricted."
+      },
+      {
+        "h": 2,
+        "t": "An interlock trips on its own; the board lights amber, and the officer reaches for a comm to report a fault no one caused."
+      },
+      {
+        "h": 3,
+        "t": "A breaker is thrown — a whole deck goes dark and weightless — and the reactor watch is calling security to the one room you're standing in."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Power",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "the distribution map"
+      },
+      {
+        "sys": "Power",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "the breaker board — divert, brown out"
+      },
+      {
+        "sys": "Power",
+        "lvl": "write",
+        "d": "Daunting ♦♦♦♦",
+        "n": "cut a system entirely"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Environmental Plant",
+    "deck": "D2 · keel",
+    "access": "crew",
+    "rhythm": "Lightly staffed; an oiler on rounds every few hours.",
+    "mx": 445,
+    "my": 216,
+    "read": "A low, warm, dripping warren amidships: the ship's lungs and plumbing. Great air-scrubber drums turn with a soft roar, water-reclamation tanks gurgle behind sweating pipes, and the gravity-plating regulators line one wall in a row of humming grey boxes. It smells of warm water, filter-must, and the faint green of the hydroponic bays feeding the kitchens next door. Pipes and conduit run everywhere, labelled by hand, and a service ladder vanishes up into the ducting that threads the whole ship from here.",
+    "people": [
+      {
+        "t": "An environmental tech checks scrubber readings off a clipboard, headphones in, half-singing.",
+        "m": "b"
+      },
+      {
+        "t": "Two off-shift crew poach tomatoes from the hydroponic bay, swearing each other to secrecy.",
+        "m": "b"
+      },
+      {
+        "t": "<span class='now'>▸ now</span>A gravity regulator stutters; the tech thumps it with a fist and it settles, for now.",
+        "m": "n"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "This plant is the Environmental node at its source: lights, heat, gravity, and the Climate Simulator's weather all answer from one console here. <span class='trail'></span>"
+      },
+      {
+        "w": "INSPECT",
+        "t": "The gravity regulators are old and twitchy — a slicer who learns their quirks can stage a half-second flutter that looks exactly like a fault."
+      },
+      {
+        "w": "ASK",
+        "t": "The tech mentions the air-handling running odd on the upper decks for weeks — 'like someone keeps borrowing a duct fan.' The ducts run from right here. <span class='trail'>[C]</span>"
+      }
+    ],
+    "slicer": [
+      "The master environmental console (Computers ♦♦) is the parent of every climate trick on the ship: stage a blackout, a heat-out, a gravity flutter, fog a deck — all deniable as plant faults.",
+      "Coordination (♦♦): the ducting ladder here is the trunk of the whole crawlway network — the cleanest way into the walls of any deck.",
+      "Mechanics (♦♦) tunes a gravity regulator to drop for half a second on command: the flutter only Rodas is braced for.",
+      "Survival or Perception (♦): the hydroponic bay is an unwatched back way through to the galley and the lower decks."
+    ],
+    "nudge": "Everything that makes the ship feel alive — air, warmth, weight — is set from this one warm room.",
+    "exits": "Up the duct ladder into the crawlways · through the hydroponic bay to the galley · stair to Deck 1 and Deck 3.",
+    "links": [
+      "Maintenance Crawlways",
+      "Deck 2 — Pods, Trash, Holding",
+      "Cargo Spine & Bays"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "An oiler ambles in on rounds and is mildly surprised to find guests among the scrubbers."
+      },
+      {
+        "h": 2,
+        "t": "A gravity regulator drops a deck to half-weight by itself; crew start converging to chase the fault."
+      },
+      {
+        "h": 3,
+        "t": "A scrubber drum seizes and the air goes thick and hot fast — the room is filling with haze and the exits are narrowing."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Operations",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "environmental at the source — climate AND gravity, ship-wide"
+      }
+    ]
+  },
+  {
+    "zone": "Decks 1–3 — The Keel",
+    "name": "Maintenance Crawlways",
+    "deck": "D1–9 · in the walls",
+    "access": "nobody (you're in the walls)",
+    "rhythm": "Never staffed; cleaning droids on set routes.",
+    "mx": 300,
+    "my": 230,
+    "read": "Behind every panel, the ship's true nervous system: crawlways barely wide enough to kneel in, threaded with cable trunks thick as your arm, junction boxes ticking softly in the dark, the great hum split into a hundred separate voices. Access ladders connect the decks; chase-runs follow the corridors above. Here and there a grille throws a bar of light and a slice of someone's evening — a dinner, an argument, a vault cage. It is cramped, warm, and the one place aboard where a careful person is genuinely alone with the ship.",
+    "people": [
+      {
+        "t": "<span class='now'>▸ now</span>A cleaning droid trundles its fixed route ahead of you, indifferent, lamp sweeping the dark.",
+        "m": "n"
+      },
+      {
+        "t": "Somewhere through a grille, two voices you half-recognise discuss a schedule — carried clean down the conduit.",
+        "m": "b"
+      }
+    ],
+    "hints": [
+      {
+        "w": "SLICE",
+        "t": "Every hardline tap on the ship lives down here — including Sliprigg's three. Splice in beside one and you share his access without his knowing. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "SEARCH",
+        "t": "Follow the warm cable run and it leads you to a tap you didn't place: a three-note signature humming on a loop where no maintenance should be. <span class='trail'>[C]</span>"
+      },
+      {
+        "w": "WATCH",
+        "t": "A grille over the purser's cage, another over the captain's table, another over Saalo's suite door — the crawlways see what the cameras can't."
+      }
+    ],
+    "slicer": [
+      "The crawlways ARE the covert network: chases link Deck 3, Deck 6, and Deck 8, with the environmental plant as their trunk. Grilles pop with Skulduggery (♦); transit is cramped Coordination (♦♦); Threat is noise, and noise carries down a conduit.",
+      "Computers (♦♦) from any junction box: a quiet, physical tap into Doors, Surveillance, or Comms with no terminal to trace it to.",
+      "Perception (♦♦♦) hunts Sliprigg's taps along the runs — find one and you can mirror it, leech it, or feed it lies. <span class='trail'>[C]</span>",
+      "Stealth is free here so long as you mind the droids' routes and keep the Threat down; this is where Rodas is safest and most dangerous at once."
+    ],
+    "nudge": "This is Rodas's true home aboard — alone in the walls, listening to the whole ship breathe.",
+    "exits": "Grilles into any deck's service corridor · the duct trunk down to the environmental plant · ladders the height of the ship.",
+    "links": [
+      "Environmental Plant",
+      "Engine Room",
+      "Droid Maintenance",
+      "Cargo Spine & Bays"
+    ],
+    "comps": [
+      {
+        "h": 1,
+        "t": "A cleaning droid's route is about to bring it nose-to-nose with you in a space too tight to pass."
+      },
+      {
+        "h": 2,
+        "t": "Through a grille, an old crewmate pauses mid-sentence — did they hear something in the wall?"
+      },
+      {
+        "h": 3,
+        "t": "A grille clangs shut and locks somewhere behind you, and a three-note sting chirps from the dark ahead: Sliprigg knows you're in his ducts."
+      }
+    ],
+    "term": [
+      {
+        "sys": "Security",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "tap a camera junction directly, no setback"
+      },
+      {
+        "sys": "Security",
+        "lvl": "write",
+        "d": "Hard ♦♦♦",
+        "n": "splice the door net from inside the wall"
+      },
+      {
+        "sys": "Operations",
+        "lvl": "write",
+        "d": "Average ♦♦",
+        "n": "any deck’s controls, from a maintenance jack"
+      },
+      {
+        "sys": "Comms",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "a hub tap"
+      },
+      {
+        "sys": "Power",
+        "lvl": "read",
+        "d": "Easy ♦",
+        "n": "read a feed from a junction"
+      }
+    ]
+  }
+]

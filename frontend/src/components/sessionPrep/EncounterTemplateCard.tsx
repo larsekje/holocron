@@ -32,7 +32,7 @@ const EncounterTemplateCard: React.FC<Props> = ({ template, onEdit, onDelete }) 
   );
 
   const tag = primaryTag(template.tags);
-  const accent = tag ? TAG_COLOR[tag] : '#5a7fb0';
+  const accent = template.accentColor ?? (tag ? TAG_COLOR[tag] : '#5a7fb0');
   const icon = tag ? TAG_ICON[tag] : null;
 
   const rightSlot = (

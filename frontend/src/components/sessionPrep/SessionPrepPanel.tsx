@@ -8,9 +8,10 @@ import ActiveSceneCard from './ActiveSceneCard';
 import OngoingEffectsCard from './OngoingEffectsCard';
 import RosterEditor from './RosterEditor';
 import EncounterCardInline from './EncounterCardInline';
-import EncounterTemplateCard from './EncounterTemplateCard';
 import PrepSection from './PrepSection';
-import { ENCOUNTER_TEMPLATES } from '@/data/encounterTemplates';
+import HalcyonCastPanel from './HalcyonCastPanel';
+import HalcyonScenesPanel from './HalcyonScenesPanel';
+import { HALCYON_SCENES } from '@/data/halcyonHeist';
 import useUserContentStore, { newEncounterId, newRosterGroupId } from '@/state/userContentStore';
 import usePrepUiStore from '@/state/prepUiStore';
 
@@ -19,11 +20,11 @@ import usePrepUiStore from '@/state/prepUiStore';
  *
  * The live "Ongoing effects" readout is pinned at the top (glanceable play
  * status). Below it sit the foldable prep sections — active scene, tonight's
- * roster, the GM's own (inline-editable) encounters, and the bundled samples —
+ * roster, the GM's own (inline-editable) scenes, and the bundled samples —
  * each collapsible via PrepSection so the GM can hide what they're not using.
- * Roster and "My encounters" are author-your-own, persisted via
- * userContentStore; samples are the bundled Gundark Gambit seed (collapsed by
- * default) kept as starting points.
+ * Roster and "Scenes" are author-your-own, persisted via userContentStore;
+ * samples are the bundled Gundark Gambit seed (collapsed by default) kept as
+ * starting points.
  */
 const SessionPrepPanel: React.FC = () => {
   const userEncounters = useUserContentStore((s) => s.userEncounters);
@@ -81,11 +82,17 @@ const SessionPrepPanel: React.FC = () => {
           }
         >
           <RosterEditor />
+          <Box mt={2.5} pt={2} borderTopWidth="1px" borderColor="whiteAlpha.150">
+            <Text fontSize="2xs" color="whiteAlpha.500" letterSpacing="0.16em" textTransform="uppercase" mb={1.5}>
+              Halcyon Heist cast
+            </Text>
+            <HalcyonCastPanel />
+          </Box>
         </PrepSection>
 
         <PrepSection
           sectionKey="encounters"
-          label="My encounters"
+          label="Scenes"
           count={userEncounters.length}
           action={
             <Button
@@ -104,7 +111,7 @@ const SessionPrepPanel: React.FC = () => {
           {userEncounters.length === 0 ? (
             <Box bg="#26292d" borderWidth="1px" borderStyle="dashed" borderColor="whiteAlpha.200" borderRadius="md" px={2} py={1.5}>
               <Text color="whiteAlpha.500" fontSize="2xs" fontStyle="italic">
-                Hit New and start typing. The first line of the body becomes the hook.
+                Hit New and start typing — the first line becomes the scene's hook.
               </Text>
             </Box>
           ) : (
@@ -116,12 +123,8 @@ const SessionPrepPanel: React.FC = () => {
           )}
         </PrepSection>
 
-        <PrepSection sectionKey="samples" label="Samples" count={ENCOUNTER_TEMPLATES.length} defaultOpen={false}>
-          <VStack align="stretch" spacing={1}>
-            {ENCOUNTER_TEMPLATES.map((t) => (
-              <EncounterTemplateCard key={t.id} template={t} />
-            ))}
-          </VStack>
+        <PrepSection sectionKey="halcyon-scenes" label="Halcyon Heist · Scenes" count={HALCYON_SCENES.length} defaultOpen={false}>
+          <HalcyonScenesPanel />
         </PrepSection>
       </VStack>
     </ContentCardOld>

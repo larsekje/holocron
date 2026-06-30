@@ -1,0 +1,614 @@
+[
+  {
+    "camp": "undertow",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "“Mother” Maro Sull",
+    "species": "Human",
+    "face": "Not aboard until the raid",
+    "seen": "When she finally comes, she comes calmly: a trim woman in a long coat, a sword-cane she never seems to draw, a voice level as deep water. Rodas knows that voice in his sleep — she was his captain. If she ever lays eyes on him, there is no passing as a stranger.",
+    "truth": "Captain of the Undertow, the politest pirate in the Mid Rim. She runs the Riptide dark two jumps back and crosses the collar herself at zero hour. She remembers Rodas, and how is the campaign's open wound — the shares he skimmed, the friend she spaced, the job he sold. <span class='trail'>[A/C]</span>",
+    "want": "A clean twenty-minute extraction and no bodies — dead marks bring patrols.",
+    "lever": "She deals. Chasing a slicer who out-sliced Sliprigg is bad bookkeeping; if Rodas ends the night holding the chip, his freedom and his old debt are both on the table.",
+    "found": "Not aboard until zero hour — then the mezzanine, on a stolen PA, telling the guests everything is in hand.",
+    "ties": [
+      "Renka Dross",
+      "Sliprigg",
+      "The Fake Stewards",
+      "Riptide Boarders"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "undertow",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "act",
+    "name": "Renka Dross",
+    "species": "Human",
+    "face": "Steward “Vey”",
+    "seen": "Rodas’s stomach drops before his brain catches up: that steward crossing the room is Dross. The tray’s held like a boarding pike because Dross was never a waiter — he was the man at Rodas’s shoulder on a dozen jobs, and the last time they spoke it did not end well. The glove rides up over a tattoo Rodas has seen by firelight.",
+    "truth": "Second-story man, and the crewmate most likely to look up and KNOW him. Of all the old crew, Dross has the sharpest eye and the longest grudge — every scene they share is a coin-flip on recognition. He doesn’t know Rodas is aboard. Yet.",
+    "want": "To work the job clean — with no idea the one person who could ruin it is across the room.",
+    "lever": "The dread runs one direction only: Rodas knows Dross; Dross doesn’t know Rodas. The whole game is staying in that gap — working the room, the corridors, the slice, while never letting that gaze land and hold.",
+    "found": "Working the Lounge and the cabin corridors, reading door numbers against a flimsi.",
+    "ties": [
+      "“Mother” Maro Sull",
+      "The Fake Stewards"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "undertow",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Sliprigg",
+    "species": "Siniteen",
+    "face": "Guest-systems contractor",
+    "seen": "A “contractor” bends into an open wall panel, toolkit untouched, long fingers moving far too fast for honest maintenance — and Rodas knows those hands. Sliprigg. The crew’s other slicer, the one whose style he learned beside, then ran from.",
+    "truth": "The crew’s slicer, signed aboard to soften the ship from inside — three weeks deep in her Imperial-era code. He and Rodas trained on the same tricks, which cuts both ways: he’s the crewmate most likely to FEEL a second slicer in the walls and guess whose hands are doing it. Vain enough to sign his work with a three-note sting. <span class='trail'>[C]</span>",
+    "want": "To deliver a softened ship to the old crew and admire his own cleverness doing it — never knowing Rodas is the rat in his walls.",
+    "lever": "The hidden war turns on a knife: Rodas knows Sliprigg’s style and Sliprigg knows his. Collect all three of his signature fragments — the Training Pod, a warm droid buffer, the comms loop — and Rodas can lock him out at the worst moment, or simply out-ghost the one man who could name him to the others.",
+    "found": "Rarely in the flesh; mostly felt — taps in the ducts of D3, D6, D8, and three notes where no bird should sing.",
+    "ties": [
+      "“Mother” Maro Sull",
+      "Tobb Renlo"
+    ],
+    "trail": "C"
+  },
+  {
+    "camp": "undertow",
+    "kind": "feat",
+    "comp": "group",
+    "mode": "desc",
+    "name": "The Fake Stewards",
+    "species": "Mixed",
+    "face": "New service staff",
+    "seen": "Rodas knows them on sight. Five “new stewards” this voyage — and he has crewed with every one of them. There’s the slicer who taught him half his tricks, the breacher who carried him out of a job gone wrong, faces from a life he ran from. They pour wine and clear plates and have no idea he’s aboard.",
+    "truth": "The Undertow’s advance team — his old crew — signed aboard nineteen days ago as staff to soften the ship from inside. To anyone else they pass as staff; to Rodas they are unmistakable, and any one of them glancing up at the wrong moment ends him. Their cache rides laundry cart 9: vibro-arms, breach tape, an annotated deck plan. <span class='trail'>[A]</span>",
+    "want": "To pass as crew until the signal, then seal the stairs and take the vault — never dreaming a man they’d kill is watching them do it.",
+    "lever": "He doesn’t need to deduce what they are; he needs to learn what they’re DOING and stay unseen doing it. Every shift one works near him is a held breath.",
+    "found": "Everywhere a steward should be, and a few places one shouldn’t — the cargo spine, the collar.",
+    "ties": [
+      "Renka Dross",
+      "“Mother” Maro Sull"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "undertow",
+    "kind": "bg",
+    "comp": "group",
+    "mode": "act",
+    "name": "Riptide Boarders",
+    "species": "Mixed",
+    "face": "— (only at the raid)",
+    "seen": "Hard-faced spacers in glow-strip masks who move in pairs and never split up, stunning guests and blasting doors with brisk, rehearsed economy — and under the masks, more faces Rodas once called crew.",
+    "truth": "The Undertow's muscle, crossing the collar when the job goes loud. Doctrine: stun the soft ones, breach the locks, never break formation — which a slicer who owns the doors can punish all night.",
+    "want": "In, to the vault, and gone before help arrives.",
+    "lever": "Their discipline is a weakness: predictable, sealable, herdable.",
+    "found": "The D9 collar at zero hour, then the Atrium stairs.",
+    "ties": [
+      "“Mother” Maro Sull"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Captain Ilune Varos",
+    "species": "Human",
+    "face": "Master of the Halcyon",
+    "seen": "A woman whose calm fills the bridge like ballast, grey at the temples, watching her own nav board a beat longer than anything else in the room. The crew would follow her anywhere, quietly.",
+    "truth": "Ex-Rebel blockade runner who took the gilded chair because she was tired of funerals. She's noticed the course adjustment her bridge never filed, and she's hunting it without tipping her own security chief.",
+    "want": "A quiet crossing and her crew safe.",
+    "lever": "Impress her honestly and she may recruit discreet, capable guests rather than trust Vask. Help her covertly, and she does not see a Rodian leave in the confusion. That is her thank-you.",
+    "found": "The bridge; the nightly position ceremony; the Crown of Corellia's captain's table.",
+    "ties": [
+      "Renno Vask",
+      "Bel Tannis"
+    ],
+    "trail": "C"
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Renno Vask",
+    "species": "Human",
+    "face": "Chief of security",
+    "seen": "His whites never wrinkle. He walks the Atrium's edge at the same pace every hour, an amnesty pin bright on his collar, and he remembers every face he passes and what it owes him.",
+    "truth": "Ex-ISB, 'rehabilitated.' His instincts are screaming that something lives in the network — and he's hunting one slicer, not two. A Rodian passenger with a datapad is exactly his kind of suspect.",
+    "want": "Leverage on everyone, and a clean account of himself when it's over.",
+    "lever": "The war's third player: feed him Sliprigg and he becomes a weapon pointed away from you. Ignore him and he's a heat lamp on the whole operation.",
+    "found": "The Atrium colonnade, hourly; anywhere a guest behaves oddly.",
+    "ties": [
+      "Captain Ilune Varos",
+      "Bel Tannis"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Bel Tannis",
+    "species": "Pantoran",
+    "face": "Cruise Director",
+    "seen": "The ship's smile, ageless and immaculate, gliding the room ensuring nothing is ever, ever wrong — and terrifyingly good at it.",
+    "truth": "He fast-tracked five last-minute 'stewards' to cover a pre-launch staffing hole and skipped the reference calls. He knows the paperwork is rotten and has told himself it's nothing. <span class='trail'>[A]</span>",
+    "want": "Five stars and zero incidents on his watch.",
+    "lever": "One look at his own hiring file turns him from obstacle into a man desperate to help — quietly. Your most blackmailable, most useful asset.",
+    "found": "The Atrium nightly 'moment of welcome'; the recreation deck; anywhere a guest needs soothing.",
+    "ties": [
+      "The Fake Stewards",
+      "Captain Ilune Varos",
+      "Renno Vask"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Purser Ovelle Crey",
+    "species": "Human",
+    "face": "Keeper of the vault",
+    "seen": "Immaculate braid, exhausted eyes. Behind the cage she counts the same cash drawer a third time, lips moving, before she'll sign anything.",
+    "truth": "The human half of the vault's dual key — and she carries a sabacc debt to Quarrel that the pirates don't know about. The soft lever on the hard door. <span class='trail'>[B]</span>",
+    "want": "To get through the voyage without anyone auditing her 'private matter.'",
+    "lever": "Her debt is findable in ten minutes of records, or buyable from Quarrel. Pressure works — but kindly handled, she's an ally inside the cage.",
+    "found": "The Service Desk, every vault window, 0855 and 2055.",
+    "ties": [
+      "“Doc” Quarrel",
+      "Veem Saalo"
+    ],
+    "trail": "B"
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Tobb Renlo",
+    "species": "Human",
+    "face": "Chief mechanic",
+    "seen": "Grease to the elbows, gruff, and forever crossing a room to set some burnt-smelling component on a counter and wait for people to notice it.",
+    "truth": "King of physical access — his maintenance jacks are the cleanest network taps aboard, and two of Sliprigg's hardlines are spliced into HIS ducts, which he takes very personally. He found the rifles, too. <span class='trail'>[C]</span>",
+    "want": "His ship treated with respect and his ducts left alone.",
+    "lever": "Bribeable only in rare parts and engine gossip, never credits. Show him a tap and you've made an ally with a grudge and a master key to the walls.",
+    "found": "Crew country; the cargo spine; wherever something's been spliced that shouldn't be.",
+    "ties": [
+      "Sliprigg",
+      "VN-7 “Venn”"
+    ],
+    "trail": "C"
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "VN-7 “Venn”",
+    "species": "Protocol droid",
+    "face": "Vintage staff droid",
+    "seen": "A burnished antique droid that addresses everyone as 'young gentle-being' and straightens artwork no one has touched. It has served the Halcyon since before the Empire seized her.",
+    "truth": "A clerical error spared its memory from every scheduled wipe. It carries High Republic root honorifics no living sysop remembers, the ship's one true manifest — and the knowledge that Drabor's Key is no myth. <span class='trail'>[C]</span>",
+    "want": "The ship's dignity, and someone who treats the staff like people.",
+    "lever": "Kindness is the whole price. Treat Venn well and it opens the basement of the ship's mind to you — roots, manifests, the thirteen-tone sequence.",
+    "found": "Its berth in droid maintenance (D3); gliding the guest decks, dusting.",
+    "ties": [
+      "Tobb Renlo"
+    ],
+    "trail": "C"
+  },
+  {
+    "camp": "ship",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Tisk",
+    "species": "Chadra-Fan",
+    "face": "Lounge bartender",
+    "seen": "Ears like dishes, swiveling independently across three conversations while the hands pour without looking. Hears every deal on Deck 6 and sells none of it for free.",
+    "truth": "The Lounge's listening post. He's already clocked that the new stewards drink like spacers and tip like ghosts.",
+    "want": "A quiet bar and a fair trade.",
+    "lever": "One true rumor a night, for a favor or a credit — never for nothing.",
+    "found": "Behind the Sublight Lounge bar; off-shift in crew country.",
+    "ties": [
+      "The Fake Stewards"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "ship",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "act",
+    "name": "Siyana Vell",
+    "species": "Mirialan",
+    "face": "Headliner",
+    "seen": "The voice of the postwar moment, in a gown the color of a held breath. When she sings the 2100 set the whole room goes quiet — and she has plainly started to hate the song that made her.",
+    "truth": "Functionally, she's the ship's metronome: her set empties three decks into the Lounge and her encore runs eleven minutes. Anyone moving aboard plans around her, and she's noticed that 'Steward Vey' cannot pour wine.",
+    "want": "Out from under her own myth.",
+    "lever": "Her performance is a clock everyone can set a watch by — while she sings, the rest of the ship isn't looking.",
+    "found": "The Lounge bandstand, 2100 nightly; the Atrium for the captain's receptions.",
+    "ties": [
+      "Tisk"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "mark",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Veem Saalo",
+    "species": "Muun",
+    "face": "Consortium counselor",
+    "seen": "A nervous Muun in banker's grey who counts things — his steps from the lift, his cutlery, the exits — and eats alone at exactly 1900. He visits the vault at 0900 and 2100 just to look at a box, touches nothing, and leaves.",
+    "truth": "The courier. He's carrying a quantum-locked aurodium bearer-chip he can't spend and can't stop guarding. His ritual is a readable schedule, and his nerve is thin. <span class='trail'>[B]</span>",
+    "want": "To deliver his charge and be rid of the terror of carrying it.",
+    "lever": "Shown proof the heist is coming, he'll pay a finder's fee, swear gratitude, and remember Rodas to people who matter — the 'bargain free' ending.",
+    "found": "The Crown of Corellia at 1900; his grand suite; the Service Desk at 0900 and 2100.",
+    "ties": [
+      "Brunt",
+      "Purser Ovelle Crey"
+    ],
+    "trail": "B"
+  },
+  {
+    "camp": "mark",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Brunt",
+    "species": "Houk",
+    "face": "Bodyguard",
+    "seen": "A Houk in a suit one size too small, contractually polite, who stands where the corridor narrows with his weight never quite leaving the balls of his feet. He sleeps across his principal's doorway.",
+    "truth": "The rare problem Rodas genuinely cannot fight, only route around. His rotation has exactly one forty-second seam. <span class='trail'>[B]</span>",
+    "want": "To keep the Muun — and the box — untouched, for the fee.",
+    "lever": "Not a combat to win; a geometry to solve. Watch the rounds, find the seam, never be where he is.",
+    "found": "The grand-suite corridor; outside the vault during Saalo's visits.",
+    "ties": [
+      "Veem Saalo"
+    ],
+    "trail": "B"
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Lyn Avath",
+    "species": "Twi'lek",
+    "face": "Insurance assessor",
+    "seen": "A Twi'lek with a visitor's lanyard, photographing the Service Desk cage from four angles, stylus never stopping. Sharp enough to notice when something's been tampered with.",
+    "truth": "Aboard to recertify the vault — and her datapad holds the strongroom's full schematics and inspection schedule, the second-best prize on the ship. Incorruptible about money; very corruptible about being right. <span class='trail'>[B]</span>",
+    "want": "A clean recertification and to be proven correct.",
+    "lever": "Her datapad is the legitimate way to get someone inside the purser's section for the air-gapped first slice. Don't bribe her — hand her a discrepancy and let her chase it.",
+    "found": "The Service Desk; the boutique; reading reports in the Lounge.",
+    "ties": [
+      "Purser Ovelle Crey"
+    ],
+    "trail": "B"
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "“Doc” Quarrel",
+    "species": "Devaronian",
+    "face": "Sabacc regular",
+    "seen": "An elderly Devaronian fleecing the Lounge nightly, dealing himself practice hands with chip towers exact to the credit. Smells a job the way other people smell rain.",
+    "truth": "He holds Purser Crey's marker, and he's already sized up the run: 'Five new stewards and a Muun who counts his own steps? Son, I've robbed boats like this.'",
+    "want": "A stake in whatever's really happening aboard.",
+    "lever": "He'll sell the marker, the gossip, or the seat next to Saalo's table — for a cut of something. A merchant of leverage who happens to like Rodas.",
+    "found": "The Sublight Lounge sabacc table, every night.",
+    "ties": [
+      "Purser Ovelle Crey"
+    ],
+    "trail": "B"
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Brassa Held",
+    "species": "Human",
+    "face": "Quiet guest at the rail",
+    "seen": "Grey-haired and straight-backed, drinking alone and watching the room in the mirror behind the bottles rather than the room itself. Tips well. Says little.",
+    "truth": "A retired Rebel commando, and the wildcard of the whole story: when it goes loud, she WILL go loud with it — grab a fallen blaster, organize the guests, charge the right corridor at the wrong moment.",
+    "want": "To be left in peace — until peace is no longer on offer.",
+    "lever": "Meet her early and Rodas can aim her like a thrown grenade at zero hour. Ignore her and she's weather: powerful, and pointed wherever chance puts her.",
+    "found": "The Lounge rail; the Atrium's quieter edges.",
+    "ties": [],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Pippa “Pip” Andrassy",
+    "species": "Human",
+    "face": "Unsupervised heiress, age 9",
+    "seen": "A child in expensive clothes and untied boots, leaning over the mezzanine rail with a borrowed monocular, narrating the crowd to herself and pointing at the people she's decided are spies.",
+    "truth": "Professionally unaccompanied, and she keeps SEEING things — a steward in a crew-only corridor, a panel that shut itself, a Rodian doing something fast at a wall socket. She thinks it's a game and she wants in. She's pointed at Rodas twice.",
+    "want": "To be part of the spy game she's certain is happening.",
+    "lever": "One credit buys her intelligence, and she's right about once a day. She's also the conscience of the story — and, at zero hour, in exactly the wrong corridor.",
+    "found": "The Atrium mezzanine rail; underfoot anywhere interesting.",
+    "ties": [
+      "The Fake Stewards"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "The Menagerie Keeper",
+    "species": "Human",
+    "face": "Curator of the collection",
+    "seen": "A woman in high-collared green with feeding gauntlets at her belt, who knows every animal aboard by sound and most guests by their family's sponsorship.",
+    "truth": "She tends the showpiece nexu, Duchess — and the dark vitrine that's 'between residents' but still drawing power. She coaxes something unseen in it with a vocoder whistle, and stops when she notices she's watched. <span class='trail'>[B]</span>",
+    "want": "Her animals fed, documented, and admired.",
+    "lever": "Read Duchess through her and you learn which steward the nexu won't stop tracking — animals remember the smell of a boarding deck. <span class='trail'>[A]</span>",
+    "found": "The Menagerie (D4); the creature lift down to the D2 holding bays.",
+    "ties": [
+      "The Fake Stewards"
+    ],
+    "trail": "A"
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "pair",
+    "mode": "desc",
+    "name": "The Ithorian Honeymooners",
+    "species": "Ithorian",
+    "face": "Newlywed guests",
+    "seen": "Two Ithorians sharing one dessert with one spoon, their silver translator droid quietly narrating the room to itself in the background.",
+    "truth": "Genuinely just married, genuinely besotted — but that droid records everything, and is a walking evidence locker for anyone who thinks to ask it the right question.",
+    "want": "An unforgettable voyage and a little privacy.",
+    "lever": "The droid heard it. Whatever 'it' was.",
+    "found": "The Crown of Corellia; the Climate Simulator footbridge; the meadow.",
+    "ties": [],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "pair",
+    "mode": "desc",
+    "name": "The Brell Twins",
+    "species": "Human",
+    "face": "Corellian shipwrights on holiday",
+    "seen": "Two Corellians in union jackets who keep opening maintenance panels 'just to look,' palms flat to the bulkhead like they're checking a horse's flank.",
+    "truth": "Busman's holiday, nothing sinister — but their idle poking salts the network with innocent anomalies that foul both slicers' traces and muddy everyone's logs.",
+    "want": "To see how the old girl was built.",
+    "lever": "Free noise. Their meddling is cover Rodas didn't have to manufacture — or a red herring that wastes a watchful Vask's evening.",
+    "found": "Any corridor with a panel; the cargo spine on a 'tour.'",
+    "ties": [],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Madame Verlaine Oss",
+    "species": "Human",
+    "face": "Widow in mourning grey",
+    "seen": "An elderly woman who takes the same window table every night and tips in old-mint Imperial credits, polite and unhurried and entirely alone.",
+    "truth": "An Imperial governor's widow under a thin alias — and therefore everyone's favorite wrong suspect. She has nothing to do with the heist whatsoever.",
+    "want": "To be left to her grief and her window.",
+    "lever": "The perfect red herring: chase her and she costs you a scene and pays out one small, sad, true thing about loyalty and lost worlds.",
+    "found": "The Crown of Corellia, the same table; the Lounge, late.",
+    "ties": [],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Hssan",
+    "species": "Gotal",
+    "face": "Guest in a meditation shawl",
+    "seen": "A Gotal who pauses mid-corridor, head-cones tilting, and remarks to no one that 'someone aboard is terribly frightened,' then apologizes to a passing stranger.",
+    "truth": "A genuine empath, reading the ambient mood with uncomfortable accuracy. The frightened one is Saalo. It is also, some nights, Rodas.",
+    "want": "A little quiet for the nerves — his own and everyone else's.",
+    "lever": "A living tell: he feels the fear in a room before the players can see its cause.",
+    "found": "Drifting the guest decks; the Climate Simulator's calm.",
+    "ties": [
+      "Veem Saalo"
+    ],
+    "trail": "B"
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "act",
+    "name": "Jubal Vex",
+    "species": "Human",
+    "face": "Holo-celebrity chef",
+    "seen": "A man in monogrammed whites filming himself plating a dessert, drone-cam orbiting, free hand shooing guests out of frame as he narrates to an audience that isn't here.",
+    "truth": "Filming content in every room aboard — uncontrolled cameras that are ruinous to a quiet operation and occasionally, accidentally, useful.",
+    "want": "The voyage's best footage and a thousand new followers.",
+    "lever": "His drone sees corridors no fixed camera covers. A liability — or a borrowed eye, if you can get into his feed.",
+    "found": "Any photogenic room; the Crown of Corellia at dessert.",
+    "ties": [],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "desc",
+    "name": "The Quiet Hunter",
+    "species": "Mandalorian",
+    "face": "Armored guest",
+    "seen": "A figure in worn beskar'gam, courteous at dinner, declining drinks with a small nod, drawing every eye and meeting none of them.",
+    "truth": "Aboard on entirely unrelated business and magnificent at making a table nervous. A pure red herring — unless you'd like a wildcard with their own agenda.",
+    "want": "Their own quarry, who is not anyone in this story.",
+    "lever": "Dread for free. Everyone assumes the armored stranger is the threat; the armored stranger could not care less.",
+    "found": "The Crown of Corellia; the launch-pod gallery, watching arrivals.",
+    "ties": [],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "group",
+    "mode": "desc",
+    "name": "The Engine-Crew Regulars",
+    "species": "Mixed",
+    "face": "Off-shift staff",
+    "seen": "Three off-duty engine crew in clean coveralls packed into a corner booth, boots up, laughing at the same story told three different ways.",
+    "truth": "Exactly what they look like: tired, decent staff blowing off a shift. The honest baseline that makes the fake stewards stand out by contrast.",
+    "want": "A drink, a laugh, and an early rack.",
+    "lever": "Ask them what a real Halcyon steward knows, and the impostors' gaps light up.",
+    "found": "The Lounge after 2300; crew country's social hour.",
+    "ties": [
+      "The Fake Stewards"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Crown Princess Aralin Veth",
+    "species": "Human",
+    "face": "Heir to a Core throne",
+    "seen": "A young woman in understated couture who never quite stands alone — two house attendants orbit her at a polite distance, and other guests pretend not to watch her choose a fork. She wears a signet ring she turns when she's bored.",
+    "truth": "Heir to one of the old Core thrones, aboard because her family has held a Halcyon berth since the ship was launched. Sheltered, sharp, and quietly desperate for a single unscripted hour. Utterly unconnected to the heist — but her security detail takes any disturbance near her very seriously.",
+    "want": "One conversation, one game, one evening where no one is performing at her.",
+    "lever": "Befriend her and doors open on reputation alone — a princess's nod gets a guest seated, invited, and waved past the velvet rope. Her attendants, though, escalate any trouble near her fast.",
+    "found": "The captain's table; the Climate Simulator meadow at quiet hours; the Lounge, briefly, before she's ushered on.",
+    "ties": [
+      "The Veth Attendants"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "pair",
+    "mode": "desc",
+    "name": "The Veth Attendants",
+    "species": "Human",
+    "face": "House retainers in livery",
+    "seen": "Two figures in muted house livery who are never more than a few steps from the young woman they attend, scanning the room far more than they converse with each other.",
+    "truth": "The princess's protective detail, wearing service colors rather than armor. Professional, courteous, and watchful in a way the Halcyon's own stewards aren't — a useful contrast for a player learning to read who's really guarding whom.",
+    "want": "Their charge untroubled and the voyage uneventful.",
+    "lever": "They read threats by proximity to the princess; lead trouble away from her and they lose all interest in you.",
+    "found": "Wherever the princess is, plus the corridor outside her suite.",
+    "ties": [
+      "Crown Princess Aralin Veth"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Senator Dab Orrin",
+    "species": "Human",
+    "face": "New Republic senator",
+    "seen": "A genial man working the room like it's a constituency — a hand on every shoulder, a laugh for every joke, and a press of flesh that never quite reaches his eyes. He toasts 'the New Republic!' a little too often.",
+    "truth": "A sitting senator campaigning on demilitarization, sincerely convinced the war is over because believing it got him elected. The theme NPC made flesh: shown the rifles in 8-C or the truth of the run, does he look — or look away?",
+    "want": "To be seen, liked, and re-elected, without anything inconvenient landing on his watch.",
+    "lever": "A senator who finally SEES is worth more than a blaster — his voice can freeze the whole ship in the players' favor. But he's a coward by reflex, and pushing him costs effort.",
+    "found": "The Atrium receptions; the captain's table; anywhere a crowd will notice him being noticed.",
+    "ties": [
+      "Vanna Sue"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "act",
+    "name": "Vanna Sue",
+    "species": "Twi'lek",
+    "face": "Senator's chief of staff",
+    "seen": "A poised Twi'lek in senate-district colors who steers her principal with the lightest touches — a murmur, a redirected elbow, a datapad slipped into his hand — and right now is quietly cancelling something on that pad with a frown.",
+    "truth": "Orrin's chief of staff and the competent half of the pair. Unknown to the senator, someone has been buying his itinerary; she's the one who'll notice the leak first if anyone rattles it.",
+    "want": "Her senator on-message, on-schedule, and out of trouble.",
+    "lever": "Sharper and more honest than her boss. Convince HER and the senator follows; she's the real door to Orrin's voice.",
+    "found": "A half-step behind the senator, always; the service desk, sorting his affairs.",
+    "ties": [
+      "Senator Dab Orrin"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "feat",
+    "comp": "single",
+    "mode": "act",
+    "name": "Maestro Ondrev Kael",
+    "species": "Bith",
+    "face": "Touring composer",
+    "seen": "A Bith in an old-fashioned high collar conducts the Lounge quartet with two fingers from his booth, wincing whenever they rush a passage and conducting right through his dinner.",
+    "truth": "A celebrated composer-in-residence for the voyage, patron-funded and gloriously self-absorbed. Hears EVERYTHING in a room as sound — footfalls, a dropped tray, a tremor in the deck — and complains about all of it, which occasionally makes him an unwitting witness.",
+    "want": "A flawless premiere and an audience that doesn't chew so loudly.",
+    "lever": "His ear is a sensor. He'll grumble about 'that awful hum from the cargo decks' or 'someone running in the service corridor at this hour' without ever knowing he's reporting a clue.",
+    "found": "His reserved Lounge booth; the bandstand, correcting the players; the Climate Simulator, composing.",
+    "ties": [
+      "The Quartet"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "group",
+    "mode": "desc",
+    "name": "The Quartet",
+    "species": "Mixed",
+    "face": "House musicians",
+    "seen": "Four players — strings and a soft horn — who hold the Lounge's low evening sound and, on their break, share one ashtray and three opinions about the new arrangement.",
+    "truth": "The ship's working band: underpaid, overqualified, and quietly resentful of the maestro riding their tempo. They see every guest who lingers near the bandstand and every deal struck under cover of their playing.",
+    "want": "To finish the set, get paid, and not be lectured about rubato again.",
+    "lever": "Working musicians notice patrons the way bartenders do — a tip and a sympathetic ear buys what they've watched from the stand.",
+    "found": "The Lounge bandstand each evening; crew country, off-shift.",
+    "ties": [
+      "Maestro Ondrev Kael",
+      "Siyana Vell"
+    ],
+    "trail": ""
+  },
+  {
+    "camp": "wild",
+    "kind": "bg",
+    "comp": "single",
+    "mode": "desc",
+    "name": "Duke Castovar the Younger",
+    "species": "Human",
+    "face": "Minor nobleman",
+    "seen": "A florid man in a sash crowded with honors, holding court at the bar about lineage and vintages, certain that everyone wants to hear which of his ancestors did what.",
+    "truth": "A minor noble of an over-extended house, all title and thinning fortune, aboard on a berth he can barely justify. Harmless, loud, and the kind of man who'll loudly misidentify someone as a fellow aristocrat — useful cover, or an awkward spotlight.",
+    "want": "To be taken as seriously as he takes himself.",
+    "lever": "Flatter the lineage and he'll vouch for a stranger to the whole room — instant, unearned social standing, with a side of unwanted attention.",
+    "found": "The Lounge bar; the Crown of Corellia, angling for the captain's table.",
+    "ties": [],
+    "trail": ""
+  }
+]
