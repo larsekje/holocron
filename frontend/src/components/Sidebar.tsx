@@ -6,6 +6,7 @@ import useSessionLogStore, {
   Reminder,
 } from "@/state/sessionLogStore";
 import { nukeAndReload } from "@/state/persist";
+import QuickAddRandom from "@/components/QuickAddRandom";
 import usePlaytestNotesStore from "@/state/playtestNotesStore";
 import { renderSwrpgText } from "@/utils/swrpgText";
 
@@ -504,6 +505,10 @@ const Sidebar: React.FC = () => {
       </Box>
 
       {import.meta.env.DEV && <PlaytestNotes />}
+
+      {/* Random scratch-add tools, relocated out of the Targets header into the
+          footer next to the dev escape hatch. */}
+      <QuickAddRandom />
 
       {/* Dev-only escape hatch — wipes all persisted holocron state and
           reloads. Survives prod-build by being dropped at build time when

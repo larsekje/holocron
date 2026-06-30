@@ -10,6 +10,16 @@ export interface Adversary {
   named?: boolean;
   description?: string;
   notes?: string;
+  /** Classification taxonomy (v5), present in adversaries.json:
+   *  - factions: allegiance bloc(s) — the 14-value list
+   *  - archetype: broad 6-bucket roll-up (Combatant / Social / Creature /
+   *    Specialist / Force / Civilian), derived from coreArchetype
+   *  - coreArchetype: Role — the specific job (31 values)
+   *  - traits: Profile — behavioural flavor (partially derived) */
+  factions?: string[];
+  archetype?: string;
+  coreArchetype?: string;
+  traits?: string[];
   characteristics: {
     Brawn: number;
     Agility: number;

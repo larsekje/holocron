@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -14,11 +14,20 @@ import {
   Flex,
   Spinner,
   Select,
+  Switch,
+  Tooltip,
+  IconButton,
   VStack,
   HStack,
+  Wrap,
+  WrapItem,
   Badge,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
   useToast,
-  Divider,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -27,219 +36,462 @@ import {
   FormControl,
   FormLabel,
 } from '@chakra-ui/react';
+import { FaUsers, FaSpaceShuttle } from 'react-icons/fa';
+import { ReactComponent as SetbackSvg } from '@/assets/dice/setback.svg';
+import { ReactComponent as DifficultySvg } from '@/assets/dice/difficulty.svg';
+import { ReactComponent as ChallengeSvg } from '@/assets/dice/challenge.svg';
 import { Adversary } from '@/types/adversaryTypes';
 import adversaryService from '@/services/adversaryService';
 import useParticipantStore from '@/state/participantsStore';
+import useActiveVehicleStore, { buildVehicleSpecFromSpotlight } from '@/state/activeVehicleStore';
+import { browseIndex, getDetail } from '@/data/spotlightIndex';
 
 interface AdversarySelectorProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-/**
- * Component for selecting an adversary to add as a participant
- */
+/** The six derived Archetype buckets, in scan order. */
+const ARCHETYPES = ['Combatant', 'Specialist', 'Force', 'Social', 'Creature', 'Civilian'];
+const TIERS: Array<Adversary['type']> = ['Minion', 'Rival', 'Nemesis'];
+
+const TIER_COLOR: Record<string, string> = { Minion: 'green', Rival: 'blue', Nemesis: 'red' };
+
+// Reuse the narrative-dice iconography the GM already knows: setback (minion),
+// difficulty (rival), challenge (nemesis).
+const TIER_ICON: Record<string, React.ComponentType<any>> = {
+  Minion: SetbackSvg,
+  Rival: DifficultySvg,
+  Nemesis: ChallengeSvg,
+};
+
+const PANEL_BG = '#202326';
+const ROW_BG = '#26292d';
+
+// Vehicle `info.type` is "category/subtype"; the first segment is the category.
+// Exclude ground/atmospheric craft so the Starships tab stays starships.
+const NON_STARSHIP_CATEGORIES = new Set([
+  'speeder',
+  'speeder truck',
+  'airspeeder',
+  'landspeeder',
+  'walker',
+  'swoop',
+]);
+function isStarship(detail: any): boolean {
+  const t = String(detail?.info?.type ?? '').toLowerCase().trim();
+  if (!t) return true;
+  const root = t.split('/')[0]?.trim() ?? '';
+  return !NON_STARSHIP_CATEGORIES.has(root);
+}
+
+interface ShipEntry {
+  id: string;
+  name: string;
+  subtitle?: string;
+  detail: any;
+}
+
+/** A small toggle chip used for the Tier / Archetype facets. */
+const Chip: React.FC<{ active: boolean; onClick: () => void; children: React.ReactNode; activeColor?: string }> = ({
+  active,
+  onClick,
+  children,
+  activeColor = 'blue',
+}) => (
+  <Button
+    size="xs"
+    h="22px"
+    borderRadius="full"
+    variant={active ? 'solid' : 'outline'}
+    colorScheme={active ? activeColor : 'gray'}
+    color={active ? undefined : 'whiteAlpha.700'}
+    borderColor={active ? undefined : 'whiteAlpha.300'}
+    fontWeight="medium"
+    onClick={onClick}
+  >
+    {children}
+  </Button>
+);
+
 const AdversarySelector: React.FC<AdversarySelectorProps> = ({ isOpen, onClose }) => {
-  const [adversaries, setAdversaries] = useState<Adversary[]>([]);
-  const [filteredAdversaries, setFilteredAdversaries] = useState<Adversary[]>([]);
-  const [selectedAdversary, setSelectedAdversary] = useState<Adversary | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [minionCount, setMinionCount] = useState<number>(4);
-  
-  const { addParticipant } = useParticipantStore();
+  // ── shared ──────────────────────────────────────────────────────────────
+  const addParticipant = useParticipantStore((s) => s.addParticipant);
+  const addVehicle = useActiveVehicleStore((s) => s.add);
   const toast = useToast();
-  
-  // Load adversaries when component mounts
+
+  // ── adversaries ─────────────────────────────────────────────────────────
+  const [adversaries, setAdversaries] = useState<Adversary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [tiers, setTiers] = useState<Set<string>>(new Set());
+  const [archetypes, setArchetypes] = useState<Set<string>>(new Set());
+  const [faction, setFaction] = useState('all');
+  const [role, setRole] = useState('all');
+  const [includeNamed, setIncludeNamed] = useState(false);
+  const [selected, setSelected] = useState<Adversary | null>(null);
+  const [minionCount, setMinionCount] = useState(4);
+
+  // ── starships (lazy-built on first open) ─────────────────────────────────
+  const [ships, setShips] = useState<ShipEntry[] | null>(null);
+  const [shipSearch, setShipSearch] = useState('');
+  const [selectedShip, setSelectedShip] = useState<ShipEntry | null>(null);
+  const [tabIndex, setTabIndex] = useState(0);
+
   useEffect(() => {
-    const loadData = async () => {
+    let cancelled = false;
+    const load = async () => {
       setLoading(true);
       try {
         const data = await adversaryService.getAdversaries();
-        setAdversaries(data);
-        setFilteredAdversaries(data);
+        if (!cancelled) setAdversaries(data);
       } catch (error) {
         console.error('Failed to load adversaries:', error);
-        toast({
-          title: 'Error loading adversaries',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
+        toast({ title: 'Error loading adversaries', status: 'error', duration: 3000, isClosable: true });
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
-    
-    loadData();
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, [toast]);
-  
-  // Filter adversaries when search term or type filter changes
-  useEffect(() => {
-    let filtered = adversaries;
-    
-    // Apply type filter
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter(adv => adv.type === typeFilter);
+
+  // Faction / Role dropdown options, derived from the data actually present.
+  const factionOptions = useMemo(() => {
+    const s = new Set<string>();
+    adversaries.forEach((a) => (a.factions ?? []).forEach((f) => f && s.add(f)));
+    return [...s].sort();
+  }, [adversaries]);
+  const roleOptions = useMemo(() => {
+    const s = new Set<string>();
+    adversaries.forEach((a) => a.coreArchetype && s.add(a.coreArchetype));
+    return [...s].sort();
+  }, [adversaries]);
+
+  const filtered = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return adversaries.filter((a) => {
+      if (!includeNamed && a.named) return false;
+      if (tiers.size && !tiers.has(a.type)) return false;
+      if (archetypes.size && !(a.archetype && archetypes.has(a.archetype))) return false;
+      if (faction !== 'all' && !(a.factions ?? []).includes(faction)) return false;
+      if (role !== 'all' && a.coreArchetype !== role) return false;
+      if (term && !(a.name.toLowerCase().includes(term) || (a.description ?? '').toLowerCase().includes(term)))
+        return false;
+      return true;
+    });
+  }, [adversaries, search, tiers, archetypes, faction, role, includeNamed]);
+
+  const RENDER_CAP = 250;
+  const shown = filtered.slice(0, RENDER_CAP);
+
+  const toggle = (set: Set<string>, value: string, setter: (s: Set<string>) => void) => {
+    const next = new Set(set);
+    next.has(value) ? next.delete(value) : next.add(value);
+    setter(next);
+  };
+
+  const buildShips = () => {
+    if (ships) return;
+    const out: ShipEntry[] = [];
+    for (const e of browseIndex(5000, ['vehicle'])) {
+      const detail = getDetail('vehicle', e.id);
+      if (detail && isStarship(detail)) out.push({ id: e.id, name: e.name, subtitle: e.subtitle, detail });
     }
-    
-    // Apply search filter
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(adv => 
-        adv.name.toLowerCase().includes(term) ||
-        (adv.description && adv.description.toLowerCase().includes(term))
-      );
-    }
-    
-    setFilteredAdversaries(filtered);
-  }, [adversaries, searchTerm, typeFilter]);
-  
-  // Add the selected adversary as a participant
+    out.sort((a, b) => a.name.localeCompare(b.name));
+    setShips(out);
+  };
+
+  const filteredShips = useMemo(() => {
+    if (!ships) return [];
+    const term = shipSearch.trim().toLowerCase();
+    if (!term) return ships;
+    return ships.filter((s) => s.name.toLowerCase().includes(term) || (s.subtitle ?? '').toLowerCase().includes(term));
+  }, [ships, shipSearch]);
+
   const handleAddAdversary = () => {
-    if (!selectedAdversary) return;
-    
+    if (!selected) return;
     try {
-      // Use adversaryService to convert adversary to participant
-      const newParticipant = adversaryService.convertToParticipant(selectedAdversary);
-      
-      // Customize the minion count if applicable
-      if (selectedAdversary.type === 'Minion') {
-        newParticipant.stats!.minions = minionCount;
-      }
-      
-      // Add the converted participant
-      addParticipant(newParticipant);
-      
-      toast({
-        title: 'Adversary added',
-        description: `${selectedAdversary.name} has been added as a participant`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      
+      const p = adversaryService.convertToParticipant(selected);
+      if (selected.type === 'Minion') p.stats!.minions = minionCount;
+      addParticipant(p);
+      toast({ title: 'Adversary added', description: selected.name, status: 'success', duration: 2000, isClosable: true });
       onClose();
     } catch (error) {
       console.error('Error converting adversary to participant:', error);
-      toast({
-        title: 'Error adding adversary',
-        description: 'Could not convert adversary to participant',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      toast({ title: 'Error adding adversary', status: 'error', duration: 3000, isClosable: true });
     }
   };
-  
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Select Adversary</ModalHeader>
-        <ModalCloseButton />
-        
-        <ModalBody>
-          <VStack spacing={4} align="stretch">
-            {/* Search and filtering */}
-            <HStack>
-              <Input 
-                placeholder="Search by name or description..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                flex={1}
-              />
-              <Select 
-                value={typeFilter} 
-                onChange={(e) => setTypeFilter(e.target.value)}
-                width="150px"
-              >
-                <option value="all">All Types</option>
-                <option value="Minion">Minion</option>
-                <option value="Rival">Rival</option>
-                <option value="Nemesis">Nemesis</option>
-              </Select>
-            </HStack>
-            
-            {/* Results count */}
-            <Text fontSize="sm" color="gray.600">
-              Showing {filteredAdversaries.length} of {adversaries.length} adversaries
-            </Text>
-            
-            {/* Loading state */}
-            {loading ? (
-              <Flex justify="center" py={8}>
-                <Spinner />
-              </Flex>
-            ) : (
-              <Box maxHeight="400px" overflowY="auto" borderWidth="1px" borderRadius="md">
-                <VStack divider={<Divider />} spacing={0} align="stretch">
-                  {filteredAdversaries.length === 0 ? (
-                    <Text p={4} textAlign="center">No adversaries match your search</Text>
-                  ) : (
-                    filteredAdversaries.map((adversary) => (
-                      <Box 
-                        key={adversary.name}
-                        p={3}
-                        cursor="pointer"
-                        bg={selectedAdversary?.name === adversary.name ? 'blue.50' : 'white'}
-                        onClick={() => setSelectedAdversary(adversary)}
-                        _hover={{ bg: 'gray.50' }}
-                      >
-                        <Flex justify="space-between" align="center">
-                          <Text fontWeight="bold">{adversary.name}</Text>
-                          <Badge colorScheme={
-                            adversary.type === 'Minion' ? 'green' :
-                            adversary.type === 'Rival' ? 'blue' : 'red'
-                          }>
-                            {adversary.type}
-                          </Badge>
-                        </Flex>
-                        {selectedAdversary?.name === adversary.name && (
-                          <Text fontSize="sm" mt={2} noOfLines={2}>
-                            {adversary.description || 'No description available'}
-                          </Text>
-                        )}
-                      </Box>
-                    ))
-                  )}
-                </VStack>
-              </Box>
-            )}
-            
-            {/* Minion count selector, only shown when a minion is selected */}
-            {selectedAdversary?.type === 'Minion' && (
-              <FormControl>
-                <FormLabel>Number of Minions</FormLabel>
-                <NumberInput 
-                  min={1} 
-                  max={10} 
-                  value={minionCount}
-                  onChange={(_, value) => setMinionCount(value)}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </FormControl>
-            )}
-          </VStack>
-        </ModalBody>
 
-        <ModalFooter>
-          <Button variant="ghost" mr={3} onClick={onClose}>
+  const handleAddShip = () => {
+    if (!selectedShip) return;
+    addVehicle(buildVehicleSpecFromSpotlight(selectedShip.detail));
+    toast({
+      title: 'Starship added',
+      description: selectedShip.detail.fullName ?? selectedShip.name,
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    });
+    onClose();
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
+      <ModalOverlay />
+      <ModalContent bg={PANEL_BG} color="whiteAlpha.900" borderWidth="1px" borderColor="whiteAlpha.200">
+        <ModalHeader fontSize="md">Add to encounter</ModalHeader>
+        <ModalCloseButton />
+
+        <Tabs
+          variant="line"
+          colorScheme="blue"
+          isLazy
+          index={tabIndex}
+          onChange={(i) => {
+            setTabIndex(i);
+            if (i === 1) buildShips();
+          }}
+        >
+          <TabList px={4} borderColor="whiteAlpha.200">
+            <Tab fontSize="sm" gap={2}>
+              <FaUsers /> Adversaries
+            </Tab>
+            <Tab fontSize="sm" gap={2}>
+              <FaSpaceShuttle /> Starships
+            </Tab>
+          </TabList>
+
+          <TabPanels>
+            {/* ── Adversaries ─────────────────────────────────────────────── */}
+            <TabPanel px={4} pb={2}>
+              <VStack spacing={3} align="stretch">
+                {/* Search + tier (dice) + include-named, all on one row */}
+                <HStack spacing={2}>
+                  <Input
+                    placeholder="Search by name or description…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    bg={ROW_BG}
+                    borderColor="whiteAlpha.200"
+                    flex={1}
+                    minW={0}
+                  />
+                  <HStack spacing={1} flexShrink={0}>
+                    {TIERS.map((t) => {
+                      const Icon = TIER_ICON[t];
+                      const active = tiers.has(t);
+                      return (
+                        <Tooltip key={t} label={t}>
+                          <IconButton
+                            aria-label={`Filter ${t}`}
+                            icon={<Icon width={18} />}
+                            size="sm"
+                            variant="ghost"
+                            bg={active ? 'whiteAlpha.200' : 'transparent'}
+                            borderWidth="1px"
+                            borderColor={active ? 'whiteAlpha.400' : 'whiteAlpha.200'}
+                            opacity={active ? 1 : 0.5}
+                            _hover={{ bg: 'whiteAlpha.100', opacity: 1 }}
+                            onClick={() => toggle(tiers, t, setTiers)}
+                          />
+                        </Tooltip>
+                      );
+                    })}
+                  </HStack>
+                  <Box w="1px" h="22px" bg="whiteAlpha.200" flexShrink={0} />
+                  <FormControl display="flex" alignItems="center" w="auto" flexShrink={0}>
+                    <FormLabel htmlFor="include-named" fontSize="xs" color="whiteAlpha.600" mb={0} mr={2} whiteSpace="nowrap">
+                      Named
+                    </FormLabel>
+                    <Switch id="include-named" size="sm" colorScheme="blue" isChecked={includeNamed} onChange={(e) => setIncludeNamed(e.target.checked)} />
+                  </FormControl>
+                </HStack>
+
+                {/* Archetype chips */}
+                <Wrap spacing={1.5}>
+                  {ARCHETYPES.map((a) => (
+                    <WrapItem key={a}>
+                      <Chip active={archetypes.has(a)} onClick={() => toggle(archetypes, a, setArchetypes)}>
+                        {a}
+                      </Chip>
+                    </WrapItem>
+                  ))}
+                </Wrap>
+
+                {/* Faction + Role dropdowns */}
+                <HStack>
+                  <Select value={faction} onChange={(e) => setFaction(e.target.value)} bg={ROW_BG} borderColor="whiteAlpha.200" size="sm">
+                    <option value="all">All factions</option>
+                    {factionOptions.map((f) => (
+                      <option key={f} value={f}>
+                        {f}
+                      </option>
+                    ))}
+                  </Select>
+                  <Select value={role} onChange={(e) => setRole(e.target.value)} bg={ROW_BG} borderColor="whiteAlpha.200" size="sm">
+                    <option value="all">All roles</option>
+                    {roleOptions.map((r) => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </Select>
+                </HStack>
+
+                <Text fontSize="xs" color="whiteAlpha.500">
+                  {filtered.length} match{filtered.length === 1 ? '' : 'es'}
+                  {filtered.length > RENDER_CAP ? ` (showing first ${RENDER_CAP} — refine to narrow)` : ''}
+                </Text>
+
+                {loading ? (
+                  <Flex justify="center" py={8}>
+                    <Spinner />
+                  </Flex>
+                ) : (
+                  <Box maxH="340px" overflowY="auto" borderWidth="1px" borderColor="whiteAlpha.200" borderRadius="md">
+                    {shown.length === 0 ? (
+                      <Text p={4} textAlign="center" color="whiteAlpha.500" fontSize="sm">
+                        No adversaries match these filters
+                      </Text>
+                    ) : (
+                      <VStack spacing={0} align="stretch">
+                        {shown.map((a) => {
+                          const isSel = selected?.name === a.name;
+                          return (
+                            <Box
+                              key={a.name}
+                              px={3}
+                              py={2}
+                              cursor="pointer"
+                              borderLeftWidth="2px"
+                              borderLeftColor={isSel ? `${TIER_COLOR[a.type]}.400` : 'transparent'}
+                              bg={isSel ? 'whiteAlpha.100' : 'transparent'}
+                              _hover={{ bg: 'whiteAlpha.50' }}
+                              onClick={() => setSelected(a)}
+                            >
+                              <Flex justify="space-between" align="center" gap={2}>
+                                <Text fontWeight="semibold" fontSize="sm" noOfLines={1}>
+                                  {a.name}
+                                </Text>
+                                <HStack spacing={1} flexShrink={0}>
+                                  {a.coreArchetype && (
+                                    <Badge bg="whiteAlpha.150" color="whiteAlpha.700" fontSize="9px" textTransform="none">
+                                      {a.coreArchetype}
+                                    </Badge>
+                                  )}
+                                  <Badge colorScheme={TIER_COLOR[a.type]} fontSize="9px">
+                                    {a.type}
+                                  </Badge>
+                                </HStack>
+                              </Flex>
+                              <Text fontSize="2xs" color="whiteAlpha.500" noOfLines={1}>
+                                {[a.archetype, (a.factions ?? []).join(' · ')].filter(Boolean).join('  ·  ')}
+                              </Text>
+                              {isSel && a.description && (
+                                <Text fontSize="xs" mt={1} color="whiteAlpha.700" noOfLines={3}>
+                                  {a.description}
+                                </Text>
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </VStack>
+                    )}
+                  </Box>
+                )}
+
+                {selected?.type === 'Minion' && (
+                  <FormControl>
+                    <FormLabel fontSize="sm" mb={1}>
+                      Number of minions
+                    </FormLabel>
+                    <NumberInput min={1} max={10} value={minionCount} onChange={(_, v) => setMinionCount(v || 1)} size="sm" maxW="120px">
+                      <NumberInputField bg={ROW_BG} borderColor="whiteAlpha.200" />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                )}
+              </VStack>
+            </TabPanel>
+
+            {/* ── Starships ───────────────────────────────────────────────── */}
+            <TabPanel px={4} pb={2}>
+              <VStack spacing={3} align="stretch">
+                <Input
+                  placeholder="Search starships…"
+                  value={shipSearch}
+                  onChange={(e) => setShipSearch(e.target.value)}
+                  bg={ROW_BG}
+                  borderColor="whiteAlpha.200"
+                />
+                <Text fontSize="xs" color="whiteAlpha.500">
+                  {filteredShips.length} starship{filteredShips.length === 1 ? '' : 's'}
+                </Text>
+                {ships === null ? (
+                  <Flex justify="center" py={8}>
+                    <Spinner />
+                  </Flex>
+                ) : (
+                  <Box maxH="380px" overflowY="auto" borderWidth="1px" borderColor="whiteAlpha.200" borderRadius="md">
+                    {filteredShips.length === 0 ? (
+                      <Text p={4} textAlign="center" color="whiteAlpha.500" fontSize="sm">
+                        No starships match your search
+                      </Text>
+                    ) : (
+                      <VStack spacing={0} align="stretch">
+                        {filteredShips.slice(0, 300).map((s) => {
+                          const isSel = selectedShip?.id === s.id;
+                          return (
+                            <Box
+                              key={s.id}
+                              px={3}
+                              py={2}
+                              cursor="pointer"
+                              borderLeftWidth="2px"
+                              borderLeftColor={isSel ? 'blue.400' : 'transparent'}
+                              bg={isSel ? 'whiteAlpha.100' : 'transparent'}
+                              _hover={{ bg: 'whiteAlpha.50' }}
+                              onClick={() => setSelectedShip(s)}
+                            >
+                              <Text fontWeight="semibold" fontSize="sm" noOfLines={1}>
+                                {s.name}
+                              </Text>
+                              {s.subtitle && (
+                                <Text fontSize="2xs" color="whiteAlpha.500" noOfLines={1}>
+                                  {s.subtitle}
+                                </Text>
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </VStack>
+                    )}
+                  </Box>
+                )}
+              </VStack>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+
+        <ModalFooter gap={3}>
+          <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button 
-            colorScheme="blue" 
-            onClick={handleAddAdversary}
-            isDisabled={!selectedAdversary}
-          >
-            Add Adversary
-          </Button>
+          {tabIndex === 1 ? (
+            <Button colorScheme="blue" onClick={handleAddShip} isDisabled={!selectedShip}>
+              Add starship
+            </Button>
+          ) : (
+            <Button colorScheme="blue" onClick={handleAddAdversary} isDisabled={!selected}>
+              Add adversary
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>
