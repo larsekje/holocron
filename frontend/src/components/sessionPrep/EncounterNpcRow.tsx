@@ -121,6 +121,17 @@ const EncounterNpcRow: React.FC<Props> = ({ npc, onChange, onRemove, onSendToRos
         />
       </HStack>
 
+      {/* The improv handle — surfaces on the play-surface cast rows. */}
+      <Input
+        value={npc.want ?? ''}
+        onChange={(e) => onChange({ want: e.target.value || undefined })}
+        placeholder="▸ want — what they're after"
+        size="xs"
+        variant="flushed"
+        color="#b7c6a8"
+        _placeholder={{ color: 'whiteAlpha.300' }}
+      />
+
       <HStack spacing={2} mt={1} fontSize="2xs">
         {linked ? (
           <>

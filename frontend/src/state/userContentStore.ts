@@ -19,6 +19,8 @@ export interface RosterEntry {
   /** Spotlight adversary id — when set, the entry can be one-click dropped
    * into the live encounter as a participant. */
   adversaryId?: string;
+  /** What they're after — the improv handle shown on bench/cast rows. */
+  want?: string;
   /** Minion group size / number of copies to add when dropped in. */
   count?: number;
   /** Optional parent squad (RosterGroup id). Absent = a loose individual. */

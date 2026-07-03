@@ -104,7 +104,7 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
   const removeNpc = (i: number) => setNpcs(npcs.filter((_, idx) => idx !== i));
   const addNpc = (n: NpcRef) => setNpcs([...npcs, n]);
   const sendNpcToRoster = (n: NpcRef) => {
-    addRosterEntry({ name: n.name || 'NPC', note: n.descriptor, adversaryId: n.adversaryId, count: n.count });
+    addRosterEntry({ name: n.name || 'NPC', note: n.descriptor, adversaryId: n.adversaryId, count: n.count, want: n.want });
     toast({ title: 'Sent to roster', description: n.name, status: 'success', duration: 1500, isClosable: true });
   };
 
@@ -342,7 +342,7 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
                       bg="#16181c"
                       _hover={{ bg: 'whiteAlpha.100' }}
                       fontSize="xs"
-                      onClick={() => addNpc({ name: r.name, descriptor: r.note, adversaryId: r.adversaryId, count: r.count })}
+                      onClick={() => addNpc({ name: r.name, descriptor: r.note, adversaryId: r.adversaryId, count: r.count, want: r.want })}
                     >
                       {r.name}
                     </MenuItem>

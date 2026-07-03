@@ -6,6 +6,7 @@ import { FiUsers } from 'react-icons/fi';
 import ContentCardOld from '@/ContentCardOld';
 import ActiveSceneCard from './ActiveSceneCard';
 import OngoingEffectsCard from './OngoingEffectsCard';
+import PlaySurface from './PlaySurface';
 import RosterEditor from './RosterEditor';
 import EncounterCardInline from './EncounterCardInline';
 import PrepSection from './PrepSection';
@@ -14,19 +15,20 @@ import HalcyonScenesPanel from './HalcyonScenesPanel';
 import { HALCYON_SCENES } from '@/data/halcyonHeist';
 import useUserContentStore, { newEncounterId, newRosterGroupId } from '@/state/userContentStore';
 import usePrepUiStore from '@/state/prepUiStore';
+import useSessionPrepStore from '@/state/sessionPrepStore';
 
 /**
- * SessionPrepPanel — the GM's prep binder (right column).
+ * SessionPrepPanel — the GM's prep binder (right column), with two faces:
  *
- * The live "Ongoing effects" readout is pinned at the top (glanceable play
- * status). Below it sit the foldable prep sections — active scene, tonight's
- * roster, the GM's own (inline-editable) scenes, and the bundled samples —
- * each collapsible via PrepSection so the GM can hide what they're not using.
- * Roster and "Scenes" are author-your-own, persisted via userContentStore;
- * samples are the bundled Gundark Gambit seed (collapsed by default) kept as
- * starting points.
+ * **Prep** (no live scene): the foldable authoring sections — tonight's
+ * roster, the GM's own (inline-editable) scenes, and the bundled samples.
+ * **Play** (a scene is live): the panel inverts into PlaySurface — threads,
+ * the active scene expanded, bench, sparks, and the scene menu.
+ *
+ * The live "Ongoing effects" readout stays pinned at the top in both modes.
  */
 const SessionPrepPanel: React.FC = () => {
+  const inPlay = useSessionPrepStore((s) => s.activeScene !== null);
   const userEncounters = useUserContentStore((s) => s.userEncounters);
   const roster = useUserContentStore((s) => s.roster);
   const saveEncounter = useUserContentStore((s) => s.saveEncounter);
@@ -56,6 +58,17 @@ const SessionPrepPanel: React.FC = () => {
 
   // Newest first so a freshly added card lands at the top.
   const encountersNewestFirst = [...userEncounters].reverse();
+
+  if (inPlay) {
+    return (
+      <ContentCardOld heading="Session Prep" icon={<GiBookmarklet />}>
+        <VStack align="stretch" spacing={3}>
+          <OngoingEffectsCard />
+          <PlaySurface />
+        </VStack>
+      </ContentCardOld>
+    );
+  }
 
   return (
     <ContentCardOld heading="Session Prep" icon={<GiBookmarklet />}>

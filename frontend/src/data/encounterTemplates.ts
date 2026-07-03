@@ -31,6 +31,9 @@ export interface NpcRef {
   /** Spotlight adversary id (e.g. `adversary_stormtrooper-patrol-troopers`).
    *  Surfaces a "+ add" button on the row. */
   adversaryId?: string;
+  /** What they're after — the improv handle. Shown on play-surface cast rows
+   *  so the GM can riff from motivation without opening anything. */
+  want?: string;
   /** Multiplier — for minion groups this overrides the minion count; for
    *  non-minion entries the add button drops in `count` separate
    *  participants, each suffixed with " 1", " 2", … so they're distinct. */
