@@ -3,7 +3,7 @@ import { Box, HStack, Input, Text, VStack, useToast } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import useUserContentStore, { type RosterEntry } from '@/state/userContentStore';
 import useSessionPrepStore from '@/state/sessionPrepStore';
-import { HALCYON_NPCS, type HalcyonNpc } from '@/data/halcyonHeist';
+import { HALCYON_CAMPS, HALCYON_NPCS, type HalcyonCamp, type HalcyonNpc } from '@/data/halcyonHeist';
 import type { NpcRef } from '@/data/encounterTemplates';
 import { addNpcToEncounter } from './addNpc';
 import { deriveProfile } from './rosterVisuals';
@@ -55,6 +55,18 @@ function matches(item: BenchItem, q: string): boolean {
 
 const MAX_RESULTS = 12;
 
+type BenchTab = 'mine' | HalcyonCamp;
+
+/** Camp → active-chip colour (undertow reads as danger; the rest follow the
+ * Halcyon zone palette). Mine stays neutral. */
+const CAMP_CHIP: Record<BenchTab, { bg: string; color: string }> = {
+  mine: { bg: 'whiteAlpha.300', color: 'white' },
+  undertow: { bg: '#8c4040', color: 'white' },
+  ship: { bg: '#4db6a8', color: '#0e2422' },
+  mark: { bg: '#c9a765', color: '#1a1c1e' },
+  wild: { bg: '#5a7fb0', color: 'white' },
+};
+
 /**
  * BenchPanel — everyone who might walk into the scene: the GM's roster
  * (pinned recurrers first) with the bundled Halcyon cast reachable through the
@@ -71,6 +83,7 @@ const BenchPanel: React.FC = () => {
   const sceneNpcs = useSessionPrepStore((s) => s.activeScene?.npcs);
   const toast = useToast();
   const [query, setQuery] = useState('');
+  const [tab, setTab] = useState<BenchTab>('mine');
   const [editingWant, setEditingWant] = useState<string | null>(null);
   const [wantDraft, setWantDraft] = useState('');
 
@@ -89,11 +102,16 @@ const BenchPanel: React.FC = () => {
     return [...items.filter((i) => i.pinned), ...items.filter((i) => !i.pinned)];
   }, [roster]);
 
+  // A search spans everything; otherwise the active tab lists its members
+  // outright — the cast should be readable at a glance, not search-gated.
   const visible: BenchItem[] = useMemo(() => {
-    if (!q) return rosterItems;
-    const halcyon = HALCYON_NPCS.map(fromHalcyon);
-    return [...rosterItems, ...halcyon].filter((i) => matches(i, q)).slice(0, MAX_RESULTS);
-  }, [q, rosterItems]);
+    if (q) {
+      const halcyon = HALCYON_NPCS.map(fromHalcyon);
+      return [...rosterItems, ...halcyon].filter((i) => matches(i, q)).slice(0, MAX_RESULTS);
+    }
+    if (tab === 'mine') return rosterItems;
+    return HALCYON_NPCS.filter((n) => n.camp === tab).map(fromHalcyon);
+  }, [q, tab, rosterItems]);
 
   const exactMatch = visible.some((i) => i.name.toLowerCase() === q);
 
@@ -135,6 +153,42 @@ const BenchPanel: React.FC = () => {
 
   return (
     <Box>
+      {/* Camp tabs — Mine (the GM's roster) + the Halcyon camps, so the whole
+          cast is one tap away instead of search-gated. */}
+      <HStack spacing={1} mb={1.5} flexWrap="wrap">
+        {([{ camp: 'mine' as const, label: 'Mine', count: roster.length }].concat(
+          HALCYON_CAMPS.map((c) => ({
+            camp: c.camp as BenchTab,
+            label: c.label,
+            count: HALCYON_NPCS.filter((n) => n.camp === c.camp).length,
+          })),
+        )).map(({ camp, label, count }) => {
+          const on = tab === camp && !q;
+          const chip = CAMP_CHIP[camp];
+          return (
+            <Box
+              key={camp}
+              as="button"
+              fontSize="9px"
+              fontWeight="bold"
+              letterSpacing="0.05em"
+              textTransform="uppercase"
+              px={1.5}
+              py="1px"
+              borderRadius="sm"
+              color={on ? chip.color : 'whiteAlpha.500'}
+              bg={on ? chip.bg : 'whiteAlpha.100'}
+              onClick={() => {
+                setTab(camp);
+                setQuery('');
+              }}
+            >
+              {label} · {count}
+            </Box>
+          );
+        })}
+      </HStack>
+
       <HStack spacing={1.5} mb={1}>
         <SearchIcon color="whiteAlpha.400" boxSize="10px" />
         <Input
@@ -153,7 +207,7 @@ const BenchPanel: React.FC = () => {
         />
       </HStack>
 
-      <VStack align="stretch" spacing="2px">
+      <VStack align="stretch" spacing="2px" maxH="230px" overflowY="auto" pr={0.5}>
         {visible.map((item) => {
           const profile = deriveProfile(item.adversaryId);
           const here = inSceneNames.has(item.name.toLowerCase());
@@ -283,7 +337,9 @@ const BenchPanel: React.FC = () => {
             ? exactMatch || visible.length > 0
               ? 'searching roster + Halcyon cast'
               : `no match — ↵ to create “${query.trim()}”`
-            : `Halcyon cast · ${HALCYON_NPCS.length} — type to find`}
+            : tab === 'mine' && roster.length === 0
+            ? 'no NPCs of your own yet — type a name + ↵ to add one'
+            : ''}
         </Text>
       </VStack>
     </Box>

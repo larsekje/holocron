@@ -7,6 +7,7 @@ import { HALCYON_SCENES } from '@/data/halcyonHeist';
 import { resolveEncounterVisual } from './encounterVisuals';
 import PlayCastRow from './PlayCastRow';
 import RollTableBlock from './RollTableBlock';
+import DiceText from './DiceText';
 
 /** Section caption used inside the scene card. */
 const Cap: React.FC<{ children: React.ReactNode; hint?: string }> = ({ children, hint }) => (
@@ -51,8 +52,10 @@ const ActiveScenePlay: React.FC = () => {
   const toggleBeat = useSessionPrepStore((s) => s.toggleBeat);
   const updateSceneNpc = useSessionPrepStore((s) => s.updateSceneNpc);
   const userEncounters = useUserContentStore((s) => s.userEncounters);
+  const startFromTemplate = useSessionPrepStore((s) => s.startFromTemplate);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [showFullText, setShowFullText] = useState(false);
+  const [readOpen, setReadOpen] = useState(false);
 
   if (!activeScene) return null;
 
@@ -76,6 +79,18 @@ const ActiveScenePlay: React.FC = () => {
   const npcs = toRefs(activeScene.npcs);
   const beats = activeScene.beats ?? [];
   const used = activeScene.beatsUsed ?? [];
+  const floor = activeScene.floor ?? [];
+  const angles = activeScene.angles ?? [];
+  const clampRead = lead.length > 280;
+
+  // Walk-to chips: adjacent scene titles resolved against all three libraries.
+  const linkTargets = (activeScene.links ?? []).map((title) => {
+    const target =
+      HALCYON_SCENES.find((t) => t.title === title) ??
+      userEncounters.find((t) => t.title === title) ??
+      ENCOUNTER_TEMPLATES.find((t) => t.title === title);
+    return { title, target };
+  });
 
   return (
     <Box
@@ -115,21 +130,37 @@ const ActiveScenePlay: React.FC = () => {
       </HStack>
 
       <Box px={2} pb={2}>
-        {/* Read-aloud lead + folded GM tail */}
+        {/* Read-aloud lead — clamped when long (it's performed, not studied),
+            + folded GM tail */}
         {lead && (
-          <Text
-            color="whiteAlpha.800"
-            fontSize="xs"
-            fontStyle="italic"
-            lineHeight="1.5"
-            whiteSpace="pre-wrap"
-            borderLeftWidth="2px"
-            borderColor="whiteAlpha.300"
-            pl={2}
-            mt={2}
-          >
-            {lead}
-          </Text>
+          <Box mt={2}>
+            <Text
+              color="whiteAlpha.800"
+              fontSize="xs"
+              fontStyle="italic"
+              lineHeight="1.5"
+              whiteSpace="pre-wrap"
+              borderLeftWidth="2px"
+              borderColor="whiteAlpha.300"
+              pl={2}
+              noOfLines={clampRead && !readOpen ? 4 : undefined}
+            >
+              {lead}
+            </Text>
+            {clampRead && (
+              <Box
+                as="button"
+                color="whiteAlpha.400"
+                fontSize="2xs"
+                mt={0.5}
+                pl={2}
+                _hover={{ color: 'whiteAlpha.700' }}
+                onClick={() => setReadOpen((v) => !v)}
+              >
+                {readOpen ? '▴ less' : '▾ read on'}
+              </Box>
+            )}
+          </Box>
         )}
         {restText && (
           <>
@@ -155,6 +186,25 @@ const ActiveScenePlay: React.FC = () => {
                 {showFullText ? '▴ less' : '▾ more'}
               </Box>
             )}
+          </>
+        )}
+
+        {/* The floor — ambient vignettes; amber dot = watching back */}
+        {floor.length > 0 && (
+          <>
+            <Cap>The floor</Cap>
+            <VStack align="stretch" spacing="2px">
+              {floor.map((v, i) => (
+                <HStack key={i} align="flex-start" spacing={2} px={0.5}>
+                  <Text fontSize="8px" mt="4px" color={v.watch ? '#d39939' : 'whiteAlpha.400'} flexShrink={0}>
+                    ●
+                  </Text>
+                  <Text color="whiteAlpha.600" fontSize="2xs" fontStyle="italic" lineHeight="1.45">
+                    {v.text}
+                  </Text>
+                </HStack>
+              ))}
+            </VStack>
           </>
         )}
 
@@ -233,6 +283,23 @@ const ActiveScenePlay: React.FC = () => {
           </>
         )}
 
+        {/* Angles — PC-specific approach options, dice glyphs coloured */}
+        {angles.length > 0 && (
+          <>
+            <Cap>{activeScene.anglesLabel ?? 'Angles'}</Cap>
+            <VStack align="stretch" spacing="2px">
+              {angles.map((a, i) => (
+                <HStack key={i} align="flex-start" spacing={2} px={0.5}>
+                  <Text fontSize="9px" mt="2px" color="#7fb0ca" flexShrink={0}>▸</Text>
+                  <Text color="whiteAlpha.700" fontSize="2xs" lineHeight="1.45">
+                    <DiceText text={a} />
+                  </Text>
+                </HStack>
+              ))}
+            </VStack>
+          </>
+        )}
+
         {/* Roll tables */}
         {activeScene.tables && activeScene.tables.length > 0 && (
           <>
@@ -242,6 +309,69 @@ const ActiveScenePlay: React.FC = () => {
                 <RollTableBlock key={t.id} table={t} editable={false} />
               ))}
             </VStack>
+          </>
+        )}
+
+        {/* Nudge — for when it stalls */}
+        {activeScene.nudge && (
+          <Box
+            mt={2.5}
+            px={2}
+            py={1}
+            borderWidth="1px"
+            borderStyle="dashed"
+            borderColor="rgba(201,167,101,0.35)"
+            bg="rgba(201,167,101,0.08)"
+            borderRadius="md"
+          >
+            <Text fontSize="8px" fontWeight="bold" letterSpacing="0.12em" textTransform="uppercase" color="rgba(203,185,138,0.6)">
+              If it stalls
+            </Text>
+            <Text fontSize="2xs" color="#cbb98a" lineHeight="1.45">
+              {activeScene.nudge}
+            </Text>
+          </Box>
+        )}
+
+        {/* Exits — physical routes + walk-to chips for adjacent scenes */}
+        {(activeScene.exits || linkTargets.length > 0) && (
+          <>
+            <Cap>Exits</Cap>
+            {activeScene.exits && (
+              <Text color="whiteAlpha.500" fontSize="2xs" lineHeight="1.4" px={0.5} mb={linkTargets.length ? 1 : 0}>
+                {activeScene.exits}
+              </Text>
+            )}
+            {linkTargets.length > 0 && (
+              <HStack spacing={1} flexWrap="wrap" rowGap="4px">
+                {linkTargets.map(({ title, target }) => {
+                  const dot = target ? target.accentColor ?? resolveEncounterVisual(target).color : undefined;
+                  return (
+                    <HStack
+                      key={title}
+                      as="button"
+                      spacing={1.5}
+                      px={2}
+                      py="2px"
+                      borderWidth="1px"
+                      borderColor="whiteAlpha.300"
+                      borderRadius="full"
+                      bg="#26292d"
+                      cursor={target ? 'pointer' : 'default'}
+                      opacity={target ? 1 : 0.5}
+                      _hover={target ? { borderColor: 'whiteAlpha.500', color: 'white' } : undefined}
+                      onClick={target ? () => startFromTemplate(target) : undefined}
+                      title={target ? `Walk to ${title}` : title}
+                    >
+                      {dot && <Box w="6px" h="6px" borderRadius="full" bg={dot} flexShrink={0} />}
+                      <Text color="whiteAlpha.700" fontSize="10px" fontWeight="semibold" lineHeight="1.4">
+                        {title}
+                      </Text>
+                    </HStack>
+                  );
+                })}
+              </HStack>
+            )}
           </>
         )}
 

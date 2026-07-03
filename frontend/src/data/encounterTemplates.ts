@@ -58,6 +58,14 @@ export interface RollTable {
   rows: RollTableRow[];
 }
 
+/** An ambient one-liner — what's happening on the floor of a location scene.
+ * Not a stat row: set dressing the GM narrates from. `watch` marks the ones
+ * watching back (surveillance/pressure) so they get an amber dot. */
+export interface FloorVignette {
+  text: string;
+  watch?: boolean;
+}
+
 export interface EncounterTemplate {
   id: string;
   title: string;
@@ -79,6 +87,24 @@ export interface EncounterTemplate {
   npcs?: NpcEntry[];
   beats?: string[];
   tables?: RollTable[];
+
+  /* Structured location-scene fields (Halcyon rooms; optional everywhere).
+   * When present the play surface renders them as their own sections instead
+   * of prose packed into `description`. */
+  /** Ambient people/business on the floor right now. */
+  floor?: FloorVignette[];
+  /** PC-specific approach options ("Slicer's eye" lines). May contain the
+   * narrative-dice glyphs ♦ (difficulty) and ■ (boost) — rendered coloured. */
+  angles?: string[];
+  /** Heading for `angles` — e.g. "Slicer's eye". Defaults to "Angles". */
+  anglesLabel?: string;
+  /** One-liner to drop when the scene stalls. */
+  nudge?: string;
+  /** Freeform physical exits ("Grand stair up · guest lifts …"). */
+  exits?: string;
+  /** Titles of adjacent scenes — rendered as walk-to chips on the play
+   * surface (resolved against the same library the scene came from). */
+  links?: string[];
 }
 
 export const ENCOUNTER_TEMPLATES: EncounterTemplate[] = [

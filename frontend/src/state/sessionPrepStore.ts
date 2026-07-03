@@ -10,7 +10,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { holocronPersist } from './persist';
-import type { EncounterTemplate, NpcEntry, NpcRef, RollTable } from '@/data/encounterTemplates';
+import type { EncounterTemplate, FloorVignette, NpcEntry, NpcRef, RollTable } from '@/data/encounterTemplates';
 
 export interface ActiveScene {
   /** Snapshot id — independent of any source template id, so re-starting
@@ -29,6 +29,14 @@ export interface ActiveScene {
   beatsUsed?: boolean[];
   /** Roll tables carried from the encounter — rollable during play. */
   tables?: RollTable[];
+  /** Structured location-scene sections, carried verbatim from the template
+   * (see EncounterTemplate for field semantics). */
+  floor?: FloorVignette[];
+  angles?: string[];
+  anglesLabel?: string;
+  nudge?: string;
+  exits?: string;
+  links?: string[];
   /** Free-form GM notes the GM types in during play. Starts blank when a
    * template is started — the template description goes in `description`,
    * this is the running scratch. */
@@ -84,6 +92,12 @@ const useSessionPrepStore = create<SessionPrepStore>()(persist((set) => ({
         beats: template.beats ? [...template.beats] : undefined,
         beatsUsed: [],
         tables: template.tables ? [...template.tables] : undefined,
+        floor: template.floor ? [...template.floor] : undefined,
+        angles: template.angles ? [...template.angles] : undefined,
+        anglesLabel: template.anglesLabel,
+        nudge: template.nudge,
+        exits: template.exits,
+        links: template.links ? [...template.links] : undefined,
         notes: '',
         startedAt: Date.now(),
       },

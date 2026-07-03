@@ -81,15 +81,6 @@ function slug(name: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-/** Append a labelled block to a description only when it has content. */
-function section(label: string, body: string): string {
-  return body ? `${label}\n${body}` : '';
-}
-
-function joinSections(parts: string[]): string {
-  return parts.filter(Boolean).join('\n\n');
-}
-
 // ── Cast: the 34-NPC roster, one cleaned record per NPC ─────────────────────
 
 export type HalcyonCamp = 'undertow' | 'ship' | 'mark' | 'wild';
@@ -196,19 +187,6 @@ function sceneZoneKey(access: string): string {
   return 'ship';
 }
 
-function roomDescription(r: RawRoom): string {
-  const here = (r.people ?? []).map((pp) => `· ${strip(pp.t)}`).join('\n');
-  const slicer = (r.slicer ?? []).map((s) => `· ${strip(s)}`).join('\n');
-  return joinSections([
-    strip(r.read),
-    section('HERE', here),
-    section("SLICER'S EYE", slicer),
-    section('NUDGE', strip(r.nudge)),
-    section('EXITS', strip(r.exits)),
-    r.links && r.links.length ? `CONNECTS TO\n${r.links.join(' · ')}` : '',
-  ]);
-}
-
 function roomBeats(r: RawRoom): string[] {
   const hints = (r.hints ?? []).map((h) =>
     [h.w ? `[${h.w}]` : '', strip(h.t)].filter(Boolean).join(' '),
@@ -219,10 +197,15 @@ function roomBeats(r: RawRoom): string[] {
   return [...hints, ...comps];
 }
 
+/** A room's named cast member inherits the person's `want` from people.json —
+ * that's what the play surface's cast rows lead with. */
+const wantByName = new Map(HALCYON_NPCS.map((n) => [n.name, n.want]));
+
 const scenesWithZone = rooms.map((r) => {
   const npcs: NpcRef[] = (r.cast ?? []).map((c) => ({
     name: c.n,
     descriptor: strip(c.s) || undefined,
+    want: wantByName.get(c.n) || undefined,
   }));
   const blurb = [r.deck, strip(r.rhythm)].filter(Boolean).join(' · ');
   const zoneKey = sceneZoneKey(r.access ?? '');
@@ -231,9 +214,16 @@ const scenesWithZone = rooms.map((r) => {
     title: r.name,
     blurb,
     accentColor: ZONE_COLOR[zoneKey],
-    description: roomDescription(r),
+    // Just the read-aloud — everything else is structured below.
+    description: strip(r.read),
     npcs: npcs.length ? npcs : undefined,
     beats: roomBeats(r),
+    floor: (r.people ?? []).map((pp) => ({ text: strip(pp.t), watch: pp.m === 'h' || undefined })),
+    angles: (r.slicer ?? []).map(strip),
+    anglesLabel: "Slicer's eye",
+    nudge: strip(r.nudge) || undefined,
+    exits: strip(r.exits) || undefined,
+    links: r.links && r.links.length ? r.links : undefined,
   };
   return { scene, zoneKey };
 });
