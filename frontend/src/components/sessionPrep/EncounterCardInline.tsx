@@ -9,6 +9,7 @@ import {
   Input,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   Popover,
@@ -16,14 +17,17 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Portal,
   SimpleGrid,
   Text,
   Textarea,
+  Tooltip,
   VStack,
   useToast,
 } from '@chakra-ui/react';
 import { AddIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { FaPlay } from 'react-icons/fa';
+import { FiCopy, FiMoreVertical } from 'react-icons/fi';
 import { nanoid } from 'nanoid';
 import type { EncounterTag, EncounterTemplate, NpcEntry, NpcRef, RollTable } from '@/data/encounterTemplates';
 import useUserContentStore from '@/state/userContentStore';
@@ -62,13 +66,14 @@ interface Props {
 }
 
 /**
- * Inline-editable encounter card. Collapsed: icon + title + first-paragraph
- * hook. Expanded: edit everything in place (title, icon, tags, free body, NPC
- * blocks, roll tables) with autosave — no modal. A brand-new card that's left
- * empty is discarded when collapsed.
+ * Inline-editable scene card. Collapsed: icon + title + first-paragraph hook,
+ * with hover actions (start / duplicate / delete). Expanded: edit everything in
+ * place (title, icon, tags, free body, NPC blocks, roll tables) with autosave —
+ * no modal. A brand-new card that's left empty is discarded when collapsed.
  */
 const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
   const updateEncounter = useUserContentStore((s) => s.updateEncounter);
+  const duplicateEncounter = useUserContentStore((s) => s.duplicateEncounter);
   const removeEncounter = useUserContentStore((s) => s.removeEncounter);
   const roster = useUserContentStore((s) => s.roster);
   const addRosterEntry = useUserContentStore((s) => s.addRosterEntry);
@@ -76,6 +81,12 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
   const activeFromThis = useSessionPrepStore((s) => s.activeScene?.fromTemplateId === encounter.id);
   const toast = useToast();
   const [open, setOpen] = useState(!!autoFocus);
+  const [confirmDel, setConfirmDel] = useState(false); // two-step delete in the ⋮ menu
+
+  const duplicate = () => {
+    duplicateEncounter(encounter.id);
+    toast({ title: 'Scene duplicated', description: encounter.title || undefined, status: 'success', duration: 1500, isClosable: true });
+  };
 
   const { icon, color } = resolveEncounterVisual(encounter);
   const npcs = toRefs(encounter.npcs);
@@ -114,6 +125,8 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
 
   return (
     <Box
+      role="group"
+      position="relative"
       bg="#26292d"
       borderWidth="1px"
       borderColor={open ? color : 'whiteAlpha.150'}
@@ -122,6 +135,70 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
       borderRadius="md"
       transition="border-color 120ms"
     >
+      {/* Floated actions — the frequent "start scene" stays a direct button;
+          duplicate + delete live in the ⋮ menu. Revealed on hover over a plate
+          so it reserves no row width (covers the right-side badges/chevron). */}
+      <HStack
+        position="absolute"
+        top="3px"
+        right="3px"
+        spacing={0}
+        opacity={0}
+        pointerEvents="none"
+        _groupHover={{ opacity: 1, pointerEvents: 'auto' }}
+        transition="opacity 120ms"
+        zIndex={2}
+        bg="#26292d"
+        borderRadius="md"
+        boxShadow="0 0 5px 4px #26292d"
+      >
+        {!activeFromThis && (
+          <Tooltip label="Start scene" placement="top" hasArrow openDelay={300} bg="#1a1c1e">
+            <IconButton
+              aria-label="Start scene"
+              icon={<FaPlay size={9} />}
+              size="xs" h="20px" minW="20px" variant="ghost"
+              color="#7fb0ca"
+              _hover={{ color: '#a8d0e0', bg: 'whiteAlpha.100' }}
+              onClick={(e) => { e.stopPropagation(); startFromTemplate(encounter); }}
+            />
+          </Tooltip>
+        )}
+        <Menu isLazy placement="bottom-end" onClose={() => setConfirmDel(false)}>
+          <MenuButton
+            as={IconButton}
+            aria-label="Scene actions"
+            icon={<FiMoreVertical />}
+            size="xs" h="20px" minW="20px"
+            variant="ghost" color="whiteAlpha.700"
+            _hover={{ color: 'white', bg: 'whiteAlpha.100' }}
+            _active={{ bg: 'whiteAlpha.100' }}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <Portal>
+            <MenuList bg="#16181c" borderColor="whiteAlpha.200" color="whiteAlpha.900" minW="180px" py={1} zIndex={1500}>
+              <MenuItem bg="#16181c" _hover={{ bg: 'whiteAlpha.100' }} fontSize="xs" icon={<FaPlay size={10} />} isDisabled={activeFromThis} onClick={() => startFromTemplate(encounter)}>
+                {activeFromThis ? 'Already active' : 'Start scene'}
+              </MenuItem>
+              <MenuItem bg="#16181c" _hover={{ bg: 'whiteAlpha.100' }} fontSize="xs" icon={<FiCopy />} onClick={duplicate}>
+                Duplicate
+              </MenuItem>
+              <MenuDivider borderColor="whiteAlpha.150" />
+              {/* Two-step delete — never one-click. */}
+              {confirmDel ? (
+                <MenuItem closeOnSelect bg="rgba(176,48,48,0.22)" _hover={{ bg: 'rgba(176,48,48,0.32)' }} color="#e8a0a0" fontSize="xs" fontWeight="semibold" onClick={() => removeEncounter(encounter.id)}>
+                  Click again to delete
+                </MenuItem>
+              ) : (
+                <MenuItem closeOnSelect={false} bg="#16181c" _hover={{ bg: 'rgba(176,48,48,0.18)' }} color="#e08080" fontSize="xs" onClick={() => setConfirmDel(true)}>
+                  Delete scene…
+                </MenuItem>
+              )}
+            </MenuList>
+          </Portal>
+        </Menu>
+      </HStack>
+
       {/* Header — click to expand/collapse */}
       <HStack
         px={1.5}
@@ -136,7 +213,7 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
           {icon}
         </Box>
         <Text color="white" fontSize="xs" fontWeight="medium" noOfLines={1} flexShrink={0} maxW={open ? '100%' : '45%'}>
-          {encounter.title || 'Untitled encounter'}
+          {encounter.title || 'Untitled scene'}
         </Text>
         {!open && hook && (
           <Text color="whiteAlpha.500" fontSize="2xs" noOfLines={1} flex="1">
@@ -184,7 +261,7 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
             <Input
               value={encounter.title}
               onChange={(e) => patch({ title: e.target.value })}
-              placeholder="Encounter title"
+              placeholder="Scene title"
               size="sm"
               variant="flushed"
               fontWeight="semibold"
@@ -292,7 +369,8 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
             Roll table
           </Button>
 
-          {/* Footer */}
+          {/* Footer — Start is the primary action; duplicate/delete live in the
+              card's ⋮ menu (delete is two-step there). */}
           <HStack mt={2} spacing={1.5}>
             <Button
               size="xs"
@@ -302,16 +380,6 @@ const EncounterCardInline: React.FC<Props> = ({ encounter, autoFocus }) => {
               onClick={() => startFromTemplate(encounter)}
             >
               {activeFromThis ? 'Active' : 'Start scene'}
-            </Button>
-            <Box flex="1" />
-            <Button
-              size="xs"
-              variant="ghost"
-              color="whiteAlpha.500"
-              _hover={{ bg: 'rgba(176,48,48,0.18)', color: '#e08080' }}
-              onClick={() => removeEncounter(encounter.id)}
-            >
-              Delete
             </Button>
           </HStack>
         </Box>

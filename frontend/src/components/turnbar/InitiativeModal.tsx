@@ -562,7 +562,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                 fontWeight={!pcUseCool ? "bold" : "normal"}
                                 opacity={!pcUseCool ? 1 : 0.8}
                             >
-                                Vigilance: Used when prepared or alert for danger
+                                Vigilance: Used when caught off-guard or combat begins unexpectedly
                             </Text>
                             <Text 
                                 fontSize="sm" 
@@ -570,7 +570,7 @@ const InitiativeModal: React.FC<InitiativeModalProps> = ({
                                 fontWeight={pcUseCool ? "bold" : "normal"}
                                 opacity={pcUseCool ? 1 : 0.8}
                             >
-                                Cool: Used for surprise situations or when caught off-guard
+                                Cool: Used when aware and ready for combat (e.g. a quick draw or springing an ambush)
                             </Text>
                         </Box>
 

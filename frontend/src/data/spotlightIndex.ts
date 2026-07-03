@@ -4,7 +4,7 @@ import type {
   SpotlightEntityType,
   SpotlightResult,
 } from '@/state/spotlightStore';
-import { compareEntries, computeNumericStats, evaluate, orderTokens, parseQuery } from './spotlightQuery';
+import { compareEntries, computeNumericStats, evaluate, orderTokens, parseQuery, tokenEntityTypes } from './spotlightQuery';
 
 // The generator writes an array of entries of shape:
 // { id, type, name, subtitle?, tags?, detail: SpotlightDetail }

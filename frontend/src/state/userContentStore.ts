@@ -52,6 +52,8 @@ interface UserContentStore {
   saveEncounter: (encounter: EncounterTemplate) => void;
   /** Patch fields of an existing encounter — used by inline editing. */
   updateEncounter: (id: string, patch: Partial<EncounterTemplate>) => void;
+  /** Clone a scene (fresh ids, "(copy)" title) inserted right after the source. */
+  duplicateEncounter: (id: string) => void;
   removeEncounter: (id: string) => void;
 
   addRosterEntry: (entry: Omit<RosterEntry, 'id'>) => void;
@@ -94,6 +96,29 @@ const useUserContentStore = create<UserContentStore>()(persist((set) => ({
     set((state) => ({
       userEncounters: state.userEncounters.map((e) => (e.id === id ? { ...e, ...patch } : e)),
     })),
+  duplicateEncounter: (id) =>
+    set((state) => {
+      const idx = state.userEncounters.findIndex((e) => e.id === id);
+      if (idx === -1) return state;
+      const src = state.userEncounters[idx];
+      // Fresh table/row ids so the clone's keys never collide with the source.
+      const copy: EncounterTemplate = {
+        ...src,
+        id: newEncounterId(),
+        title: src.title ? `${src.title} (copy)` : '',
+        tags: src.tags ? [...src.tags] : undefined,
+        beats: src.beats ? [...src.beats] : undefined,
+        npcs: src.npcs?.map((n) => (typeof n === 'string' ? n : { ...n })),
+        tables: src.tables?.map((t) => ({
+          ...t,
+          id: nanoid(6),
+          rows: t.rows.map((r) => ({ ...r, id: nanoid(6) })),
+        })),
+      };
+      const next = [...state.userEncounters];
+      next.splice(idx + 1, 0, copy);
+      return { userEncounters: next };
+    }),
   removeEncounter: (id) =>
     set((state) => ({
       userEncounters: state.userEncounters.filter((e) => e.id !== id),
