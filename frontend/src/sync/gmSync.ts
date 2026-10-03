@@ -113,7 +113,12 @@ function applyAction(action: {
       // selected but their turn not yet "started") NEXT_TURN only advances to
       // turn_active, so step through both phases here.
       const gp = useGameplayStore.getState();
-      if (gp.context.turnState === "turn_start" && gp.context.activeParticipantId) {
+      // Only end the turn the player was looking at. Next also skips empty
+      // slots now, so a double tap (or a tap that lands after the GM moved
+      // on) must not pass the following slot or end someone else's turn.
+      if (!gp.context.activeParticipantId) break;
+      if (action.participantId && action.participantId !== gp.context.activeParticipantId) break;
+      if (gp.context.turnState === "turn_start") {
         gp.transition("NEXT_TURN"); // turn_start -> turn_active
       }
       gp.transition("NEXT_TURN"); // turn_active -> complete & advance

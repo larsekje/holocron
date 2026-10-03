@@ -91,9 +91,10 @@ const PlayerView: React.FC<{ roomId: string }> = ({ roomId }) => {
       postAction(roomId, { type: "setActive", participantId }),
     [roomId],
   );
+  const activeId = snap?.participants.find((p) => p.active)?.id ?? null;
   const endTurn = React.useCallback(
-    () => postAction(roomId, { type: "endTurn" }),
-    [roomId],
+    () => postAction(roomId, { type: "endTurn", participantId: activeId }),
+    [roomId, activeId],
   );
 
   const inCombat =
