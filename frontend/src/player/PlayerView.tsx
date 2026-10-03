@@ -140,7 +140,11 @@ const PlayerView: React.FC<{ roomId: string }> = ({ roomId }) => {
       <VStack spacing={[6, 8, 10]} px={2} w="100%">
         <PlayerRound round={snap.round} />
         <PlayerInitiativeBar slots={snap.slots} />
-        <PlayerRoster participants={snap.participants} />
+        <PlayerRoster
+          participants={snap.participants}
+          pickableIds={openPcSlot ? new Set(eligiblePcs.map((p) => p.id)) : undefined}
+          onPick={setActive}
+        />
         <PlayerTurnControls
           picks={picks}
           activeName={endTurnName}

@@ -19,20 +19,25 @@ const ACTIVE_BG = "#272320";
  * fissures when hurt, the chip fully shattered with a pulsing red glow on its
  * last leg. Red so it reads on the dark table screen.
  */
-const Chip: React.FC<{ p: PlayerParticipant }> = ({ p }) => {
+const Chip: React.FC<{ p: PlayerParticipant; onPick?: () => void }> = ({ p, onPick }) => {
   const teamColor = p.team === "PC" ? PC_COLOR : NPC_COLOR;
   const individual = !p.down && p.groupTotal == null;
   const shatter = individual && p.health != null && p.health !== "unhurt" ? p.health : null;
   const critical = shatter === "critical";
   return (
     <Box
+      as={onPick ? "button" : "div"}
+      onClick={onPick}
+      aria-label={onPick ? `${p.name} acts now` : undefined}
+      cursor={onPick ? "pointer" : "default"}
+      sx={onPick ? { WebkitTapHighlightColor: "transparent", touchAction: "manipulation" } : undefined}
       position="relative"
       overflow="visible"
       px={3}
       py={1.5}
       borderRadius="full"
-      borderWidth="1px"
-      borderColor={p.active ? ACTIVE : critical ? "#e2474788" : "whiteAlpha.200"}
+      borderWidth={onPick ? "2px" : "1px"}
+      borderColor={onPick ? PC_COLOR : p.active ? ACTIVE : critical ? "#e2474788" : "whiteAlpha.200"}
       bg={p.active ? ACTIVE_BG : CHIP_BG}
       boxShadow={
         critical
@@ -93,14 +98,25 @@ const Chip: React.FC<{ p: PlayerParticipant }> = ({ p }) => {
   );
 };
 
-const PlayerRoster: React.FC<{ participants: PlayerParticipant[] }> = ({
-  participants,
-}) => {
+/**
+ * During an open PC slot, `pickableIds` marks who may take it; those chips
+ * become buttons (green ring) so a player can claim the slot by tapping
+ * their own name, same as the "Who's acting?" buttons.
+ */
+const PlayerRoster: React.FC<{
+  participants: PlayerParticipant[];
+  pickableIds?: Set<string>;
+  onPick?: (id: string) => void;
+}> = ({ participants, pickableIds, onPick }) => {
   if (participants.length === 0) return null;
   return (
     <Flex wrap="wrap" justify="center" gap={2} maxW="92vw">
       {participants.map((p, i) => (
-        <Chip key={`${p.name}-${i}`} p={p} />
+        <Chip
+          key={`${p.name}-${i}`}
+          p={p}
+          onPick={onPick && pickableIds?.has(p.id) ? () => onPick(p.id) : undefined}
+        />
       ))}
     </Flex>
   );
