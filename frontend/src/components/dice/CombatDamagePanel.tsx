@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import type { ModalSnapshot } from './mockSnapshots';
 import useDiceRollerStore from '@/state/diceRollerStore';
+import { useQuickActionsStore } from '@/state/quickActionsStore';
 import useParticipantStore from '@/state/participantsStore';
 import useActiveVehicleStore from '@/state/activeVehicleStore';
 import useSessionLogStore from '@/state/sessionLogStore';
@@ -379,6 +380,19 @@ export const CombatDamagePanel: React.FC<Props> = ({ snapshot }) => {
                   : `Hull exceeds threshold (${newHull}/${targetVehicle.hullThreshold}) — Vehicle Critical Hit.`
               : 'Critical threshold reserved'}
         </Text>
+        {characterWoundsExceed && snapshot.targetParticipantId && (
+          <Button
+            size="xs"
+            ml="auto"
+            flexShrink={0}
+            bg="#7a4a18"
+            color="#ffd591"
+            _hover={{ bg: '#8f5a20' }}
+            onClick={() => useQuickActionsStore.getState().openCritFor(snapshot.targetParticipantId)}
+          >
+            Roll crit
+          </Button>
+        )}
       </Alert>
     </VStack>
   );

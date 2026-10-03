@@ -32,6 +32,10 @@ interface QuickActionsState {
   enterWeapon: () => void;
   pickWeapon: (index: number) => void;
   openCrit: () => void;
+  /** Open the crit roller from a button rather than the C hotkey: for a
+   * given participant (also made the selection), else for whoever is
+   * selected, else with the modal's own participant picker. */
+  openCritFor: (participantId?: string | null) => void;
   closeCrit: () => void;
   openEffects: () => void;
   closeEffects: () => void;
@@ -340,6 +344,11 @@ export const useQuickActionsStore = create<QuickActionsState>((set) => ({
 
   openCrit: () => {
     if (!selectedId()) return;
+    set({ critModalOpen: true });
+  },
+
+  openCritFor: (participantId) => {
+    if (participantId) useParticipantStore.getState().selectParticipant(participantId);
     set({ critModalOpen: true });
   },
 

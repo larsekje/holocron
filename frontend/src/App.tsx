@@ -1,6 +1,6 @@
 import {Box, Grid, GridItem, HStack, Heading, IconButton, Kbd, Text, Tooltip} from "@chakra-ui/react";
 import {SearchIcon} from "@chakra-ui/icons";
-import {GiGalaxy, GiMartini} from "react-icons/gi";
+import {GiBloodySword, GiGalaxy, GiMartini} from "react-icons/gi";
 import {FiTag} from "react-icons/fi";
 import React from "react";
 
@@ -25,6 +25,7 @@ import {useSpotlightStore} from "@/state/spotlightStore";
 import {useNarrativeJuiceStore} from "@/state/narrativeJuiceStore";
 import {useSymbolSpendsStore} from "@/state/symbolSpendsStore";
 import {useGalaxyMapStore} from "@/state/galaxyMapStore";
+import {useQuickActionsStore} from "@/state/quickActionsStore";
 import {buildFreestandingSnapshot} from "@/utils/diceSnapshots";
 import {ReactComponent as ProficiencySvg} from "@/assets/dice/proficiency.svg";
 import DestinyPoolInline from "@components/destinyPoints/DestinyPoolInline";
@@ -42,6 +43,7 @@ function App() {
   const openNarrativeJuice = useNarrativeJuiceStore((s) => s.open);
   const openSymbolSpends = useSymbolSpendsStore((s) => s.open);
   const openGalaxyMap = useGalaxyMapStore((s) => s.open);
+  const openCritFor = useQuickActionsStore((s) => s.openCritFor);
   const openClassificationReview = useClassificationReviewStore((s) => s.open);
 
   // Auto-resume player sharing if it was active before a reload/crash.
@@ -138,6 +140,25 @@ function App() {
                   _hover={{ bg: 'whiteAlpha.200', color: 'whiteAlpha.900' }}
                 />
                 <HotkeyHint>G</HotkeyHint>
+              </Box>
+            </Tooltip>
+            <Tooltip
+              label={<HStack spacing={2}><Box>Critical injury roller</Box><Kbd bg="gray.700" color="gray.200" borderColor="gray.500">C</Kbd></HStack>}
+              placement="bottom"
+              hasArrow
+              openDelay={300}
+            >
+              <Box position="relative">
+                <IconButton
+                  size="sm"
+                  variant="ghost"
+                  aria-label="Critical injury roller"
+                  icon={<GiBloodySword size={20}/>}
+                  color="whiteAlpha.800"
+                  onClick={() => openCritFor()}
+                  _hover={{ bg: 'whiteAlpha.200', color: 'whiteAlpha.900' }}
+                />
+                <HotkeyHint>C</HotkeyHint>
               </Box>
             </Tooltip>
             <Tooltip label="Open a freestanding dice roller" placement="bottom" hasArrow openDelay={300}>

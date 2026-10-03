@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import type { RollResult } from '@/engine/diceEngine';
 import type { DiceRollMode, ModalSnapshot, SnapshotWeapon } from './mockSnapshots';
+import { useQuickActionsStore } from '@/state/quickActionsStore';
 import useDiceRollerStore from '@/state/diceRollerStore';
 import useParticipantStore, { type DicePouch, type Participant } from '@/state/participantsStore';
 import useFSMStore from '@/state/FSMStore';
@@ -376,6 +377,11 @@ export const SpendPanel: React.FC<SpendPanelProps> = ({ result, mode, spent, wea
       : undefined;
     const labelWithRecipient = recipientName ? `${opt.label} → ${recipientName}` : opt.label;
     recordSpend(opt.id, labelWithRecipient, recipientId);
+    // Inflicting a crit is the moment the table needs the d100 — open the
+    // crit roller on the target straight away (Vicious seeds from this roll).
+    if (opt.id === 'crit' || opt.id === 'crit-advantage') {
+      useQuickActionsStore.getState().openCritFor(targetId ?? null);
+    }
   }
 
   // Reverse the most recent occurrence of a given option. We only know how to
