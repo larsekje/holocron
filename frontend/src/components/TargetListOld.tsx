@@ -43,6 +43,7 @@ const TargetListOld = () => {
   // Graveyard starts collapsed — downed combatants are reference, not the
   // GM's working set. Click the header to expand.
   const [graveyardOpen, setGraveyardOpen] = useState(false);
+  const [offstageOpen, setOffstageOpen] = useState(false);
   const graveyardRef = useRef<HTMLDivElement | null>(null);
 
   // On expand, keep the graveyard's bottom pinned to the viewport as it
@@ -75,8 +76,10 @@ const TargetListOld = () => {
   const liveCompanions: Participant[] = [];
   const liveNPCs: Participant[] = [];
   const dead: Participant[] = [];
+  const offstage: Participant[] = [];
   for (const p of participants) {
-    if (isParticipantDead(p)) dead.push(p);
+    if (p.offstage) offstage.push(p);
+    else if (isParticipantDead(p)) dead.push(p);
     else if (p.isPC) livePCs.push(p);
     else if (teamOf(p) === "PC") liveCompanions.push(p);
     else liveNPCs.push(p);
@@ -151,7 +154,7 @@ const TargetListOld = () => {
     //    change; the active participant isn't their own target)
     //  - otherwise → retarget (set the participant as the Targeted one)
     const handleClick = () => {
-      if (isStructured && !activeParticipantId) {
+      if (isStructured && !activeParticipantId && !participant.offstage) {
         setActiveParticipantId(participant.id);
       } else {
         selectParticipant(participant.id);
@@ -247,6 +250,60 @@ const TargetListOld = () => {
               />
             ))}
           </VStack>
+        </Box>
+      )}
+
+      {offstage.length > 0 && (
+        // Tracked but out of the fight (stepped away, waiting in the ship,
+        // on comms). Collapsed like the graveyard; names show while closed.
+        <Box mt={3}>
+          <Flex
+            align="center"
+            gap={2}
+            mb={1}
+            px={1.5}
+            py={1}
+            cursor="pointer"
+            role="button"
+            aria-expanded={offstageOpen}
+            onClick={() => setOffstageOpen((open) => !open)}
+            borderRadius="sm"
+            borderWidth="1px"
+            borderStyle="dotted"
+            borderColor="whiteAlpha.200"
+            _hover={{ borderColor: "whiteAlpha.400", bg: "whiteAlpha.50" }}
+            minW={0}
+          >
+            <Text
+              as="b"
+              fontSize="10px"
+              letterSpacing="0.16em"
+              textTransform="uppercase"
+              color="whiteAlpha.700"
+              flexShrink={0}
+            >
+              <Box
+                as="span"
+                display="inline-block"
+                mr="4px"
+                transform={offstageOpen ? "rotate(90deg)" : "rotate(0deg)"}
+                transition="transform 0.18s ease"
+              >
+                ▸
+              </Box>
+              Off-stage ({offstage.length})
+            </Text>
+            {!offstageOpen && (
+              <Text fontSize="xs" color="whiteAlpha.500" noOfLines={1} minW={0}>
+                {offstage.map((p) => p.name).join(" · ")}
+              </Text>
+            )}
+          </Flex>
+          <Collapse in={offstageOpen} animateOpacity>
+            <VStack align="stretch" spacing="6px" opacity={0.6}>
+              {offstage.map(renderRow)}
+            </VStack>
+          </Collapse>
         </Box>
       )}
 

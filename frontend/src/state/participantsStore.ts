@@ -100,6 +100,10 @@ export interface Participant {
     vehicleRole?: VehicleRole;
     /** Side override — see teamOf. Only set for companions. */
     side?: Team;
+    /** Tracked but not in the current fight: keeps wounds, strain, pouch
+     * and crits, but takes no initiative slot and stays off the target
+     * lists and the shared screen until brought back in. */
+    offstage?: boolean;
 }
 
 // Zustand Store
@@ -123,6 +127,8 @@ interface ParticipantStore {
 
     /** Move a participant to a side (companion NPC ⇄ adversary). */
     setSide: (id: string, side: Team) => void;
+    /** Step out of / back into the fight (see Participant.offstage). */
+    setOffstage: (id: string, offstage: boolean) => void;
 
     // Direct setters used by the stat-edit popovers.
     setMinionCount: (id: string, count: number) => void;
@@ -273,6 +279,23 @@ const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
                 return next;
             }),
         }));
+    },
+
+    setOffstage: (id, offstage) => {
+        const before = useParticipantStore.getState().participants.find((p) => p.id === id);
+        if (!before || !!before.offstage === offstage) return;
+        set((state) => ({
+            participants: state.participants.map((p) => {
+                if (p.id !== id) return p;
+                const next: Participant = {...p, offstage};
+                if (!offstage) delete next.offstage;
+                return next;
+            }),
+            selectedParticipantId:
+                offstage && state.selectedParticipantId === id ? null : state.selectedParticipantId,
+        }));
+        // Same slot bookkeeping as leaving / joining the encounter.
+        EventBus.emit(offstage ? "participant-removed" : "participant-added", before);
     },
 
     setMinionCount: (id, count) => {

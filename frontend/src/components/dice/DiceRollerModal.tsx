@@ -75,7 +75,7 @@ const TargetText: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
 
   const attacker = participants.find((p) => p.id === snapshot.attackerParticipantId);
   const candidates = participants.filter(
-    (p) => p.id !== snapshot.attackerParticipantId && !isParticipantDead(p),
+    (p) => p.id !== snapshot.attackerParticipantId && !p.offstage && !isParticipantDead(p),
   );
   // Opponents first: the other side of the table from the attacker.
   const opponents = candidates.filter((p) => !attacker || teamOf(p) !== teamOf(attacker));

@@ -23,6 +23,7 @@ import CritRollerModal from "@components/crit/CritRollerModal";
 import AttachVehicleModal from "@components/vehicle/AttachVehicleModal";
 import {Participant} from "@/state/participantsStore";
 import useParticipantStore, {teamOf} from "@/state/participantsStore";
+import useSessionLogStore from "@/state/sessionLogStore";
 import useGameplayStore from "@/state/newGameplayStore";
 import {useEffectStore} from "@/state/effectStore";
 
@@ -87,6 +88,7 @@ const TargetCardOld = ({
   const removeParticipant = useParticipantStore((s) => s.removeParticipant);
   const addParticipant = useParticipantStore((s) => s.addParticipant);
   const setSide = useParticipantStore((s) => s.setSide);
+  const setOffstage = useParticipantStore((s) => s.setOffstage);
   const updateParticipants = useParticipantStore((s) => s.updateParticipants);
   const setStat = useParticipantStore((s) => s.setStat);
   const addWounds = useParticipantStore((s) => s.addWounds);
@@ -361,6 +363,25 @@ const TargetCardOld = ({
               onClick={handleDuplicate}
             >
               Duplicate
+            </MenuItem>
+            <MenuItem
+              bg="transparent"
+              _hover={{bg: "whiteAlpha.100"}}
+              onClick={() => {
+                const leaving = !participant.offstage;
+                setOffstage(participant.id, leaving);
+                useSessionLogStore.getState().log({
+                  kind: leaving ? "effect-removed" : "effect-added",
+                  participantId: participant.id,
+                  participantName: participant.name,
+                  summary: leaving
+                    ? `${participant.name} steps out of the fight`
+                    : `${participant.name} rejoins the fight`,
+                  tone: "info",
+                });
+              }}
+            >
+              {participant.offstage ? "Bring into the fight" : "Send off-stage (keep tracking)"}
             </MenuItem>
             {!participant.isPC && (
               <MenuItem

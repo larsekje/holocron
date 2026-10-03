@@ -17,7 +17,7 @@ export function disabledSlotIndices(
 ): Set<number> {
   const remaining: Record<InitiativeSlot["team"], number> = { PC: 0, NPC: 0 };
   for (const p of participants) {
-    if (isParticipantDead(p)) remaining[teamOf(p)] += 1;
+    if (!p.offstage && isParticipantDead(p)) remaining[teamOf(p)] += 1;
   }
   const disabled = new Set<number>();
   for (let i = initiativeOrder.length - 1; i >= 0; i--) {

@@ -149,7 +149,7 @@ export function buildPlayerSnapshot(inputs: SnapshotInputs): PlayerSnapshot {
       // History: who acted in this slot this round (active + past).
       actorName: slotActors[i],
     })),
-    participants: participants.map((p) => {
+    participants: participants.filter((p) => !p.offstage).map((p) => {
       const stats = p.stats ?? {};
       // Minion group: surface living / total so the table sees it thin out.
       let groupAlive: number | undefined;

@@ -182,7 +182,7 @@ const GlobalCombatHotkeys: React.FC = () => {
         // each in insertion order. Dead participants live in the graveyard
         // and are skipped. Pressing arrows with nothing selected lands on the
         // first (Down) or last (Up) live participant.
-        const live = liveParticipants.filter((p) => !isParticipantDead(p));
+        const live = liveParticipants.filter((p) => !p.offstage && !isParticipantDead(p));
         const ordered = [
           ...live.filter((p) => p.isPC),
           ...live.filter((p) => !p.isPC && teamOf(p) === 'PC'),

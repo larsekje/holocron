@@ -86,7 +86,12 @@ const ToolBarNonStructured = ({ }: Props) => {
         transition('ENTER_STRUCTURED');
         transition('ROLL_INITIATIVE');
 
-        updateParticipants(updatedParticipants);
+        // The modal only saw on-stage participants — merge its results back
+        // so off-stage ones aren't dropped from the store.
+        const byId = new Map(updatedParticipants.map((p) => [p.id, p]));
+        updateParticipants(
+            useParticipantsStore.getState().participants.map((p) => byId.get(p.id) ?? p),
+        );
 
         // Map participants to InitiativeSlot[] shape and sort them
         const order = updatedParticipants
@@ -178,7 +183,7 @@ const ToolBarNonStructured = ({ }: Props) => {
 
           <InitiativeModal
               isOpen={isInitiativeModalOpen}
-              participants={participants} // Pass current participants
+              participants={participants.filter((p) => !p.offstage)} // Off-stage people sit initiative out
               onClose={handleCloseModal}
               onSubmit={handleSetInitiative} // Handle initiative updates
           />
