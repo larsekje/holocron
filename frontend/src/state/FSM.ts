@@ -259,7 +259,7 @@ export function createEncounterFSM(): FSM {
         const participants = useParticipantStore.getState().participants;
         // Nothing to land on if literally everyone is down — bail rather than
         // spin to the iteration cap.
-        if (!participants.some((p) => !isParticipantDead(p))) {
+        if (!participants.some((p) => !p.offstage && !isParticipantDead(p))) {
             console.log("[FSM] All participants down; not auto-skipping");
             return;
         }
@@ -284,7 +284,7 @@ export function createEncounterFSM(): FSM {
      */
     const skipDisabledSlotsBackward = (context: EncounterContext): void => {
         const participants = useParticipantStore.getState().participants;
-        if (!participants.some((p) => !isParticipantDead(p))) return;
+        if (!participants.some((p) => !p.offstage && !isParticipantDead(p))) return;
         const order = context.initiativeOrder;
         if (order.length === 0) return;
         const disabled = disabledSlotIndices(order, participants);

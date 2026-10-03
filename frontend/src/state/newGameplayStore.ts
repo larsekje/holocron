@@ -78,10 +78,26 @@ const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
     // Prefer a slot still to come this round; else the team's last slot.
     // Never the slot being played right now.
     EventBus.on("participant-removed", (participant) => {
+        if (dropTeamSlot(teamOf(participant))) set({context: {...encounterFSM.context}});
+    });
+
+    // A participant switching sides (companion ⇄ adversary) mid-fight takes
+    // a slot from the old team and gives one to the new team, appended
+    // like a late arrival. No-op outside an encounter (no slots yet).
+    EventBus.on("participant-side-changed", (participant, side: InitiativeSlot["team"]) => {
+        if (encounterFSM.context.initiativeOrder.length === 0) return;
+        dropTeamSlot(teamOf(participant));
+        encounterFSM.context.initiativeOrder = [
+            ...encounterFSM.context.initiativeOrder,
+            {team: side, initiative: 0, name: participant.name, participantId: participant.id},
+        ];
+        set({context: {...encounterFSM.context}});
+    });
+
+    function dropTeamSlot(team: InitiativeSlot["team"]): boolean {
         const ctx = encounterFSM.context;
         const order = ctx.initiativeOrder;
-        if (order.length === 0) return;
-        const team = teamOf(participant);
+        if (order.length === 0) return false;
         let idx = -1;
         for (let i = order.length - 1; i > ctx.currentTurnIndex; i--) {
             if (order[i].team === team) { idx = i; break; }
@@ -91,10 +107,10 @@ const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
                 if (order[i].team === team && i !== ctx.currentTurnIndex) { idx = i; break; }
             }
         }
-        if (idx < 0) return;
+        if (idx < 0) return false;
         removeSlotAt(idx);
-        set({context: {...encounterFSM.context}});
-    });
+        return true;
+    }
 
     function removeSlotAt(index: number) {
         const ctx = encounterFSM.context;

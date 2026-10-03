@@ -204,7 +204,8 @@ const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
                 state.selectedParticipantId === id ? null : state.selectedParticipantId,
         }));
         // Mirror of participant-added: the gameplay store drops a slot.
-        if (removed) EventBus.emit("participant-removed", removed);
+        // An off-stage participant already gave theirs up when stepping out.
+        if (removed && !removed.offstage) EventBus.emit("participant-removed", removed);
     },
     updateParticipants: (updatedParticipants) =>
         set(() => ({ participants: updatedParticipants })),
@@ -270,6 +271,7 @@ const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
     },
 
     setSide: (id, side) => {
+        const before = useParticipantStore.getState().participants.find((p) => p.id === id);
         set((state) => ({
             participants: state.participants.map((p) => {
                 if (p.id !== id) return p;
@@ -279,6 +281,12 @@ const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
                 return next;
             }),
         }));
+        // Mid-fight, the participant's slot changes team with them —
+        // otherwise the old team keeps a slot it has nobody for, and the
+        // participant's death would darken a slot on the wrong side.
+        if (before && !before.offstage && teamOf(before) !== side) {
+            EventBus.emit("participant-side-changed", before, side);
+        }
     },
 
     setOffstage: (id, offstage) => {
