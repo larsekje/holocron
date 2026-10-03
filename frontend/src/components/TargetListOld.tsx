@@ -197,8 +197,7 @@ const TargetListOld = () => {
   );
 
   return (
-    // Use the card body's full height so the graveyard can be pushed to the bottom.
-    <Flex direction="column" h="100%" minH={0} gap="6px">
+    <Flex direction="column" minH={0} gap="6px">
       {livePCs.length > 0 && (
         <Box>
           {sectionHeader('Player Characters', livePCs.length)}
@@ -239,30 +238,39 @@ const TargetListOld = () => {
       )}
 
       {graveyardCount > 0 && (
-        // mt="auto" pins this section to the bottom of the available column space.
-        <Box mt="auto" ref={graveyardRef}>
+        // Sits directly under the live sections (in flow, not pinned to the
+        // column bottom) — pinned, it fell below the fold once the list
+        // scrolled and the GM lost track of where the downed went.
+        <Box mt={3} ref={graveyardRef}>
           <Flex
             align="center"
             gap={2}
-            mt={2}
             mb={1}
+            px={1.5}
+            py={1}
             cursor="pointer"
             role="button"
             aria-expanded={graveyardOpen}
             onClick={() => setGraveyardOpen((open) => !open)}
+            borderRadius="sm"
+            borderWidth="1px"
+            borderStyle="dashed"
+            borderColor="whiteAlpha.200"
+            _hover={{ borderColor: "whiteAlpha.400", bg: "whiteAlpha.50" }}
+            minW={0}
           >
-            <Box flex="1" h="1px" bg="whiteAlpha.150"/>
             <Text
               as="b"
-              fontSize="9px"
-              letterSpacing="0.18em"
+              fontSize="10px"
+              letterSpacing="0.16em"
               textTransform="uppercase"
-              color="whiteAlpha.500"
+              color="whiteAlpha.700"
+              flexShrink={0}
             >
               <Box
                 as="span"
                 display="inline-block"
-                mr="3px"
+                mr="4px"
                 transform={graveyardOpen ? "rotate(90deg)" : "rotate(0deg)"}
                 transition="transform 0.18s ease"
               >
@@ -270,7 +278,12 @@ const TargetListOld = () => {
               </Box>
               Graveyard ({graveyardCount})
             </Text>
-            <Box flex="1" h="1px" bg="whiteAlpha.150"/>
+            {/* Collapsed, the names still read at a glance. */}
+            {!graveyardOpen && (
+              <Text fontSize="xs" color="whiteAlpha.500" noOfLines={1} minW={0}>
+                {[...dead.map((p) => p.name), ...deadVehicles.map((v) => v.name)].join(" · ")}
+              </Text>
+            )}
           </Flex>
           <Collapse
             in={graveyardOpen}
