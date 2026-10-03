@@ -43,6 +43,10 @@ function shouldHandleKeystroke(): boolean {
 // arm lapses. Matches the muscle-memory of the old digit double-tap.
 const ACTIVE_OVERRIDE_WINDOW_MS = 1200;
 
+// Minimum gap between a turn change and a Space that would skip the slot
+// it landed on.
+const SKIP_GUARD_MS = 500;
+
 // Compact, low-key toast for the A verb — Chakra's default status toasts are
 // too bright and bulky for this dark, hand-styled surface. A small dark pill
 // with one accent dot: gold (the active-participant colour) on confirm, a
@@ -87,6 +91,7 @@ const GlobalCombatHotkeys: React.FC = () => {
   // auto-clear timer. Held in a ref so it survives re-renders and the
   // keydown listener can read/update it without re-binding.
   const activeArmRef = useRef<{ id: string; timer: number } | null>(null);
+  const lastTurnKeyRef = useRef(0);
   const enterDamage = useQuickActionsStore((s) => s.enterDamage);
   const enterPouch = useQuickActionsStore((s) => s.enterPouch);
   const openCrit = useQuickActionsStore((s) => s.openCrit);
@@ -134,6 +139,18 @@ const GlobalCombatHotkeys: React.FC = () => {
       // too because plain Space would otherwise trigger any focused button.
       if (k === ' ' || k === 'Spacebar') {
         const event = e.shiftKey ? 'PREV_TURN' : 'NEXT_TURN';
+        // Next also skips unclaimed slots now, so a held key (auto-repeat)
+        // or a quick double-tap after ending a turn would fly through
+        // every empty slot. Ignore repeats, and don't skip a slot that
+        // only just came up.
+        const now = Date.now();
+        const unclaimed = !useGameplayStore.getState().context.activeParticipantId;
+        if (e.repeat || (event === 'NEXT_TURN' && unclaimed && now - lastTurnKeyRef.current < SKIP_GUARD_MS)) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        lastTurnKeyRef.current = now;
         if (canTransition(event)) {
           e.preventDefault();
           e.stopPropagation();
