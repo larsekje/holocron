@@ -120,6 +120,7 @@ const MiniStatCard: React.FC = () => {
   const clearDicePouch = useParticipantStore((s) => s.clearDicePouch);
   const removeDice = useParticipantStore((s) => s.removeDice);
   const removeCriticalInjury = useParticipantStore((s) => s.removeCriticalInjury);
+  const setMinionCount = useParticipantStore((s) => s.setMinionCount);
   const addWounds = useParticipantStore((s) => s.addWounds);
   const openFullSheet = useQuickActionsStore((s) => s.openFullSheet);
   const removeWounds = useParticipantStore((s) => s.removeWounds);
@@ -183,6 +184,21 @@ const MiniStatCard: React.FC = () => {
   // groups, else just the threshold. The wound bar + the n/total readout
   // both work off this so a minion group reads correctly.
   const groupTotal = isMinionGroup ? wt * initialMinions : wt;
+
+  const changeMinionCount = (delta: 1 | -1) => {
+    const next = Math.max(1, initialMinions + delta);
+    if (next === initialMinions) return;
+    setMinionCount(participant.id, next);
+    useSessionLogStore.getState().log({
+      kind: delta > 0 ? 'effect-added' : 'effect-removed',
+      participantId: participant.id,
+      participantName: participant.name,
+      summary: delta > 0
+        ? `${participant.name} gains a minion (group of ${next})`
+        : `${participant.name} loses a minion (group of ${next})`,
+      tone: 'info',
+    });
+  };
   const strainPct = strainThreshold > 0 ? Math.min(100, (strain / strainThreshold) * 100) : 0;
 
   const pouch = participant.dicePouch;
@@ -282,6 +298,34 @@ const MiniStatCard: React.FC = () => {
               value={`${aliveMinions}/${initialMinions}`}
               color={aliveMinions === 0 ? 'red.300' : 'whiteAlpha.900'}
             />
+            {/* Group size: reinforcements arrive (+) or one flees / is
+                waved off (−). Kills still come from wounds — this is the
+                roster of the group, not its damage. */}
+            <VStack spacing={0.5}>
+              <Tooltip label="Reinforcement joins the group" hasArrow openDelay={400} placement="right">
+                <IconButton
+                  aria-label="Add a minion to the group"
+                  icon={<AddIcon boxSize="7px" />}
+                  size="xs"
+                  h="14px"
+                  minW="18px"
+                  variant="ghost"
+                  onClick={() => changeMinionCount(1)}
+                />
+              </Tooltip>
+              <Tooltip label="One leaves the group (flees, peels off)" hasArrow openDelay={400} placement="right">
+                <IconButton
+                  aria-label="Remove a minion from the group"
+                  icon={<MinusIcon boxSize="7px" />}
+                  size="xs"
+                  h="14px"
+                  minW="18px"
+                  variant="ghost"
+                  isDisabled={initialMinions <= 1}
+                  onClick={() => changeMinionCount(-1)}
+                />
+              </Tooltip>
+            </VStack>
           </>
         )}
       </HStack>
