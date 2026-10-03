@@ -44,6 +44,13 @@ const ToolBarNonStructured = ({ }: Props) => {
 
     const {setInitiativeOrder} = useGameplayStoreNew();
     const participants = useParticipantsStore((state) => state.participants);
+    // Stable identity matters: InitiativeModal re-rolls every NPC whenever
+    // this prop changes, so a fresh .filter() per render would re-roll on
+    // any unrelated re-render while the modal is open.
+    const onStageParticipants = React.useMemo(
+        () => participants.filter((p) => !p.offstage),
+        [participants],
+    );
     const participantCount = useParticipantsStore((state) => state.participants.length);
 
     // Get current initiative slot participants
@@ -183,7 +190,7 @@ const ToolBarNonStructured = ({ }: Props) => {
 
           <InitiativeModal
               isOpen={isInitiativeModalOpen}
-              participants={participants.filter((p) => !p.offstage)} // Off-stage people sit initiative out
+              participants={onStageParticipants} // Off-stage people sit initiative out
               onClose={handleCloseModal}
               onSubmit={handleSetInitiative} // Handle initiative updates
           />
