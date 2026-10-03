@@ -2,6 +2,7 @@ import {nanoid} from 'nanoid';
 import type {Participant} from '@/state/participantsStore';
 import useParticipantStore from '@/state/participantsStore';
 import useActiveVehicleStore, {type ActiveVehicle} from '@/state/activeVehicleStore';
+import {useEffectStore} from '@/state/effectStore';
 import {speedBandFor} from '@/data/vehicleActions';
 import type {ModalSnapshot, SnapshotAttacker, SnapshotTarget, SnapshotWeapon} from '@components/dice/mockSnapshots';
 import type {DicePool, DieType, SymbolTotals} from '@/engine/diceEngine';
@@ -108,6 +109,11 @@ export function buildSkillCheckSnapshot(
   charValue: number,
 ): ModalSnapshot {
   const pool: DicePool = {...skillPool(rank, charValue), difficulty: 2};
+  const poolSources: Partial<Record<string, string[]>> = {
+    ...skillSources(skillName, rank, charValue),
+    difficulty: ['Difficulty', 'Difficulty'],
+  };
+  applyRollerStatusDice(pool, poolSources, participant.id);
   return {
     id: nanoid(),
     label: `${participant.name} — ${skillName}`,
@@ -118,10 +124,7 @@ export function buildSkillCheckSnapshot(
     skill: skillName,
     characteristic,
     pool,
-    poolSources: {
-      ...skillSources(skillName, rank, charValue),
-      difficulty: ['Difficulty', 'Difficulty'],
-    } as ModalSnapshot['poolSources'],
+    poolSources: poolSources as ModalSnapshot['poolSources'],
     appliedPresets: ['difficulty-average'],
     appliedModifiers: [],
     result: null,
@@ -300,6 +303,23 @@ function addSetbackToPool(
   if (count <= 0) return;
   pool.setback = (pool.setback ?? 0) + count;
   sources.setback = [...(sources.setback ?? []), ...Array(count).fill(label)];
+}
+
+// Statuses on the roller that change their own dice. Disoriented N adds N
+// Setback to every check the participant makes (CRB p. 220 / Disorient
+// quality). Labelled per status so the pool tooltip says why.
+function applyRollerStatusDice(
+  pool: DicePool,
+  sources: Partial<Record<string, string[]>>,
+  participantId: string,
+): void {
+  for (const e of useEffectStore.getState().effects) {
+    if (e.target.type !== 'character' || e.target.participantId !== participantId) continue;
+    if (e.effect.status === 'disoriented') {
+      const rank = e.effect.rank ?? 1;
+      addSetbackToPool(pool, sources, rank, `Disoriented ${rank}`);
+    }
+  }
 }
 
 // Downgrade N Difficulty dice in place — convert Challenge → Difficulty if
@@ -625,6 +645,7 @@ export function buildAttackSnapshot(
     applyVehicleTargetModifiers(pool, poolSources, resolved.vehicle.id);
   }
   applyOwnVehicleAttackModifiers(pool, poolSources, participant);
+  applyRollerStatusDice(pool, poolSources, participant.id);
 
   // Compose the target id / display fields from the resolved kind.
   const targetParticipantId = resolved.kind === 'character' ? resolved.participant.id : undefined;
