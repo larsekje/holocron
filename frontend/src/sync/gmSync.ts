@@ -151,6 +151,38 @@ function getOrCreateRoomId(): string {
   }
 }
 
+// Player taps (Destiny flips, turn picks) arrive on this stream. EventSource
+// reconnects by itself after a network drop, but gives up for good (CLOSED)
+// when the relay answers with an HTTP error — e.g. mid-restart behind a
+// proxy. Outbound publishing keeps working on the heartbeat, so the table
+// screen looks healthy while every tap goes nowhere. Reopen with backoff.
+let actionRetry: ReturnType<typeof setTimeout> | null = null;
+let actionBackoffMs = 1000;
+
+function openActionChannel(): void {
+  if (!roomId) return;
+  const es = new EventSource(`${getSyncBaseUrl()}/sync/${roomId}/actions`);
+  actionSource = es;
+  es.onopen = () => {
+    actionBackoffMs = 1000;
+  };
+  es.onmessage = (e) => {
+    try {
+      applyAction(JSON.parse(e.data));
+    } catch {
+      /* malformed / keepalive — ignore */
+    }
+  };
+  es.onerror = () => {
+    if (es.readyState !== EventSource.CLOSED || actionSource !== es) return;
+    actionRetry = setTimeout(() => {
+      actionRetry = null;
+      if (actionSource === es) openActionChannel();
+    }, actionBackoffMs);
+    actionBackoffMs = Math.min(actionBackoffMs * 2, 15000);
+  };
+}
+
 export function startSharing(): { roomId: string; shareUrl: string } {
   if (roomId) return { roomId, shareUrl: shareUrlFor(roomId) };
   roomId = getOrCreateRoomId();
@@ -167,14 +199,7 @@ export function startSharing(): { roomId: string; shareUrl: string } {
   unsubs.push(useRevealedRollStore.subscribe(schedule));
 
   // Inbound: listen for player actions.
-  actionSource = new EventSource(`${getSyncBaseUrl()}/sync/${roomId}/actions`);
-  actionSource.onmessage = (e) => {
-    try {
-      applyAction(JSON.parse(e.data));
-    } catch {
-      /* malformed / keepalive — ignore */
-    }
-  };
+  openActionChannel();
 
   void publish();
   heartbeat = setInterval(publish, HEARTBEAT_MS);
@@ -191,6 +216,10 @@ export function stopSharing(): void {
     clearInterval(heartbeat);
     heartbeat = null;
   }
+  if (actionRetry) {
+    clearTimeout(actionRetry);
+    actionRetry = null;
+  }
   if (actionSource) {
     actionSource.close();
     actionSource = null;
@@ -199,9 +228,14 @@ export function stopSharing(): void {
 }
 
 // During dev, Vite HMR hot-swaps this module and resets its singletons
-// (roomId, the action EventSource) while shareStore still thinks we're sharing,
-// which silently breaks the reverse channel. Tear down cleanly so stale
-// connections don't linger; after an HMR update the GM should re-share.
+// (roomId, the action EventSource) while shareStore still thinks we're
+// sharing. Tear the old connections down, then resume in the new module
+// instance — the room id is persisted, so it's the same room and the table
+// screen never notices.
 if (import.meta.hot) {
-  import.meta.hot.dispose(() => stopSharing());
+  if (import.meta.hot.data.wasSharing) startSharing();
+  import.meta.hot.dispose((data) => {
+    data.wasSharing = roomId !== null;
+    stopSharing();
+  });
 }

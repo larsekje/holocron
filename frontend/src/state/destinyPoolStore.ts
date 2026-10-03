@@ -14,10 +14,13 @@ export const useDestinyStore = create<DestinyStoreState>()(persist((set, get) =>
     destinyPool: [],
 
     flipDestinyPoint: (atIndex: number) => {
-        const destinyPool = get().destinyPool;
-        destinyPool[atIndex] = !destinyPool[atIndex];
+        // New array, not an in-place flip: selector subscribers compare by
+        // reference and would miss a mutation of the same array.
+        const destinyPool = get().destinyPool.map((isLight, i) =>
+            i === atIndex ? !isLight : isLight,
+        );
 
-        set({ destinyPool: destinyPool });
+        set({ destinyPool });
     },
 
     clearDestinyPool: () =>
