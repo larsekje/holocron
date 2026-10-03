@@ -24,6 +24,11 @@ export interface GameplayStore {
     isInitiativeModalOpen: boolean;
     setInitiativeModalOpen: (open: boolean) => void;
 
+    // Slot editing (SWRPG slots belong to a team, not a person — the GM
+    // trims or adds them as the fight changes shape).
+    removeSlot: (index: number) => void;
+    insertSlot: (afterIndex: number, team: InitiativeSlot["team"]) => void;
+
     // Manage participants
     setActiveParticipantId: (participantId: string | null) => void; // Set the active participant's ID
     addActedParticipant: (participantId: string) => void;
@@ -66,6 +71,37 @@ const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
             context: {...encounterFSM.context},
         });
     });
+
+    // A participant leaving mid-fight takes one of its team's slots with
+    // it — otherwise its slot lingers as a live turn nobody can take
+    // (deleting a killed group used to bring its "DOWN" slot back to life).
+    // Prefer a slot still to come this round; else the team's last slot.
+    // Never the slot being played right now.
+    EventBus.on("participant-removed", (participant) => {
+        const ctx = encounterFSM.context;
+        const order = ctx.initiativeOrder;
+        if (order.length === 0) return;
+        const team = teamOf(participant);
+        let idx = -1;
+        for (let i = order.length - 1; i > ctx.currentTurnIndex; i--) {
+            if (order[i].team === team) { idx = i; break; }
+        }
+        if (idx < 0) {
+            for (let i = order.length - 1; i >= 0; i--) {
+                if (order[i].team === team && i !== ctx.currentTurnIndex) { idx = i; break; }
+            }
+        }
+        if (idx < 0) return;
+        removeSlotAt(idx);
+        set({context: {...encounterFSM.context}});
+    });
+
+    function removeSlotAt(index: number) {
+        const ctx = encounterFSM.context;
+        if (index === ctx.currentTurnIndex) return;
+        ctx.initiativeOrder = ctx.initiativeOrder.filter((_, i) => i !== index);
+        if (index < ctx.currentTurnIndex) ctx.currentTurnIndex -= 1;
+    }
 
     // Ensure the FSM always has the latest participants
     useParticipantsStore.subscribe((state) => {
@@ -120,6 +156,25 @@ const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
 
         setInitiativeModalOpen: (open) => {
             set({isInitiativeModalOpen: open})
+        },
+
+        removeSlot: (index) => {
+            removeSlotAt(index);
+            set({context: {...encounterFSM.context}});
+        },
+
+        insertSlot: (afterIndex, team) => {
+            const ctx = encounterFSM.context;
+            const at = Math.min(Math.max(afterIndex + 1, 0), ctx.initiativeOrder.length);
+            const neighbour = ctx.initiativeOrder[afterIndex];
+            const slot: InitiativeSlot = {team, initiative: neighbour?.initiative ?? 0};
+            ctx.initiativeOrder = [
+                ...ctx.initiativeOrder.slice(0, at),
+                slot,
+                ...ctx.initiativeOrder.slice(at),
+            ];
+            if (at <= ctx.currentTurnIndex) ctx.currentTurnIndex += 1;
+            set({context: {...encounterFSM.context}});
         },
 
         setActiveParticipantId: (participantId: string | null) => {

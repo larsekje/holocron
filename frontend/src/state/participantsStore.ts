@@ -190,12 +190,16 @@ const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
         // Emit the event when a participant is added
         EventBus.emit("participant-added", participant);
     },
-    removeParticipant: (id) =>
+    removeParticipant: (id) => {
+        const removed = useParticipantStore.getState().participants.find((p) => p.id === id);
         set((state) => ({
             participants: state.participants.filter((p) => p.id !== id),
             selectedParticipantId:
                 state.selectedParticipantId === id ? null : state.selectedParticipantId,
-        })),
+        }));
+        // Mirror of participant-added: the gameplay store drops a slot.
+        if (removed) EventBus.emit("participant-removed", removed);
+    },
     updateParticipants: (updatedParticipants) =>
         set(() => ({ participants: updatedParticipants })),
     

@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, HStack, Text, Tooltip} from "@chakra-ui/react";
+import {Box, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Portal, Text, Tooltip} from "@chakra-ui/react";
 import useGameplayStore from "@/state/newGameplayStore";
 import useParticipantStore from "@/state/participantsStore";
 import {disabledSlotIndices} from "@/utils/initiativeSlots";
@@ -8,6 +8,10 @@ const InitiativeOrder: React.FC = () => {
   const initiativeOrder = useGameplayStore((state) => state.context.initiativeOrder);
   const currentTurnIndex = useGameplayStore((state) => state.context.currentTurnIndex);
   const participants = useParticipantStore((state) => state.participants);
+  const removeSlot = useGameplayStore((state) => state.removeSlot);
+  const insertSlot = useGameplayStore((state) => state.insertSlot);
+  // Two-step remove: the first click arms it for that slot index.
+  const [armedRemove, setArmedRemove] = React.useState<number | null>(null);
 
   // Which slots are disabled (a team's trailing slots go dark as it loses
   // members — see disabledSlotIndices). Same helper drives the FSM's
@@ -36,8 +40,8 @@ const InitiativeOrder: React.FC = () => {
           : `${slot.team} slot ${index + 1}`;
 
         return (
+          <Menu key={index} placement="bottom" isLazy onClose={() => setArmedRemove(null)}>
           <Tooltip
-            key={index}
             hasArrow
             placement="top"
             openDelay={200}
@@ -46,9 +50,12 @@ const InitiativeOrder: React.FC = () => {
             borderColor="whiteAlpha.200"
             borderWidth="1px"
             borderRadius="md"
-            label={<Text fontSize="xs">{tooltipText}</Text>}
+            label={<Text fontSize="xs">{tooltipText} · click to edit slots</Text>}
           >
-            <Box
+            <MenuButton
+              as={Box}
+              role="button"
+              cursor="pointer"
               position="relative"
               w="50px"
               h="34px"
@@ -116,8 +123,47 @@ const InitiativeOrder: React.FC = () => {
                   DOWN
                 </Text>
               )}
-            </Box>
+            </MenuButton>
           </Tooltip>
+          <Portal>
+            <MenuList
+              bg="#1f2125"
+              borderColor="whiteAlpha.200"
+              color="gray.100"
+              minW="170px"
+              py={1}
+              zIndex={9999}
+              sx={{ "& button": { fontSize: "sm", paddingTop: "5px", paddingBottom: "5px" } }}
+            >
+              <MenuItem bg="transparent" _hover={{bg: "whiteAlpha.100"}} onClick={() => insertSlot(index, "PC")}>
+                Add PC slot after
+              </MenuItem>
+              <MenuItem bg="transparent" _hover={{bg: "whiteAlpha.100"}} onClick={() => insertSlot(index, "NPC")}>
+                Add NPC slot after
+              </MenuItem>
+              <MenuDivider borderColor="whiteAlpha.200"/>
+              <MenuItem
+                bg="transparent"
+                _hover={{bg: "whiteAlpha.100"}}
+                color="red.300"
+                closeOnSelect={armedRemove === index}
+                isDisabled={isActive}
+                onClick={() => {
+                  if (armedRemove === index) {
+                    removeSlot(index);
+                    setArmedRemove(null);
+                  } else {
+                    setArmedRemove(index);
+                  }
+                }}
+              >
+                {isActive
+                  ? "Current slot can't be removed"
+                  : armedRemove === index ? "Click again to remove" : "Remove this slot"}
+              </MenuItem>
+            </MenuList>
+          </Portal>
+          </Menu>
         );
       })}
     </HStack>
