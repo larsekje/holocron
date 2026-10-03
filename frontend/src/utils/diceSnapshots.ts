@@ -306,6 +306,23 @@ function addSetbackToPool(
   sources.setback = [...(sources.setback ?? []), ...Array(count).fill(label)];
 }
 
+// The target's defense: each point is a Setback die on attacks against it —
+// melee defense against Brawl/Melee/Lightsaber, ranged defense against
+// everything else (Ranged, Gunnery). Labelled so a retarget can unwind it.
+const DEFENSE_LABEL = /^(Melee|Ranged) defense \d+$/;
+
+function applyTargetDefense(
+  pool: DicePool,
+  sources: Partial<Record<string, string[]>>,
+  target: Participant,
+  weaponSkill: string | undefined,
+): void {
+  const melee = isMeleeWeaponSkill(weaponSkill);
+  const stats = target.stats ?? {};
+  const def = (melee ? stats.meleeDefense : stats.rangedDefense) ?? 0;
+  addSetbackToPool(pool, sources, def, `${melee ? 'Melee' : 'Ranged'} defense ${def}`);
+}
+
 // Statuses on the roller that change their own dice. Disoriented N adds N
 // Setback to every check the participant makes (CRB p. 220 / Disorient
 // quality). Labelled per status so the pool tooltip says why.
@@ -642,6 +659,7 @@ export function buildAttackSnapshot(
   // Adversary upgrade reads talents, so it only fires for character targets.
   if (resolved.kind === 'character') {
     applyAdversaryUpgrade(pool, poolSources, resolved.participant.stats?.talents);
+    applyTargetDefense(pool, poolSources, resolved.participant, weapon.skill);
   } else if (resolved.kind === 'vehicle') {
     applyVehicleTargetModifiers(pool, poolSources, resolved.vehicle.id);
   }
@@ -738,9 +756,11 @@ export function flipAttackTarget(
   reverseUpgradeBy(pool, sources, (l) => VEHICLE_TARGET_UPGRADE_LABELS.has(l));
   reverseAddBy(pool, sources, 'setback', (l) => VEHICLE_TARGET_ADD_SETBACK_LABELS.has(l));
   reverseUpgradeBy(pool, sources, (l) => /^Adversary\s+\d+$/i.test(l));
+  reverseAddBy(pool, sources, 'setback', (l) => DEFENSE_LABEL.test(l));
 
   if (newKind === 'character') {
     applyAdversaryUpgrade(pool, sources, candidateParticipant.stats?.talents);
+    applyTargetDefense(pool, sources, candidateParticipant, snapshot.weapon?.skill);
   } else {
     applyVehicleTargetModifiers(pool, sources, candidateVehicle.id);
   }
@@ -781,8 +801,12 @@ export function retargetAttack(
   reverseUpgradeBy(pool, sources, (l) => VEHICLE_TARGET_UPGRADE_LABELS.has(l));
   reverseAddBy(pool, sources, 'setback', (l) => VEHICLE_TARGET_ADD_SETBACK_LABELS.has(l));
   reverseUpgradeBy(pool, sources, (l) => /^Adversary\s+\d+$/i.test(l));
+  reverseAddBy(pool, sources, 'setback', (l) => DEFENSE_LABEL.test(l));
 
-  if (next) applyAdversaryUpgrade(pool, sources, next.stats?.talents);
+  if (next) {
+    applyAdversaryUpgrade(pool, sources, next.stats?.talents);
+    applyTargetDefense(pool, sources, next, snapshot.weapon?.skill);
+  }
 
   return {
     ...snapshot,
