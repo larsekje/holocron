@@ -106,6 +106,33 @@ export function resolveSkillForWeapon(
   return {rank, characteristicName, charValue};
 }
 
+// Attacks anyone can make, stat block or not — PCs in the tracker usually
+// have no weapon list at all, and a bottle or chair is always in reach.
+// Edge of the Empire CRB: Brawl is Brawn damage, Crit 5, Disorient 1,
+// Knockdown, Stun Damage; a small improvised weapon is Melee, Brawn+1,
+// Crit 5, Inferior. (Bigger improvised weapons add Cumbersome — not
+// modelled; adjust in the roller.)
+export const GENERIC_WEAPONS: WeaponLike[] = [
+  {
+    name: "Unarmed",
+    skill: "Brawl",
+    damage: 0,
+    plusDamage: 0,
+    crit: 5,
+    range: "Engaged",
+    qualities: ["Disorient 1", "Knockdown", "Stun Damage"],
+  },
+  {
+    name: "Improvised weapon",
+    skill: "Melee",
+    damage: 0,
+    plusDamage: 1,
+    crit: 5,
+    range: "Engaged",
+    qualities: ["Inferior"],
+  },
+];
+
 const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
   const openDiceRoller = useDiceRollerStore((s) => s.open);
   // When the GM presses W, weapon-pick mode targets the ACTIVE participant.
@@ -126,8 +153,27 @@ const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
     }
   }, [isWeaponPick]);
 
-  const rawWeapons = (participant.stats as any)?.weapons as Array<any> | undefined;
-  if (!rawWeapons || rawWeapons.length === 0) return null;
+  const rawWeapons = ((participant.stats as any)?.weapons as Array<any> | undefined) ?? [];
+
+  const renderGeneric = (w: WeaponLike) => {
+    const {rank, characteristicName, charValue} = resolveSkillForWeapon(
+      w.skill,
+      participant,
+      characteristics,
+      aliveMinions,
+    );
+    return (
+      <WeaponCardOld
+        key={`generic-${w.name}`}
+        weapon={w}
+        pool={new DicePool(rank, charValue)}
+        wielderBrawn={characteristics.brawn}
+        onClick={() =>
+          openDiceRoller(buildAttackSnapshot(participant, w, rank, characteristicName, charValue))
+        }
+      />
+    );
+  };
 
   const items = rawWeapons.map((raw, i) => {
     const w = resolveWeapon(raw);
@@ -174,7 +220,20 @@ const WeaponListOld = ({participant, characteristics, aliveMinions}: Props) => {
         </Text>
       </Flex>
       <VStack align="stretch" spacing={2}>
-        {items.length > 0 ? items : <Text fontSize="sm" color="whiteAlpha.700">None</Text>}
+        {items}
+      </VStack>
+      <Text
+        fontSize="9px"
+        letterSpacing="0.16em"
+        textTransform="uppercase"
+        color="whiteAlpha.400"
+        mt={items.length > 0 ? 3 : 0}
+        mb={1}
+      >
+        Anyone can
+      </Text>
+      <VStack align="stretch" spacing={2} opacity={0.8}>
+        {GENERIC_WEAPONS.map(renderGeneric)}
       </VStack>
     </Box>
   );
