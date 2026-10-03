@@ -5,6 +5,8 @@ import {
     Flex,
     HStack,
     IconButton,
+    Kbd,
+    Tooltip,
 } from "@chakra-ui/react";
 import {ChevronLeftIcon, ChevronRightIcon, CloseIcon} from "@chakra-ui/icons";
 import InitiativeOrder from "@components/turnbar/InitiativeOrder";
@@ -13,6 +15,7 @@ import useParticipantsStore, {isParticipantDead} from "@/state/participantsStore
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
 import TurnActionsHint from "@components/turnbar/TurnActionsHint";
+import HotkeyHint from "@components/quickActions/HotkeyHint";
 
 interface Props { }
 
@@ -83,18 +86,23 @@ const ToolBarStructured = ({ }: Props) => {
                     spacing={2}
                     zIndex={2}
                 >
-                    <IconButton
-                        aria-label="Previous turn"
-                        icon={<ChevronLeftIcon boxSize="4" />}
-                        size="xs"
-                        variant="ghost"
-                        color="whiteAlpha.500"
-                        transition="all 0.15s ease"
-                        _hover={{bg: "whiteAlpha.100", color: "whiteAlpha.800"}}
-                        _active={{bg: "whiteAlpha.50"}}
-                        onClick={() => transition('PREV_TURN')}
-                        isDisabled={!canTransition('PREV_TURN')}
-                    />
+                    <Tooltip label="Previous turn (Shift+Space)" hasArrow openDelay={300}>
+                        <Box position="relative">
+                            <IconButton
+                                aria-label="Previous turn"
+                                icon={<ChevronLeftIcon boxSize="4" />}
+                                size="xs"
+                                variant="ghost"
+                                color="whiteAlpha.500"
+                                transition="all 0.15s ease"
+                                _hover={{bg: "whiteAlpha.100", color: "whiteAlpha.800"}}
+                                _active={{bg: "whiteAlpha.50"}}
+                                onClick={() => transition('PREV_TURN')}
+                                isDisabled={!canTransition('PREV_TURN')}
+                            />
+                            <HotkeyHint>⇧Space</HotkeyHint>
+                        </Box>
+                    </Tooltip>
                     <InitiativeOrder/>
                     <Button
                         size="xs"
@@ -110,6 +118,20 @@ const ToolBarStructured = ({ }: Props) => {
                         isDisabled={!canTransition('NEXT_TURN')}
                     >
                         Next
+                        {/* Always-visible key cap — Space is the one hotkey
+                            used every single turn, so it shouldn't need the
+                            hold-? overlay to be discovered. */}
+                        <Kbd
+                            ml={1.5}
+                            bg="blackAlpha.300"
+                            color="#1a1d24"
+                            borderColor="blackAlpha.400"
+                            fontSize="9px"
+                            px="4px"
+                            lineHeight="14px"
+                        >
+                            Space
+                        </Kbd>
                     </Button>
                     <TurnActionsHint/>
                 </HStack>
