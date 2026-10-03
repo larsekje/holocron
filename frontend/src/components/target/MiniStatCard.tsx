@@ -33,6 +33,7 @@ import { statify } from '@/utils/statify';
 import { renderSwrpgText } from '@/utils/swrpgText';
 import { talentNames } from '@/utils/talents';
 import WoundBar from '@components/target/WoundBar';
+import AddToPouchPopover from '@components/target/AddToPouchPopover';
 
 // Talents are stored as bare names ("Quick Strike 2"). The spotlight index
 // keys talents by a slug; strip the trailing rank-number then kebab-case
@@ -261,6 +262,7 @@ const MiniStatCard: React.FC = () => {
           )}
         </HStack>
         <HStack spacing={1} flexShrink={0}>
+          <AddToPouchPopover participant={participant} />
           <Button
             size="xs"
             colorScheme={selectedIsActive ? 'yellow' : 'blue'}
