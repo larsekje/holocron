@@ -11,7 +11,7 @@ import {
 import {ChevronLeftIcon, ChevronRightIcon, CloseIcon} from "@chakra-ui/icons";
 import InitiativeOrder from "@components/turnbar/InitiativeOrder";
 import useGameplayStore from "@/state/newGameplayStore";
-import useParticipantsStore, {isParticipantDead} from "@/state/participantsStore";
+import useParticipantsStore, {isParticipantDead, teamOf} from "@/state/participantsStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import EndEncounterModal from "@components/turnbar/EndEncounterModal";
 import TurnActionsHint from "@components/turnbar/TurnActionsHint";
@@ -62,9 +62,9 @@ const ToolBarStructured = ({ }: Props) => {
                     onConfirm={({removeDeadNpcs, removeAllNpcs}) => {
                         const {participants, updateParticipants} = useParticipantsStore.getState();
                         if (removeAllNpcs) {
-                            updateParticipants(participants.filter((p) => p.isPC));
+                            updateParticipants(participants.filter((p) => teamOf(p) === 'PC'));
                         } else if (removeDeadNpcs) {
-                            updateParticipants(participants.filter((p) => p.isPC || !isParticipantDead(p)));
+                            updateParticipants(participants.filter((p) => teamOf(p) === 'PC' || !isParticipantDead(p)));
                         }
                         // Wipe initiative / active-participant scratch so it
                         // doesn't bleed into the next encounter's prep.

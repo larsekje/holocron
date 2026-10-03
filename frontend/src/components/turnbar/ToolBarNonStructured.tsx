@@ -17,7 +17,7 @@ import useGameplayStoreNew from "@/state/newGameplayStore";
 import RoundNumberDisplay from "@components/turnbar/RoundNumberDisplay";
 import {useMachine} from "@xstate/react";
 import InitiativeModal from "@components/turnbar/InitiativeModal";
-import useParticipantsStore, {Participant} from "@/state/participantsStore";
+import useParticipantsStore, {Participant, teamOf} from "@/state/participantsStore";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import DestinyPointManager from "@components/destinyPoints/DestinyPointManager";
 import SkillChallengeStartButton from "@components/skillChallenge/SkillChallengeStartButton";
@@ -63,7 +63,7 @@ const ToolBarNonStructured = ({ }: Props) => {
         // Find all participants that match this initiative
         const slotParticipants = participants.filter(p => 
             p.initiative === currentSlot.initiative && 
-            (p.isPC ? currentSlot.team === 'PC' : currentSlot.team === 'NPC')
+            teamOf(p) === currentSlot.team
         );
         
         return {
@@ -92,7 +92,7 @@ const ToolBarNonStructured = ({ }: Props) => {
         const order = updatedParticipants
             .filter((p) => p.initiative !== null) // Ensure all initiatives are present
             .map((p) => ({
-                team: p.isPC ? "PC" : "NPC", // Map to the store's type
+                team: teamOf(p),
                 initiative: p.initiative!,
                 name: p.name,
                 participantId: p.id,

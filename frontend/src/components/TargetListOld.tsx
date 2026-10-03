@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Box, Collapse, Flex, Text, VStack} from "@chakra-ui/react";
 import TargetCardOld from "@components/target/TargetCardOld";
 import VehicleTargetCardOld from "@components/target/VehicleTargetCardOld";
-import useParticipantStore, {Participant} from "@/state/participantsStore";
+import useParticipantStore, {Participant, teamOf} from "@/state/participantsStore";
 import useActiveVehicleStore, {isVehicleDead, type ActiveVehicle} from "@/state/activeVehicleStore";
 import useGameplayStore from "@/state/newGameplayStore";
 
@@ -66,15 +66,19 @@ const TargetListOld = () => {
 
   const currentSlot = initiativeOrder?.[currentTurnIndex];
   const currentSlotTeam = currentSlot?.team;
-  const eligibleFor = (isPC: boolean) =>
-    isStructured && currentSlotTeam !== undefined && (isPC ? currentSlotTeam === "PC" : currentSlotTeam === "NPC");
+  const eligibleFor = (p: Participant) =>
+    isStructured && currentSlotTeam !== undefined && teamOf(p) === currentSlotTeam;
 
   const livePCs: Participant[] = [];
+  // NPCs fighting on the party's side (side: 'PC') — listed with the PCs
+  // and eligible for PC slots, but they keep their NPC stats.
+  const liveCompanions: Participant[] = [];
   const liveNPCs: Participant[] = [];
   const dead: Participant[] = [];
   for (const p of participants) {
     if (isParticipantDead(p)) dead.push(p);
     else if (p.isPC) livePCs.push(p);
+    else if (teamOf(p) === "PC") liveCompanions.push(p);
     else liveNPCs.push(p);
   }
   const liveVehicles: ActiveVehicle[] = [];
@@ -87,7 +91,7 @@ const TargetListOld = () => {
 
   const inSelectingMode = isStructured && currentSlotTeam !== undefined;
   const activeParticipant = participants.find((p) => p.id === activeParticipantId);
-  const activeIsPC = activeParticipant?.isPC;
+  const activeTeam = activeParticipant ? teamOf(activeParticipant) : undefined;
   const isPickingActiveForSlot = inSelectingMode && !activeParticipantId;
   const isPickingTarget = isStructured && !!activeParticipantId;
 
@@ -99,7 +103,7 @@ const TargetListOld = () => {
   // (see GlobalCombatHotkeys), which double-taps to confirm so a stray
   // keypress can't yank the active mid-turn.
   const pickable: Participant[] = inSelectingMode && !activeParticipantId
-    ? (currentSlotTeam === "PC" ? livePCs : liveNPCs).filter(
+    ? (currentSlotTeam === "PC" ? [...livePCs, ...liveCompanions] : liveNPCs).filter(
         (p) => !actedParticipants.includes(p.id),
       )
     : [];
@@ -140,7 +144,7 @@ const TargetListOld = () => {
 
   const renderRow = (participant: Participant) => {
     const hasActed = actedParticipants.includes(participant.id);
-    const eligible = eligibleFor(participant.isPC);
+    const eligible = eligibleFor(participant);
     const isActive = participant.id === activeParticipantId;
     // A row click does ONE of two things:
     //  - structured mode + no active yet → claim the active slot (no target
@@ -165,7 +169,7 @@ const TargetListOld = () => {
     // While picking a target, opposing-team rows are valid candidates even
     // if they already acted this round. Suppress the "has acted" opacity dim
     // for them so they don't fade out.
-    const suppressActedDim = isPickingTarget && participant.isPC !== activeIsPC;
+    const suppressActedDim = isPickingTarget && teamOf(participant) !== activeTeam;
     return (
       <TargetCardOld
         key={participant.id}
@@ -207,8 +211,17 @@ const TargetListOld = () => {
         </Box>
       )}
 
-      {liveNPCs.length > 0 && (
+      {liveCompanions.length > 0 && (
         <Box mt={livePCs.length > 0 ? 3 : 0}>
+          {sectionHeader('Companions', liveCompanions.length)}
+          <VStack align="stretch" spacing="6px">
+            {liveCompanions.map(renderRow)}
+          </VStack>
+        </Box>
+      )}
+
+      {liveNPCs.length > 0 && (
+        <Box mt={livePCs.length > 0 || liveCompanions.length > 0 ? 3 : 0}>
           {sectionHeader('Adversaries', liveNPCs.length)}
           <VStack align="stretch" spacing="6px">
             {liveNPCs.map(renderRow)}

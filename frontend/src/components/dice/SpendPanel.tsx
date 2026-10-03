@@ -24,7 +24,7 @@ import type { RollResult } from '@/engine/diceEngine';
 import type { DiceRollMode, ModalSnapshot, SnapshotWeapon } from './mockSnapshots';
 import { useQuickActionsStore } from '@/state/quickActionsStore';
 import useDiceRollerStore from '@/state/diceRollerStore';
-import useParticipantStore, { type DicePouch, type Participant } from '@/state/participantsStore';
+import useParticipantStore, { teamOf, type DicePouch, type Participant } from '@/state/participantsStore';
 import useFSMStore from '@/state/FSMStore';
 import { useEffectStore } from '@/state/effectStore';
 import { StatusFactories, type Effect, type EffectTarget } from '@/types/effectTypes';
@@ -296,7 +296,7 @@ function resolveNextAlly(
   if (!attackerId) return null;
   const attacker = participants.find((p) => p.id === attackerId);
   if (!attacker) return null;
-  const team: 'PC' | 'NPC' = attacker.isPC ? 'PC' : 'NPC';
+  const team = teamOf(attacker);
 
   const ctx = useFSMStore.getState().context;
   const order = ctx.initiativeOrder ?? [];

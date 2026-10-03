@@ -22,7 +22,7 @@ import ApplyEffectsModal from "@components/effects/ApplyEffectsModal";
 import CritRollerModal from "@components/crit/CritRollerModal";
 import AttachVehicleModal from "@components/vehicle/AttachVehicleModal";
 import {Participant} from "@/state/participantsStore";
-import useParticipantStore from "@/state/participantsStore";
+import useParticipantStore, {teamOf} from "@/state/participantsStore";
 import useGameplayStore from "@/state/newGameplayStore";
 import {useEffectStore} from "@/state/effectStore";
 
@@ -86,6 +86,7 @@ const TargetCardOld = ({
   const toggleActed = useGameplayStore((s) => s.toggleActedParticipant);
   const removeParticipant = useParticipantStore((s) => s.removeParticipant);
   const addParticipant = useParticipantStore((s) => s.addParticipant);
+  const setSide = useParticipantStore((s) => s.setSide);
   const updateParticipants = useParticipantStore((s) => s.updateParticipants);
   const setStat = useParticipantStore((s) => s.setStat);
   const addWounds = useParticipantStore((s) => s.addWounds);
@@ -361,6 +362,15 @@ const TargetCardOld = ({
             >
               Duplicate
             </MenuItem>
+            {!participant.isPC && (
+              <MenuItem
+                bg="transparent"
+                _hover={{bg: "whiteAlpha.100"}}
+                onClick={() => setSide(participant.id, teamOf(participant) === "PC" ? "NPC" : "PC")}
+              >
+                {teamOf(participant) === "PC" ? "Make adversary" : "Make companion (party side)"}
+              </MenuItem>
+            )}
             {/* Only offer attaching while the character isn't already aboard
                 a ship — mirrors the rocket button on the full stat sheet. */}
             {!participant.equippedVehicleId && (

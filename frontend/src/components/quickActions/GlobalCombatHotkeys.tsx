@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Text, useToast } from '@chakra-ui/react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import useParticipantStore, { isParticipantDead } from '@/state/participantsStore';
+import useParticipantStore, { isParticipantDead, teamOf } from '@/state/participantsStore';
 import useGameplayStore from '@/state/newGameplayStore';
 import { useQuickActionsStore } from '@/state/quickActionsStore';
 import { useSymbolSpendsStore } from '@/state/symbolSpendsStore';
@@ -185,7 +185,8 @@ const GlobalCombatHotkeys: React.FC = () => {
         const live = liveParticipants.filter((p) => !isParticipantDead(p));
         const ordered = [
           ...live.filter((p) => p.isPC),
-          ...live.filter((p) => !p.isPC),
+          ...live.filter((p) => !p.isPC && teamOf(p) === 'PC'),
+          ...live.filter((p) => teamOf(p) === 'NPC'),
         ];
         if (ordered.length === 0) return;
         const idx = liveSelectedId

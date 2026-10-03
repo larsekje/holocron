@@ -1,5 +1,5 @@
 import { disabledSlotIndices } from "@/utils/initiativeSlots";
-import { isParticipantDead } from "@/state/participantsStore";
+import { isParticipantDead, teamOf } from "@/state/participantsStore";
 import type { EncounterContext } from "@/state/FSM";
 import type { Participant } from "@/state/participantsStore";
 import type { SkillChallengeState } from "@/state/skillChallengeStore";
@@ -167,7 +167,7 @@ export function buildPlayerSnapshot(inputs: SnapshotInputs): PlayerSnapshot {
       return {
         id: p.id,
         name: p.name,
-        team: (p.isPC ? "PC" : "NPC") as "PC" | "NPC",
+        team: teamOf(p),
         acted: acted.includes(p.id),
         active: p.id === activeParticipantId,
         down: isParticipantDead(p),

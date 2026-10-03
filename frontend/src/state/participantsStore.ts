@@ -54,6 +54,16 @@ export function isParticipantDead(p: Participant): boolean {
 
 export type VehicleRole = 'pilot' | 'gunner' | 'astromech' | 'passenger';
 
+export type Team = 'PC' | 'NPC';
+
+/** Which side of the table a participant fights on. Defaults from `isPC`;
+ * a companion NPC (the crew's hired muscle, a droid) is `side: 'PC'` — it
+ * keeps NPC stats and rules but takes PC initiative slots and counts with
+ * the party. */
+export function teamOf(p: Pick<Participant, 'isPC' | 'side'>): Team {
+    return p.side ?? (p.isPC ? 'PC' : 'NPC');
+}
+
 export interface Participant {
     id: string;
     name: string;
@@ -88,6 +98,8 @@ export interface Participant {
     equippedVehicleId?: string;
     /** Free-form display label; not enforced. Used by stat sheet headers. */
     vehicleRole?: VehicleRole;
+    /** Side override — see teamOf. Only set for companions. */
+    side?: Team;
 }
 
 // Zustand Store
@@ -108,6 +120,9 @@ interface ParticipantStore {
     removeWounds: (id: string, wounds: number) => void;
     addStrain: (id: string, strain: number) => void;
     removeStrain: (id: string, strain: number) => void;
+
+    /** Move a participant to a side (companion NPC ⇄ adversary). */
+    setSide: (id: string, side: Team) => void;
 
     // Direct setters used by the stat-edit popovers.
     setMinionCount: (id: string, count: number) => void;
@@ -241,6 +256,18 @@ const useParticipantStore = create<ParticipantStore>()(persist((set) => ({
                     stats: {...participant.stats, strain: Math.max(0, cur - strain)}
                 };
             })
+        }));
+    },
+
+    setSide: (id, side) => {
+        set((state) => ({
+            participants: state.participants.map((p) => {
+                if (p.id !== id) return p;
+                const natural: Team = p.isPC ? 'PC' : 'NPC';
+                const next: Participant = {...p, side};
+                if (side === natural) delete next.side;
+                return next;
+            }),
         }));
     },
 

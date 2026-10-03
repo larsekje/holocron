@@ -2,6 +2,7 @@ import { create } from "zustand";
 import EventBus from "@/utils/events";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import { emitGameEvent } from "./eventSystem";
+import { teamOf } from "./participantsStore";
 
 type GameplayType = 'non-structured' | 'structured' | 'skill-challenge';
 
@@ -49,7 +50,7 @@ const useGameplayStore = create<GameplayStore>((set, get) => {
     // Listen to the "participantAdded" event
     EventBus.on("participant-added", (participant) => {
         const { addSlotAtEnd } = get();
-        addSlotAtEnd(participant.id, participant.isPC ? "PC" : "NPC", participant.name);
+        addSlotAtEnd(participant.id, teamOf(participant), participant.name);
     });
 
     return {

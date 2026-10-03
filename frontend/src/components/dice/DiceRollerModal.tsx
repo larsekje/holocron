@@ -32,7 +32,7 @@ import { SkillChallengePlaceholder } from './SkillChallengePlaceholder';
 import { ModifiersPopover } from './ModifiersPopover';
 import { SegmentedToggle } from '@/components/ParticipantSheetView';
 import useDiceRollerStore from '@/state/diceRollerStore';
-import useParticipantStore, { isParticipantDead } from '@/state/participantsStore';
+import useParticipantStore, { isParticipantDead, teamOf } from '@/state/participantsStore';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
 interface DiceRollerModalProps {
@@ -78,8 +78,8 @@ const TargetText: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
     (p) => p.id !== snapshot.attackerParticipantId && !isParticipantDead(p),
   );
   // Opponents first: the other side of the table from the attacker.
-  const opponents = candidates.filter((p) => !attacker || p.isPC !== attacker.isPC);
-  const sameSide = candidates.filter((p) => attacker && p.isPC === attacker.isPC);
+  const opponents = candidates.filter((p) => !attacker || teamOf(p) !== teamOf(attacker));
+  const sameSide = candidates.filter((p) => attacker && teamOf(p) === teamOf(attacker));
   const item = (p: (typeof candidates)[number]) => (
     <MenuItem
       key={p.id}

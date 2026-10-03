@@ -1,5 +1,5 @@
 import { InitiativeSlot } from "@/types/initiativeSlot";
-import { Participant, isParticipantDead } from "@/state/participantsStore";
+import { Participant, isParticipantDead, teamOf } from "@/state/participantsStore";
 
 /**
  * SWRPG initiative slots belong to a team, not to a specific character — any
@@ -17,7 +17,7 @@ export function disabledSlotIndices(
 ): Set<number> {
   const remaining: Record<InitiativeSlot["team"], number> = { PC: 0, NPC: 0 };
   for (const p of participants) {
-    if (isParticipantDead(p)) remaining[p.isPC ? "PC" : "NPC"] += 1;
+    if (isParticipantDead(p)) remaining[teamOf(p)] += 1;
   }
   const disabled = new Set<number>();
   for (let i = initiativeOrder.length - 1; i >= 0; i--) {

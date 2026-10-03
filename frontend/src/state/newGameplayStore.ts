@@ -4,7 +4,7 @@ import { holocronPersist } from "./persist";
 import {createEncounterFSM, EncounterContext, TurnState} from "./FSM";
 import {InitiativeSlot} from "@/types/initiativeSlot";
 import EventBus from "@/utils/events";
-import useParticipantsStore from './participantsStore'; // Import the participants store
+import useParticipantsStore, { teamOf } from './participantsStore'; // Import the participants store
 
 const encounterFSM = createEncounterFSM();
 
@@ -55,7 +55,7 @@ const useGameplayStore = create<GameplayStore>()(persist((set, get) => {
         console.log("participant-added", participant);
         const initiativeSlots = encounterFSM.context.initiativeOrder;
         const newSlot: InitiativeSlot = {
-            team: participant.isPC ? "PC" : "NPC",
+            team: teamOf(participant),
             initiative: 0,
             used: false,
             name: participant.name,
