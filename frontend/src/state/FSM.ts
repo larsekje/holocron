@@ -459,7 +459,7 @@ export function createEncounterFSM(): FSM {
                         action: (context) => {
                             if (context.currentTurnIndex  === 0) {
                                 context.round--;
-                                context.currentTurnIndex = useParticipantStore.getState().participants.length - 1;
+                                context.currentTurnIndex = context.initiativeOrder.length - 1;
                             } else {
                                 context.currentTurnIndex--;
                             }
