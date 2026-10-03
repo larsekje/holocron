@@ -1,8 +1,10 @@
 src/App.tsx: error TS2322: Type '(initialTypes?: SpotlightEntityType[] | undefined) => void' is not assignable to type 'MouseEventHandler<HTMLDivElement>'.
 src/components/ActiveEffectsDisplay.tsx: error TS2345: Argument of type '(effect: ParticipantEffect) => JSX.Element' is not assignable to parameter of type '(value: ParticipantEffect, index: number, array: ParticipantEffect[]) => Element'.
 src/components/Spotlight.tsx: error TS2304: Cannot find name 'Suggestion'.
+src/components/Spotlight.tsx: error TS2304: Cannot find name 'Suggestion'.
 src/components/destinyPoints/DestinyPoolInline.tsx: error TS2322: Type '(e: React.MouseEvent<HTMLButtonElement>) => void' is not assignable to type 'MouseEventHandler<HTMLDivElement> & MouseEventHandler<HTMLButtonElement>'.
 src/components/dice/PoolBuilder.tsx: error TS2322: Type '(e: MouseEvent<HTMLDivElement, MouseEvent>) => void' is not assignable to type 'MouseEventHandler<HTMLDivElement> & MouseEventHandler<HTMLButtonElement>'.
+src/components/dice/SpendPanel.tsx: error TS2339: Property 'recipientId' does not exist on type '{ optionId: string; }'.
 src/components/dice/SpendPanel.tsx: error TS2339: Property 'recipientId' does not exist on type '{ optionId: string; }'.
 src/components/dice/SpendPanel.tsx: error TS2352: Conversion of type 'readonly ["combat"]' to type '(DiceRollMode | "any")[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 src/components/galaxyMap/GalaxyMapOverlay.tsx: error TS2322: Type '{ children: Element[]; isOpen: boolean; onClose: () => void; size: "full"; isLazy: true; motionPreset: "none"; }' is not assignable to type 'IntrinsicAttributes & ModalProps'.
@@ -14,6 +16,7 @@ src/components/participantStatus/StatSheet.tsx: error TS7006: Parameter 'index' 
 src/components/sessionPrep/BenchPanel.tsx: error TS2769: No overload matches this call.
 src/components/sessionPrep/EncounterNpcRow.tsx: error TS2322: Type 'any[][]' is not assignable to type '[string, any][]'.
 src/components/statblock/SkillListOld.tsx: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+src/components/statblock/SkillListOld.tsx: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 src/components/statblock/WeaponListOld.tsx: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 src/components/turnbar/InitiativeSlot.tsx: error TS2307: Cannot find module '@/types/effect' or its corresponding type declarations.
 src/components/turnbar/ToolBarNonStructured.tsx: error TS2307: Cannot find module '@xstate/react' or its corresponding type declarations.
@@ -22,6 +25,7 @@ src/state/diceRollerStore.ts: error TS2790: The operand of a 'delete' operator m
 src/state/effectStore.ts: error TS2741: Property 'ENCOUNTER_START' is missing in type '{ TURN_START: string; TURN_ACTION: string; TURN_END: string; ROUND_START: string; ROUND_END: string; ENCOUNTER_END: string; }' but required in type 'Record<GameEvent, string>'.
 src/state/newGameplayStore.ts: error TS2459: Module '"./FSM"' declares 'TurnState' locally, but it is not exported.
 src/utils/defaultRolls.ts: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+src/utils/effects.ts: error TS18048: 'participant' is possibly 'undefined'.
 src/utils/effects.ts: error TS18048: 'participant' is possibly 'undefined'.
 src/utils/effects.ts: error TS2322: Type '{ id: string; name: string; description: string; type: string; trigger: string; duration: number; apply: (participant: Participant | undefined) => void; end: (participant: any) => void; }' is not assignable to type 'ParticipantEffect'.
 src/utils/effects.ts: error TS7006: Parameter 'participant' implicitly has an 'any' type.
