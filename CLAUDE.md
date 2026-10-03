@@ -31,7 +31,7 @@ npm run build            # type-check + production build
 npm run gen              # regenerate Swagger client from src/generated/openapi.json
 ```
 
-There is no lint or test script wired up on the frontend.
+There is no lint or unit-test script on the frontend. See "Verifying frontend changes" below.
 
 Backend (`cd backend`):
 
@@ -43,6 +43,37 @@ poetry run pytest test/test_data_controller.py::test_weapon   # single test
 ```
 
 Backend tests use `pytest-anyio` and spin up the FastAPI app via `httpx.AsyncClient` — they exercise real route wiring, not mocks.
+
+## Verifying frontend changes
+
+`npm run build` / plain `tsc` always fail: the codebase carries ~30 pre-existing type errors. Use these instead (from `frontend/`):
+
+```bash
+npm run typecheck        # tsc vs typecheck-baseline.txt — fails only on errors you introduced
+npx vite build           # bundles without the tsc gate
+npm run typecheck -- --update   # re-record the baseline after fixing old errors (commit it)
+```
+
+UI changes should be seen, not assumed. `scripts/ui/shot.mjs` drives the dev server in headless Chromium and screenshots it; `--fixture playtest-2026-07-30` seeds localStorage with the real state from the 2026-07-30 playtest (mid-encounter: Rodas Olo, the Pirates minion group, Sall with Adversary 2, …), so you don't have to click an encounter together first. Steps files default-export `async (page) => {}`; `scripts/ui/lib.mjs` has fixture ids and a `makeActive` helper; `scripts/ui/example-steps.mjs` is a working example.
+
+```bash
+npm run dev &                                   # :8000
+node scripts/ui/shot.mjs roller scripts/ui/example-steps.mjs --fixture playtest-2026-07-30
+# → scripts/ui/out/roller.png (git-ignored) + console errors/warnings
+```
+
+Playwright is deliberately not a dependency: `npm i --no-save playwright && npx playwright install chromium`.
+
+The app keeps all state in localStorage (`holocron:v1:*` zustand persist keys) — inspect or patch it via `page.evaluate`, then reload.
+
+## Cloud sessions (Claude Code on the web)
+
+`.claude/settings.json` runs `.claude/hooks/cloud-setup.sh` on SessionStart. It is a no-op locally; in a cloud session (`CLAUDE_CODE_REMOTE=true`) it runs `npm ci` in `frontend/` and installs Playwright + Chromium best-effort. If the browser download is blocked, fall back to `npm run typecheck` + `npx vite build` and say in the PR that the UI wasn't screenshotted.
+
+- **Never push to `master`** — it auto-deploys (see Deployment). Work on a branch and open a PR.
+- The `swrpg-mechanics` skill lives in `.claude/skills/`, which is git-ignored, so cloud sessions don't have it. For rules questions, the existing code's comments cite the rulebook; when unsure, flag the rule in the PR instead of guessing.
+- Keep one commit per user-visible change, with the why in the body and a final `Test:` line saying how to see it in the app — the owner reviews commit by commit.
+- Open task briefs from playtests live in `docs/playtest-*.md`.
 
 ## Architecture notes that aren't obvious from a single file
 

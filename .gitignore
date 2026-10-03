@@ -184,3 +184,6 @@ references/
 *.sln
 *.sw?
 
+
+# UI screenshot harness output
+frontend/scripts/ui/out/

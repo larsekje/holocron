@@ -13,6 +13,7 @@
     "prebuild": "npm run build:spotlight",
     "dev": "vite",
     "build": "tsc && vite build",
+    "typecheck": "node ./scripts/typecheck.mjs",
     "preview": "vite preview",
     "gen": "swagger-typescript-api -p src/generated/openapi.json -o src/generated --axios --templates src/generated/templates --unwrap-response-data",
     "docker-build": "docker-compose up frontend --build --no-recreate -d",
