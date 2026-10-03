@@ -130,6 +130,8 @@ const PoolDie: React.FC<{ die: DieType; roll?: DieRoll; rolling: boolean; source
   return (
     <Tooltip label={tip} placement="top" hasArrow openDelay={400}>
       <Box
+        data-die={die}
+        data-source={source}
         position="relative"
         w="56px"
         minH="56px"

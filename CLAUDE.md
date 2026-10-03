@@ -54,6 +54,8 @@ npx vite build           # bundles without the tsc gate
 npm run typecheck -- --update   # re-record the baseline after fixing old errors (commit it)
 ```
 
+`npm run ui:check` is the regression suite for the playtest fixes: it starts its own Vite, loads the 2026-07-30 playtest state, drives every fixed feature in headless Chromium and prints PASS/FAIL per check (failure screenshots in `scripts/ui/out/`). `npm run ui:check -- opposed` runs only matching checks. Checks tagged `relay` need the sync backend (`SYNC_PORT`, default 8081) and are skipped without it. Add a check to `scripts/ui/check.mjs` when you fix or build something user-visible. Pool dice carry `data-die` / `data-source` attributes for exactly this.
+
 UI changes should be seen, not assumed. `scripts/ui/shot.mjs` drives the dev server in headless Chromium and screenshots it; `--fixture playtest-2026-07-30` seeds localStorage with the real state from the 2026-07-30 playtest (mid-encounter: Rodas Olo, the Pirates minion group, Sall with Adversary 2, …), so you don't have to click an encounter together first. Steps files default-export `async (page) => {}`; `scripts/ui/lib.mjs` has fixture ids and a `makeActive` helper; `scripts/ui/example-steps.mjs` is a working example.
 
 ```bash
@@ -62,7 +64,7 @@ node scripts/ui/shot.mjs roller scripts/ui/example-steps.mjs --fixture playtest-
 # → scripts/ui/out/roller.png (git-ignored) + console errors/warnings
 ```
 
-Playwright is deliberately not a dependency: `npm i --no-save playwright && npx playwright install chromium`.
+Playwright is deliberately not a dependency: `npm i --no-save --ignore-scripts playwright && npx playwright install chromium`. Keep `--ignore-scripts` — without it npm re-runs `node-sass`'s native build (an unused leftover dependency; Vite uses `sass`), which fails on current Node.
 
 The app keeps all state in localStorage (`holocron:v1:*` zustand persist keys) — inspect or patch it via `page.evaluate`, then reload.
 
