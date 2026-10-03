@@ -30,6 +30,9 @@ export interface PlayerParticipant {
   id: string; // opaque; lets a player pick who acts in an open slot
   name: string;
   team: "PC" | "NPC";
+  // GM-run NPC fighting on the party's side. Tappable in an open PC slot,
+  // but never auto-claimed for — the GM decides when a companion acts.
+  companion?: boolean;
   acted: boolean; // has acted this round
   active: boolean; // currently acting
   down: boolean; // downed / defeated
@@ -168,6 +171,7 @@ export function buildPlayerSnapshot(inputs: SnapshotInputs): PlayerSnapshot {
         id: p.id,
         name: p.name,
         team: teamOf(p),
+        ...(!p.isPC && teamOf(p) === "PC" ? { companion: true } : {}),
         acted: acted.includes(p.id),
         active: p.id === activeParticipantId,
         down: isParticipantDead(p),

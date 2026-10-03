@@ -110,9 +110,15 @@ const PlayerView: React.FC<{ roomId: string }> = ({ roomId }) => {
     .filter((p) => p.team === "PC" && !p.down && !p.acted)
     .map((p) => ({ id: p.id, name: p.name }));
   // With a single eligible PC there's nothing to ask — auto-select them.
-  const soloPickId =
-    openPcSlot && eligiblePcs.length === 1 ? eligiblePcs[0].id : null;
-  const picks = openPcSlot && eligiblePcs.length > 1 ? eligiblePcs : null;
+  // Not for a companion: a GM-run NPC shouldn't take the slot unasked.
+  const soloCandidate =
+    openPcSlot && eligiblePcs.length === 1
+      ? snap?.participants.find((p) => p.id === eligiblePcs[0].id)
+      : undefined;
+  const soloPickId = soloCandidate && !soloCandidate.companion ? soloCandidate.id : null;
+  const picks = openPcSlot && (eligiblePcs.length > 1 || (eligiblePcs.length === 1 && !soloPickId))
+    ? eligiblePcs
+    : null;
   const endTurnName =
     inCombat && activeParticipant && activeParticipant.team === "PC"
       ? activeParticipant.name

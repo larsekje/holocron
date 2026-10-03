@@ -37,7 +37,7 @@ export const OppositionRow: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot 
   const setOpposition = useDiceRollerStore((s) => s.setOpposition);
   const participants = useParticipantStore((s) => s.participants);
   const candidates = participants.filter(
-    (p) => p.id !== snapshot.attackerParticipantId && !isParticipantDead(p),
+    (p) => p.id !== snapshot.attackerParticipantId && !p.offstage && !isParticipantDead(p),
   );
   const suggested = suggestedOpposition(snapshot.skill);
   const defenderId = snapshot.defenderParticipantId ?? '';
