@@ -825,6 +825,9 @@ export function participantSkill(
   const stats = (p.stats ?? {}) as Record<string, any>;
   const ref = SKILLS.find((sk) => skillKey(sk.name) === skillKey(skillName));
   let characteristic = (ref?.characteristic ?? 'Brawn').toLowerCase();
+  // The asked-for skill may carry its own override ("Lightsaber (Willpower)").
+  const asked = skillName.match(CHARACTERISTIC_OVERRIDE);
+  if (asked) characteristic = asked[1].toLowerCase();
   let rank = 0;
   let listed = false;
   for (const [k, v] of Object.entries((stats.skills ?? {}) as Record<string, number>)) {

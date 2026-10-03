@@ -7,7 +7,7 @@ import type {CharacteristicSet} from "./CharacteristicsOld";
 import useDiceRollerStore from "@/state/diceRollerStore";
 import useGameplayStore from "@/state/newGameplayStore";
 import {useQuickActionsStore} from "@/state/quickActionsStore";
-import {buildAttackSnapshot, type WeaponLike} from "@/utils/diceSnapshots";
+import {buildAttackSnapshot, participantSkill, type WeaponLike} from "@/utils/diceSnapshots";
 import {getDetail} from "@/data/spotlightIndex";
 
 interface Props {
@@ -66,44 +66,22 @@ export function resolveWeapon(raw: any): WeaponLike | null {
   };
 }
 
-// Resolve the rank + characteristic actually used by this weapon's skill (e.g. Lightsaber
-// (Willpower) → use Willpower with that rank), accounting for minion-group rule when active.
+// Resolve the rank + characteristic actually used by this weapon's skill.
+// Delegates to participantSkill (shared with opposed checks) so attacks and
+// skill checks read a stat block the same way: the skill's own
+// characteristic (Ranged → Agility), a "(Willpower)"-style override, and the
+// minion-group rank rule. Characteristic values come from the sheet's
+// resolved set. `aliveMinions` is kept for callers; the minion rule reads
+// the group's wounds directly.
 export function resolveSkillForWeapon(
   weaponSkill: string,
   participant: Participant,
   characteristics: CharacteristicSet,
-  aliveMinions: number | undefined,
+  _aliveMinions?: number,
 ): {rank: number; characteristicName: string; charValue: number} {
-  const profileSkills = (participant.stats?.skills as Record<string, number>) ?? {};
-  const lower = weaponSkill.toLowerCase();
-
-  // Try exact case-insensitive match
-  let storedRank = 0;
-  let charOverride: string | undefined;
-  for (const [k, v] of Object.entries(profileSkills)) {
-    if (k.toLowerCase() === lower) {
-      storedRank = v ?? 0;
-      const m = k.match(/\(([^)]+)\)/);
-      if (m) charOverride = m[1].toLowerCase();
-      break;
-    }
-  }
-  // If weaponSkill itself encodes the characteristic override (e.g. "Lightsaber (Willpower)")
-  if (!charOverride) {
-    const m = weaponSkill.match(/\(([^)]+)\)/);
-    if (m) charOverride = m[1].toLowerCase();
-  }
-  // Fallback: pick a guess from name root if it's a Lightsaber base; otherwise undefined
-  const characteristicName = charOverride ?? "brawn";
-  const charValue = (characteristics as Record<string, number>)[characteristicName] ?? 0;
-
-  // Minion group: listed-skill rank = max(0, alive - 1) regardless of stored value
-  const isMinionGroup = aliveMinions !== undefined;
-  const rank = isMinionGroup
-    ? (storedRank > 0 ? Math.max(0, (aliveMinions as number) - 1) : 0)
-    : storedRank;
-
-  return {rank, characteristicName, charValue};
+  const {rank, characteristic} = participantSkill(participant, weaponSkill);
+  const charValue = (characteristics as unknown as Record<string, number>)[characteristic] ?? 0;
+  return {rank, characteristicName: characteristic, charValue};
 }
 
 // Attacks anyone can make, stat block or not — PCs in the tracker usually

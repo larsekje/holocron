@@ -17,7 +17,6 @@ src/components/sessionPrep/BenchPanel.tsx: error TS2769: No overload matches thi
 src/components/sessionPrep/EncounterNpcRow.tsx: error TS2322: Type 'any[][]' is not assignable to type '[string, any][]'.
 src/components/statblock/SkillListOld.tsx: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 src/components/statblock/SkillListOld.tsx: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
-src/components/statblock/WeaponListOld.tsx: error TS2352: Conversion of type 'CharacteristicSet' to type 'Record<string, number>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 src/components/turnbar/InitiativeSlot.tsx: error TS2307: Cannot find module '@/types/effect' or its corresponding type declarations.
 src/components/turnbar/ToolBarNonStructured.tsx: error TS2307: Cannot find module '@xstate/react' or its corresponding type declarations.
 src/engine/diceEngine.test.ts: error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
