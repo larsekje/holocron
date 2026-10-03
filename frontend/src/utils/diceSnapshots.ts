@@ -593,7 +593,13 @@ export function buildAttackSnapshot(
     ? parseInt(weapon.critical, 10)
     : (weapon.critical ?? (typeof weapon.crit === 'string' ? parseInt(weapon.crit, 10) : weapon.crit) ?? 0);
 
-  const resolved = resolveAttackTarget(weaponKind);
+  let resolved = resolveAttackTarget(weaponKind);
+  // The selection often still points at the attacker (the GM just clicked
+  // them to act). Attacking yourself is never the intent — start untargeted
+  // and let the GM pick in the roller header.
+  if (resolved.kind === 'character' && resolved.participant.id === participant.id) {
+    resolved = { kind: 'none' };
+  }
 
   const poolSources: Partial<Record<string, string[]>> = {
     ...skillSources(weapon.skill || 'weapon', resolvedSkillRank, resolvedCharValue),
@@ -726,6 +732,48 @@ export function flipAttackTarget(
     targetVehicleName: newKind === 'vehicle' ? candidateVehicle.name : undefined,
     target: newKind === 'character' ? snapshotTargetFromParticipant(candidateParticipant) : undefined,
     // Editing target invalidates any prior roll — same convention as pool edits.
+    result: null,
+    spent: [],
+  };
+}
+
+/** Point an attack at a different participant (or at nobody). Unwinds every
+ * target-side modifier the previous target contributed — Adversary upgrades
+ * and vehicle-target dice — then applies the new target's Adversary talent.
+ * Manual additions, modifier toggles and range presets stay. Any prior roll
+ * is invalidated, same as a pool edit. */
+export function retargetAttack(
+  snapshot: ModalSnapshot,
+  participantId: string | null,
+): ModalSnapshot {
+  const ps = useParticipantStore.getState();
+  const next = participantId ? ps.participants.find((p) => p.id === participantId) : undefined;
+  if (participantId && !next) return snapshot;
+
+  const pool: DicePool = { ...snapshot.pool };
+  const sources: Partial<Record<string, string[]>> = {};
+  for (const k of Object.keys(snapshot.poolSources ?? {}) as DieType[]) {
+    const arr = (snapshot.poolSources ?? {})[k];
+    if (arr) sources[k] = [...arr];
+  }
+  reverseUpgradeBy(pool, sources, (l) => VEHICLE_TARGET_UPGRADE_LABELS.has(l));
+  reverseAddBy(pool, sources, 'setback', (l) => VEHICLE_TARGET_ADD_SETBACK_LABELS.has(l));
+  reverseUpgradeBy(pool, sources, (l) => /^Adversary\s+\d+$/i.test(l));
+
+  if (next) applyAdversaryUpgrade(pool, sources, next.stats?.talents);
+
+  return {
+    ...snapshot,
+    pool,
+    poolSources: sources as ModalSnapshot['poolSources'],
+    targetParticipantId: next?.id,
+    target: next ? snapshotTargetFromParticipant(next) : undefined,
+    // A hand-picked character target drops any ship routing and the
+    // [Ship|Pilot] toggle that came with it.
+    targetVehicleId: undefined,
+    targetVehicleName: undefined,
+    targetCandidateParticipantId: undefined,
+    targetCandidateVehicleId: undefined,
     result: null,
     spent: [],
   };

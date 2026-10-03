@@ -4,7 +4,7 @@ import type { ModalSnapshot } from '@components/dice/mockSnapshots';
 import type { ModifierEntry } from '@components/dice/modifiers';
 import useParticipantStore from '@/state/participantsStore';
 import useSessionLogStore from '@/state/sessionLogStore';
-import { flipAttackTarget as computeFlippedSnapshot, upgradePoolAbility, upgradePoolDifficulty } from '@/utils/diceSnapshots';
+import { flipAttackTarget as computeFlippedSnapshot, retargetAttack, upgradePoolAbility, upgradePoolDifficulty } from '@/utils/diceSnapshots';
 import { rollPolyPool, POLY_DICE, type PolyDie, type PolyPool, type PolyRollResult } from '@/engine/polyDice';
 
 export type BonusSymbolKind = keyof SymbolTotals;
@@ -34,6 +34,8 @@ interface DiceRollerState {
    * vehicle-target modifier dice for the previous target and re-applies for
    * the new one; preserves manual additions. */
   flipAttackTarget: (newKind: 'vehicle' | 'character') => void;
+  /** Re-point the attack at another participant (null = no target). */
+  setAttackTarget: (participantId: string | null) => void;
   roll: () => void;
   /** Plain numbered dice share the narrative pool; the main roll() rolls both. */
   addPolyDie: (die: PolyDie) => void;
@@ -331,6 +333,16 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
       if (next === state.snapshot) return state;
       return { snapshot: next };
     }),
+  setAttackTarget: (participantId) => {
+    if (!get().snapshot) return;
+    // Keep the app's "Targeted" selection in step: the roller's target card
+    // (MiniStatCard) and the rest of the UI read the selection, and picking
+    // a target here is the same intent as clicking their row.
+    useParticipantStore.getState().selectParticipant(participantId);
+    set((state) =>
+      state.snapshot ? { snapshot: retargetAttack(state.snapshot, participantId) } : state,
+    );
+  },
   roll: () => {
     const snap = get().snapshot;
     if (!snap) return;

@@ -1,7 +1,14 @@
 import React from 'react';
 import {
+  Box,
+  Button,
   Heading,
   HStack,
+  Menu,
+  MenuButton,
+  MenuGroup,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -24,6 +31,8 @@ import { SkillChallengePlaceholder } from './SkillChallengePlaceholder';
 import { ModifiersPopover } from './ModifiersPopover';
 import { SegmentedToggle } from '@/components/ParticipantSheetView';
 import useDiceRollerStore from '@/state/diceRollerStore';
+import useParticipantStore, { isParticipantDead } from '@/state/participantsStore';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 
 interface DiceRollerModalProps {
   snapshot: ModalSnapshot | null;
@@ -38,21 +47,98 @@ const MODE_LABEL: Record<string, string> = {
   polyhedral:     'Dice',
 };
 
-/** `→ TargetName` chip — sits inline next to the attacker name on the left
- * side of the header, so the GM reads "Han Solo → TIE Advanced" as one
- * phrase. The toggle is rendered separately on the right by `TargetToggle`. */
+/** `→ TargetName` — sits inline next to the attacker name so the GM reads
+ * "Han Solo → TIE Advanced" as one phrase. In combat it's a menu: pick who
+ * the attack goes at without closing the roller (the default is the
+ * selected target, which is easy to get wrong mid-turn). Vehicle targets
+ * stay plain text — they're routed via the [Ship|Pilot] toggle. */
 const TargetText: React.FC<{ snapshot: ModalSnapshot }> = ({ snapshot }) => {
+  const participants = useParticipantStore((s) => s.participants);
+  const setAttackTarget = useDiceRollerStore((s) => s.setAttackTarget);
   const isVehicleTarget = !!snapshot.targetVehicleId;
   const targetName = isVehicleTarget
     ? snapshot.targetVehicleName
     : snapshot.target?.name;
-  if (!targetName) return null;
+
+  if (snapshot.mode !== 'combat' || isVehicleTarget) {
+    if (!targetName) return null;
+    return (
+      <HStack spacing={2} align="center">
+        <Text fontSize="sm" color="gray.500">→</Text>
+        <Text fontSize="sm" color="gray.50" fontWeight="semibold" noOfLines={1} maxW="220px">
+          {targetName}
+        </Text>
+      </HStack>
+    );
+  }
+
+  const attacker = participants.find((p) => p.id === snapshot.attackerParticipantId);
+  const candidates = participants.filter(
+    (p) => p.id !== snapshot.attackerParticipantId && !isParticipantDead(p),
+  );
+  // Opponents first: the other side of the table from the attacker.
+  const opponents = candidates.filter((p) => !attacker || p.isPC !== attacker.isPC);
+  const sameSide = candidates.filter((p) => attacker && p.isPC === attacker.isPC);
+  const item = (p: (typeof candidates)[number]) => (
+    <MenuItem
+      key={p.id}
+      bg="transparent"
+      _hover={{ bg: 'whiteAlpha.100' }}
+      fontSize="sm"
+      fontWeight={p.id === snapshot.targetParticipantId ? 'bold' : 'normal'}
+      onClick={() => setAttackTarget(p.id)}
+    >
+      {p.name}
+    </MenuItem>
+  );
+
   return (
     <HStack spacing={2} align="center">
       <Text fontSize="sm" color="gray.500">→</Text>
-      <Text fontSize="sm" color="gray.50" fontWeight="semibold" noOfLines={1} maxW="220px">
-        {targetName}
-      </Text>
+      {/* Box wrapper: as a direct HStack child the menu's popper div would
+          inherit the stack's spacing margin (Popper warns about it). */}
+      <Box>
+      <Menu placement="bottom-start" isLazy>
+        <MenuButton
+          as={Button}
+          size="xs"
+          variant="ghost"
+          rightIcon={<ChevronDownIcon />}
+          color={targetName ? 'gray.50' : 'orange.300'}
+          fontWeight="semibold"
+          fontSize="sm"
+          px={1.5}
+          maxW="240px"
+          _hover={{ bg: 'whiteAlpha.100' }}
+          _active={{ bg: 'whiteAlpha.200' }}
+        >
+          <Text as="span" noOfLines={1}>{targetName ?? 'Pick a target'}</Text>
+        </MenuButton>
+        <MenuList bg="gray.800" borderColor="gray.600" color="whiteAlpha.900" maxH="50vh" overflowY="auto" zIndex={1500}>
+          {opponents.length > 0 && (
+            <MenuGroup title="Opponents" fontSize="2xs" color="gray.400" textTransform="uppercase" letterSpacing="0.12em">
+              {opponents.map(item)}
+            </MenuGroup>
+          )}
+          {sameSide.length > 0 && (
+            <MenuGroup title="Same side" fontSize="2xs" color="gray.400" textTransform="uppercase" letterSpacing="0.12em">
+              {sameSide.map(item)}
+            </MenuGroup>
+          )}
+          {snapshot.targetParticipantId && (
+            <MenuItem
+              bg="transparent"
+              _hover={{ bg: 'whiteAlpha.100' }}
+              fontSize="sm"
+              color="gray.400"
+              onClick={() => setAttackTarget(null)}
+            >
+              No target
+            </MenuItem>
+          )}
+        </MenuList>
+      </Menu>
+      </Box>
     </HStack>
   );
 };
