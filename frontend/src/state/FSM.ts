@@ -144,32 +144,14 @@ export function createEncounterFSM(): FSM {
     const canDecreaseTurn = (context: EncounterContext): boolean =>
          !(context.currentTurnIndex === 0 && context.round === 1);
 
-    const getActiveParticipant = (context: EncounterContext): Participant | undefined => {
-        const participants = useParticipantStore.getState().participants;
-        const activeParticipantId = context.activeParticipantId;
-        return participants.find((participant) => participant.id === activeParticipantId);
-    };
-
-    const canAdvanceTurn = (context: EncounterContext): boolean => {
-        const activeParticipant = getActiveParticipant(context);
-
-        if (activeParticipant === undefined)
-        {
-            return false;
-        }
-
-        const currentInitiativeSlot = context.initiativeOrder[context.currentTurnIndex];
-
-        if (currentInitiativeSlot === undefined){
-            return false;
-        }
-
-        if (context.actedParticipants.includes(activeParticipant.id)) {
-            return false;
-        }
-
-        return isSlotValidForParticipant(currentInitiativeSlot, activeParticipant);
-    }
+    // Next is never a dead end. An empty slot (nobody picked) is passed —
+    // e.g. a PC slot with no PC able to act, or an NPC slot the GM wants to
+    // waive. A participant who already acted this round may take the slot
+    // again as a GM override (the playtest stalled on exactly that: an NPC
+    // that had acted got made active in a PC slot, and Next stayed disabled
+    // with no visible reason). The only hard requirement is a slot to leave.
+    const canAdvanceTurn = (context: EncounterContext): boolean =>
+        context.initiativeOrder[context.currentTurnIndex] !== undefined;
 
     const processTurnStart = (context: EncounterContext): void => {
         console.log('[FSM] Processing turn start...');
@@ -264,12 +246,6 @@ export function createEncounterFSM(): FSM {
             activeParticipantId: null
         };
     };
-
-    // Team is informational, not a hard gate — the GM can claim any unclaimed
-    // slot with any participant (e.g. let a PC take an NPC slot if the
-    // narrative warrants it). The slot itself only enforces "still has someone
-    // to act"; whether team and participant align is a soft hint in the UI.
-    const isSlotValidForParticipant = (_currentInitiativeSlot: InitiativeSlot, _activeParticipant: Participant): boolean => true;
 
     /**
      * After the turn advances, loop forward past any slot that's been
@@ -417,7 +393,16 @@ export function createEncounterFSM(): FSM {
                                     // Update state
                                     context.turnState = 'turn_active';
                                 } else {
-                                    console.log('[FSM] No active participant selected, cannot proceed');
+                                    // Nobody claimed the slot — pass it. No turn
+                                    // effects fire because nobody took a turn.
+                                    console.log('[FSM] Passing unclaimed slot', context.currentTurnIndex);
+                                    const passed = advanceTurnIndex(context);
+                                    context.currentTurnIndex = passed.currentTurnIndex;
+                                    if (passed.round !== context.round) {
+                                        context.round = passed.round;
+                                        context.actedParticipants = [];
+                                    }
+                                    skipUnfillableSlots(context);
                                 }
                             } 
                             else if (context.turnState === 'turn_active') {

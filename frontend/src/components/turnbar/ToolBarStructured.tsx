@@ -26,6 +26,9 @@ const ToolBarStructured = ({ }: Props) => {
     const round = useGameplayStore((state) => state.context.round);
     const state = useGameplayStore((state) => state.state);
     const clearEncounterState = useGameplayStore((state) => state.clearEncounterState);
+    // With nobody claiming the slot, Next passes it rather than ending a
+    // turn — say so on the button so the GM knows what Space will do.
+    const slotUnclaimed = useGameplayStore((state) => !state.context.activeParticipantId);
 
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -104,8 +107,14 @@ const ToolBarStructured = ({ }: Props) => {
                         </Box>
                     </Tooltip>
                     <InitiativeOrder/>
+                    <Tooltip
+                        label={slotUnclaimed ? "Nobody has claimed this slot — pass it" : "End this turn"}
+                        hasArrow
+                        openDelay={400}
+                    >
                     <Button
                         size="xs"
+                        minW="92px"
                         rightIcon={<ChevronRightIcon boxSize="3.5" />}
                         bg="#d39939"
                         color="#1a1d24"
@@ -117,7 +126,7 @@ const ToolBarStructured = ({ }: Props) => {
                         onClick={() => transition('NEXT_TURN')}
                         isDisabled={!canTransition('NEXT_TURN')}
                     >
-                        Next
+                        {slotUnclaimed ? "Skip" : "Next"}
                         {/* Always-visible key cap — Space is the one hotkey
                             used every single turn, so it shouldn't need the
                             hold-? overlay to be discovered. */}
@@ -133,6 +142,7 @@ const ToolBarStructured = ({ }: Props) => {
                             Space
                         </Kbd>
                     </Button>
+                    </Tooltip>
                     <TurnActionsHint/>
                 </HStack>
             )}
