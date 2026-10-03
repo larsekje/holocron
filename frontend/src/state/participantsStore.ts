@@ -23,6 +23,12 @@ export interface DicePouch {
     proficiency?: number;
     difficulty?: number;
     challenge?: number;
+    /** Pending upgrades for the owner's next roll: `upgrade` turns an
+     * Ability die into Proficiency, `upgradeDifficulty` turns a Difficulty
+     * die into Challenge. Banked like any other pouch token and applied
+     * from the dice roller's pouch strip. */
+    upgrade?: number;
+    upgradeDifficulty?: number;
 }
 
 import { CritInjury } from "@/data/critTable";

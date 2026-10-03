@@ -4,7 +4,7 @@ import type { ModalSnapshot } from '@components/dice/mockSnapshots';
 import type { ModifierEntry } from '@components/dice/modifiers';
 import useParticipantStore from '@/state/participantsStore';
 import useSessionLogStore from '@/state/sessionLogStore';
-import { flipAttackTarget as computeFlippedSnapshot } from '@/utils/diceSnapshots';
+import { flipAttackTarget as computeFlippedSnapshot, upgradePoolAbility, upgradePoolDifficulty } from '@/utils/diceSnapshots';
 import { rollPolyPool, POLY_DICE, type PolyDie, type PolyPool, type PolyRollResult } from '@/engine/polyDice';
 
 export type BonusSymbolKind = keyof SymbolTotals;
@@ -18,6 +18,10 @@ interface DiceRollerState {
   update: (patch: Partial<ModalSnapshot>) => void;
   addDie: (die: DieType, source?: string) => void;
   removeDie: (die: DieType) => void;
+  /** Upgrade one die in the pool: Ability → Proficiency, or Difficulty →
+   * Challenge. Same semantics as the snapshot builders' upgrades (adds the
+   * upgraded die outright when there's nothing left to upgrade). */
+  upgradeDie: (kind: 'ability' | 'difficulty', source?: string) => void;
   setDifficulty: (presetId: string, count: number, sourceLabel?: string) => void;
   toggleModifier: (mod: ModifierEntry) => void;
   addBonusSymbol: (kind: BonusSymbolKind, count?: number) => void;
@@ -111,6 +115,28 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
           ...state.snapshot,
           pool: next,
           poolSources: nextSources,
+          result: null,
+          polyResult: null,
+          spent: [],
+        },
+      };
+    }),
+  upgradeDie: (kind, source) =>
+    set((state) => {
+      if (!state.snapshot) return state;
+      const pool = { ...state.snapshot.pool };
+      const sources: Partial<Record<string, string[]>> = {};
+      for (const [k, arr] of Object.entries(state.snapshot.poolSources ?? {})) {
+        if (arr) sources[k] = [...arr];
+      }
+      const label = source ?? 'Upgrade';
+      if (kind === 'ability') upgradePoolAbility(pool, sources, 1, label);
+      else upgradePoolDifficulty(pool, sources, 1, label);
+      return {
+        snapshot: {
+          ...state.snapshot,
+          pool,
+          poolSources: sources as ModalSnapshot['poolSources'],
           result: null,
           polyResult: null,
           spent: [],

@@ -532,6 +532,89 @@ const PouchSymbolEntry: React.FC<{
   );
 };
 
+// Banked upgrade token: shows the upgraded die (Proficiency / Challenge)
+// with an ↑ badge. Click applies one upgrade to the current pool.
+const PouchUpgradeEntry: React.FC<{
+  kind: 'upgrade' | 'upgradeDifficulty';
+  count: number;
+  participantId: string;
+  sources?: string[];
+}> = ({ kind, count, participantId, sources }) => {
+  const upgradeDie = useDiceRollerStore((s) => s.upgradeDie);
+  const removeDice = useParticipantStore((s) => s.removeDice);
+  const ownerName = useParticipantStore(
+    (s) => s.participants.find((p) => p.id === participantId)?.name ?? 'pouch',
+  );
+  const isAbility = kind === 'upgrade';
+  const Svg = isAbility ? DIE_SVG.proficiency : DIE_SVG.challenge;
+  const what = isAbility ? 'Ability → Proficiency' : 'Difficulty → Challenge';
+  const sourceLines = summariseSources(sources);
+  const tipLabel = sourceLines
+    ? `${count} upgrade${count === 1 ? '' : 's'} (${what}) from:\n${sourceLines}\n\nClick to apply one`
+    : `${count} upgrade${count === 1 ? '' : 's'} (${what}) — click to apply one`;
+  return (
+    <Tooltip
+      label={<span style={{ whiteSpace: 'pre-line' }}>{tipLabel}</span>}
+      placement="top"
+      hasArrow
+      openDelay={300}
+    >
+      <Box
+        as="button"
+        aria-label={`Apply upgrade: ${what}`}
+        position="relative"
+        boxSize="40px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius="md"
+        _hover={{ bg: 'whiteAlpha.100', transform: 'translateY(-1px)' }}
+        transition="transform 80ms ease-out, background 120ms ease-out"
+        onClick={() => {
+          upgradeDie(isAbility ? 'ability' : 'difficulty', `Pouch upgrade (${ownerName})`);
+          removeDice(participantId, kind, 1);
+        }}
+      >
+        <Svg width={32} />
+        <Text
+          position="absolute"
+          bottom="-2px"
+          left="-2px"
+          fontSize="14px"
+          fontWeight="bold"
+          color={isAbility ? 'yellow.300' : 'red.300'}
+          lineHeight="1"
+          pointerEvents="none"
+          textShadow="0 0 3px black"
+        >
+          ↑
+        </Text>
+        <Box
+          position="absolute"
+          top="-4px"
+          right="-4px"
+          minW="16px"
+          h="16px"
+          px="4px"
+          bg="orange.500"
+          color="white"
+          fontSize="10px"
+          fontWeight="bold"
+          borderRadius="full"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          pointerEvents="none"
+        >
+          {count}
+        </Box>
+      </Box>
+    </Tooltip>
+  );
+};
+
+const POUCH_UPGRADE_KINDS = ['upgrade', 'upgradeDifficulty'] as const;
+
 const PouchStrip: React.FC<{ participantId: string }> = ({ participantId }) => {
   const participant = useParticipantStore((s) =>
     s.participants.find((p) => p.id === participantId),
@@ -547,7 +630,11 @@ const PouchStrip: React.FC<{ participantId: string }> = ({ participantId }) => {
     .map((k) => [k, pouch[k] ?? 0] as const)
     .filter(([, n]) => n > 0);
 
-  if (dieEntries.length === 0 && symbolEntries.length === 0) return null;
+  const upgradeEntries = POUCH_UPGRADE_KINDS
+    .map((k) => [k, pouch[k] ?? 0] as const)
+    .filter(([, n]) => n > 0);
+
+  if (dieEntries.length === 0 && symbolEntries.length === 0 && upgradeEntries.length === 0) return null;
 
   return (
     <VStack align="start" spacing={1}>
@@ -565,6 +652,15 @@ const PouchStrip: React.FC<{ participantId: string }> = ({ participantId }) => {
           <PouchDieEntry
             key={kind}
             kind={kind as keyof DicePouch & DieType}
+            count={n}
+            participantId={participantId}
+            sources={sourcesByKind?.[kind]}
+          />
+        ))}
+        {upgradeEntries.map(([kind, n]) => (
+          <PouchUpgradeEntry
+            key={kind}
+            kind={kind}
             count={n}
             participantId={participantId}
             sources={sourcesByKind?.[kind]}

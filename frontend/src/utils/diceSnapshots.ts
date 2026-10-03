@@ -207,7 +207,7 @@ function adversaryRanks(talents: string[] | undefined): number {
 // Convert N Difficulty → Challenge in place. Adds fresh Challenge dice if
 // there's nothing to upgrade. Sources are tagged with `label` so the dice
 // roller's breakdown explains where each die came from.
-function upgradePoolDifficulty(
+export function upgradePoolDifficulty(
   pool: DicePool,
   sources: Partial<Record<string, string[]>>,
   count: number,
@@ -238,7 +238,7 @@ function upgradePoolDifficulty(
 // Convert N Ability dice → Proficiency in place. Standard SWRPG
 // "upgrade ability" semantics; when no Ability remains, the upgrade adds a
 // fresh Proficiency. Used for Gain the Advantage's outgoing buff.
-function upgradePoolAbility(
+export function upgradePoolAbility(
   pool: DicePool,
   sources: Partial<Record<string, string[]>>,
   count: number,

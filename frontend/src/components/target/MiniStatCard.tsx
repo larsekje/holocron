@@ -84,6 +84,8 @@ const POUCH_KINDS: { key: keyof DicePouchType; label: string; color: string }[] 
   { key: 'triumph', label: 'TR', color: 'yellow.500' },
   { key: 'despair', label: 'DE', color: 'red.500' },
   { key: 'force', label: 'FO', color: 'whiteAlpha.800' },
+  { key: 'upgrade', label: '↑A', color: 'yellow.300' },
+  { key: 'upgradeDifficulty', label: '↑D', color: 'red.300' },
 ];
 
 // Tier badge sizing

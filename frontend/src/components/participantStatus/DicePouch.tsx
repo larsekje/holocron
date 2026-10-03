@@ -40,7 +40,13 @@ const DicePouch: React.FC<DicePouchProps> = ({ participant }) => {
     failure: 'red',
     triumph: 'yellow',
     despair: 'red',
-    force: 'white'
+    force: 'white',
+    ability: 'green',
+    proficiency: 'yellow',
+    difficulty: 'purple',
+    challenge: 'red',
+    upgrade: 'yellow',
+    upgradeDifficulty: 'red',
   };
   
   // Display names for dice
@@ -53,7 +59,13 @@ const DicePouch: React.FC<DicePouchProps> = ({ participant }) => {
     failure: 'Failure',
     triumph: 'Triumph',
     despair: 'Despair',
-    force: 'Force'
+    force: 'Force',
+    ability: 'Ability',
+    proficiency: 'Proficiency',
+    difficulty: 'Difficulty',
+    challenge: 'Challenge',
+    upgrade: 'Upgrade (Ability → Proficiency)',
+    upgradeDifficulty: 'Upgrade (Difficulty → Challenge)',
   };
   
   // Get dice entries with non-zero values

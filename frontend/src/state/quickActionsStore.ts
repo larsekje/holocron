@@ -67,6 +67,10 @@ const POUCH_BRACKET_CODE: Partial<Record<keyof DicePouch, string>> = {
 // surface here). Exported so other surfaces (MiniStatCard) can compose
 // matching summaries when they emit pouch logs directly.
 export function pouchIconString(kind: keyof DicePouch, count: number): string {
+  if (kind === 'upgrade') return count === 1 ? 'an upgrade' : `${count} upgrades`;
+  if (kind === 'upgradeDifficulty') {
+    return count === 1 ? 'a difficulty upgrade' : `${count} difficulty upgrades`;
+  }
   const code = POUCH_BRACKET_CODE[kind];
   if (!code) return `${count} ${kind}`;
   return `[${code}]`.repeat(count);
@@ -101,6 +105,13 @@ const POUCH_KIND_ALIASES: Record<string, keyof DicePouch> = {
   despair: 'despair',
   fo: 'force',
   force: 'force',
+  // Upgrades: "u"/"uu" = Ability → Proficiency, "ud" = Difficulty →
+  // Challenge (e.g. "2ud").
+  u: 'upgrade',
+  up: 'upgrade',
+  upgrade: 'upgrade',
+  ud: 'upgradeDifficulty',
+  upd: 'upgradeDifficulty',
 };
 
 function parsePouchInput(input: string): { kind: keyof DicePouch; count: number } | null {
