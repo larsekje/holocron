@@ -104,7 +104,7 @@ function App() {
               </Box>
             </Tooltip>
             <Tooltip
-              label={<HStack spacing={2}><Box>Symbol spends</Box><Kbd bg="gray.700" color="gray.200" borderColor="gray.500">R</Kbd></HStack>}
+              label={<HStack spacing={2}><Box>Rules reference</Box><Kbd bg="gray.700" color="gray.200" borderColor="gray.500">R</Kbd></HStack>}
               placement="bottom"
               hasArrow
               openDelay={300}
@@ -113,7 +113,7 @@ function App() {
                 <IconButton
                   size="sm"
                   variant="ghost"
-                  aria-label="Symbol spends"
+                  aria-label="Rules reference"
                   // Reuse the dice-font triumph glyph for instant recognition.
                   // The CSS class lives in src/assets/sass/dice.sass.
                   icon={<Box className="icon triumph" fontSize="20px" color="whiteAlpha.800" />}

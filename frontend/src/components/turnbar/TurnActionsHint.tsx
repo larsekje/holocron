@@ -1,11 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Box, Text, Tooltip, VStack} from "@chakra-ui/react";
 import useGameplayStore from "@/state/newGameplayStore";
+import {useSymbolSpendsStore} from "@/state/symbolSpendsStore";
 
 const ROWS: Array<{key: string; label: string; tooltip: string}> = [
   {key: "incidental", label: "Incidental", tooltip: "Free action — talking, dropping an item, glancing. No limit."},
-  {key: "maneuver1", label: "Maneuver", tooltip: "First maneuver this turn — free."},
-  {key: "maneuver2", label: "Maneuver", tooltip: "Second maneuver costs 2 strain (or via talents/Advantages). Hard cap 2/turn."},
+  {key: "maneuver1", label: "Maneuver", tooltip: "First maneuver this turn — free. Right-click: what maneuvers can do."},
+  {key: "maneuver2", label: "Maneuver", tooltip: "Second maneuver costs 2 strain (or via talents/Advantages). Hard cap 2/turn. Right-click: maneuvers & range bands."},
   {key: "action", label: "Action", tooltip: "One action per turn. Usually a skill check."},
 ];
 
@@ -55,6 +56,11 @@ const TurnActionsHint = () => {
                   cursor="pointer"
                   userSelect="none"
                   onClick={() => setDone((d) => ({...d, [row.key]: !d[row.key]}))}
+                  onContextMenu={(e: React.MouseEvent) => {
+                    if (!row.key.startsWith("maneuver")) return;
+                    e.preventDefault();
+                    useSymbolSpendsStore.getState().open("maneuvers");
+                  }}
                   fontSize="10px"
                   letterSpacing="0.06em"
                   color={isDone ? "whiteAlpha.500" : "whiteAlpha.600"}

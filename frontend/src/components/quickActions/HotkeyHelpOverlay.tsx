@@ -55,7 +55,7 @@ const SECTIONS: { title: string; rows: HotkeyRow[] }[] = [
   {
     title: 'Reference',
     rows: [
-      { keys: <K>R</K>, label: 'Symbol Spends — Advantage / Threat / Triumph / Despair tables' },
+      { keys: <K>R</K>, label: 'Rules reference — symbol spends, skills, maneuvers & range' },
       { keys: <K>J</K>, label: 'Juice — roll a scene of narrative juice' },
       { keys: <K>G</K>, label: 'Galaxy map — interactive map of the galaxy' },
     ],
