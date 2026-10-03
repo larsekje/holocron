@@ -4,7 +4,7 @@ import type { ModalSnapshot } from '@components/dice/mockSnapshots';
 import type { ModifierEntry } from '@components/dice/modifiers';
 import useParticipantStore from '@/state/participantsStore';
 import useSessionLogStore from '@/state/sessionLogStore';
-import { flipAttackTarget as computeFlippedSnapshot, retargetAttack, upgradePoolAbility, upgradePoolDifficulty } from '@/utils/diceSnapshots';
+import { flipAttackTarget as computeFlippedSnapshot, retargetAttack, setOpposition as computeOpposition, upgradePoolAbility, upgradePoolDifficulty } from '@/utils/diceSnapshots';
 import { rollPolyPool, POLY_DICE, type PolyDie, type PolyPool, type PolyRollResult } from '@/engine/polyDice';
 
 export type BonusSymbolKind = keyof SymbolTotals;
@@ -36,6 +36,8 @@ interface DiceRollerState {
   flipAttackTarget: (newKind: 'vehicle' | 'character') => void;
   /** Re-point the attack at another participant (null = no target). */
   setAttackTarget: (participantId: string | null) => void;
+  /** Make a skill check opposed by a participant's skill (null = plain check). */
+  setOpposition: (defenderId: string | null, defenderSkill: string) => void;
   roll: () => void;
   /** Plain numbered dice share the narrative pool; the main roll() rolls both. */
   addPolyDie: (die: PolyDie) => void;
@@ -343,6 +345,12 @@ const useDiceRollerStore = create<DiceRollerState>((set, get) => ({
       state.snapshot ? { snapshot: retargetAttack(state.snapshot, participantId) } : state,
     );
   },
+  setOpposition: (defenderId, defenderSkill) =>
+    set((state) =>
+      state.snapshot
+        ? { snapshot: computeOpposition(state.snapshot, defenderId, defenderSkill) }
+        : state,
+    ),
   roll: () => {
     const snap = get().snapshot;
     if (!snap) return;

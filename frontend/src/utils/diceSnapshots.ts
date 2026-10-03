@@ -1,10 +1,11 @@
 import {nanoid} from 'nanoid';
 import type {Participant} from '@/state/participantsStore';
-import useParticipantStore from '@/state/participantsStore';
+import useParticipantStore, {isParticipantDead} from '@/state/participantsStore';
 import useActiveVehicleStore, {type ActiveVehicle} from '@/state/activeVehicleStore';
 import {useEffectStore} from '@/state/effectStore';
 import {speedBandFor} from '@/data/vehicleActions';
-import type {ModalSnapshot, SnapshotAttacker, SnapshotTarget, SnapshotWeapon} from '@components/dice/mockSnapshots';
+import type {ModalSnapshot, SnapshotAttacker, SnapshotDefender, SnapshotTarget, SnapshotWeapon} from '@components/dice/mockSnapshots';
+import {SKILLS} from '@/data/rulesReference';
 import type {DicePool, DieType, SymbolTotals} from '@/engine/diceEngine';
 
 /** Labels written by `applyVehicleTargetModifiers` that *upgrade* difficulty
@@ -798,4 +799,125 @@ export function retargetAttack(
     result: null,
     spent: [],
   };
+}
+
+// Stat blocks spell skills inconsistently ("Ranged: Heavy", "Ranged -
+// Heavy", "Knowledge: Education", "Negotiation (Intellect)"). Compare on a
+// normalised key with any characteristic override and "Knowledge:" stripped.
+function skillKey(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/\(.*?\)/g, '')
+    .replace(/^knowledge\s*[:-]\s*/, '')
+    .replace(/[^a-z]/g, '');
+}
+
+/** A participant's rank and characteristic in a skill, honouring a
+ * "(Characteristic)" override in their stat block and the minion-group rule
+ * (listed skill → rank = alive members − 1). */
+export function participantSkill(
+  p: Participant,
+  skillName: string,
+): {rank: number; characteristic: string; charValue: number} {
+  const stats = (p.stats ?? {}) as Record<string, any>;
+  const ref = SKILLS.find((sk) => skillKey(sk.name) === skillKey(skillName));
+  let characteristic = (ref?.characteristic ?? 'Brawn').toLowerCase();
+  let rank = 0;
+  let listed = false;
+  for (const [k, v] of Object.entries((stats.skills ?? {}) as Record<string, number>)) {
+    if (skillKey(k) !== skillKey(skillName)) continue;
+    listed = true;
+    rank = v ?? 0;
+    const override = k.match(/\(([^)]+)\)/);
+    if (override) characteristic = override[1].toLowerCase();
+    break;
+  }
+  if (stats.minions !== undefined) {
+    const wt = Math.max(stats.woundThreshold ?? 1, 1);
+    const alive = Math.max(stats.minions - Math.floor((stats.wounds ?? 0) / wt), 0);
+    rank = listed ? Math.max(0, alive - 1) : 0;
+  }
+  return {rank, characteristic, charValue: stats[characteristic] ?? 0};
+}
+
+/** Turn a skill check into an opposed check against `defenderId` using
+ * their `defenderSkill` (or back into a plain Average check when null).
+ * Opposed difficulty per the core rules: the higher of the opponent's
+ * characteristic and skill rank sets the number of Difficulty dice, and the
+ * lower of the two upgrades that many to Challenge. Replaces the existing
+ * Difficulty/Challenge dice; everything else in the pool stays. */
+export function setOpposition(
+  snapshot: ModalSnapshot,
+  defenderId: string | null,
+  defenderSkill: string,
+): ModalSnapshot {
+  const pool: DicePool = {...snapshot.pool};
+  const sources: Partial<Record<string, string[]>> = {};
+  for (const k of Object.keys(snapshot.poolSources ?? {}) as DieType[]) {
+    const arr = (snapshot.poolSources ?? {})[k];
+    if (arr) sources[k] = [...arr];
+  }
+  delete pool.difficulty;
+  delete pool.challenge;
+  delete sources.difficulty;
+  delete sources.challenge;
+
+  const defender = defenderId
+    ? useParticipantStore.getState().participants.find((p) => p.id === defenderId)
+    : undefined;
+
+  if (!defender) {
+    pool.difficulty = 2;
+    sources.difficulty = ['Difficulty', 'Difficulty'];
+    return {
+      ...snapshot,
+      mode: 'basic',
+      defender: undefined,
+      difficultyLabel: 'Average',
+      appliedPresets: ['difficulty-average'],
+      pool,
+      poolSources: sources as ModalSnapshot['poolSources'],
+      result: null,
+      spent: [],
+    };
+  }
+
+  const {rank, characteristic, charValue} = participantSkill(defender, defenderSkill);
+  const high = Math.max(rank, charValue);
+  const low = Math.min(rank, charValue);
+  const label = `${defender.name} (${defenderSkill})`;
+  if (high - low > 0) {
+    pool.difficulty = high - low;
+    sources.difficulty = Array(high - low).fill(label);
+  }
+  if (low > 0) {
+    pool.challenge = low;
+    sources.challenge = Array(low).fill(label);
+  }
+  const defenderInfo: SnapshotDefender = {
+    name: defender.name,
+    characteristic,
+    characteristicValue: charValue,
+    skill: defenderSkill,
+    skillRank: rank,
+  };
+  return {
+    ...snapshot,
+    mode: 'opposed',
+    defender: defenderInfo,
+    defenderParticipantId: defender.id,
+    difficultyLabel: undefined,
+    appliedPresets: [],
+    pool,
+    poolSources: sources as ModalSnapshot['poolSources'],
+    result: null,
+    spent: [],
+  };
+}
+
+/** Living participants other than `excludeId`, for opposition pickers. */
+export function opposableParticipants(excludeId: string | undefined): Participant[] {
+  return useParticipantStore
+    .getState()
+    .participants.filter((p) => p.id !== excludeId && !isParticipantDead(p));
 }

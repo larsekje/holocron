@@ -27,6 +27,7 @@ import { SpendPanel } from './SpendPanel';
 import { CombatPanel } from './CombatPanel';
 import { CombatDamagePanel } from './CombatDamagePanel';
 import { OpposedPanel } from './OpposedPanel';
+import { OppositionRow } from './OppositionRow';
 import { SkillChallengePlaceholder } from './SkillChallengePlaceholder';
 import { ModifiersPopover } from './ModifiersPopover';
 import { SegmentedToggle } from '@/components/ParticipantSheetView';
@@ -200,6 +201,9 @@ export const DiceRollerModal: React.FC<DiceRollerModalProps> = ({ snapshot, onCl
               ) : (
                 <>
                   {mode === 'combat' && <CombatPanel snapshot={snapshot} />}
+                  {(mode === 'basic' || mode === 'opposed') && snapshot.skill && (
+                    <OppositionRow snapshot={snapshot} />
+                  )}
                   {mode === 'opposed' && <OpposedPanel snapshot={snapshot} />}
 
                   <ModifiersPopover mode={mode} appliedModifierIds={snapshot.appliedModifiers} />

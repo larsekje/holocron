@@ -79,6 +79,8 @@ export interface ModalSnapshot {
   targetCandidateParticipantId?: string;
   targetCandidateVehicleId?: string;
   defender?: SnapshotDefender;
+  /** Participant behind `defender` in an opposed check. */
+  defenderParticipantId?: string;
   weapon?: SnapshotWeapon;
   skill?: string;
   characteristic?: string;
