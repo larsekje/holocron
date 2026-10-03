@@ -1,6 +1,6 @@
 import {nanoid} from 'nanoid';
 import type {Participant} from '@/state/participantsStore';
-import useParticipantStore, {isParticipantDead} from '@/state/participantsStore';
+import useParticipantStore from '@/state/participantsStore';
 import useActiveVehicleStore, {type ActiveVehicle} from '@/state/activeVehicleStore';
 import {useEffectStore} from '@/state/effectStore';
 import {speedBandFor} from '@/data/vehicleActions';
@@ -801,15 +801,18 @@ export function retargetAttack(
   };
 }
 
-// Stat blocks spell skills inconsistently ("Ranged: Heavy", "Ranged -
-// Heavy", "Knowledge: Education", "Negotiation (Intellect)"). Compare on a
-// normalised key with any characteristic override and "Knowledge:" stripped.
+// Stat blocks spell skills inconsistently ("Ranged: Heavy", "Ranged (Light)",
+// "Knowl\u00ADedge: Education", "Negotiation (Intellect)"). Compare on a
+// normalised key: a parenthesised *characteristic* is an override and is
+// dropped, any other parenthesised word ("(Light)") is part of the name.
+const CHARACTERISTIC_OVERRIDE = /\((brawn|agility|intellect|cunning|willpower|presence)\)/i;
+
 function skillKey(name: string): string {
   return name
     .toLowerCase()
-    .replace(/\(.*?\)/g, '')
-    .replace(/^knowledge\s*[:-]\s*/, '')
-    .replace(/[^a-z]/g, '');
+    .replace(new RegExp(CHARACTERISTIC_OVERRIDE.source, 'gi'), '')
+    .replace(/[^a-z]/g, '')
+    .replace(/^knowledge/, '');
 }
 
 /** A participant's rank and characteristic in a skill, honouring a
@@ -828,7 +831,7 @@ export function participantSkill(
     if (skillKey(k) !== skillKey(skillName)) continue;
     listed = true;
     rank = v ?? 0;
-    const override = k.match(/\(([^)]+)\)/);
+    const override = k.match(CHARACTERISTIC_OVERRIDE);
     if (override) characteristic = override[1].toLowerCase();
     break;
   }
@@ -857,10 +860,23 @@ export function setOpposition(
     const arr = (snapshot.poolSources ?? {})[k];
     if (arr) sources[k] = [...arr];
   }
+  // Only the base difficulty is replaced. Dice from anything else — a
+  // banked pouch upgrade, a manual add — survive and are re-applied on top
+  // of the new base (upgrades as upgrades, extra dice as extra dice).
+  const isBase = (l: string) => l === 'Difficulty' || l.startsWith('Opposed: ');
+  const keptDifficulty = (sources.difficulty ?? []).filter((l) => !isBase(l));
+  const keptUpgrades = (sources.challenge ?? []).filter((l) => !isBase(l));
   delete pool.difficulty;
   delete pool.challenge;
   delete sources.difficulty;
   delete sources.challenge;
+  const reapplyKept = () => {
+    if (keptDifficulty.length > 0) {
+      pool.difficulty = (pool.difficulty ?? 0) + keptDifficulty.length;
+      sources.difficulty = [...(sources.difficulty ?? []), ...keptDifficulty];
+    }
+    for (const label of keptUpgrades) upgradePoolDifficulty(pool, sources, 1, label);
+  };
 
   const defender = defenderId
     ? useParticipantStore.getState().participants.find((p) => p.id === defenderId)
@@ -869,10 +885,12 @@ export function setOpposition(
   if (!defender) {
     pool.difficulty = 2;
     sources.difficulty = ['Difficulty', 'Difficulty'];
+    reapplyKept();
     return {
       ...snapshot,
       mode: 'basic',
       defender: undefined,
+      defenderParticipantId: undefined,
       difficultyLabel: 'Average',
       appliedPresets: ['difficulty-average'],
       pool,
@@ -885,7 +903,7 @@ export function setOpposition(
   const {rank, characteristic, charValue} = participantSkill(defender, defenderSkill);
   const high = Math.max(rank, charValue);
   const low = Math.min(rank, charValue);
-  const label = `${defender.name} (${defenderSkill})`;
+  const label = `Opposed: ${defender.name} (${defenderSkill})`;
   if (high - low > 0) {
     pool.difficulty = high - low;
     sources.difficulty = Array(high - low).fill(label);
@@ -894,6 +912,7 @@ export function setOpposition(
     pool.challenge = low;
     sources.challenge = Array(low).fill(label);
   }
+  reapplyKept();
   const defenderInfo: SnapshotDefender = {
     name: defender.name,
     characteristic,
@@ -913,11 +932,4 @@ export function setOpposition(
     result: null,
     spent: [],
   };
-}
-
-/** Living participants other than `excludeId`, for opposition pickers. */
-export function opposableParticipants(excludeId: string | undefined): Participant[] {
-  return useParticipantStore
-    .getState()
-    .participants.filter((p) => p.id !== excludeId && !isParticipantDead(p));
 }
