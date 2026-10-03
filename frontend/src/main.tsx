@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {ChakraProvider, extendTheme} from '@chakra-ui/react'
-import App from './App'
 import './index.css'
 
 const theme = extendTheme({
@@ -49,11 +48,41 @@ if (pcRoom) {
     )
   })
 } else {
-  root.render(
-    <React.StrictMode>
-      <ChakraProvider theme={theme}>
-        <App/>
-      </ChakraProvider>
-    </React.StrictMode>,
+  void loadDevFixture().then(() => import('./App')).then(({default: App}) => {
+    root.render(
+      <React.StrictMode>
+        <ChakraProvider theme={theme}>
+          <App/>
+        </ChakraProvider>
+      </React.StrictMode>,
+    )
+  })
+}
+
+// Dev only: ?fixture=<name> replaces this origin's saved state with
+// scripts/ui/fixtures/<name>.json (e.g. the 2026-07-30 playtest, mid-
+// encounter) so manual testing always starts from the same scene. Runs
+// before the GM app is imported because the stores hydrate on import.
+// Asks first — it wipes whatever is saved for this host:port.
+async function loadDevFixture(): Promise<void> {
+  if (!import.meta.env.DEV) return
+  const url = new URL(window.location.href)
+  const name = url.searchParams.get('fixture')
+  if (!name) return
+  url.searchParams.delete('fixture')
+  window.history.replaceState(null, '', url.toString())
+  if (!/^[\w-]+$/.test(name)) return
+  const res = await fetch(`/scripts/ui/fixtures/${name}.json`)
+  if (!res.ok) {
+    window.alert(`No fixture "${name}" in scripts/ui/fixtures/.`)
+    return
+  }
+  const seed = (await res.json()) as Record<string, string>
+  const ok = window.confirm(
+    `Load the "${name}" test state?\n\nThis replaces everything saved for ${window.location.host} ` +
+      `(participants, encounter, prep, log).`,
   )
+  if (!ok) return
+  localStorage.clear()
+  for (const [k, v] of Object.entries(seed)) localStorage.setItem(k, v)
 }
