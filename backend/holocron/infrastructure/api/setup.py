@@ -6,12 +6,13 @@ from fastapi.responses import RedirectResponse
 from fastapi.routing import APIRoute
 
 from holocron.container import ApplicationContainer
-from holocron.infrastructure.api import data_controller
+from holocron.infrastructure.api import data_controller, set_piece_controller
 
 
 def setup(app: FastAPI, container: ApplicationContainer) -> None:
     # Add other controllers here
     app.include_router(data_controller.router)
+    app.include_router(set_piece_controller.router)
 
     # Change operationId to something more readable (https://fastapi.tiangolo.com/advanced/path-operation-advanced-configuration/)
     use_route_names_as_operation_ids(app)
@@ -19,7 +20,8 @@ def setup(app: FastAPI, container: ApplicationContainer) -> None:
     # Inject dependencies
     container.wire(
         modules=[
-            data_controller
+            data_controller,
+            set_piece_controller,
         ]
     )
 

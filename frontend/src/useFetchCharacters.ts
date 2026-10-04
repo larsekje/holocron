@@ -12,7 +12,7 @@ export const useFetchCharacters = () => {
       };
 
       fetchAndSetCharacters();
-    });
+    }, []);
 
   return characters;
 };

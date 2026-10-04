@@ -1,0 +1,82 @@
+[
+  {
+    "id": "cantina-brawl",
+    "name": "Cantina Brawl",
+    "tier": "easy",
+    "scene": "A smoke-thick dive on the edge of Mos Pelgo. A Twi'lek band plays through the chaos. Sand blows in every time the door cracks open.",
+    "battlefield": "Short range across the common room. Bar (long, durable cover) along the north wall; round tables (light cover, kickable) scattered through the middle; a stage on the east; back door behind the bar (:average: Athletics to vault). Hanging lamps swing on chains overhead.",
+    "tactics": "**R1:** Two toughs charge into melee. A drunk pulls a hold-out blaster from the bar and fires wild.\n**R2:** A third tough grabs a chair and throws it (ranged). Bartender ducks below the counter.\n**R3:** Whoever's losing yells for the rest of the bar to join in — add 2 unnamed brawlers next round if the PCs haven't bought drinks.\n**R4+:** Survivors flee out the back when down to one.",
+    "suggested_adversaries": "3 Weequay Gunsels using fists and chairs, 1 Gang leader egging them on. For higher-tier groups swap in a Lasan Honour Guard as the headliner.",
+    "quick_add": [
+      { "ref": "Weequay Gunsel", "count": 3 },
+      { "ref": "Gang leader", "count": 1 }
+    ],
+    "skill_uses": "**Charm:** Talk the bartender into hiding you behind the counter — full cover and a free drink.\n**Coordination:** Swing the chain-lamp into an enemy. Setback to their next attack.\n**Skulduggery:** Pocket the credits on the table mid-fight.",
+    "dice_menu": "**:triumph:** A patron joins your side — generate an unnamed ally for the scene.\n**:advantage::advantage:** Knock an enemy through a table — they fall prone.\n**:threat:** The barkeep pulls a slugthrower; everyone takes :setback: next round.\n**:despair:** Local enforcers arrive. Combat is over — now you have a problem.",
+    "gm_notes": "Tone-setter, not a real threat. If a PC goes down, narrate 'knocked silly' rather than wounded — they wake up in the gutter with their boots missing."
+  },
+  {
+    "id": "outpost-ambush",
+    "name": "Outpost Ambush",
+    "tier": "medium",
+    "scene": "A two-storey watchtower over a moisture-farm clearing at dusk. The vaporators hiss; a comm dish on the tower whines in the wind.",
+    "battlefield": "Long range across the clearing. Watchtower is high ground (ranged defense +1), :average: Athletics to climb the ladder. Crates around the base (light cover). Coolant spill on the east side — Athletics check or fall prone when entering. The comm dish is destructible (HP 10, :setback: to all Imperial backup rolls when destroyed).",
+    "tactics": "**R1:** Troopers open up from the tower. The commander calls for backup on the comm (narrate the radio).\n**R2:** One trooper rappels down to flank. The rest lay suppressing fire — :setback: to PC ranged attacks.\n**R3:** Commander lobs a smoke grenade and repositions. Takes a desperate shot from a new angle.\n**R4+:** Commander retreats at <50% wounds. Last surviving trooper surrenders if isolated.",
+    "suggested_adversaries": "4 Imperial Armour Corps Crew on the tower, 1 Imperial Armour Corps Commander on the ground. For higher-tier groups bring in a Stormtrooper: Range Trooper to replace one of the crew.",
+    "quick_add": [
+      { "ref": "Imperial Armour Corps Crew", "count": 4 },
+      { "ref": "Imperial Armour Corps Commander", "count": 1 }
+    ],
+    "skill_uses": "**Mechanics:** Hotwire a speeder husk in the clearing for mobile cover.\n**Skulduggery:** Kill the floodlights — :boost: on ranged attacks for the rest of the scene.\n**Athletics:** Vault to the tower platform in 1 fewer maneuver than normal.",
+    "dice_menu": "**:triumph:** Sever the power conduit — the tower's spotlight dies and one trooper falls prone.\n**:advantage::advantage:** Spot the radio antenna; called shot to disable it as a free maneuver.\n**:threat:** :setback: to all ranged checks for 1 round (dust kicks up).\n**:despair:** Backup transmission goes through — add 1 trooper at the start of next round.",
+    "gm_notes": "Surprise round on Stealth vs. Vigilance if the PCs approach quietly. If the comm dish gets destroyed early, the fight ends sooner — don't force the full tactics ladder."
+  },
+  {
+    "id": "speeder-chase-shootout",
+    "name": "Speeder Chase Shootout",
+    "tier": "medium",
+    "scene": "A four-vehicle chase down the spice-canyon highway at midday. Two suns, no shade, walls of red rock blurring past.",
+    "battlefield": "Range bands shift every round — the GM narrates whether the pursuers close, open, or hold. Canyon walls (rocky, :hard: Piloting to ride close for cover). Skull-shaped overpass arrives at R3 (low clearance — :average: Piloting or smack the canopy). Loose scrap on the road (:threat: here triggers a Piloting check). Treat the chase as one big abstract fight: ranges are the relationship between vehicles, not feet.",
+    "tactics": "**R1:** Two swoops flank wide — one each side of the lead PC vehicle. They want to herd, not kill yet.\n**R2:** A speeder truck pulls alongside; gunner opens up. Left swoop tries to ram (Piloting opposed).\n**R3:** Truck swings into the overpass shadow — PCs lose line of sight for the round. Swoops try to plant a magnetic charge (:average: Skulduggery to plant; explodes R+2).\n**R4+:** If the truck is disabled, the swoops break off. If the PCs are losing, the truck tries to force them into the canyon wall.",
+    "suggested_adversaries": "2 Swoop Aces on bikes, 1 speeder truck driven by a Weequay Gunsel with another Weequay Gunsel on the gun. Higher-tier: add a third swoop or upgrade the gunner.",
+    "quick_add": [
+      { "ref": "Swoop Ace", "count": 2 },
+      { "ref": "Weequay Gunsel", "count": 2 }
+    ],
+    "skill_uses": "**Piloting (Planetary):** Cut through a side ravine — close one range band as a free maneuver.\n**Gunnery:** Shoot the canyon wall above an enemy — rockfall, :setback: to their next Piloting.\n**Streetwise:** You know this road — narrate an upcoming hazard before it arrives, gain :boost:.",
+    "dice_menu": "**:triumph:** Disable an enemy vehicle's steering — it crashes into the wall next round.\n**:advantage::advantage:** Force an enemy to a longer range band.\n**:threat:** Engine sputters — :setback: to next Piloting check.\n**:despair:** Lose control momentarily; vehicle takes 1 hull trauma from a glancing wall hit.",
+    "gm_notes": "Don't track HP on the swoops — one solid hit puts a rider down. The truck is the real fight. If the group isn't enjoying chase mechanics, end it with the overpass and start a footchase in the canyon."
+  },
+  {
+    "id": "junkyard-standoff",
+    "name": "Junkyard Standoff",
+    "tier": "hard",
+    "scene": "A bounty hunter has cornered the party in a Hutt-owned scrapyard at night. Rusted hulks of starships stacked four storeys high. A magnetic crane creaks overhead. Pools of grease shimmer between the piles.",
+    "battlefield": "Medium range maze of scrap. Stacks of hulls (heavy cover, climbable with :hard: Athletics). Magnetic crane on a rail (operable from a control booth — :average: Computers). Grease pools (Athletics check or fall prone when sprinting). One stack is unstable (:daunting: Perception to spot; collapses on :triumph: hit). The hunter has a jetpack — treat as one extra range band of vertical movement per maneuver.",
+    "tactics": "**R1:** Hunter opens with a tracking shot from a high perch (long range, aim maneuvers already taken). Two slicer-droids skitter out from the scrap.\n**R2:** Hunter uses jetpack to reposition to a new perch. Drops a thermal det to herd the PCs (narrate the warning beep).\n**R3:** Hunter goes for a capture: net-launcher (:hard: Athletics or Coordination to escape) on the most dangerous PC.\n**R4+:** Below half wounds, retreats with whatever bounty they've grabbed. Calls in reinforcements only if the PCs trash the crane or the booth.",
+    "suggested_adversaries": "1 Gang leader statted as a Nemesis bounty hunter, 2 Mouse Droids reskinned as slicer-droids. Higher-tier: add a Weequay Gunsel wingman the hunter calls in on R3.",
+    "quick_add": [
+      { "ref": "Gang leader", "count": 1 },
+      { "ref": "Mouse Droid", "count": 2 }
+    ],
+    "skill_uses": "**Computers:** Hijack the crane — drop a hull on the hunter's perch (opposed Piloting vs. you).\n**Perception:** Spot the unstable stack before someone climbs it.\n**Mechanics:** Rig a busted speeder reactor to overload (1 maneuver to set, detonates next round on a free roll).",
+    "dice_menu": "**:triumph:** Knock the hunter off their perch — they take 5 strain and lose their next maneuver.\n**:advantage::advantage:** Spot the hunter's helmet feed and feed it false data — :setback: to their next attack.\n**:threat:** Step in grease — :setback: to your next check.\n**:despair:** Hunter's tracker pings your ship's location. Even if you win, they know where you parked.",
+    "gm_notes": "Should feel like a horror movie until the PCs find an angle. Let them be hunted for a round before they fight back. The hunter is the star — name them, give them a voice, let them taunt."
+  },
+  {
+    "id": "boarding-action-corridor-defense",
+    "name": "Boarding Action: Corridor Defense",
+    "tier": "hard",
+    "scene": "The PCs' ship is dead in the water and Imperials are cutting through the airlock. Red emergency lights. Alarm klaxon. The smell of cut durasteel.",
+    "battlefield": "Tight corridor, short range only. Pressure door at the far end (the breach point — opens R1). Junction halfway through with branching corridors (provides a flanking opportunity for whoever holds it). Maintenance hatch in the floor (:average: Mechanics to open; leads to engineering). Loose cabling overhead (shoot it to short the corridor lights — full darkness, both sides take :setback:).",
+    "tactics": "**R1:** Pressure door blows. Smoke fills the breach — :setback: to ranged attacks into the smoke. Two troopers move in and take knees.\n**R2:** Smoke clears. A Range Trooper steps through and opens up with suppressing fire (:setback: to any PC who moved last round).\n**R3:** A trooper lobs a stun grenade into the corridor (:hard: Resilience or 4 strain and disoriented).\n**R4+:** If the PCs hold the junction, Imperials try the maintenance hatch from engineering — flanking attempt next round. If the PCs are pushed back, Imperials secure the breach and start sweeping room-by-room.",
+    "suggested_adversaries": "4 Imperial Armour Corps Crew pushing in, 1 Stormtrooper: Range Trooper as the heavy. Higher-tier: upgrade the Range Trooper to a Nemesis and have an Imperial Armour Corps Commander bark orders from the breach.",
+    "quick_add": [
+      { "ref": "Imperial Armour Corps Crew", "count": 4 },
+      { "ref": "Stormtrooper: Range Trooper", "count": 1 }
+    ],
+    "skill_uses": "**Mechanics:** Reroute power to the blast door at the junction — closes it as a maneuver, buys a round.\n**Computers:** Spoof the IFF on the boarders' helmet HUDs — :setback: to their attacks for 2 rounds.\n**Athletics:** Brace the maintenance hatch shut so nobody flanks through it.",
+    "dice_menu": "**:triumph:** Hit a power conduit — sparks, lights flicker, all sides :setback: to ranged for 1 round.\n**:advantage::advantage:** Force a trooper back into the breach — they're out of LOS next round.\n**:threat:** Hull plating rattles loose, shedding atmo — narrate it, don't mechanic it unless you want a vacuum scene.\n**:despair:** Second breach. A new pressure door across the junction blows; add a trooper next round on the opposite side.",
+    "gm_notes": "This is a 'hold the line until X' scene — set a clock for 4 rounds (engineer needs to finish repairs, hyperdrive needs to spool, gunner needs to free the cannon). Combat ends when the clock ends, win or lose."
+  }
+]
